@@ -41,14 +41,20 @@ Plans:
 ### Phase 2: Auth & Workspaces
 **Goal**: A developer can run `twentythree auth credentials`, enter a domain and bearer token, select workspaces, and have all subsequent commands operate against the correct workspace
 **Depends on**: Phase 1
-**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06, AUTH-07, AUTH-08, AUTH-09
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06, AUTH-07, AUTH-08, AUTH-09, AUTH-10, AUTH-11
 **Success Criteria** (what must be TRUE):
   1. `twentythree auth credentials` prompts for domain and bearer token, calls the workspace discovery endpoint, and stores credentials securely in the OS keychain
   2. `twentythree auth status` shows current credentials, active workspace name, and token expiry
   3. `twentythree workspace list` lists all available workspaces with the default visually marked
   4. `twentythree workspace use <name>` switches the active workspace; all subsequent commands operate against the new workspace
   5. Every command output header shows the active workspace name; destructive confirmation prompts include the workspace name
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 02-01-PLAN.md — Install deps, inspect live /user/tokens response, create test stubs (Wave 0)
+- [ ] 02-02-PLAN.md — Credential store + workspace config modules (Wave 1)
+- [ ] 02-03-PLAN.md — Token refresh with file locking (Wave 1)
+- [ ] 02-04-PLAN.md — API client factory + BaseCommand/AuthenticatedCommand (Wave 2)
+- [ ] 02-05-PLAN.md — Auth + workspace commands with end-to-end verification (Wave 3)
 
 ### Phase 3: Video Core
 **Goal**: A developer can upload, list, get, update, delete, replace, and manage sections and subtitles for videos — with resumable chunked uploads, progress feedback, pagination, and zero legacy terminology in output
@@ -129,7 +135,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-04-14 |
-| 2. Auth & Workspaces | 0/3 | Not started | - |
+| 2. Auth & Workspaces | 0/5 | Planned | - |
 | 3. Video Core | 0/4 | Not started | - |
 | 4. Category & Webinar Core | 0/3 | Not started | - |
 | 5. Webinar Deep | 0/4 | Not started | - |
