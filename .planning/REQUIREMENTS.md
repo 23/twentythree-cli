@@ -32,7 +32,11 @@ Requirements for initial release. Maps to roadmap phases.
 
 ### Uploads (Chunked & Resumable)
 
-- [ ] **UPL-01**: File uploads use the two-step token flow: POST `/api/2/photo/get-upload-token` to obtain an `upload_token`, then POST chunks to `/api/2/photo/redeem-upload-token`
+The chunked upload engine is **shared infrastructure** used by any command that uploads a potentially large file. Small files (images, avatars, subtitles) use a direct multipart POST. Large files (videos, webinar attachments, action video files, open uploads) use the chunked engine.
+
+**Commands using chunked upload:** `video upload`, `video replace`, `webinar attachment upload`, `action upload` (when file is video), `openupload upload-file`
+
+- [ ] **UPL-01**: The chunked upload engine is a shared module in `src/upload/`; video token-based uploads use `photo/get-upload-token` → `photo/redeem-upload-token`; direct-endpoint uploads (e.g. webinar attachments) send resumable.js params directly to the endpoint URL
 - [ ] **UPL-02**: Files are split into chunks using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
 - [ ] **UPL-03**: Default chunk size is 100MB; configurable via `--chunk-size` flag
 - [ ] **UPL-04**: Up to 5 chunks are uploaded in parallel by default; configurable via `--concurrency` flag
@@ -74,7 +78,7 @@ Requirements for initial release. Maps to roadmap phases.
 - [ ] **WEB-09**: `twentythree webinar list-formats` lists available webinar formats
 - [ ] **WEB-10**: `twentythree webinar log <id>` retrieves the webinar event log
 - [ ] **WEB-11**: `twentythree webinar repeat <id>` repeats/schedules a recurring webinar
-- [ ] **WEB-12**: `twentythree webinar attachment list|upload|delete|set-hidden <id>` manages webinar attachments
+- [ ] **WEB-12**: `twentythree webinar attachment list|upload|delete|set-hidden <id>` manages webinar attachments; `attachment upload` uses the shared chunked upload engine (UPL-01–UPL-08) since handouts/PDFs/slides can be large
 - [ ] **WEB-13**: `twentythree webinar section list|add|update|remove <id>` manages webinar agenda sections
 - [ ] **WEB-14**: `twentythree webinar speaker list|add|add-from-user|add-from-speaker|update|remove|set-avatar|remove-avatar|set-order|send-invitation|request-guest|cancel-guest-request|connection-types|library` manages speakers
 - [ ] **WEB-15**: `twentythree webinar mail list|add|update|remove|preview|send|test` manages webinar email communications
@@ -103,7 +107,7 @@ Requirements for initial release. Maps to roadmap phases.
 - [ ] **ACT-06**: `twentythree action delete <id>` removes a CTA permanently with confirmation
 - [ ] **ACT-07**: `twentythree action include <id>` adds an object to a CTA's scope
 - [ ] **ACT-08**: `twentythree action exclude <id>` prevents a CTA from displaying on a specific object
-- [ ] **ACT-09**: `twentythree action upload <id>` uploads an image/video file to an action variable
+- [ ] **ACT-09**: `twentythree action upload <id>` uploads an image/video file to an action variable; uses the shared chunked upload engine (UPL-01–UPL-08) when the file is a video
 
 ### Collector Commands
 
@@ -211,7 +215,7 @@ Requirements for initial release. Maps to roadmap phases.
 ### Open Upload Commands
 
 - [ ] **OUP-01**: `twentythree openupload list` lists open upload entries
-- [ ] **OUP-02**: `twentythree openupload upload-file` uploads a file via open upload
+- [ ] **OUP-02**: `twentythree openupload upload-file` uploads a file via open upload; uses the shared chunked upload engine (UPL-01–UPL-08) since open uploads accept arbitrary large files
 - [ ] **OUP-03**: `twentythree openupload update-file <id>` updates an open upload entry
 
 ### Site & Setting Commands
