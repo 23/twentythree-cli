@@ -42,7 +42,10 @@ export function toApiTerm(cliTerm: string): string {
 export function applyCliTerms(text: string): string {
   let result = text
   for (const [apiTerm, cliTerm] of Object.entries(API_TO_CLI)) {
-    result = result.replaceAll(apiTerm, cliTerm)
+    // Case-insensitive, word-boundary-safe replacement:
+    // - 'gi' flag catches "Photo", "PHOTO", etc.
+    // - \b guards prevent partial-word matches (e.g. "album" inside "albumArt")
+    result = result.replace(new RegExp(`\\b${apiTerm}\\b`, 'gi'), cliTerm)
   }
   return result
 }
