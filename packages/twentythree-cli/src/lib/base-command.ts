@@ -28,6 +28,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected flags!: BaseFlags<T>
   protected activeWorkspace!: WorkspaceEntry
+  /** Base URL with /api/2/ appended — use this when constructing URLs outside of openapi-fetch (e.g. chunked upload) */
+  protected apiBaseUrl!: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected apiClient!: ReturnType<typeof createApiClient>
 
@@ -89,8 +91,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
     }
 
+    // api_base_url is the workspace domain root (e.g. "https://company.video23.com/").
+    // All API endpoints live under /api/2/ — append it here so every command's paths
+    // (e.g. "/photo/list") resolve correctly without each command knowing the prefix.
+    this.apiBaseUrl = this.activeWorkspace.api_base_url.replace(/\/?$/, '/') + 'api/2/'
     this.apiClient = createApiClient({
-      baseUrl: this.activeWorkspace.api_base_url,
+      baseUrl: this.apiBaseUrl,
       token: this.activeWorkspace.bearer_token || undefined,
     })
   }
@@ -120,5 +126,48 @@ export abstract class AuthenticatedCommand<T extends typeof Command> extends Bas
         { exit: 1 },
       )
     }
+  }
+
+  /**
+   * Fetch the API token for a video by ID.
+   * Required by endpoints (e.g. section/list, subtitle/list) that demand a real token param.
+   * Throws a user-friendly error if the video is not found.
+   */
+  protected async fetchVideoToken(videoId: string | number): Promise<string> {
+    const { data, error } = await this.apiClient.GET('/photo/list', {
+      params: { query: { photo_id: Number(videoId), include_unpublished_p: 1 } },
+    })
+    if (error) {
+      this.error(`Could not look up video ${videoId}: ${error}`, { exit: 1 })
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resp = data as any
+    const video = Array.isArray(resp?.data) ? resp.data[0] : resp?.data
+    if (!video?.token) {
+      this.error(`Video ${videoId} not found or has no token`, { exit: 1 })
+    }
+    return video.token as string
+  }
+
+  /**
+   * Fetch the API token for a webinar by ID.
+   * Required by Phase 5 webinar endpoints that demand a real token param.
+   * Mirrors fetchVideoToken but calls /live/list instead of /photo/list.
+   * Throws a user-friendly error if the webinar is not found.
+   */
+  protected async fetchWebinarToken(webinarId: string | number): Promise<string> {
+    const { data, error } = await this.apiClient.GET('/live/list', {
+      params: { query: { live_id: Number(webinarId) } },
+    })
+    if (error) {
+      this.error(`Could not look up webinar ${webinarId}: ${error}`, { exit: 1 })
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resp = data as any
+    const webinar = Array.isArray(resp?.data) ? resp.data[0] : resp?.data
+    if (!webinar?.token) {
+      this.error(`Webinar ${webinarId} not found or has no token`, { exit: 1 })
+    }
+    return webinar.token as string
   }
 }
