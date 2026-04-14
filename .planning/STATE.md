@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-video-core/03-01-PLAN.md
-last_updated: "2026-04-14T12:39:52.286Z"
+stopped_at: Completed 03-video-core/03-02-PLAN.md
+last_updated: "2026-04-14T12:45:10.622Z"
 last_activity: 2026-04-14
 progress:
   total_phases: 8
   completed_phases: 2
   total_plans: 13
-  completed_plans: 9
-  percent: 69
+  completed_plans: 10
+  percent: 77
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 03 (video-core) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-04-14
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation P02 | 2 | 2 tasks | 7 files |
 | Phase 01-foundation P03 | 3 | 2 tasks | 7 files |
 | Phase 03-video-core P01 | 5 | 2 tasks | 10 files |
+| Phase 03-video-core P02 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: CLI_TO_API derived from API_TO_CLI via Object.fromEntries — single source of truth for term mappings
 - [Phase 03-video-core]: @types/cli-table3 does not exist on npm — cli-table3 bundles own types; only @types/cli-progress needed
 - [Phase 03-video-core]: formatBytes uses toFixed(1)+Number() not toPrecision() — toPrecision strips significant digits from integer values like 300
+- [Phase 03-video-core]: delayFn injectable in uploadChunkPool for deterministic test timing — avoids real setTimeout delays in test suite
+- [Phase 03-video-core]: uploadUrl https:// validation added (T-03-02) — threat model mitigation applied as Rule 2 deviation
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-14T12:39:52.284Z
-Stopped at: Completed 03-video-core/03-01-PLAN.md
+Last session: 2026-04-14T12:45:10.619Z
+Stopped at: Completed 03-video-core/03-02-PLAN.md
 Resume file: None

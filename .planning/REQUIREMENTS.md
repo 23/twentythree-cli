@@ -39,12 +39,12 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 **Commands using chunked upload:** `video upload`, `video replace`, `webinar attachment upload`, `action upload` (when file is video), `openupload upload-file`
 
 - [x] **UPL-01**: The chunked upload engine is a shared module in `src/upload/`; video token-based uploads use `photo/get-upload-token` → `photo/redeem-upload-token`; direct-endpoint uploads (e.g. webinar attachments) send resumable.js params directly to the endpoint URL
-- [ ] **UPL-02**: Files are split into chunks using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
-- [ ] **UPL-03**: Default chunk size is 100MB; configurable via `--chunk-size` flag
-- [ ] **UPL-04**: Up to 5 chunks are uploaded in parallel by default; configurable via `--concurrency` flag
-- [ ] **UPL-05**: Each chunk retries up to 5 times on transient failure before the upload is aborted
-- [ ] **UPL-06**: Interrupted uploads can be resumed — CLI checks which chunks were already accepted before re-uploading
-- [ ] **UPL-07**: A progress bar displays bytes uploaded, percentage, and estimated time remaining during upload
+- [x] **UPL-02**: Files are split into chunks using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
+- [x] **UPL-03**: Default chunk size is 100MB; configurable via `--chunk-size` flag
+- [x] **UPL-04**: Up to 5 chunks are uploaded in parallel by default; configurable via `--concurrency` flag
+- [x] **UPL-05**: Each chunk retries up to 5 times on transient failure before the upload is aborted
+- [x] **UPL-06**: Interrupted uploads can be resumed — CLI checks which chunks were already accepted before re-uploading
+- [x] **UPL-07**: A progress bar displays bytes uploaded, percentage, and estimated time remaining during upload
 - [x] **UPL-08**: Upload implementation is native to the CLI — no dependency on `resumable-upload-command`
 
 ### Video Commands (`photo` → `video`)
@@ -308,12 +308,12 @@ Explicitly excluded. Documented to prevent scope creep.
 | AUTH-10 | Phase 2 | Pending |
 | AUTH-11 | Phase 2 | Pending |
 | UPL-01 | Phase 3 | Complete |
-| UPL-02 | Phase 3 | Pending |
-| UPL-03 | Phase 3 | Pending |
-| UPL-04 | Phase 3 | Pending |
-| UPL-05 | Phase 3 | Pending |
-| UPL-06 | Phase 3 | Pending |
-| UPL-07 | Phase 3 | Pending |
+| UPL-02 | Phase 3 | Complete |
+| UPL-03 | Phase 3 | Complete |
+| UPL-04 | Phase 3 | Complete |
+| UPL-05 | Phase 3 | Complete |
+| UPL-06 | Phase 3 | Complete |
+| UPL-07 | Phase 3 | Complete |
 | UPL-08 | Phase 3 | Complete |
 | VID-01 | Phase 3 | Pending |
 | VID-02 | Phase 3 | Pending |
