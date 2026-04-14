@@ -140,6 +140,10 @@ None - no external service configuration required.
 - pnpm install succeeds and dependency tree is resolved
 - Ready for Plan 01-02: bin entrypoints, tsdown config, term-map.ts, and Node version guard
 
+## Self-Check: PASSED
+
+All created files verified to exist on disk. All task commits verified in git log.
+
 ---
 *Phase: 01-foundation*
 *Completed: 2026-04-14*
