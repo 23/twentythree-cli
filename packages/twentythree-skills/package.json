@@ -1,0 +1,10 @@
+{
+  "name": "twentythree-skills",
+  "version": "0.1.0",
+  "description": "AI agent skills for the TwentyThree CLI",
+  "license": "MIT",
+  "files": [
+    "SKILL.md"
+  ],
+  "keywords": ["ai", "skills", "twentythree", "cli"]
+}

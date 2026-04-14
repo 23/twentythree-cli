@@ -1,0 +1,43 @@
+{
+  "name": "twentythree-cli",
+  "version": "0.1.0",
+  "description": "Terminal access to every TwentyThree API endpoint",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "bin": {
+    "twentythree": "./bin/run.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "/bin",
+    "/dist",
+    "/oclif.manifest.json"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "postbuild": "oclif manifest",
+    "dev": "node ./bin/dev.js",
+    "test": "vitest run"
+  },
+  "oclif": {
+    "bin": "twentythree",
+    "dirname": "twentythree",
+    "commands": "./dist/commands",
+    "topicSeparator": " "
+  },
+  "dependencies": {
+    "@oclif/core": "^4.10.5",
+    "openapi-fetch": "^0.17.0"
+  },
+  "devDependencies": {
+    "oclif": "^4.23.0",
+    "tsdown": "^0.21.8",
+    "typescript": "^5.0.0",
+    "openapi-typescript": "^7.13.0",
+    "vitest": "^4.1.4",
+    "@oclif/test": "^4.0.0"
+  }
+}
