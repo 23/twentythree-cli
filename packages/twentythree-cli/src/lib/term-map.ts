@@ -42,10 +42,12 @@ export function toApiTerm(cliTerm: string): string {
 export function applyCliTerms(text: string): string {
   let result = text
   for (const [apiTerm, cliTerm] of Object.entries(API_TO_CLI)) {
-    // Case-insensitive, word-boundary-safe replacement:
+    // Case-insensitive, letter-boundary-safe replacement:
     // - 'gi' flag catches "Photo", "PHOTO", etc.
-    // - \b guards prevent partial-word matches (e.g. "album" inside "albumArt")
-    result = result.replace(new RegExp(`\\b${apiTerm}\\b`, 'gi'), cliTerm)
+    // - (?<![a-zA-Z]) / (?![a-zA-Z]) prevent partial letter-word matches
+    //   (e.g. "album" inside "albumArt") while still matching "photo_id" → "video_id"
+    //   (\b would block underscored identifiers since _ is \w)
+    result = result.replace(new RegExp(`(?<![a-zA-Z])${apiTerm}(?![a-zA-Z])`, 'gi'), cliTerm)
   }
   return result
 }
