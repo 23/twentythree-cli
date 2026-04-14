@@ -254,7 +254,8 @@ describe('ensureFreshToken', () => {
 
     // Should return the already-refreshed token without calling fetch
     expect(result).toBe('tok_already_fresh')
-    expect(fetch).not.toBeDefined()
+    // getCredential should NOT have been called (no fetch attempted)
+    expect(getCredential).not.toHaveBeenCalled()
     // Lock was acquired and released
     expect(lockfile.lock).toHaveBeenCalled()
     expect(mockRelease).toHaveBeenCalled()
