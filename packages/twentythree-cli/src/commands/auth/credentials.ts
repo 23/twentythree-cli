@@ -14,6 +14,7 @@ export default class Credentials extends Command {
   static examples = ['<%= config.bin %> auth credentials']
 
   public async run(): Promise<void> {
+    await this.parse(Credentials)
     p.intro('TwentyThree credentials')
 
     const domain = await p.text({

@@ -1,4 +1,3 @@
-import { Command } from '@oclif/core'
 import { BaseCommand } from '../../lib/base-command.js'
 import { getWorkspaces } from '../../auth/workspace-config.js'
 
