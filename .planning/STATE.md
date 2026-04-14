@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation)
+Phase: 1 of 8 (Foundation)
 Plan: 0 of 3 in current phase
 Status: Ready to plan
-Last activity: 2026-04-14 — Roadmap created; ready to begin Phase 1 planning
+Last activity: 2026-04-14 — Roadmap replaced with full 8-phase 235-endpoint coverage; ready to begin Phase 1 planning
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -46,6 +46,7 @@ Recent decisions affecting current work:
 - Init: API uses legacy terms (`photo`, `album`, `live`); CLI maps to `video`, `category`, `webinar` via `term-map.ts`
 - Init: `@napi-rs/keyring` for credential storage (not archived `keytar`); `conf` for non-sensitive config
 - Init: Chunked upload is native — no dependency on `resumable-upload-command`
+- 2026-04-14: Roadmap expanded from 5 phases to 8 phases to cover all 235 endpoints across 22 resource groups; webinar surface split across Phase 4 (core) and Phase 5 (deep); Phases 6 and 7 can execute in parallel after Phase 3
 
 ### Pending Todos
 
@@ -58,5 +59,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-14
-Stopped at: Roadmap created — ROADMAP.md, STATE.md, REQUIREMENTS.md traceability all written
+Stopped at: Roadmap replaced — full 8-phase roadmap covering all 235 endpoints written to ROADMAP.md; STATE.md updated
 Resume file: None

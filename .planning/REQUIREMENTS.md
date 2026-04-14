@@ -3,6 +3,8 @@
 **Defined:** 2026-04-14
 **Core Value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
+**API surface:** 235 endpoints across 22 resource groups (source: `video.twentythree.com/apidocs/swagger.json`)
+
 ## v1 Requirements
 
 Requirements for initial release. Maps to roadmap phases.
@@ -13,7 +15,7 @@ Requirements for initial release. Maps to roadmap phases.
 - [ ] **FOUND-02**: CLI is built with oclif v4, TypeScript, and bundled via tsdown into a single entry point
 - [ ] **FOUND-03**: CLI is installable globally via `npm install -g twentythree-cli` and runnable as `twentythree`
 - [ ] **FOUND-04**: `engines` field enforces minimum Node.js version; CLI prints a clear error and exits on unsupported versions
-- [ ] **FOUND-05**: OpenAPI types are generated from `video.twentythree.com/apidocs/swagger.json` and committed as `api/types.ts`; type generation script re-runs as the spec grows
+- [ ] **FOUND-05**: OpenAPI types are generated from `video.twentythree.com/apidocs/swagger.json` and committed as `api/types.ts`; generation script is re-runnable
 - [ ] **FOUND-06**: A `term-map.ts` module translates legacy API terms (`photo`→`video`, `album`→`category`, `live`→`webinar`) — applied to all user-visible output including error messages
 
 ### Authentication & Workspaces
@@ -31,45 +33,65 @@ Requirements for initial release. Maps to roadmap phases.
 ### Uploads (Chunked & Resumable)
 
 - [ ] **UPL-01**: File uploads use the two-step token flow: POST `/api/2/photo/get-upload-token` to obtain an `upload_token`, then POST chunks to `/api/2/photo/redeem-upload-token`
-- [ ] **UPL-02**: Files are split into chunks and uploaded using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
+- [ ] **UPL-02**: Files are split into chunks using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
 - [ ] **UPL-03**: Default chunk size is 100MB; configurable via `--chunk-size` flag
 - [ ] **UPL-04**: Up to 5 chunks are uploaded in parallel by default; configurable via `--concurrency` flag
 - [ ] **UPL-05**: Each chunk retries up to 5 times on transient failure before the upload is aborted
-- [ ] **UPL-06**: Interrupted uploads can be resumed — the CLI checks which chunks were already accepted before re-uploading
+- [ ] **UPL-06**: Interrupted uploads can be resumed — CLI checks which chunks were already accepted before re-uploading
 - [ ] **UPL-07**: A progress bar displays bytes uploaded, percentage, and estimated time remaining during upload
 - [ ] **UPL-08**: Upload implementation is native to the CLI — no dependency on `resumable-upload-command`
 
-### Video Commands
+### Video Commands (`photo` → `video`)
 
 - [ ] **VID-01**: `twentythree video list` lists videos in the active workspace with pagination
-- [ ] **VID-02**: `twentythree video get <id>` retrieves a single video's details
+- [ ] **VID-02**: `twentythree video get <id>` retrieves a single video's details (includes `photo/list` with id filter)
 - [ ] **VID-03**: `twentythree video upload <file>` uploads a video file using the chunked upload protocol (UPL-01–UPL-08)
 - [ ] **VID-04**: `twentythree video update <id>` updates video metadata
 - [ ] **VID-05**: `twentythree video delete <id>` deletes a video with confirmation prompt
+- [ ] **VID-06**: `twentythree video replace <id> <file>` replaces a video file using `photo/get-replace-token` + chunked upload
+- [ ] **VID-07**: `twentythree video transcoding-progress <id>` retrieves transcoding status
+- [ ] **VID-08**: `twentythree video frame <id>` extracts a frame/thumbnail from a video
+- [ ] **VID-09**: `twentythree video section list|create|update|delete|set-thumbnail <id>` manages video sections/chapters
+- [ ] **VID-10**: `twentythree video subtitle list|create|update|delete|upload|data|locales|types|duplicate|set-primary|archive` manages subtitles
 
-### Category Commands
+### Category Commands (`album` → `category`)
 
 - [ ] **CAT-01**: `twentythree category list` lists categories in the active workspace
-- [ ] **CAT-02**: `twentythree category get <id>` retrieves a single category's details
-- [ ] **CAT-03**: `twentythree category create` creates a new category
-- [ ] **CAT-04**: `twentythree category update <id>` updates category metadata
-- [ ] **CAT-05**: `twentythree category delete <id>` deletes a category with confirmation prompt
+- [ ] **CAT-02**: `twentythree category create` creates a new category
+- [ ] **CAT-03**: `twentythree category update <id>` updates category metadata
+- [ ] **CAT-04**: `twentythree category delete <id>` deletes a category with confirmation prompt
 
-### Webinar Commands
+### Webinar Commands (`live` → `webinar`)
 
-- [ ] **WEB-01**: `twentythree webinar list` lists webinars in the active workspace
-- [ ] **WEB-02**: `twentythree webinar get <id>` retrieves a single webinar's details
-- [ ] **WEB-03**: `twentythree webinar create` creates a new webinar
-- [ ] **WEB-04**: `twentythree webinar update <id>` updates webinar details
-- [ ] **WEB-05**: `twentythree webinar delete <id>` deletes a webinar with confirmation prompt
+- [ ] **WEB-01**: `twentythree webinar list` lists webinars in the active workspace with pagination
+- [ ] **WEB-02**: `twentythree webinar create` creates a new webinar
+- [ ] **WEB-03**: `twentythree webinar update <id>` updates webinar details
+- [ ] **WEB-04**: `twentythree webinar delete <id>` deletes a webinar with confirmation prompt
+- [ ] **WEB-05**: `twentythree webinar upload-image <id> <file>` uploads a webinar image/thumbnail
+- [ ] **WEB-06**: `twentythree webinar metrics <id>` retrieves webinar metrics
+- [ ] **WEB-07**: `twentythree webinar clips <id>` lists generated clips from a webinar
+- [ ] **WEB-08**: `twentythree webinar highlights <id>` lists highlights
+- [ ] **WEB-09**: `twentythree webinar list-formats` lists available webinar formats
+- [ ] **WEB-10**: `twentythree webinar log <id>` retrieves the webinar event log
+- [ ] **WEB-11**: `twentythree webinar repeat <id>` repeats/schedules a recurring webinar
+- [ ] **WEB-12**: `twentythree webinar attachment list|upload|delete|set-hidden <id>` manages webinar attachments
+- [ ] **WEB-13**: `twentythree webinar section list|add|update|remove <id>` manages webinar agenda sections
+- [ ] **WEB-14**: `twentythree webinar speaker list|add|add-from-user|add-from-speaker|update|remove|set-avatar|remove-avatar|set-order|send-invitation|request-guest|cancel-guest-request|connection-types|library` manages speakers
+- [ ] **WEB-15**: `twentythree webinar mail list|add|update|remove|preview|send|test` manages webinar email communications
+- [ ] **WEB-16**: `twentythree webinar recording start|stop|status` controls webinar recording
+- [ ] **WEB-17**: `twentythree webinar transcription list|connect|locales|transcriptionlist` manages transcriptions
+- [ ] **WEB-18**: `twentythree webinar room info|themes|send-recording|connect` manages the webinar room
+- [ ] **WEB-19**: `twentythree webinar series list|create|update|delete|metrics|recurrences|apply-recurrence|skip-recurrence|cancel|set-ondemand|mapped-objects|upload-thumbnail` manages webinar series
+- [ ] **WEB-20**: `twentythree webinar queued-video add|remove` manages queued videos for a webinar
 
 ### Player Commands
 
 - [ ] **PLY-01**: `twentythree player list` lists players in the active workspace
-- [ ] **PLY-02**: `twentythree player get <id>` retrieves player configuration
-- [ ] **PLY-03**: `twentythree player create` creates a new player
-- [ ] **PLY-04**: `twentythree player update <id>` updates player settings
-- [ ] **PLY-05**: `twentythree player delete <id>` deletes a player with confirmation prompt
+- [ ] **PLY-02**: `twentythree player update <id>` updates player settings
+- [ ] **PLY-03**: `twentythree player delete <id>` deletes a player with confirmation prompt
+- [ ] **PLY-04**: `twentythree player embed <id>` generates embed code for a player
+- [ ] **PLY-05**: `twentythree player embed-versions` lists available embed versions
+- [ ] **PLY-06**: `twentythree player styles` lists available player styles
 
 ### Action Commands (CTAs)
 
@@ -78,27 +100,141 @@ Requirements for initial release. Maps to roadmap phases.
 - [ ] **ACT-03**: `twentythree action types` lists available action type definitions
 - [ ] **ACT-04**: `twentythree action add` creates a new CTA with default values
 - [ ] **ACT-05**: `twentythree action update <id>` modifies action name, timing, and data fields
-- [ ] **ACT-06**: `twentythree action delete <id>` removes a CTA permanently
+- [ ] **ACT-06**: `twentythree action delete <id>` removes a CTA permanently with confirmation
 - [ ] **ACT-07**: `twentythree action include <id>` adds an object to a CTA's scope
 - [ ] **ACT-08**: `twentythree action exclude <id>` prevents a CTA from displaying on a specific object
 - [ ] **ACT-09**: `twentythree action upload <id>` uploads an image/video file to an action variable
 
 ### Collector Commands
 
-- [ ] **COL-01**: `twentythree collector list` lists workspace collectors with optional analytics
+- [ ] **COL-01**: `twentythree collector list` lists workspace collectors with optional analytics flag
 - [ ] **COL-02**: `twentythree collector include <id>` attaches a collector to a video or webinar
 - [ ] **COL-03**: `twentythree collector exclude <id>` blocks a collector from displaying on a video/webinar
 
-### Site Commands
+### Comment Commands
+
+- [ ] **CMT-01**: `twentythree comment list <id>` lists comments on a video or webinar
+- [ ] **CMT-02**: `twentythree comment add <id>` adds a comment
+- [ ] **CMT-03**: `twentythree comment update <id>` updates a comment
+- [ ] **CMT-04**: `twentythree comment delete <id>` deletes a comment with confirmation
+- [ ] **CMT-05**: `twentythree comment promote <id>` promotes a comment
+- [ ] **CMT-06**: `twentythree comment clone <id>` clones a comment
+- [ ] **CMT-07**: `twentythree comment set-order <id>` sets comment display order
+- [ ] **CMT-08**: `twentythree comment reaction list|add|remove <id>` manages comment reactions
+
+### Poll Commands
+
+- [ ] **POL-01**: `twentythree poll list <id>` lists polls for a webinar
+- [ ] **POL-02**: `twentythree poll add <id>` creates a new poll
+- [ ] **POL-03**: `twentythree poll update <id>` updates a poll
+- [ ] **POL-04**: `twentythree poll remove <id>` removes a poll with confirmation
+- [ ] **POL-05**: `twentythree poll set-options <id>` sets poll options
+- [ ] **POL-06**: `twentythree poll answer <id>` submits a poll answer
+
+### Analytics Commands
+
+- [ ] **ANL-01**: `twentythree analytics videos` retrieves video analytics data
+- [ ] **ANL-02**: `twentythree analytics videos timeseries|totals|weekday|performance|published` retrieves aggregated video analytics
+- [ ] **ANL-03**: `twentythree analytics live` retrieves live/webinar analytics data
+- [ ] **ANL-04**: `twentythree analytics live timeseries|totals|weekday|event|event-timeseries|event-totals` retrieves aggregated live analytics
+- [ ] **ANL-05**: `twentythree analytics conversions` retrieves conversion analytics
+- [ ] **ANL-06**: `twentythree analytics conversions timeseries|totals` retrieves aggregated conversion analytics
+- [ ] **ANL-07**: `twentythree analytics usage devices|domains|locations|sources|sourceids|spots|storage|traffic` retrieves usage analytics
+- [ ] **ANL-08**: All analytics commands support `--json` output and accept standard date range filters
+
+### Audience Commands
+
+- [ ] **AUD-01**: `twentythree audience list` lists audience members
+- [ ] **AUD-02**: `twentythree audience search` searches audience members
+- [ ] **AUD-03**: `twentythree audience register` registers a new audience member
+- [ ] **AUD-04**: `twentythree audience unregister <id>` removes an audience member
+- [ ] **AUD-05**: `twentythree audience remove <id>` removes audience data
+- [ ] **AUD-06**: `twentythree audience metrics` retrieves audience metrics
+- [ ] **AUD-07**: `twentythree audience funnel` retrieves funnel analytics
+- [ ] **AUD-08**: `twentythree audience timelines <id>` retrieves audience member timelines
+- [ ] **AUD-09**: `twentythree audience companies` lists audience companies
+- [ ] **AUD-10**: `twentythree audience identity-sources` lists available identity sources
+- [ ] **AUD-11**: `twentythree audience list-collectors` lists collectors linked to audience
+- [ ] **AUD-12**: `twentythree audience field list|set|remove|types` manages custom audience fields
+
+### Spot Commands
+
+- [ ] **SPT-01**: `twentythree spot list` lists spots in the active workspace
+- [ ] **SPT-02**: `twentythree spot create` creates a new spot
+- [ ] **SPT-03**: `twentythree spot update <id>` updates spot settings
+- [ ] **SPT-04**: `twentythree spot delete <id>` deletes a spot with confirmation
+- [ ] **SPT-05**: `twentythree spot set-videos <id>` sets videos assigned to a spot
+- [ ] **SPT-06**: `twentythree spot check <id>` checks spot status
+- [ ] **SPT-07**: `twentythree spot reset-version <id>` resets a spot version
+
+### Thumbnail Commands
+
+- [ ] **THB-01**: `twentythree thumbnail list` lists thumbnail templates
+- [ ] **THB-02**: `twentythree thumbnail add` creates a new thumbnail template
+- [ ] **THB-03**: `twentythree thumbnail update <id>` updates a thumbnail template
+- [ ] **THB-04**: `twentythree thumbnail delete <id>` deletes a thumbnail template with confirmation
+- [ ] **THB-05**: `twentythree thumbnail duplicate <id>` duplicates a thumbnail template
+- [ ] **THB-06**: `twentythree thumbnail data <id>` retrieves template data
+- [ ] **THB-07**: `twentythree thumbnail file list|upload|delete <id>` manages template files
+
+### Webhook Commands
+
+- [ ] **WHK-01**: `twentythree webhook list` lists webhook subscriptions
+- [ ] **WHK-02**: `twentythree webhook subscribe` creates a new webhook subscription
+- [ ] **WHK-03**: `twentythree webhook unsubscribe <id>` removes a webhook subscription
+- [ ] **WHK-04**: `twentythree webhook events` lists available webhook event types
+- [ ] **WHK-05**: `twentythree webhook sample <event>` retrieves a sample payload for an event type
+
+### App Commands
+
+- [ ] **APP-01**: `twentythree app add` installs an app integration
+- [ ] **APP-02**: `twentythree app update <id>` updates app settings
+- [ ] **APP-03**: `twentythree app delete <id>` removes an app with confirmation
+
+### Presentation Commands
+
+- [ ] **PRS-01**: `twentythree presentation setting list` lists presentation settings
+- [ ] **PRS-02**: `twentythree presentation setting update` updates presentation settings
+- [ ] **PRS-03**: `twentythree presentation page link-locations` retrieves page link location options
+
+### Protection Commands
+
+- [ ] **PRT-01**: `twentythree protection protect <id>` applies protection to a resource
+- [ ] **PRT-02**: `twentythree protection unprotect <id>` removes protection from a resource
+- [ ] **PRT-03**: `twentythree protection verify` verifies protection credentials
+
+### Session Commands
+
+- [ ] **SES-01**: `twentythree session get-token` creates a session token
+- [ ] **SES-02**: `twentythree session redeem-token` redeems a session token
+
+### Open Upload Commands
+
+- [ ] **OUP-01**: `twentythree openupload list` lists open upload entries
+- [ ] **OUP-02**: `twentythree openupload upload-file` uploads a file via open upload
+- [ ] **OUP-03**: `twentythree openupload update-file <id>` updates an open upload entry
+
+### Site & Setting Commands
 
 - [ ] **SITE-01**: `twentythree site get` retrieves site settings for the active workspace
-- [ ] **SITE-02**: `twentythree site update` updates site settings
+- [ ] **SITE-02**: `twentythree site search` searches within the site
+- [ ] **SITE-03**: `twentythree setting update` updates global site settings
 
 ### User Commands
 
 - [ ] **USR-01**: `twentythree user list` lists users in the active workspace
 - [ ] **USR-02**: `twentythree user get <id>` retrieves a user's details
-- [ ] **USR-03**: `twentythree user tokens` retrieves cross-site tokens for the authenticated user
+- [ ] **USR-03**: `twentythree user create` creates a new user
+- [ ] **USR-04**: `twentythree user update <id>` updates user details
+- [ ] **USR-05**: `twentythree user send-invitation <id>` sends a user invitation
+- [ ] **USR-06**: `twentythree user get-login-token <id>` generates a login token for a user
+- [ ] **USR-07**: `twentythree user redeem-login-token` redeems a login token
+- [ ] **USR-08**: `twentythree user tokens` retrieves cross-site tokens for the authenticated user
+
+### Tag Commands
+
+- [ ] **TAG-01**: `twentythree tag list` lists tags in the active workspace
+- [ ] **TAG-02**: `twentythree tag related` lists related tags
 
 ### Cross-Cutting CLI Quality
 
@@ -124,12 +260,6 @@ Deferred to future milestones. Tracked but not in current roadmap.
 - **SKILL-02**: Skills package is installable via `npx skills add twentythree/skills`
 - **SKILL-03**: Skills package version is pinned to a specific CLI release; versions stay in sync
 
-### Extended API Coverage
-
-- **EXT-01**: Video sub-resource commands (chapters/sections, subtitles, attachments, coordinates, edits)
-- **EXT-02**: Protection/access control commands
-- **EXT-03**: Additional endpoints added to the OpenAPI spec after v1 ship
-
 ### UX Enhancements
 
 - **UX-01**: Shell completions for bash, zsh, and fish
@@ -147,7 +277,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | OAuth 1.0a signing | Auth uses simple bearer token headers; OAuth 1.0a not required by the API |
 | Code-generated commands from OpenAPI spec | Mechanical generation produces bad UX and breaks the terminology mapping; commands are hand-authored against generated types |
 | Dependency on `resumable-upload-command` | Upload logic is implemented natively; the reference repo is unsupported example code |
-| Real-time streaming / webhooks | Out of v1 CLI scope; server-side concerns |
+| Real-time streaming / webhooks | Webhook subscription management is in scope; real-time event handling is server-side |
 
 ## Traceability
 
@@ -181,50 +311,140 @@ Explicitly excluded. Documented to prevent scope creep.
 | VID-03 | Phase 3 | Pending |
 | VID-04 | Phase 3 | Pending |
 | VID-05 | Phase 3 | Pending |
-| CAT-01 | Phase 3 | Pending |
-| CAT-02 | Phase 3 | Pending |
-| CAT-03 | Phase 3 | Pending |
-| CAT-04 | Phase 3 | Pending |
-| CAT-05 | Phase 3 | Pending |
-| WEB-01 | Phase 3 | Pending |
-| WEB-02 | Phase 3 | Pending |
-| WEB-03 | Phase 3 | Pending |
-| WEB-04 | Phase 3 | Pending |
-| WEB-05 | Phase 3 | Pending |
-| PLY-01 | Phase 4 | Pending |
-| PLY-02 | Phase 4 | Pending |
-| PLY-03 | Phase 4 | Pending |
-| PLY-04 | Phase 4 | Pending |
-| PLY-05 | Phase 4 | Pending |
-| ACT-01 | Phase 4 | Pending |
-| ACT-02 | Phase 4 | Pending |
-| ACT-03 | Phase 4 | Pending |
-| ACT-04 | Phase 4 | Pending |
-| ACT-05 | Phase 4 | Pending |
-| ACT-06 | Phase 4 | Pending |
-| ACT-07 | Phase 4 | Pending |
-| ACT-08 | Phase 4 | Pending |
-| ACT-09 | Phase 4 | Pending |
-| COL-01 | Phase 4 | Pending |
-| COL-02 | Phase 4 | Pending |
-| COL-03 | Phase 4 | Pending |
-| SITE-01 | Phase 5 | Pending |
-| SITE-02 | Phase 5 | Pending |
-| USR-01 | Phase 5 | Pending |
-| USR-02 | Phase 5 | Pending |
-| USR-03 | Phase 5 | Pending |
+| VID-06 | Phase 3 | Pending |
+| VID-07 | Phase 3 | Pending |
+| VID-08 | Phase 3 | Pending |
+| VID-09 | Phase 3 | Pending |
+| VID-10 | Phase 3 | Pending |
 | CLI-01 | Phase 3 | Pending |
 | CLI-02 | Phase 3 | Pending |
 | CLI-03 | Phase 3 | Pending |
 | CLI-04 | Phase 3 | Pending |
-| CLI-05 | Phase 5 | Pending |
-| CLI-06 | Phase 5 | Pending |
-
-**Coverage:**
-- v1 requirements: 63 total
-- Mapped to phases: 63
-- Unmapped: 0 ✓
+| CAT-01 | Phase 4 | Pending |
+| CAT-02 | Phase 4 | Pending |
+| CAT-03 | Phase 4 | Pending |
+| CAT-04 | Phase 4 | Pending |
+| WEB-01 | Phase 4 | Pending |
+| WEB-02 | Phase 4 | Pending |
+| WEB-03 | Phase 4 | Pending |
+| WEB-04 | Phase 4 | Pending |
+| WEB-05 | Phase 4 | Pending |
+| WEB-06 | Phase 4 | Pending |
+| WEB-07 | Phase 4 | Pending |
+| WEB-08 | Phase 4 | Pending |
+| WEB-09 | Phase 4 | Pending |
+| WEB-10 | Phase 4 | Pending |
+| WEB-11 | Phase 4 | Pending |
+| WEB-12 | Phase 5 | Pending |
+| WEB-13 | Phase 5 | Pending |
+| WEB-14 | Phase 5 | Pending |
+| WEB-15 | Phase 5 | Pending |
+| WEB-16 | Phase 5 | Pending |
+| WEB-17 | Phase 5 | Pending |
+| WEB-18 | Phase 5 | Pending |
+| WEB-19 | Phase 5 | Pending |
+| WEB-20 | Phase 5 | Pending |
+| POL-01 | Phase 5 | Pending |
+| POL-02 | Phase 5 | Pending |
+| POL-03 | Phase 5 | Pending |
+| POL-04 | Phase 5 | Pending |
+| POL-05 | Phase 5 | Pending |
+| POL-06 | Phase 5 | Pending |
+| ACT-01 | Phase 6 | Pending |
+| ACT-02 | Phase 6 | Pending |
+| ACT-03 | Phase 6 | Pending |
+| ACT-04 | Phase 6 | Pending |
+| ACT-05 | Phase 6 | Pending |
+| ACT-06 | Phase 6 | Pending |
+| ACT-07 | Phase 6 | Pending |
+| ACT-08 | Phase 6 | Pending |
+| ACT-09 | Phase 6 | Pending |
+| COL-01 | Phase 6 | Pending |
+| COL-02 | Phase 6 | Pending |
+| COL-03 | Phase 6 | Pending |
+| CMT-01 | Phase 6 | Pending |
+| CMT-02 | Phase 6 | Pending |
+| CMT-03 | Phase 6 | Pending |
+| CMT-04 | Phase 6 | Pending |
+| CMT-05 | Phase 6 | Pending |
+| CMT-06 | Phase 6 | Pending |
+| CMT-07 | Phase 6 | Pending |
+| CMT-08 | Phase 6 | Pending |
+| PLY-01 | Phase 6 | Pending |
+| PLY-02 | Phase 6 | Pending |
+| PLY-03 | Phase 6 | Pending |
+| PLY-04 | Phase 6 | Pending |
+| PLY-05 | Phase 6 | Pending |
+| PLY-06 | Phase 6 | Pending |
+| TAG-01 | Phase 6 | Pending |
+| TAG-02 | Phase 6 | Pending |
+| ANL-01 | Phase 7 | Pending |
+| ANL-02 | Phase 7 | Pending |
+| ANL-03 | Phase 7 | Pending |
+| ANL-04 | Phase 7 | Pending |
+| ANL-05 | Phase 7 | Pending |
+| ANL-06 | Phase 7 | Pending |
+| ANL-07 | Phase 7 | Pending |
+| ANL-08 | Phase 7 | Pending |
+| AUD-01 | Phase 7 | Pending |
+| AUD-02 | Phase 7 | Pending |
+| AUD-03 | Phase 7 | Pending |
+| AUD-04 | Phase 7 | Pending |
+| AUD-05 | Phase 7 | Pending |
+| AUD-06 | Phase 7 | Pending |
+| AUD-07 | Phase 7 | Pending |
+| AUD-08 | Phase 7 | Pending |
+| AUD-09 | Phase 7 | Pending |
+| AUD-10 | Phase 7 | Pending |
+| AUD-11 | Phase 7 | Pending |
+| AUD-12 | Phase 7 | Pending |
+| SPT-01 | Phase 8 | Pending |
+| SPT-02 | Phase 8 | Pending |
+| SPT-03 | Phase 8 | Pending |
+| SPT-04 | Phase 8 | Pending |
+| SPT-05 | Phase 8 | Pending |
+| SPT-06 | Phase 8 | Pending |
+| SPT-07 | Phase 8 | Pending |
+| THB-01 | Phase 8 | Pending |
+| THB-02 | Phase 8 | Pending |
+| THB-03 | Phase 8 | Pending |
+| THB-04 | Phase 8 | Pending |
+| THB-05 | Phase 8 | Pending |
+| THB-06 | Phase 8 | Pending |
+| THB-07 | Phase 8 | Pending |
+| WHK-01 | Phase 8 | Pending |
+| WHK-02 | Phase 8 | Pending |
+| WHK-03 | Phase 8 | Pending |
+| WHK-04 | Phase 8 | Pending |
+| WHK-05 | Phase 8 | Pending |
+| APP-01 | Phase 8 | Pending |
+| APP-02 | Phase 8 | Pending |
+| APP-03 | Phase 8 | Pending |
+| PRS-01 | Phase 8 | Pending |
+| PRS-02 | Phase 8 | Pending |
+| PRS-03 | Phase 8 | Pending |
+| PRT-01 | Phase 8 | Pending |
+| PRT-02 | Phase 8 | Pending |
+| PRT-03 | Phase 8 | Pending |
+| SES-01 | Phase 8 | Pending |
+| SES-02 | Phase 8 | Pending |
+| OUP-01 | Phase 8 | Pending |
+| OUP-02 | Phase 8 | Pending |
+| OUP-03 | Phase 8 | Pending |
+| SITE-01 | Phase 8 | Pending |
+| SITE-02 | Phase 8 | Pending |
+| SITE-03 | Phase 8 | Pending |
+| USR-01 | Phase 8 | Pending |
+| USR-02 | Phase 8 | Pending |
+| USR-03 | Phase 8 | Pending |
+| USR-04 | Phase 8 | Pending |
+| USR-05 | Phase 8 | Pending |
+| USR-06 | Phase 8 | Pending |
+| USR-07 | Phase 8 | Pending |
+| USR-08 | Phase 8 | Pending |
+| CLI-05 | Phase 8 | Pending |
+| CLI-06 | Phase 8 | Pending |
 
 ---
 *Requirements defined: 2026-04-14*
-*Last updated: 2026-04-14 — expanded to full endpoint coverage + chunked upload protocol*
+*Last updated: 2026-04-14 — traceability populated for 8-phase roadmap covering all 235 endpoints*
