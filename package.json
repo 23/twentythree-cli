@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "twentythree-cli-monorepo",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "generate-types": "openapi-typescript https://video.twentythree.com/apidocs/swagger.json -o packages/twentythree-cli/src/api/types.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.6",
+    "@changesets/cli": "^2.30.0",
+    "typescript": "^5.0.0"
+  }
+}

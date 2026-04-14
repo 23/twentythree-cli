@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["src/**/*.ts", "test/**/*.ts", "vitest.config.*"]
+    },
+    "lint": {
+      "inputs": ["src/**/*.ts", ".eslintrc*"]
+    },
+    "generate-types": {
+      "outputs": ["src/api/types.ts"],
+      "cache": false
+    }
+  }
+}
