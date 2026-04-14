@@ -63,54 +63,30 @@ export default class Credentials extends Command {
 
       let selectedWorkspaces: WorkspaceEntry[]
 
-      // AUTH-03: Prompt user to select workspaces when multiple returned
+      // AUTH-03: Prompt user to select default workspace when multiple returned
       if (workspaces.length > 1) {
-        const selectedDomains = await p.multiselect({
-          message: 'Select workspaces to activate',
+        const selectedDomain = await p.select({
+          message: 'Select default workspace',
           options: workspaces.map((w) => ({
             value: w.domain,
             label: `${w.display_name} (${w.domain})`,
           })),
-          required: true,
         })
 
-        if (p.isCancel(selectedDomains)) {
+        if (p.isCancel(selectedDomain)) {
           p.cancel('Cancelled')
           return
         }
 
-        selectedWorkspaces = workspaces.filter((w) =>
-          (selectedDomains as string[]).includes(w.domain),
-        )
+        selectedWorkspaces = workspaces.filter((w) => w.domain === (selectedDomain as string))
       } else {
         selectedWorkspaces = workspaces
       }
 
-      // Prompt to set default workspace
-      let defaultDomain: string
-      if (selectedWorkspaces.length > 1) {
-        const chosen = await p.select({
-          message: 'Default workspace',
-          options: selectedWorkspaces.map((w) => ({
-            value: w.domain,
-            label: `${w.display_name} (${w.domain})`,
-          })),
-        })
+      const defaultDomain =
+        selectedWorkspaces.length === 1 ? selectedWorkspaces[0].domain : (domain as string)
 
-        if (p.isCancel(chosen)) {
-          p.cancel('Cancelled')
-          return
-        }
-
-        defaultDomain = chosen as string
-      } else if (selectedWorkspaces.length === 1) {
-        defaultDomain = selectedWorkspaces[0].domain
-      } else {
-        // Fallback: use the entered domain itself
-        defaultDomain = domain as string
-      }
-
-      setWorkspaces(selectedWorkspaces)
+      setWorkspaces(workspaces)
       setActiveWorkspace(defaultDomain)
     } else {
       // Domain-only mode: store entry without token, skip discovery
