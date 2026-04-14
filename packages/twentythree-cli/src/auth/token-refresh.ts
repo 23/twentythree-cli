@@ -90,7 +90,7 @@ export async function ensureFreshToken(domain: string): Promise<string | null> {
     const loginToken = getCredential(credDomain)
     if (!loginToken) return null
 
-    const freshTokens = await fetchWorkspaceTokens(domain, loginToken)
+    const freshTokens = await fetchWorkspaceTokens(credDomain, loginToken)
 
     // Merge fresh tokens into the existing workspace list (preserving entries
     // for other domains that weren't returned by this domain's token endpoint)
