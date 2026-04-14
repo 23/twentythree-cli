@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-03-PLAN.md
-last_updated: "2026-04-14T10:07:55.087Z"
-last_activity: 2026-04-14 -- Phase 02 execution started
+stopped_at: Completed 03-video-core/03-01-PLAN.md
+last_updated: "2026-04-14T12:39:52.286Z"
+last_activity: 2026-04-14
 progress:
   total_phases: 8
-  completed_phases: 1
-  total_plans: 8
-  completed_plans: 3
-  percent: 38
+  completed_phases: 2
+  total_plans: 13
+  completed_plans: 9
+  percent: 69
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 02 — auth-workspaces
+**Current focus:** Phase 03 — video-core
 
 ## Current Position
 
-Phase: 02 (auth-workspaces) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 02
-Last activity: 2026-04-14 -- Phase 02 execution started
+Phase: 03 (video-core) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-04-14
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation P01 | 2 | 2 tasks | 12 files |
 | Phase 01-foundation P02 | 2 | 2 tasks | 7 files |
 | Phase 01-foundation P03 | 3 | 2 tasks | 7 files |
+| Phase 03-video-core P01 | 5 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: tsdown build script requires --config-loader unrun in CJS packages when tsdown.config.ts uses ESM import syntax
 - [Phase 01-foundation]: generate-types root script uses pnpm --filter twentythree-cli exec — openapi-typescript binary is in CLI package, not root
 - [Phase 01-foundation]: CLI_TO_API derived from API_TO_CLI via Object.fromEntries — single source of truth for term mappings
+- [Phase 03-video-core]: @types/cli-table3 does not exist on npm — cli-table3 bundles own types; only @types/cli-progress needed
+- [Phase 03-video-core]: formatBytes uses toFixed(1)+Number() not toPrecision() — toPrecision strips significant digits from integer values like 300
 
 ### Pending Todos
 
@@ -86,6 +89,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-14T09:01:17.144Z
-Stopped at: Completed 01-foundation/01-03-PLAN.md
+Last session: 2026-04-14T12:39:52.284Z
+Stopped at: Completed 03-video-core/03-01-PLAN.md
 Resume file: None

@@ -38,14 +38,14 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 **Commands using chunked upload:** `video upload`, `video replace`, `webinar attachment upload`, `action upload` (when file is video), `openupload upload-file`
 
-- [ ] **UPL-01**: The chunked upload engine is a shared module in `src/upload/`; video token-based uploads use `photo/get-upload-token` → `photo/redeem-upload-token`; direct-endpoint uploads (e.g. webinar attachments) send resumable.js params directly to the endpoint URL
+- [x] **UPL-01**: The chunked upload engine is a shared module in `src/upload/`; video token-based uploads use `photo/get-upload-token` → `photo/redeem-upload-token`; direct-endpoint uploads (e.g. webinar attachments) send resumable.js params directly to the endpoint URL
 - [ ] **UPL-02**: Files are split into chunks using the resumable.js protocol parameters (`resumableChunkNumber`, `resumableTotalChunks`, `resumableChunkSize`, `resumableTotalSize`, `resumableIdentifier`, `resumableFilename`)
 - [ ] **UPL-03**: Default chunk size is 100MB; configurable via `--chunk-size` flag
 - [ ] **UPL-04**: Up to 5 chunks are uploaded in parallel by default; configurable via `--concurrency` flag
 - [ ] **UPL-05**: Each chunk retries up to 5 times on transient failure before the upload is aborted
 - [ ] **UPL-06**: Interrupted uploads can be resumed — CLI checks which chunks were already accepted before re-uploading
 - [ ] **UPL-07**: A progress bar displays bytes uploaded, percentage, and estimated time remaining during upload
-- [ ] **UPL-08**: Upload implementation is native to the CLI — no dependency on `resumable-upload-command`
+- [x] **UPL-08**: Upload implementation is native to the CLI — no dependency on `resumable-upload-command`
 
 ### Video Commands (`photo` → `video`)
 
@@ -244,13 +244,13 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Cross-Cutting CLI Quality
 
-- [ ] **CLI-01**: All commands support `--json` flag returning machine-readable output with `ok`, `data`, `summary`, and `breadcrumbs` fields
-- [ ] **CLI-02**: All list commands handle API pagination transparently (auto-fetches all pages by default)
-- [ ] **CLI-03**: All commands return correct exit codes: `0` success, `1` user error, `2` API/network error
-- [ ] **CLI-04**: API errors are mapped through `term-map.ts` before display — no legacy term (`photo`, `album`, `live`) appears in user-visible output
+- [x] **CLI-01**: All commands support `--json` flag returning machine-readable output with `ok`, `data`, `summary`, and `breadcrumbs` fields
+- [x] **CLI-02**: All list commands handle API pagination transparently (auto-fetches all pages by default)
+- [x] **CLI-03**: All commands return correct exit codes: `0` success, `1` user error, `2` API/network error
+- [x] **CLI-04**: API errors are mapped through `term-map.ts` before display — no legacy term (`photo`, `album`, `live`) appears in user-visible output
 - [ ] **CLI-05**: `twentythree doctor` checks credentials, connectivity, and token validity and prints a structured health report
 - [ ] **CLI-06**: `--help --agent` on any command outputs machine-readable command metadata for AI agent consumption
-- [ ] **CLI-07**: All formatted output resolves relative URLs to full URLs using the active workspace domain — API responses mix absolute (`https://video.company.com/page`) and relative (`/page`) URLs; this applies to all URL fields including page links, thumbnail URLs, and poster images; users always see full URLs
+- [x] **CLI-07**: All formatted output resolves relative URLs to full URLs using the active workspace domain — API responses mix absolute (`https://video.company.com/page`) and relative (`/page`) URLs; this applies to all URL fields including page links, thumbnail URLs, and poster images; users always see full URLs
 
 ## v2 Requirements
 
@@ -307,14 +307,14 @@ Explicitly excluded. Documented to prevent scope creep.
 | AUTH-09 | Phase 2 | Pending |
 | AUTH-10 | Phase 2 | Pending |
 | AUTH-11 | Phase 2 | Pending |
-| UPL-01 | Phase 3 | Pending |
+| UPL-01 | Phase 3 | Complete |
 | UPL-02 | Phase 3 | Pending |
 | UPL-03 | Phase 3 | Pending |
 | UPL-04 | Phase 3 | Pending |
 | UPL-05 | Phase 3 | Pending |
 | UPL-06 | Phase 3 | Pending |
 | UPL-07 | Phase 3 | Pending |
-| UPL-08 | Phase 3 | Pending |
+| UPL-08 | Phase 3 | Complete |
 | VID-01 | Phase 3 | Pending |
 | VID-02 | Phase 3 | Pending |
 | VID-03 | Phase 3 | Pending |
@@ -325,10 +325,10 @@ Explicitly excluded. Documented to prevent scope creep.
 | VID-08 | Phase 3 | Pending |
 | VID-09 | Phase 3 | Pending |
 | VID-10 | Phase 3 | Pending |
-| CLI-01 | Phase 3 | Pending |
-| CLI-02 | Phase 3 | Pending |
-| CLI-03 | Phase 3 | Pending |
-| CLI-04 | Phase 3 | Pending |
+| CLI-01 | Phase 3 | Complete |
+| CLI-02 | Phase 3 | Complete |
+| CLI-03 | Phase 3 | Complete |
+| CLI-04 | Phase 3 | Complete |
 | CAT-01 | Phase 4 | Pending |
 | CAT-02 | Phase 4 | Pending |
 | CAT-03 | Phase 4 | Pending |
@@ -453,7 +453,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | USR-08 | Phase 8 | Pending |
 | CLI-05 | Phase 8 | Pending |
 | CLI-06 | Phase 8 | Pending |
-| CLI-07 | Phase 3 | Pending |
+| CLI-07 | Phase 3 | Complete |
 
 ---
 *Requirements defined: 2026-04-14*
