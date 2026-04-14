@@ -66,7 +66,13 @@ Plans:
   3. `twentythree video section` subcommands (list, create, update, delete, set-thumbnail) and all `video subtitle` subcommands work end-to-end
   4. All commands accept `--json` and return `{ ok, data, summary, breadcrumbs }`; list commands auto-paginate; exit codes are 0/1/2
   5. No user-visible string including error messages contains the legacy API terms `photo`, `album`, or `live`
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 03-01-PLAN.md — Install deps, output/pagination helpers, upload types, topic stubs (Wave 1)
+- [ ] 03-02-PLAN.md — Chunked upload engine (chunk-pool + chunked-upload modules) (Wave 2)
+- [ ] 03-03-PLAN.md — Core video commands (list, get, upload, update, delete) (Wave 3)
+- [ ] 03-04-PLAN.md — Video replace, transcoding-progress, frame + section subcommands (Wave 3)
+- [ ] 03-05-PLAN.md — All 11 subtitle subcommands (Wave 3)
 
 ### Phase 4: Category & Webinar Core
 **Goal**: A developer can perform full CRUD on categories and run the core webinar lifecycle — create, update, delete, upload image, retrieve metrics, clips, highlights, formats, log, and repeat
@@ -136,7 +142,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-04-14 |
 | 2. Auth & Workspaces | 0/5 | Planned | - |
-| 3. Video Core | 0/4 | Not started | - |
+| 3. Video Core | 0/5 | Planned | - |
 | 4. Category & Webinar Core | 0/3 | Not started | - |
 | 5. Webinar Deep | 0/4 | Not started | - |
 | 6. Engagement & Actions | 0/4 | Not started | - |
