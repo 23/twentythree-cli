@@ -33,6 +33,8 @@ expected: Running `pnpm --filter twentythree-cli test` outputs 19 passing tests 
 result: issue
 reported: "1 failed: applyCliTerms > replaces all legacy terms in a string — photo_id not replaced with video_id. Expected 'video_id refers to a video in an category', received 'photo_id refers to a video in an category'"
 severity: major
+fixed: true
+fix_commit: 46d9bf1
 
 ## Summary
 
@@ -46,9 +48,13 @@ blocked: 0
 ## Gaps
 
 - truth: "applyCliTerms replaces all legacy API terms in a string, including underscore-prefixed forms like photo_id → video_id"
-  status: failed
-  reason: "User reported: 1 failed: applyCliTerms > replaces all legacy terms in a string — photo_id not replaced with video_id. Expected 'video_id refers to a video in an category', received 'photo_id refers to a video in an category'"
+  status: fixed
+  reason: "User reported: 1 failed: applyCliTerms > replaces all legacy terms in a string — photo_id not replaced with video_id."
   severity: major
   test: 5
-  artifacts: []
+  root_cause: "\\b treats _ as \\w so photo_id had no word boundary after photo. WR-03 code review fix used \\bphoto\\b which blocks underscore-separated identifiers."
+  artifacts:
+    - path: "packages/twentythree-cli/src/lib/term-map.ts"
+      issue: "RegExp used \\b word boundaries; fixed to (?<![a-zA-Z])term(?![a-zA-Z])"
   missing: []
+  fix_commit: 46d9bf1
