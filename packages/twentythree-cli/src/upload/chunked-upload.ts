@@ -48,10 +48,12 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
     filePath,
     uploadToken,
     uploadUrl,
+    tokenFieldName = 'upload_token',
     chunkSize = DEFAULT_CHUNK_SIZE,
     concurrency = DEFAULT_CONCURRENCY,
     maxRetries = DEFAULT_MAX_RETRIES,
     onProgress,
+    extraFields,
   } = params
 
   // T-03-02: Validate HTTPS-only upload URL
@@ -72,10 +74,12 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
   }
 
   // Compute chunk descriptors (1-indexed, resumable.js convention)
-  const totalChunks = Math.ceil(totalSize / chunkSize)
+  // Uses Math.floor so the last chunk absorbs the remainder and is always >= chunkSize.
+  // This matches the TwentyThree resumable.js server expectation (see resumable.js issue #51).
+  const totalChunks = Math.max(1, Math.floor(totalSize / chunkSize))
   const chunks: ChunkDescriptor[] = Array.from({ length: totalChunks }, (_, i) => {
     const start = i * chunkSize
-    const end = Math.min(start + chunkSize, totalSize)
+    const end = i < totalChunks - 1 ? start + chunkSize : totalSize
     return {
       number: i + 1,
       start,
@@ -84,9 +88,9 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
     }
   })
 
-  // Generate resumable identifier: "${totalSize}-${basename}-${timestamp}"
+  // resumableIdentifier is the basename — matches the TwentyThree reference implementation
   const filename = path.basename(filePath)
-  const resumableIdentifier = `${totalSize}-${filename}-${Date.now()}`
+  const resumableIdentifier = filename
 
   // Track cumulative bytes uploaded (T-03-03: only byte counts, never tokens)
   let bytesUploaded = 0
@@ -101,7 +105,7 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
       const blob = new Blob([sliceBuffer])
 
       const formData = new FormData()
-      formData.append('upload_token', uploadToken)
+      formData.append(tokenFieldName, uploadToken)
       formData.append('file', blob, filename)
       formData.append('resumableChunkNumber', String(chunk.number))
       formData.append('resumableChunkSize', String(chunkSize))
@@ -110,6 +114,13 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
       formData.append('resumableFilename', filename)
       formData.append('resumableTotalChunks', String(totalChunks))
 
+      // Append any extra fields (e.g. 'type' for webinar upload-image)
+      if (extraFields) {
+        for (const [key, value] of Object.entries(extraFields)) {
+          formData.append(key, value)
+        }
+      }
+
       const response = await fetch(uploadUrl, {
         method: 'POST',
         body: formData,
@@ -117,7 +128,9 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
 
       let data: ChunkUploadResponse['data'] | undefined
       try {
-        data = await response.json()
+        const buf = await response.arrayBuffer()
+        const text = Buffer.from(buf).toString('utf-8')
+        try { data = JSON.parse(text) } catch { data = text || undefined }
       } catch {
         data = undefined
       }
@@ -146,5 +159,10 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
     onChunkComplete: (chunk) => onChunkComplete(chunk),
   })
 
-  return (poolResult.finalResponse ?? {}) as ChunkedUploadResult
+  // The server may return the photo_id as a plain number on the final chunk
+  const raw = poolResult.finalResponse
+  if (typeof raw === 'number') {
+    return { photo_id: raw }
+  }
+  return (raw ?? {}) as ChunkedUploadResult
 }

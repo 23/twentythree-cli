@@ -48,7 +48,7 @@ describe('uploadChunked', () => {
   })
 
   it('computes correct chunk count and 1-indexed chunk numbers', async () => {
-    // 250 bytes with chunkSize=100 → 3 chunks
+    // 250 bytes with chunkSize=100 → floor(250/100)=2 chunks (last chunk absorbs remainder)
     const fileContent = Buffer.alloc(250, 0x41) // 250 'A' bytes
     const filePath = makeTempFile(fileContent, 'test.mp4')
     cleanupPaths.push(join(filePath, '..'))
@@ -64,7 +64,7 @@ describe('uploadChunked', () => {
       const isLast = Number(fd.get('resumableTotalChunks')) === chunkNum
       return {
         status: 200,
-        json: async () => isLast ? { photo_id: 1 } : {},
+        arrayBuffer: async () => Buffer.from(JSON.stringify(isLast ? { photo_id: 1 } : {})),
       }
     })
 
@@ -77,7 +77,7 @@ describe('uploadChunked', () => {
       chunkSize: 100,
     })
 
-    expect(uploadedChunks.sort((a, b) => a - b)).toEqual([1, 2, 3])
+    expect(uploadedChunks.sort((a, b) => a - b)).toEqual([1, 2])
   })
 
   it('sends correct FormData fields matching resumable.js protocol', async () => {
@@ -100,7 +100,7 @@ describe('uploadChunked', () => {
       })
       return {
         status: 200,
-        json: async () => ({ photo_id: 1 }),
+        arrayBuffer: async () => Buffer.from(JSON.stringify({ photo_id: 1 })),
       }
     })
 
@@ -122,9 +122,8 @@ describe('uploadChunked', () => {
     expect(fields.resumableTotalSize).toBe('50')
     expect(fields.resumableFilename).toBe('myvideo.mp4')
     expect(fields.resumableTotalChunks).toBe('1')
-    // resumableIdentifier must contain filesize and filename
-    expect(fields.resumableIdentifier).toContain('50')
-    expect(fields.resumableIdentifier).toContain('myvideo.mp4')
+    // resumableIdentifier is the filename (matches TwentyThree reference implementation)
+    expect(fields.resumableIdentifier).toBe('myvideo.mp4')
   })
 
   it('sends the chunk as a Blob file field', async () => {
@@ -139,7 +138,7 @@ describe('uploadChunked', () => {
       capturedFile = fd.get('file')
       return {
         status: 200,
-        json: async () => ({ photo_id: 1 }),
+        arrayBuffer: async () => Buffer.from(JSON.stringify({ photo_id: 1 })),
       }
     })
 
@@ -166,7 +165,7 @@ describe('uploadChunked', () => {
       calledUrls.push(url)
       return {
         status: 200,
-        json: async () => ({ photo_id: 1 }),
+        arrayBuffer: async () => Buffer.from(JSON.stringify({ photo_id: 1 })),
       }
     })
 
@@ -183,7 +182,7 @@ describe('uploadChunked', () => {
   })
 
   it('calls onProgress with cumulative bytes after each chunk', async () => {
-    // 250 bytes, chunkSize=100 → 3 chunks (100, 100, 50)
+    // 250 bytes, chunkSize=100 → floor(250/100)=2 chunks (100, 150)
     const fileContent = Buffer.alloc(250, 0x45)
     const filePath = makeTempFile(fileContent, 'progress.mp4')
     cleanupPaths.push(join(filePath, '..'))
@@ -195,7 +194,7 @@ describe('uploadChunked', () => {
       const isLast = Number(fd.get('resumableChunkNumber')) === Number(fd.get('resumableTotalChunks'))
       return {
         status: 200,
-        json: async () => (isLast ? { photo_id: 1 } : {}),
+        arrayBuffer: async () => Buffer.from(JSON.stringify(isLast ? { photo_id: 1 } : {})),
       }
     })
 
@@ -212,16 +211,15 @@ describe('uploadChunked', () => {
       },
     })
 
-    expect(progressCalls).toHaveLength(3)
+    expect(progressCalls).toHaveLength(2)
     expect(progressCalls[0][1]).toBe(250) // totalBytes always 250
-    expect(progressCalls[2][0]).toBe(250) // final call = all bytes uploaded
+    expect(progressCalls[1][0]).toBe(250) // final call = all bytes uploaded
     // Cumulative: each call increases
     expect(progressCalls[0][0]).toBeLessThanOrEqual(progressCalls[1][0])
-    expect(progressCalls[1][0]).toBeLessThanOrEqual(progressCalls[2][0])
   })
 
-  it('last chunk has correct smaller size', async () => {
-    // 250 bytes, chunkSize=100 → last chunk is 50 bytes
+  it('last chunk absorbs remainder and is >= chunkSize', async () => {
+    // 250 bytes, chunkSize=100 → floor(250/100)=2 chunks: [100, 150]
     const fileContent = Buffer.alloc(250, 0x46)
     const filePath = makeTempFile(fileContent, 'sizes.mp4')
     cleanupPaths.push(join(filePath, '..'))
@@ -236,7 +234,7 @@ describe('uploadChunked', () => {
       const totalChunks = Number(fd.get('resumableTotalChunks'))
       return {
         status: 200,
-        json: async () => (chunkNum === totalChunks ? { photo_id: 1 } : {}),
+        arrayBuffer: async () => Buffer.from(JSON.stringify(chunkNum === totalChunks ? { photo_id: 1 } : {})),
       }
     })
 
@@ -251,7 +249,7 @@ describe('uploadChunked', () => {
     })
 
     chunkSizes.sort((a, b) => a - b)
-    expect(chunkSizes).toEqual([50, 100, 100])
+    expect(chunkSizes).toEqual([100, 150])
   })
 
   it('returns ChunkedUploadResult from the final chunk response', async () => {
@@ -261,7 +259,7 @@ describe('uploadChunked', () => {
 
     const mockFetch = vi.fn().mockResolvedValue({
       status: 200,
-      json: async () => ({ photo_id: 55, tree_id: 3, token: 'xyz' }),
+      arrayBuffer: async () => Buffer.from(JSON.stringify({ photo_id: 55, tree_id: 3, token: 'xyz' })),
     })
 
     vi.stubGlobal('fetch', mockFetch)
@@ -291,6 +289,40 @@ describe('uploadChunked', () => {
     expect(src).not.toMatch(/from ['"]chalk/)
     expect(src).not.toMatch(/from ['"]ora/)
     expect(src).not.toMatch(/from ['"]cli-progress/)
+  })
+
+  it('appends extraFields to each chunk FormData', async () => {
+    const content = Buffer.alloc(1024, 'x')
+    const filePath = makeTempFile(content, 'extra.mp4')
+    cleanupPaths.push(join(filePath, '..'))
+
+    const appendedFields: Record<string, string>[] = []
+
+    const mockFetch = vi.fn().mockImplementation(async (_url: string, init: any) => {
+      const formData = init.body as FormData
+      const fields: Record<string, string> = {}
+      const typeVal = formData.get('type')
+      if (typeVal) fields['type'] = String(typeVal)
+      const customVal = formData.get('custom_field')
+      if (customVal) fields['custom_field'] = String(customVal)
+      appendedFields.push(fields)
+      return {
+        status: 200,
+        arrayBuffer: async () => Buffer.from(JSON.stringify({ photo_id: 99 })),
+      }
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await uploadChunked({
+      filePath,
+      uploadToken: 'tok',
+      uploadUrl: 'https://example.com/upload',
+      chunkSize: 1024,
+      extraFields: { type: 'thumbnail', custom_field: 'value' },
+    })
+
+    expect(appendedFields.length).toBeGreaterThan(0)
+    expect(appendedFields[0]).toEqual({ type: 'thumbnail', custom_field: 'value' })
   })
 
   it('validates uploadUrl must be https (T-03-02 threat mitigation)', async () => {
