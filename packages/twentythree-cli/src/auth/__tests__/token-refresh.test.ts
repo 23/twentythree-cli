@@ -11,6 +11,7 @@ vi.mock('../workspace-config.js', () => ({
   setWorkspaces: vi.fn(),
   getWorkspaceForDomain: vi.fn(),
   getConfigPath: vi.fn(() => '/fake/config/path/config.json'),
+  getCredentialDomain: vi.fn(),
 }))
 
 vi.mock('proper-lockfile', () => ({
@@ -26,6 +27,7 @@ import {
   setWorkspaces,
   getWorkspaceForDomain,
   getConfigPath,
+  getCredentialDomain,
   type WorkspaceEntry,
 } from '../workspace-config.js'
 import * as lockfile from 'proper-lockfile'
