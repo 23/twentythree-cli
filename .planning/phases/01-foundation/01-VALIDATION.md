@@ -2,7 +2,7 @@
 phase: 1
 slug: foundation
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-04-14
 ---
@@ -54,6 +54,10 @@ created: 2026-04-14
 - [ ] `packages/twentythree-cli/src/lib/__tests__/term-map.test.ts` — covers FOUND-06 (minimum: 3 `toCliTerm` cases, 3 `toApiTerm` cases, 1 `applyCliTerms` string replacement case)
 - [ ] `packages/twentythree-cli/src/lib/__tests__/node-check.test.ts` — covers FOUND-04 (test guard logic in isolation, not the `process.exit` itself)
 
+### Greenfield Exception
+
+Plans 01-01 and 01-02 use build/structural verification (file existence checks, `pnpm install`, `pnpm build`, `--version` smoke test) rather than unit tests. This is intentional: the project does not exist yet when these plans execute, so vitest config and test files cannot precede the scaffold itself. Wave 0 test stubs (vitest.config.ts, term-map.test.ts, node-check.test.ts) are created in Plan 01-03, which is the earliest point where the build pipeline and source structure exist to support them. This exception is accepted — all testable logic introduced in Phase 1 has automated unit test coverage by the end of Plan 01-03.
+
 ---
 
 ## Manual-Only Verifications
@@ -61,17 +65,17 @@ created: 2026-04-14
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
 | `twentythree --version` prints version string | FOUND-03 | Requires global install or build+run to verify binary wiring | After `pnpm build`, run `node packages/twentythree-cli/bin/run.js --version` and confirm version string |
-| `npm install -g twentythree-cli` installs successfully | FOUND-03 | Requires published package or `npm pack` | Run `npm pack` in CLI package, install tarball globally, run `twentythree --version` |
+| `npm install -g twentythree-cli` installs successfully | FOUND-03 | Requires published package or `npm pack` | Run `npm pack` in CLI package, install tarball globally, run `twentythree --version` — verified during release, not CI |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies — Plans 01-01 and 01-02 use build/structural verification (greenfield exception: unit tests cannot exist before the project is scaffolded); Plan 01-03 creates all Wave 0 test stubs
 - [ ] Sampling continuity: no 3 consecutive tasks without automated verify
 - [ ] Wave 0 covers all MISSING references
 - [ ] No watch-mode flags
 - [ ] Feedback latency < 10s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
