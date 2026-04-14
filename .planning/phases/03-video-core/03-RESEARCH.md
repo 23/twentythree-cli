@@ -772,22 +772,25 @@ if (!flags['title'] && !flags['description'] && !flags['tags'] && !this.jsonEnab
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Subtitle archive subcommand naming**
    - What we know: Two API endpoints exist — `POST /photo/subtitle/archive/transcribe` and `GET /photo/subtitle/archive/get-progress`
    - What's unclear: VID-10 says just "archive" — is this one command (`video subtitle archive`) that accepts a `--progress` flag, or two commands (`video subtitle archive transcribe` and `video subtitle archive progress`)?
    - Recommendation: Two distinct commands for clarity; the user intent differs (trigger vs. check).
+   - **RESOLVED:** Implemented as a single `video subtitle archive` command with a `--progress` flag (Plan 05, Task 2). Default action triggers transcription; `--progress` checks status. Single command chosen because both operations are workspace-level (not video-specific) and the flag approach is simpler for the user.
 
 2. **Chunk upload via native fetch vs. openapi-fetch**
    - What we know: `openapi-fetch` types the `file` field as `Record<string, never>` in `videoRedeemUploadToken` which is not correct for binary uploads
    - What's unclear: Whether openapi-fetch's bodySerializer can correctly stream a `Buffer` chunk
    - Recommendation: Use native `fetch()` with `FormData` for all chunk POSTs; openapi-fetch for token acquisition and CRUD only.
+   - **RESOLVED:** Native `fetch()` with `FormData` is used for all chunk POSTs (Plan 02, Task 2). `openapi-fetch` is used only for token acquisition and CRUD endpoints. This avoids the `Record<string, never>` typing issue entirely.
 
 3. **Phase 2 completion dependency**
    - What we know: Phase 3 `extends AuthenticatedCommand` which is being built in Phase 2
    - What's unclear: Phase 2 plans are not yet complete (`02-04` and `02-05` pending)
    - Recommendation: Phase 3 planning can proceed; execution must wait for Phase 2 completion.
+   - **RESOLVED:** Phase 3 planning completed independently. Phase 3 execution is gated on Phase 2 completion via the roadmap dependency chain. No planning changes needed.
 
 ---
 
