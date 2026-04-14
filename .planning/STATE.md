@@ -54,7 +54,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- The public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json` may only expose a subset of endpoints when unauthenticated. The type generation script (Phase 1) will need to fetch the full spec with credentials. Build script must handle this.
+None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json` exposes all endpoints without authentication. Type generation script can fetch it directly.
 
 ## Session Continuity
 
