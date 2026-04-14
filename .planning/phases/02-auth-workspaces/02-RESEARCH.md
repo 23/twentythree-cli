@@ -2,7 +2,7 @@
 
 **Researched:** 2026-04-14
 **Domain:** CLI authentication, credential storage, workspace management, HTTP client factory
-**Confidence:** HIGH (library APIs verified; /user/tokens response shape ASSUMED — endpoint confirmed alive but not in public swagger)
+**Confidence:** HIGH (library APIs verified; /user/tokens response shape CONFIRMED from live API — see Pattern 6)
 
 ---
 
@@ -14,7 +14,7 @@
 - **Two token types**: User login tokens (long-lived, stored in keychain, never refresh) vs cross-site workspace tokens (expire, refresh by re-calling `/api/2/user/tokens?cross_sites_p=1`)
 - **Re-auth behavior**: `auth credentials` is per-domain — overwrites existing entry for that domain, adds new entry for new domains; no confirmation before overwrite
 - **Workspace identity**: Matched by display name OR domain (case-insensitive contains OR exact domain match); exact domain takes precedence; ambiguous match → present list
-- **Workspace storage schema**: `{ domain, displayName, token, expiresAt }` in `conf`
+- **Workspace storage schema**: `{ domain, display_name, bearer_token, expiration_time, api_base_url, site_name, canonical_user_p, starred_p }` in `conf` — field names match live `/api/2/user/tokens` response exactly (CONFIRMED from live API)
 - **Output header**: `[domain]` prefix once at top of command output in dim/muted style
 - **API client location**: `src/api/client.ts` — factory function taking workspace config; `Authorization: Bearer` header only when token configured; no header in domain-only mode
 - **Domain-only / anonymous mode**: Token is optional; skips workspace discovery; only 11 anonymous-scope endpoints accessible; commands requiring auth fail with exact message: "This command requires authentication — run `twentythree auth credentials` to add a bearer token"
@@ -42,7 +42,7 @@
 | ID | Description | Research Support |
 |----|-------------|------------------|
 | AUTH-01 | `auth credentials` prompts domain + bearer token (optional), stores securely in OS keychain via `@napi-rs/keyring` | Entry class API verified; setPassword/getPassword/deletePassword signatures documented |
-| AUTH-02 | When token provided, calls `/api/2/user/tokens?cross_sites_p=1` to discover workspaces; domain-only skips discovery | Endpoint confirmed alive; response shape ASSUMED (not in public swagger) |
+| AUTH-02 | When token provided, calls `/api/2/user/tokens?cross_sites_p=1` to discover workspaces; domain-only skips discovery | CONFIRMED from live API — response is `{ status, sites: WorkspaceEntry[] }` with exact field names in Pattern 6 |
 | AUTH-03 | User prompted to select which workspaces to activate and set default (skipped in domain-only mode) | `@clack/prompts` multiselect + select API verified |
 | AUTH-04 | Active workspace name printed in every command output header | `chalk` dim style; `[domain]` header pattern documented |
 | AUTH-05 | Token refresh proactively before expiry; file lock prevents race conditions | `proper-lockfile` API verified; refresh timing window is Claude's discretion |
@@ -60,7 +60,7 @@
 
 Phase 2 builds the authentication and workspace infrastructure that every downstream command depends on. The work divides into four cohesive areas: (1) credential storage using `@napi-rs/keyring` for bearer tokens and `conf` for workspace metadata; (2) workspace discovery by calling `/api/2/user/tokens?cross_sites_p=1` after login; (3) the API client factory in `src/api/client.ts` that conditionally injects the auth header; and (4) oclif command structure for `auth credentials`, `auth status`, `workspace list`, and `workspace use` plus a `BaseCommand` that resolves the active workspace and adds the `--workspace` flag to every command.
 
-The critical unknowns are the exact fields returned by `/api/2/user/tokens?cross_sites_p=1` (endpoint confirmed live but not published in the swagger spec) and the token refresh timing window (both are Claude's discretion per CONTEXT.md). The token response shape is the largest ASSUMED item — the planner should treat the field names used here as hypotheses to be confirmed by a live API call during implementation.
+The `/api/2/user/tokens?cross_sites_p=1` response shape has been confirmed from a live API call — field names are authoritative (see Pattern 6). The token refresh timing window remains Claude's discretion (5 minutes chosen). No Wave 0 live inspection is needed.
 
 **Primary recommendation:** Build bottom-up — credential storage layer first (`src/config/credentials.ts`), workspace config module second (`src/config/workspace.ts`), API client factory third (`src/api/client.ts`), then commands on top. This order means every layer is testable before the next depends on it.
 
@@ -173,9 +173,13 @@ import Conf from 'conf'
 
 interface WorkspaceEntry {
   domain: string
-  displayName: string
-  token: string
-  expiresAt: number  // Unix timestamp ms
+  display_name: string
+  bearer_token: string
+  expiration_time: string  // ISO 8601 string — CONFIRMED from live API
+  api_base_url: string     // with trailing slash
+  site_name: string
+  canonical_user_p: boolean
+  starred_p: boolean
 }
 
 interface CliConfig {
@@ -224,20 +228,20 @@ config.get('activeDomain')  // string | undefined — which workspace is active
 import createClient, { type Middleware } from 'openapi-fetch'
 import type { paths } from './types.js'
 
-interface WorkspaceConfig {
-  domain: string
-  token?: string  // undefined in domain-only mode
+interface ClientConfig {
+  baseUrl: string  // use workspace.api_base_url directly (has trailing slash)
+  token?: string   // undefined in domain-only mode
 }
 
-export function createApiClient(workspace: WorkspaceConfig) {
+export function createApiClient(config: ClientConfig) {
   const client = createClient<paths>({
-    baseUrl: `https://${workspace.domain}/api/2`,
+    baseUrl: config.baseUrl,  // api_base_url from WorkspaceEntry, already has trailing slash
   })
 
-  if (workspace.token) {
+  if (config.token) {
     const authMiddleware: Middleware = {
       async onRequest({ request }) {
-        request.headers.set('Authorization', `Bearer ${workspace.token}`)
+        request.headers.set('Authorization', `Bearer ${config.token}`)
         return request
       },
     }
@@ -257,7 +261,7 @@ export function createApiClient(workspace: WorkspaceConfig) {
 - Return `undefined` from `onRequest` to skip middleware for that request
 - Response: `{ data, error, response }` — data on 2xx, error on 4xx/5xx
 
-**AUTH-11 pattern:** Only register the auth middleware when `workspace.token` is defined. In domain-only mode, the factory is called without a token and the header is never set.
+**AUTH-11 pattern:** Only register the auth middleware when `config.token` is defined. Pass `workspace.bearer_token` as the token arg. In domain-only mode, `bearer_token` is empty string — treat as falsy to omit the header.
 
 ### Pattern 4: oclif BaseCommand with --workspace Flag
 
@@ -311,7 +315,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 export abstract class AuthenticatedCommand<T extends typeof Command> extends BaseCommand<T> {
   public async init(): Promise<void> {
     await super.init()
-    if (!this.workspace.token) {
+    if (!this.workspace.bearer_token) {
       this.error(
         'This command requires authentication — run `twentythree auth credentials` to add a bearer token',
         { exit: 1 }
@@ -342,12 +346,12 @@ const REFRESH_THRESHOLD_MS = 5 * 60 * 1000  // refresh if < 5 minutes remaining 
 
 export async function ensureFreshToken(domain: string): Promise<string | null> {
   const workspace = getWorkspace(domain)
-  if (!workspace?.token) return null
+  if (!workspace?.bearer_token) return null
 
   const now = Date.now()
-  const expiresAt = workspace.expiresAt ?? 0
+  const expiresAt = new Date(workspace.expiration_time).getTime()
   if (expiresAt - now > REFRESH_THRESHOLD_MS) {
-    return workspace.token  // still valid
+    return workspace.bearer_token  // still valid
   }
 
   // Acquire lock before refreshing to prevent concurrent refreshes
@@ -356,15 +360,15 @@ export async function ensureFreshToken(domain: string): Promise<string | null> {
     release = await lockfile.lock(TOKEN_CACHE_PATH, { realpath: false, retries: 3 })
     // Re-check after acquiring lock (another process may have refreshed)
     const fresh = getWorkspace(domain)
-    if (fresh && (fresh.expiresAt ?? 0) - Date.now() > REFRESH_THRESHOLD_MS) {
-      return fresh.token
+    if (fresh && new Date(fresh.expiration_time).getTime() - Date.now() > REFRESH_THRESHOLD_MS) {
+      return fresh.bearer_token
     }
     // Perform refresh using the stored user login token
     const loginToken = getCredential(domain)
     if (!loginToken) return null
     const newTokens = await fetchWorkspaceTokens(domain, loginToken)
     saveWorkspaceTokens(domain, newTokens)
-    return newTokens.find(t => t.domain === domain)?.token ?? null
+    return newTokens.find(t => t.domain === domain)?.bearer_token ?? null
   } finally {
     await release?.()
   }
@@ -379,39 +383,40 @@ export async function ensureFreshToken(domain: string): Promise<string | null> {
 - Lock is auto-removed on process exit (SIGKILL and OOM exceptions)
 - Version 4.1.2 is current [VERIFIED: npm registry]
 
-**Refresh timing window** (Claude's discretion): 5 minutes is a reasonable default. Refresh if `expiresAt - now < 5 * 60 * 1000`. The lock file path should be the token cache file itself.
+**Refresh timing window** (Claude's discretion): 5 minutes is a reasonable default. Refresh if `new Date(expiration_time).getTime() - now < 5 * 60 * 1000`. The lock file path should be the token cache file itself.
 
 ### Pattern 6: /api/2/user/tokens Response Shape
 
-**Status: ASSUMED — endpoint confirmed alive but not in public swagger spec**
+**Status: CONFIRMED — live API response provided by user**
 
-The endpoint `GET /api/2/user/tokens?cross_sites_p=1` exists and requires `write` permissions (returns permission_denied without auth). The swagger spec at `video.twentythree.com/apidocs/swagger.json` does NOT include this path — it appears to be an undocumented or internal endpoint. [VERIFIED: live API call returning 403, swagger paths enumerated]
-
-Based on how the CONTEXT.md describes the endpoint ("response includes the expiry time for each token") and TwentyThree's standard API envelope, the likely response shape is:
+The endpoint `GET /api/2/user/tokens?cross_sites_p=1` is not in the public swagger spec but response shape has been confirmed from a live API call. The response envelope is:
 
 ```typescript
-// [ASSUMED] — verify against live response during implementation
+// CONFIRMED from live API
 interface UserTokensResponse {
   status: 'ok' | 'error'
-  permission_level: string
-  cached: boolean
-  data: {
-    sites?: WorkspaceToken[]    // may be top-level or nested
-  } | WorkspaceToken[]
+  sites: WorkspaceEntry[]
 }
 
-interface WorkspaceToken {
-  site_id?: number            // [ASSUMED]
-  domain: string             // workspace domain e.g. "company.video23.com"
-  name?: string              // display name [ASSUMED]
-  token: string              // cross-site bearer token
-  expires_at?: number        // Unix timestamp OR ISO string [ASSUMED — field name uncertain]
-  expire_time?: number       // alternative field name [ASSUMED]
-  permission_level?: string  // [ASSUMED]
+interface WorkspaceEntry {
+  domain: string             // e.g. "company.video23.com"
+  display_name: string       // human-readable workspace name
+  bearer_token: string       // cross-site bearer token (use this for API calls)
+  expiration_time: string    // ISO 8601 string, e.g. "2026-05-14T12:34:56Z"
+  api_base_url: string       // base URL with trailing slash, e.g. "https://company.video23.com/"
+  site_name: string          // internal site name (may differ from domain)
+  canonical_user_p: boolean  // true for the user's primary/canonical workspace
+  starred_p: boolean         // true if workspace is starred/favourited
 }
 ```
 
-**CRITICAL:** During Wave 0 or the first implementation task, make a live authenticated call to `/api/2/user/tokens?cross_sites_p=1` and log the full response. The actual field names for expiry and domain/name MUST be confirmed before writing the workspace-storage code. See Assumptions Log A2.
+**Key implementation notes:**
+- Response is `json.sites` (not `json.data` or top-level array)
+- Token field is `bearer_token` (NOT `token`)
+- Expiry is `expiration_time` as ISO 8601 string — parse with `new Date(expiration_time).getTime()` for ms comparison
+- `api_base_url` has a trailing slash — use as `baseUrl` in openapi-fetch directly
+- `canonical_user_p: true` identifies the user's primary workspace — suggest as default during `auth credentials` setup
+- No Wave 0 live inspection needed — field names are now authoritative
 
 ### Pattern 7: Anonymous Scope Enforcement
 
@@ -420,7 +425,7 @@ The 11 anonymous-scope endpoints (from swagger `security: anonymous`) are:
 
 [VERIFIED: live swagger spec enumeration]
 
-All other 224 endpoints require authentication. AUTH-10 enforcement: commands that call authenticated endpoints should extend `AuthenticatedCommand` rather than `BaseCommand`, which checks `this.workspace.token` in `init()`.
+All other 224 endpoints require authentication. AUTH-10 enforcement: commands that call authenticated endpoints should extend `AuthenticatedCommand` rather than `BaseCommand`, which checks `this.workspace.bearer_token` in `init()`.
 
 ---
 
@@ -452,11 +457,8 @@ All other 224 endpoints require authentication. AUTH-10 enforcement: commands th
 **How to avoid:** Use `config.path` property to get the actual path at runtime. Do not hardcode the config path in lockfile or migration code.
 **Warning signs:** Config not found after writing; lock file created at wrong path.
 
-### Pitfall 3: /user/tokens Response Field Names Unknown
-**What goes wrong:** Code references `workspace.expires_at` but the actual API field is `expire_time` or `expiry` — runtime TypeError on every workspace token access.
-**Why it happens:** The endpoint is not in the public swagger spec; field names are ASSUMED.
-**How to avoid:** In the first wave, make a live call, log the full response, and update the TypeScript interface before proceeding. Treat the WorkspaceToken interface as a placeholder.
-**Warning signs:** TypeScript compiles fine but runtime access returns `undefined`.
+### Pitfall 3: /user/tokens Response Field Names (RESOLVED)
+**Status:** RESOLVED — field names confirmed from live API. Use `bearer_token`, `expiration_time` (ISO string), `display_name`, `api_base_url`. See Pattern 6 for full interface.
 
 ### Pitfall 4: @napi-rs/keyring Synchronous Methods Block Event Loop
 **What goes wrong:** Calling `entry.setPassword()` in a hot path (e.g., inside each API request) adds 10–100ms latency per call because the OS keychain is synchronous.
@@ -544,7 +546,7 @@ export function findWorkspace(
   // Partial display name or domain contains match (case-insensitive)
   const matches = workspaces.filter(
     (w) =>
-      w.displayName.toLowerCase().includes(query.toLowerCase()) ||
+      w.display_name.toLowerCase().includes(query.toLowerCase()) ||
       w.domain.toLowerCase().includes(query.toLowerCase())
   )
   if (matches.length === 1) return matches[0]
@@ -570,22 +572,21 @@ export function findWorkspace(
 
 | # | Claim | Section | Risk if Wrong |
 |---|-------|---------|---------------|
-| A1 | `/api/2/user/tokens?cross_sites_p=1` response has field `domain` for workspace domain | Pattern 6 | Code can't identify which token belongs to which workspace at storage time |
-| A2 | Token expiry field is named `expires_at` or `expire_time` and is a Unix timestamp | Pattern 6 | `expiresAt` stored as wrong value; refresh logic always/never triggers |
-| A3 | Response `data` field contains array of workspace tokens (not wrapped differently) | Pattern 6 | Workspace token iteration fails; empty workspace list on valid response |
-| A4 | Display name for workspace is in a `name` or `display_name` field | Pattern 6 | Workspace list shows blank names |
+| A1 | ~~`/api/2/user/tokens?cross_sites_p=1` response has field `domain` for workspace domain~~ | Pattern 6 | **RESOLVED: confirmed `domain` field** |
+| A2 | ~~Token expiry field is named `expires_at` or `expire_time` and is a Unix timestamp~~ | Pattern 6 | **RESOLVED: `expiration_time` ISO 8601 string** |
+| A3 | ~~Response `data` field contains array of workspace tokens~~ | Pattern 6 | **RESOLVED: response is `{ status, sites: [] }`** |
+| A4 | ~~Display name for workspace is in a `name` or `display_name` field~~ | Pattern 6 | **RESOLVED: `display_name`** |
 | A5 | `@clack/prompts` v1.2.0 does not have breaking changes vs the API documented | Standard Stack | Prompt functions throw or have different signatures |
 
-**A1–A4 all resolve the same way:** Make a live authenticated call to `/api/2/user/tokens?cross_sites_p=1` in Wave 0 or the first implementation task and log/inspect the full response before writing the workspace storage code.
+**A1–A4 resolved:** Live API response confirmed all field names. See Pattern 6 for the authoritative interface.
 
 ---
 
 ## Open Questions
 
-1. **Response shape of /api/2/user/tokens?cross_sites_p=1**
-   - What we know: Endpoint exists, requires `write` auth level, returns 403 without valid token
-   - What's unclear: Field names for domain, display name, token, expiry; response envelope structure
-   - Recommendation: Include a Wave 0 task "call live API and document response shape" before implementing workspace storage. This is the single most important unknown in the phase.
+1. **~~Response shape of /api/2/user/tokens?cross_sites_p=1~~** — **RESOLVED**
+   - Confirmed: `{ status, sites: WorkspaceEntry[] }` — see Pattern 6 for authoritative interface
+   - No Wave 0 live inspection task needed
 
 2. **Domain-only mode: should the login token be stored in keychain or skipped?**
    - What we know: Domain-only stores no usable token; commands requiring auth fail with AUTH-10 message
@@ -660,7 +661,7 @@ Step 2.6: No external service/tool dependencies beyond the above. Package instal
 | ASVS Category | Applies | Standard Control |
 |---------------|---------|-----------------|
 | V2 Authentication | yes | `@napi-rs/keyring` — tokens stored in OS keychain, never plaintext |
-| V3 Session Management | yes | expiresAt tracked; proactive refresh before expiry; no session fixation risk |
+| V3 Session Management | yes | expiration_time (ISO string) tracked; proactive refresh before expiry; no session fixation risk |
 | V4 Access Control | yes | AUTH-10 guard; anonymous vs authenticated command distinction |
 | V5 Input Validation | yes | domain input validated (contains `.`); `@clack/prompts` validate callback |
 | V6 Cryptography | no | Token storage delegates to OS keychain; no custom crypto |
@@ -718,8 +719,8 @@ Step 2.6: No external service/tool dependencies beyond the above. Package instal
 - `github.com/sindresorhus/conf` via WebFetch — constructor API, storage paths, TypeScript generic support
 - `github.com/bombshell-dev/clack/packages/prompts` via WebFetch — complete prompt function API
 
-### Tertiary (LOW confidence / ASSUMED)
-- `/api/2/user/tokens?cross_sites_p=1` response field names (domain, name, token, expires_at) — endpoint confirmed live but response shape not documented publicly
+### Tertiary (now CONFIRMED)
+- `/api/2/user/tokens?cross_sites_p=1` response field names — confirmed from live API: `domain`, `display_name`, `bearer_token`, `expiration_time` (ISO string), `api_base_url`, `site_name`, `canonical_user_p`, `starred_p`
 
 ---
 
@@ -729,7 +730,7 @@ Step 2.6: No external service/tool dependencies beyond the above. Package instal
 - Standard stack: HIGH — all versions verified against npm registry
 - Library APIs (keyring, conf, openapi-fetch, clack, oclif BaseCommand): HIGH — verified via official docs/repos
 - Architecture patterns: HIGH — derived from verified library APIs and CONTEXT.md locked decisions
-- /user/tokens response shape: LOW — endpoint confirmed alive but field names ASSUMED
+- /user/tokens response shape: HIGH — confirmed from live API call
 - Pitfalls: HIGH — derived from verified library characteristics (ESM, conf path, lockfile)
 
 **Research date:** 2026-04-14

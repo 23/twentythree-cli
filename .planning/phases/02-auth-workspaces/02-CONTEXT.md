@@ -42,7 +42,7 @@ Workspaces are matched by **both display name and domain**:
 - If the match is ambiguous (multiple workspaces match), present the user with a list to choose from
 - Exact domain match takes precedence over partial display name match
 
-Workspaces are stored in `conf` as: `{ domain, displayName, token, expiresAt }`.
+Workspaces are stored in `conf` as: `{ domain, display_name, bearer_token, expiration_time, api_base_url, site_name, canonical_user_p, starred_p }` — field names match the live `/api/2/user/tokens` response exactly (confirmed from live API).
 
 ### Output workspace indicator
 
