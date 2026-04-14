@@ -32,7 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Running `twentythree` on a Node version below the minimum prints a clear error message and exits with a non-zero code
   3. `api/types.ts` exists, was generated from the live OpenAPI spec, and the generation script can be re-run to regenerate it without manual intervention
   4. `term-map.ts` exists and correctly translates `photo`→`video`, `album`→`category`, `live`→`webinar` in both directions
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — Monorepo scaffold (root config, both packages, pnpm install)
+- [ ] 01-02-PLAN.md — CLI package wiring (bin entrypoints, Node guard, tsdown, build pipeline)
+- [ ] 01-03-PLAN.md — OpenAPI types + term-map (type generation, term-map module, vitest, tests)
 
 ### Phase 2: Auth & Workspaces
 **Goal**: A developer can run `twentythree auth credentials`, enter a domain and bearer token, select workspaces, and have all subsequent commands operate against the correct workspace
