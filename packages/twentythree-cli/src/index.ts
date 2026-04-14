@@ -1,2 +1,2 @@
-// Programmatic exports — populated as modules are added
-export {}
+// Programmatic exports
+export { toCliTerm, toApiTerm, applyCliTerms, TERM_MAP } from './lib/term-map.js'
