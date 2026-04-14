@@ -16,10 +16,8 @@ if (major < 22) {
 }
 
 // Load oclif only after version check passes
-const { run } = require('@oclif/core')
-const { handle } = require('@oclif/core/handle')
-
-run(process.argv.slice(2), require('../package.json'))
-  .catch(async (error) => {
-    await handle(error)
-  })
+// execute() is the documented CJS entry pattern; it calls run() + handle() internally
+void (async () => {
+  const oclif = await import('@oclif/core')
+  await oclif.execute({ dir: __dirname })
+})()

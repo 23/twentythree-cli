@@ -17,7 +17,7 @@
     "/oclif.manifest.json"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown --config-loader unrun",
     "postbuild": "oclif manifest",
     "dev": "node ./bin/dev.js",
     "test": "vitest run"
