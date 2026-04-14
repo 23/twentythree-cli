@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 03-video-core/03-03-PLAN.md
-last_updated: "2026-04-14T12:50:28.301Z"
+status: verifying
+stopped_at: Completed 03-video-core/03-05-PLAN.md
+last_updated: "2026-04-14T13:00:30.722Z"
 last_activity: 2026-04-14
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 13
-  completed_plans: 11
-  percent: 85
+  completed_plans: 13
+  percent: 100
 ---
 
 # Project State
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 03 (video-core) — EXECUTING
-Plan: 4 of 5
-Status: Ready to execute
+Plan: 5 of 5
+Status: Phase complete — ready for verification
 Last activity: 2026-04-14
 
 Progress: [░░░░░░░░░░] 0%
@@ -58,6 +58,8 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-video-core P01 | 5 | 2 tasks | 10 files |
 | Phase 03-video-core P02 | 3 | 2 tasks | 4 files |
 | Phase 03-video-core P03 | 3 | 2 tasks | 5 files |
+| Phase 03-video-core P04 | ~25min | 2 tasks | 10 files |
+| Phase 03-video-core P05 | 15min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -84,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 03-video-core]: uploadUrl https:// validation added (T-03-02) — threat model mitigation applied as Rule 2 deviation
 - [Phase 03-video-core]: API /photo/list response data cast to any — OpenAPI schema defines data as single object but runtime returns array; Array.isArray check handles both shapes
 - [Phase 03-video-core]: video update flag mode: only flags !== undefined added to body — prevents clearing unset fields (Pitfall 3 / T-03-07 mitigation)
+- [Phase 03-video-core]: tokenFieldName optional param added to ChunkedUploadParams — replace flow needs replace_token field name not upload_token; defaults to upload_token for backward compat
+- [Phase 03-video-core]: archive/get-progress is POST not GET per OpenAPI types — types.ts is authoritative over plan prose descriptions
 
 ### Pending Todos
 
@@ -95,6 +99,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-14T12:50:28.298Z
-Stopped at: Completed 03-video-core/03-03-PLAN.md
+Last session: 2026-04-14T13:00:30.719Z
+Stopped at: Completed 03-video-core/03-05-PLAN.md
 Resume file: None

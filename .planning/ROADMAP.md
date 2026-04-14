@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Monorepo scaffold, oclif wiring, OpenAPI types, and term-map module (completed 2026-04-14)
 - [ ] **Phase 2: Auth & Workspaces** - Credential storage, workspace discovery, token refresh, and workspace switching
-- [ ] **Phase 3: Video Core** - Chunked upload engine and all video/subtitle/section commands
+- [x] **Phase 3: Video Core** - Chunked upload engine and all video/subtitle/section commands (completed 2026-04-14)
 - [ ] **Phase 4: Category & Webinar Core** - Category CRUD and core webinar lifecycle commands
 - [ ] **Phase 5: Webinar Deep** - Speakers, mail, recording, transcription, series, room, polls, attachments, queued videos
 - [ ] **Phase 6: Engagement & Actions** - Action CTAs, collector, comment, player, and tag commands
@@ -71,8 +71,8 @@ Plans:
 - [x] 03-01-PLAN.md — Install deps, output/pagination helpers, upload types, topic stubs (Wave 1)
 - [x] 03-02-PLAN.md — Chunked upload engine (chunk-pool + chunked-upload modules) (Wave 2)
 - [x] 03-03-PLAN.md — Core video commands (list, get, upload, update, delete) (Wave 3)
-- [ ] 03-04-PLAN.md — Video replace, transcoding-progress, frame + section subcommands (Wave 3)
-- [ ] 03-05-PLAN.md — All 11 subtitle subcommands (Wave 3)
+- [x] 03-04-PLAN.md — Video replace, transcoding-progress, frame + section subcommands (Wave 3)
+- [x] 03-05-PLAN.md — All 11 subtitle subcommands (Wave 3)
 
 ### Phase 4: Category & Webinar Core
 **Goal**: A developer can perform full CRUD on categories and run the core webinar lifecycle — create, update, delete, upload image, retrieve metrics, clips, highlights, formats, log, and repeat
@@ -142,7 +142,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-04-14 |
 | 2. Auth & Workspaces | 0/5 | Planned | - |
-| 3. Video Core | 3/5 | In Progress|  |
+| 3. Video Core | 5/5 | Complete   | 2026-04-14 |
 | 4. Category & Webinar Core | 0/3 | Not started | - |
 | 5. Webinar Deep | 0/4 | Not started | - |
 | 6. Engagement & Actions | 0/4 | Not started | - |

@@ -58,7 +58,7 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 - [ ] **VID-07**: `twentythree video transcoding-progress <id>` retrieves transcoding status
 - [ ] **VID-08**: `twentythree video frame <id>` extracts a frame/thumbnail from a video
 - [ ] **VID-09**: `twentythree video section list|create|update|delete|set-thumbnail <id>` manages video sections/chapters
-- [ ] **VID-10**: `twentythree video subtitle list|create|update|delete|upload|data|locales|types|duplicate|set-primary|archive` manages subtitles
+- [x] **VID-10**: `twentythree video subtitle list|create|update|delete|upload|data|locales|types|duplicate|set-primary|archive` manages subtitles
 
 ### Category Commands (`album` → `category`)
 
@@ -324,7 +324,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | VID-07 | Phase 3 | Pending |
 | VID-08 | Phase 3 | Pending |
 | VID-09 | Phase 3 | Pending |
-| VID-10 | Phase 3 | Pending |
+| VID-10 | Phase 3 | Complete |
 | CLI-01 | Phase 3 | Complete |
 | CLI-02 | Phase 3 | Complete |
 | CLI-03 | Phase 3 | Complete |
