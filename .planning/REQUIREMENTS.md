@@ -15,8 +15,8 @@ Requirements for initial release. Maps to roadmap phases.
 - [x] **FOUND-02**: CLI is built with oclif v4, TypeScript, and bundled via tsdown into a single entry point
 - [x] **FOUND-03**: CLI is installable globally via `npm install -g twentythree-cli` and runnable as `twentythree`
 - [x] **FOUND-04**: `engines` field enforces minimum Node.js version; CLI prints a clear error and exits on unsupported versions
-- [ ] **FOUND-05**: OpenAPI types are generated from `video.twentythree.com/apidocs/swagger.json` and committed as `api/types.ts`; generation script is re-runnable
-- [ ] **FOUND-06**: A `term-map.ts` module translates legacy API terms (`photo`→`video`, `album`→`category`, `live`→`webinar`) — applied to all user-visible output including error messages
+- [x] **FOUND-05**: OpenAPI types are generated from `video.twentythree.com/apidocs/swagger.json` and committed as `api/types.ts`; generation script is re-runnable
+- [x] **FOUND-06**: A `term-map.ts` module translates legacy API terms (`photo`→`video`, `album`→`category`, `live`→`webinar`) — applied to all user-visible output including error messages
 
 ### Authentication & Workspaces
 
@@ -294,8 +294,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | FOUND-02 | Phase 1 | Complete |
 | FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
-| FOUND-05 | Phase 1 | Pending |
-| FOUND-06 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Complete |
+| FOUND-06 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
 | AUTH-03 | Phase 2 | Pending |

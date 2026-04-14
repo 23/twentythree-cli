@@ -12,7 +12,7 @@ Eight phases take the project from a bare monorepo scaffold to a fully functiona
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Monorepo scaffold, oclif wiring, OpenAPI types, and term-map module
+- [x] **Phase 1: Foundation** - Monorepo scaffold, oclif wiring, OpenAPI types, and term-map module (completed 2026-04-14)
 - [ ] **Phase 2: Auth & Workspaces** - Credential storage, workspace discovery, token refresh, and workspace switching
 - [ ] **Phase 3: Video Core** - Chunked upload engine and all video/subtitle/section commands
 - [ ] **Phase 4: Category & Webinar Core** - Category CRUD and core webinar lifecycle commands
@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Monorepo scaffold (root config, both packages, pnpm install)
 - [x] 01-02-PLAN.md — CLI package wiring (bin entrypoints, Node guard, tsdown, build pipeline)
-- [ ] 01-03-PLAN.md — OpenAPI types + term-map (type generation, term-map module, vitest, tests)
+- [x] 01-03-PLAN.md — OpenAPI types + term-map (type generation, term-map module, vitest, tests)
 
 ### Phase 2: Auth & Workspaces
 **Goal**: A developer can run `twentythree auth credentials`, enter a domain and bearer token, select workspaces, and have all subsequent commands operate against the correct workspace
@@ -128,7 +128,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 3/3 | Ready to execute | - |
+| 1. Foundation | 3/3 | Complete   | 2026-04-14 |
 | 2. Auth & Workspaces | 0/3 | Not started | - |
 | 3. Video Core | 0/4 | Not started | - |
 | 4. Category & Webinar Core | 0/3 | Not started | - |
