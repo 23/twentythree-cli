@@ -13,6 +13,7 @@ export interface WorkspaceEntry {
 
 interface CliConfig {
   activeDomain: string | undefined
+  credentialDomain: string | undefined  // login domain whose keychain entry is used to refresh workspace tokens
   workspaces: WorkspaceEntry[]
 }
 
@@ -20,6 +21,7 @@ const config = new Conf<CliConfig>({
   projectName: 'twentythree-cli',
   defaults: {
     activeDomain: undefined,
+    credentialDomain: undefined,
     workspaces: [],
   },
 })
@@ -64,6 +66,14 @@ export function findWorkspace(
   if (matches.length === 1) return matches[0]
   if (matches.length > 1) return matches
   return null
+}
+
+export function getCredentialDomain(): string | undefined {
+  return config.get('credentialDomain')
+}
+
+export function setCredentialDomain(domain: string): void {
+  config.set('credentialDomain', domain)
 }
 
 /** Get the conf file path (needed for file locking in token refresh) */

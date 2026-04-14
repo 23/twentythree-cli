@@ -5,6 +5,7 @@ import {
   setWorkspaces,
   getWorkspaceForDomain,
   getConfigPath,
+  getCredentialDomain,
   type WorkspaceEntry,
 } from './workspace-config.js'
 
@@ -32,9 +33,13 @@ export async function fetchWorkspaceTokens(
       `Failed to fetch workspace tokens: ${response.status} ${response.statusText}`,
     )
   }
-  const json = await response.json() as { status: string; sites?: WorkspaceEntry[] }
-  // Response is { status: 'ok', sites: [...] } — confirmed from live API
-  return json.sites ?? []
+  const json = await response.json() as Record<string, unknown>
+  // Response envelope: { status: 'ok', tokens: [...] } or { status: 'ok', sites: [...] }
+  // Field names inside each entry match WorkspaceEntry exactly — no mapping needed.
+  const entries = (Array.isArray(json)
+    ? json
+    : (json.tokens ?? json.sites ?? json.data ?? json.workspaces ?? [])) as WorkspaceEntry[]
+  return entries
 }
 
 /**
@@ -77,8 +82,12 @@ export async function ensureFreshToken(domain: string): Promise<string | null> {
       return rechecked.bearer_token
     }
 
-    // Fetch fresh tokens using the long-lived login token from the OS keychain
-    const loginToken = getCredential(domain)
+    // Fetch fresh tokens using the long-lived login token from the OS keychain.
+    // The credential domain (where the login token is stored) may differ from the
+    // workspace domain — e.g. logged in via preview.ranguinc.com but active workspace
+    // is boom.dev.twentythree.com. Use credentialDomain as the keychain key.
+    const credDomain = getCredentialDomain() ?? domain
+    const loginToken = getCredential(credDomain)
     if (!loginToken) return null
 
     const freshTokens = await fetchWorkspaceTokens(domain, loginToken)

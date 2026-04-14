@@ -44,7 +44,7 @@ export default class Status extends BaseCommand<typeof Status> {
     this.log(`Auth mode:   ${authMode}`)
 
     if (workspace.bearer_token) {
-      this.log(`Token:       ${formatExpiry(workspace.expiration_time)}`)
+      this.log(`Token:       active (auto-refreshes)`)
     }
 
     this.log(`Workspaces:  ${workspaceCount} configured`)

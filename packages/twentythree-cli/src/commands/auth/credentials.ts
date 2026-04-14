@@ -4,6 +4,7 @@ import { setCredential } from '../../auth/credential-store.js'
 import {
   setWorkspaces,
   setActiveWorkspace,
+  setCredentialDomain,
   type WorkspaceEntry,
 } from '../../auth/workspace-config.js'
 import { fetchWorkspaceTokens } from '../../auth/token-refresh.js'
@@ -40,8 +41,9 @@ export default class Credentials extends Command {
     const trimmedToken = (token as string).trim()
 
     if (trimmedToken) {
-      // AUTH-01: Store login token in OS keychain
+      // AUTH-01: Store login token in OS keychain; record which domain it belongs to
       setCredential(domain as string, trimmedToken)
+      setCredentialDomain(domain as string)
 
       // AUTH-02: Discover workspaces using login token
       const s = p.spinner()
