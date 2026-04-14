@@ -35,7 +35,14 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 ## Context
 
 - **API reference**: OpenAPI spec at `https://video.twentythree.com/apidocs/swagger.json` — full endpoint coverage is the long-term goal
-- **Auth model**: Simple bearer token via `Authorization: Bearer <token>` request header — no OAuth signing required. `/api/2/user/tokens?cross_sites_p=1` returns cross-site workspace tokens. Interactive login (not OAuth 1.0a) is a later milestone.
+- **Auth model**: Simple bearer token via `Authorization: Bearer <token>` request header — no OAuth signing required. `/api/2/user/tokens?cross_sites_p=1` returns cross-site workspace tokens. Interactive login (not OAuth 1.0a) is a later milestone. Bearer token is optional — domain-only mode enables anonymous endpoint access.
+- **API auth scopes** (from swagger `security` fields):
+  - `anonymous` (11 endpoints): no token needed — domain only. Includes: `album/list`, `tag list/related`, `site/search`, `player/embed`, `poll list/answer`, `user list/get`, `live/section/list`, `webhook/events`
+  - `none` (44 endpoints): token required, no specific scope level
+  - `read` (75 endpoints): token with read access
+  - `write` (84 endpoints): token with write access
+  - `admin` (19 endpoints): token with admin access
+  - `super` (2 endpoints): super-admin (`session/get-token`, `user/get-login-token`)
 - **API reference authority**: Only the OpenAPI/swagger spec at `video.twentythree.com/apidocs/swagger.json` is authoritative. Disregard other TwentyThree endpoint documentation.
 - **Multi-workspace**: Users may belong to multiple TwentyThree sites (workspaces); the CLI must support switching between them
 - **Reference implementation**: `github.com/basecamp/basecamp-cli` — similar scope, command structure, and AI skills pattern

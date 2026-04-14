@@ -20,15 +20,17 @@ Requirements for initial release. Maps to roadmap phases.
 
 ### Authentication & Workspaces
 
-- [ ] **AUTH-01**: `twentythree auth credentials` prompts for domain and bearer token and stores them securely in the OS keychain via `@napi-rs/keyring`
-- [ ] **AUTH-02**: On credential entry, CLI calls `/api/2/user/tokens?cross_sites_p=1` with the bearer token to discover all available workspaces
-- [ ] **AUTH-03**: User is prompted to select which workspaces to activate and set a default workspace
+- [ ] **AUTH-01**: `twentythree auth credentials` prompts for domain and bearer token (token is optional — press Enter to skip for anonymous-only access) and stores them securely in the OS keychain via `@napi-rs/keyring`
+- [ ] **AUTH-02**: When a token is provided, CLI calls `/api/2/user/tokens?cross_sites_p=1` to discover all available workspaces; when domain-only, workspace is the provided domain itself
+- [ ] **AUTH-03**: User is prompted to select which workspaces to activate and set a default workspace (skipped in domain-only/anonymous mode)
 - [ ] **AUTH-04**: Active workspace name is printed in every command's output header and all destructive confirmation prompts
 - [ ] **AUTH-05**: Token refresh runs proactively before expiry while CLI is active; a file lock prevents race conditions on concurrent invocations
-- [ ] **AUTH-06**: `twentythree auth status` shows current credentials, active workspace, and token expiry
+- [ ] **AUTH-06**: `twentythree auth status` shows current credentials, active workspace, token expiry, and auth mode (anonymous / authenticated / scope level)
 - [ ] **AUTH-07**: `twentythree workspace list` lists all available workspaces with the default marked
 - [ ] **AUTH-08**: `twentythree workspace use <name>` switches the default workspace
 - [ ] **AUTH-09**: Every command accepts a `--workspace <name>` flag to override the active workspace for a single invocation
+- [ ] **AUTH-10**: Commands requiring authentication that are invoked in anonymous/domain-only mode fail with a clear error: "This command requires authentication — run `twentythree auth credentials` to add a bearer token"
+- [ ] **AUTH-11**: The API client layer sends `Authorization: Bearer <token>` only when a token is configured; anonymous-scope endpoints are called without the header when in domain-only mode
 
 ### Uploads (Chunked & Resumable)
 
@@ -303,6 +305,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | AUTH-07 | Phase 2 | Pending |
 | AUTH-08 | Phase 2 | Pending |
 | AUTH-09 | Phase 2 | Pending |
+| AUTH-10 | Phase 2 | Pending |
+| AUTH-11 | Phase 2 | Pending |
 | UPL-01 | Phase 3 | Pending |
 | UPL-02 | Phase 3 | Pending |
 | UPL-03 | Phase 3 | Pending |
