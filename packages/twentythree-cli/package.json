@@ -29,15 +29,22 @@
     "topicSeparator": " "
   },
   "dependencies": {
+    "@clack/prompts": "^1.2.0",
+    "@napi-rs/keyring": "^1.2.0",
     "@oclif/core": "^4.10.5",
-    "openapi-fetch": "^0.17.0"
+    "chalk": "^4.1.2",
+    "conf": "^15.1.0",
+    "openapi-fetch": "^0.17.0",
+    "ora": "^5.4.1",
+    "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
+    "@oclif/test": "^4.0.0",
+    "@types/proper-lockfile": "^4.1.4",
     "oclif": "^4.23.0",
+    "openapi-typescript": "^7.13.0",
     "tsdown": "^0.21.8",
     "typescript": "^5.0.0",
-    "openapi-typescript": "^7.13.0",
-    "vitest": "^4.1.4",
-    "@oclif/test": "^4.0.0"
+    "vitest": "^4.1.4"
   }
 }

@@ -1,0 +1,10 @@
+describe('WorkspaceConfig', () => {
+  it.todo('stores workspace list in conf')
+  it.todo('retrieves active workspace domain')
+  it.todo('sets active workspace domain')
+  it.todo('finds workspace by exact domain match')
+  it.todo('finds workspace by partial display name (case-insensitive)')
+  it.todo('returns multiple matches for ambiguous query')
+  it.todo('returns null for no match')
+  it.todo('exact domain match takes precedence over partial name match')
+})
