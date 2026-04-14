@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. `term-map.ts` exists and correctly translates `photo`→`video`, `album`→`category`, `live`→`webinar` in both directions
 **Plans**: 3 plans
 Plans:
-- [ ] 01-01-PLAN.md — Monorepo scaffold (root config, both packages, pnpm install)
+- [x] 01-01-PLAN.md — Monorepo scaffold (root config, both packages, pnpm install)
 - [ ] 01-02-PLAN.md — CLI package wiring (bin entrypoints, Node guard, tsdown, build pipeline)
 - [ ] 01-03-PLAN.md — OpenAPI types + term-map (type generation, term-map module, vitest, tests)
 

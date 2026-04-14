@@ -11,7 +11,7 @@ Requirements for initial release. Maps to roadmap phases.
 
 ### Foundation
 
-- [ ] **FOUND-01**: Project is a pnpm monorepo with two packages: `twentythree-cli` (global binary) and `twentythree-skills` (SKILL.md only)
+- [x] **FOUND-01**: Project is a pnpm monorepo with two packages: `twentythree-cli` (global binary) and `twentythree-skills` (SKILL.md only)
 - [ ] **FOUND-02**: CLI is built with oclif v4, TypeScript, and bundled via tsdown into a single entry point
 - [ ] **FOUND-03**: CLI is installable globally via `npm install -g twentythree-cli` and runnable as `twentythree`
 - [ ] **FOUND-04**: `engines` field enforces minimum Node.js version; CLI prints a clear error and exits on unsupported versions
@@ -290,7 +290,7 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
 | FOUND-02 | Phase 1 | Pending |
 | FOUND-03 | Phase 1 | Pending |
 | FOUND-04 | Phase 1 | Pending |

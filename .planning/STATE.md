@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Completed 01-foundation/01-01-PLAN.md
+last_updated: "2026-04-14T08:50:15.516Z"
+last_activity: 2026-04-14
+progress:
+  total_phases: 8
+  completed_phases: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 33
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +21,21 @@
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 01 — foundation
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-04-14 — Roadmap replaced with full 8-phase 235-endpoint coverage; ready to begin Phase 1 planning
+Phase: 01 (foundation) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-04-14
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -30,10 +47,12 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-foundation P01 | 2 | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -47,6 +66,9 @@ Recent decisions affecting current work:
 - Init: `@napi-rs/keyring` for credential storage (not archived `keytar`); `conf` for non-sensitive config
 - Init: Chunked upload is native — no dependency on `resumable-upload-command`
 - 2026-04-14: Roadmap expanded from 5 phases to 8 phases to cover all 235 endpoints across 22 resource groups; webinar surface split across Phase 4 (core) and Phase 5 (deep); Phases 6 and 7 can execute in parallel after Phase 3
+- [Phase 01-foundation]: tsdown (not tsup) for CLI build — tsup is officially abandoned; tsdown is the Rolldown-powered maintained successor
+- [Phase 01-foundation]: CJS module type on twentythree-cli — required for oclif v4 and chalk 4.x / ora 5.x CJS-only pins
+- [Phase 01-foundation]: turbo.json uses tasks key (turborepo v2) not pipeline (turborepo v1)
 
 ### Pending Todos
 
@@ -58,6 +80,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-14
-Stopped at: Roadmap replaced — full 8-phase roadmap covering all 235 endpoints written to ROADMAP.md; STATE.md updated
+Last session: 2026-04-14T08:50:15.514Z
+Stopped at: Completed 01-foundation/01-01-PLAN.md
 Resume file: None
