@@ -83,7 +83,12 @@ Plans:
   2. `twentythree webinar list`, `webinar create`, `webinar update`, and `webinar delete` work with the same behavioral guarantees as video commands
   3. `twentythree webinar upload-image`, `webinar metrics`, `webinar clips`, `webinar highlights`, `webinar list-formats`, `webinar log`, and `webinar repeat` all return correct data
   4. All new commands in this phase respect the `--json` flag, auto-paginate lists, and apply the term map to all output
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 04-01-PLAN.md — Category CRUD commands (list, create, update, delete) + tests
+- [ ] 04-02-PLAN.md — Webinar CRUD commands (list, create, update, delete) + fetchWebinarToken + tests
+- [ ] 04-03-PLAN.md — Upload engine extraFields extension + webinar upload-image command + tests
+- [ ] 04-04-PLAN.md — Webinar read-only commands (metrics, clips, highlights, list-formats, log, repeat) + tests
 
 ### Phase 5: Webinar Deep
 **Goal**: The full webinar surface is operable — speakers, mail, recording, transcription, series, room, polls, attachments, sections, and queued videos can all be managed from the terminal
@@ -143,7 +148,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 1. Foundation | 3/3 | Complete   | 2026-04-14 |
 | 2. Auth & Workspaces | 0/5 | Planned | - |
 | 3. Video Core | 5/5 | Complete   | 2026-04-14 |
-| 4. Category & Webinar Core | 0/3 | Not started | - |
+| 4. Category & Webinar Core | 0/4 | Planned | - |
 | 5. Webinar Deep | 0/4 | Not started | - |
 | 6. Engagement & Actions | 0/4 | Not started | - |
 | 7. Analytics & Audience | 0/4 | Not started | - |
