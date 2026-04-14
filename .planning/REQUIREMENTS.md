@@ -248,7 +248,7 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 - [ ] **CLI-04**: API errors are mapped through `term-map.ts` before display — no legacy term (`photo`, `album`, `live`) appears in user-visible output
 - [ ] **CLI-05**: `twentythree doctor` checks credentials, connectivity, and token validity and prints a structured health report
 - [ ] **CLI-06**: `--help --agent` on any command outputs machine-readable command metadata for AI agent consumption
-- [ ] **CLI-07**: All formatted output resolves relative URLs to full URLs using the active workspace domain — API responses mix absolute (`https://video.company.com/page`) and relative (`/page`) URLs; users always see full URLs
+- [ ] **CLI-07**: All formatted output resolves relative URLs to full URLs using the active workspace domain — API responses mix absolute (`https://video.company.com/page`) and relative (`/page`) URLs; this applies to all URL fields including page links, thumbnail URLs, and poster images; users always see full URLs
 
 ## v2 Requirements
 

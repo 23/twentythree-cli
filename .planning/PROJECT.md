@@ -41,7 +41,8 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - **Reference implementation**: `github.com/basecamp/basecamp-cli` — similar scope, command structure, and AI skills pattern
 - **AI skills reference**: `github.com/basecamp/skills` — installable skill packages that wrap CLI commands for AI agents
 - **Terminology mapping**: API uses legacy object names — `photo` → `video`, `album` → `category`, `live` → `webinar`. All CLI commands and output use the modern terms; mapping happens transparently at the API call layer
-- **URL normalization**: API responses mix absolute URLs (e.g. `https://video.company.com/webinar-page`) and relative paths (e.g. `/webinar-page`). All formatted CLI output must resolve relative URLs to full URLs using the active workspace domain before display
+- **URL normalization**: API responses mix absolute URLs (e.g. `https://video.company.com/webinar-page`) and relative paths (e.g. `/webinar-page`). All formatted CLI output must resolve relative URLs to full URLs using the active workspace domain before display. Applies to all URL fields including page links, thumbnail URLs, and poster images.
+- **Thumbnail URL structure**: Thumbnails follow the pattern `https://domain/<tree_id>/<photo_id>/<token>/<width>x<height><crop>:<time>/thumbnail.png`. Crop methods: `cr` (centered crop, default), `st` (stretch), `mtw` (white letterbox), `mtb` (black letterbox). Time parameter (`:N` seconds) selects a specific frame. Pre-defined sizes available on video objects: `small_download`, `standard_download`, `medium_download`. The CLI outputs these URLs as-is after normalization — dimension/crop manipulation is not a CLI concern.
 
 ## Constraints
 
