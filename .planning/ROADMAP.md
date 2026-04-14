@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 Plans:
 - [x] 01-01-PLAN.md — Monorepo scaffold (root config, both packages, pnpm install)
-- [ ] 01-02-PLAN.md — CLI package wiring (bin entrypoints, Node guard, tsdown, build pipeline)
+- [x] 01-02-PLAN.md — CLI package wiring (bin entrypoints, Node guard, tsdown, build pipeline)
 - [ ] 01-03-PLAN.md — OpenAPI types + term-map (type generation, term-map module, vitest, tests)
 
 ### Phase 2: Auth & Workspaces
