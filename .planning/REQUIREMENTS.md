@@ -49,11 +49,11 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Video Commands (`photo` → `video`)
 
-- [ ] **VID-01**: `twentythree video list` lists videos in the active workspace with pagination
-- [ ] **VID-02**: `twentythree video get <id>` retrieves a single video's details (includes `photo/list` with id filter)
-- [ ] **VID-03**: `twentythree video upload <file>` uploads a video file using the chunked upload protocol (UPL-01–UPL-08)
-- [ ] **VID-04**: `twentythree video update <id>` updates video metadata
-- [ ] **VID-05**: `twentythree video delete <id>` deletes a video with confirmation prompt
+- [x] **VID-01**: `twentythree video list` lists videos in the active workspace with pagination
+- [x] **VID-02**: `twentythree video get <id>` retrieves a single video's details (includes `photo/list` with id filter)
+- [x] **VID-03**: `twentythree video upload <file>` uploads a video file using the chunked upload protocol (UPL-01–UPL-08)
+- [x] **VID-04**: `twentythree video update <id>` updates video metadata
+- [x] **VID-05**: `twentythree video delete <id>` deletes a video with confirmation prompt
 - [ ] **VID-06**: `twentythree video replace <id> <file>` replaces a video file using `photo/get-replace-token` + chunked upload
 - [ ] **VID-07**: `twentythree video transcoding-progress <id>` retrieves transcoding status
 - [ ] **VID-08**: `twentythree video frame <id>` extracts a frame/thumbnail from a video
@@ -315,11 +315,11 @@ Explicitly excluded. Documented to prevent scope creep.
 | UPL-06 | Phase 3 | Complete |
 | UPL-07 | Phase 3 | Complete |
 | UPL-08 | Phase 3 | Complete |
-| VID-01 | Phase 3 | Pending |
-| VID-02 | Phase 3 | Pending |
-| VID-03 | Phase 3 | Pending |
-| VID-04 | Phase 3 | Pending |
-| VID-05 | Phase 3 | Pending |
+| VID-01 | Phase 3 | Complete |
+| VID-02 | Phase 3 | Complete |
+| VID-03 | Phase 3 | Complete |
+| VID-04 | Phase 3 | Complete |
+| VID-05 | Phase 3 | Complete |
 | VID-06 | Phase 3 | Pending |
 | VID-07 | Phase 3 | Pending |
 | VID-08 | Phase 3 | Pending |

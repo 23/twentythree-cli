@@ -70,7 +70,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Install deps, output/pagination helpers, upload types, topic stubs (Wave 1)
 - [x] 03-02-PLAN.md — Chunked upload engine (chunk-pool + chunked-upload modules) (Wave 2)
-- [ ] 03-03-PLAN.md — Core video commands (list, get, upload, update, delete) (Wave 3)
+- [x] 03-03-PLAN.md — Core video commands (list, get, upload, update, delete) (Wave 3)
 - [ ] 03-04-PLAN.md — Video replace, transcoding-progress, frame + section subcommands (Wave 3)
 - [ ] 03-05-PLAN.md — All 11 subtitle subcommands (Wave 3)
 
@@ -142,7 +142,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-04-14 |
 | 2. Auth & Workspaces | 0/5 | Planned | - |
-| 3. Video Core | 2/5 | In Progress|  |
+| 3. Video Core | 3/5 | In Progress|  |
 | 4. Category & Webinar Core | 0/3 | Not started | - |
 | 5. Webinar Deep | 0/4 | Not started | - |
 | 6. Engagement & Actions | 0/4 | Not started | - |
