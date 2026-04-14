@@ -35,10 +35,13 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 ## Context
 
 - **API reference**: OpenAPI spec at `https://video.twentythree.com/apidocs/swagger.json` — full endpoint coverage is the long-term goal
-- **Auth model**: TwentyThree uses bearer tokens scoped per domain; `/api/2/user/tokens?cross_sites_p=1` returns cross-site workspace tokens
+- **Auth model**: Simple bearer token via `Authorization: Bearer <token>` request header — no OAuth signing required. `/api/2/user/tokens?cross_sites_p=1` returns cross-site workspace tokens. Interactive login (not OAuth 1.0a) is a later milestone.
+- **API reference authority**: Only the OpenAPI/swagger spec at `video.twentythree.com/apidocs/swagger.json` is authoritative. Disregard other TwentyThree endpoint documentation.
 - **Multi-workspace**: Users may belong to multiple TwentyThree sites (workspaces); the CLI must support switching between them
 - **Reference implementation**: `github.com/basecamp/basecamp-cli` — similar scope, command structure, and AI skills pattern
 - **AI skills reference**: `github.com/basecamp/skills` — installable skill packages that wrap CLI commands for AI agents
+- **Terminology mapping**: API uses legacy object names — `photo` → `video`, `album` → `category`, `live` → `webinar`. All CLI commands and output use the modern terms; mapping happens transparently at the API call layer
+- **URL normalization**: API responses mix absolute URLs (e.g. `https://video.company.com/webinar-page`) and relative paths (e.g. `/webinar-page`). All formatted CLI output must resolve relative URLs to full URLs using the active workspace domain before display
 
 ## Constraints
 
@@ -55,6 +58,7 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 | Credential auth before OAuth | Simpler to ship; OAuth adds browser flow complexity | — Pending |
 | npm global install only | Sufficient for developer users; avoids multi-distribution maintenance | — Pending |
 | AI skills as separate package | Follows Basecamp pattern; skills published alongside CLI releases | — Pending |
+| CLI uses modern terminology | API uses legacy names (`photo`, `album`, `live`); CLI maps these to `video`, `category`, `webinar` — forward-looking UX without breaking the underlying API calls | — Pending |
 
 ## Evolution
 
