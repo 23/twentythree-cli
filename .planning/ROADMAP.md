@@ -100,7 +100,13 @@ Plans:
   3. `twentythree webinar recording` start/stop/status controls recording; `webinar transcription` list/connect/locales/transcriptionlist manages transcriptions; `webinar room` info/themes/send-recording/connect manages the room
   4. All `twentythree webinar series` subcommands manage the full series lifecycle including recurrences, on-demand, and thumbnail upload
   5. `twentythree poll` CRUD commands and `webinar queued-video add|remove` work correctly
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 05-01-PLAN.md — Webinar attachment (list, upload, delete, set-hidden) + section (list, add, update, remove)
+- [ ] 05-02-PLAN.md — Webinar speaker (14 commands) + mail (7 commands)
+- [ ] 05-03-PLAN.md — Recording (start, stop, status) + transcription (4) + room (4) + queued-video (2)
+- [ ] 05-04-PLAN.md — Webinar series (12 commands including recurrences + thumbnail upload)
+- [ ] 05-05-PLAN.md — Poll CRUD (6 commands — new top-level topic)
 
 ### Phase 6: Engagement & Actions
 **Goal**: A developer can manage action CTAs, collectors, comments, players, and tags from the terminal with the same behavioral guarantees established in earlier phases
@@ -149,7 +155,7 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 2. Auth & Workspaces | 0/5 | Planned | - |
 | 3. Video Core | 5/5 | Complete   | 2026-04-14 |
 | 4. Category & Webinar Core | 0/4 | Planned | - |
-| 5. Webinar Deep | 0/4 | Not started | - |
+| 5. Webinar Deep | 0/5 | Planned | - |
 | 6. Engagement & Actions | 0/4 | Not started | - |
 | 7. Analytics & Audience | 0/4 | Not started | - |
 | 8. Platform & Polish | 0/5 | Not started | - |
