@@ -17,9 +17,9 @@ export default class WebinarSpeakerUpdate extends AuthenticatedCommand<typeof We
   static description = 'Update a speaker on a webinar'
 
   static examples = [
-    '<%= config.bin %> webinar speaker update 9900 --name "Jane Doe"',
-    '<%= config.bin %> webinar speaker update 9900 --email jane@example.com --title "CTO"',
-    '<%= config.bin %> webinar speaker update 9900 --name "Jane Doe" --json',
+    '<%= config.bin %> webinar speaker update 12345 9900 --name "Jane Doe"',
+    '<%= config.bin %> webinar speaker update 12345 9900 --email jane@example.com --title "CTO"',
+    '<%= config.bin %> webinar speaker update 12345 9900 --name "Jane Doe" --json',
   ]
 
   static enableJsonFlag = true
@@ -45,6 +45,7 @@ export default class WebinarSpeakerUpdate extends AuthenticatedCommand<typeof We
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Speaker ID', required: true }),
   }
 
@@ -52,8 +53,7 @@ export default class WebinarSpeakerUpdate extends AuthenticatedCommand<typeof We
     const { args, flags } = await this.parse(WebinarSpeakerUpdate)
     this.printWorkspaceHeader()
 
-    // CRITICAL: body uses live_speaker_id (NOT live_id)
-    const body: Record<string, unknown> = { live_speaker_id: Number(args.id) }
+    const body: Record<string, unknown> = { live_id: Number(args.webinarId), live_speaker_id: Number(args.id) }
     if (flags.name !== undefined) body.name = flags.name
     if (flags.email !== undefined) body.email = flags.email
     if (flags.title !== undefined) body.title = flags.title

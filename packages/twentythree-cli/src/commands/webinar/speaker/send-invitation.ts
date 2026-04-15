@@ -16,8 +16,8 @@ export default class WebinarSpeakerSendInvitation extends AuthenticatedCommand<t
   static description = 'Send an invitation to a speaker'
 
   static examples = [
-    '<%= config.bin %> webinar speaker send-invitation 9900',
-    '<%= config.bin %> webinar speaker send-invitation 9900 --json',
+    '<%= config.bin %> webinar speaker send-invitation 12345 9900',
+    '<%= config.bin %> webinar speaker send-invitation 12345 9900 --json',
   ]
 
   static enableJsonFlag = true
@@ -27,6 +27,7 @@ export default class WebinarSpeakerSendInvitation extends AuthenticatedCommand<t
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Speaker ID', required: true }),
   }
 
@@ -36,7 +37,7 @@ export default class WebinarSpeakerSendInvitation extends AuthenticatedCommand<t
 
     const { data, error } = await this.apiClient.POST('/live/speaker/send-invitation', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_speaker_id: Number(args.id) } as any,
+      body: { live_id: Number(args.webinarId), live_speaker_id: Number(args.id) } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

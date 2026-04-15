@@ -19,8 +19,8 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
   static description = 'Remove a speaker from a webinar'
 
   static examples = [
-    '<%= config.bin %> webinar speaker remove 9900',
-    '<%= config.bin %> webinar speaker remove 9900 --json',
+    '<%= config.bin %> webinar speaker remove 12345 9900',
+    '<%= config.bin %> webinar speaker remove 12345 9900 --json',
   ]
 
   static enableJsonFlag = true
@@ -30,6 +30,7 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Speaker ID', required: true }),
   }
 
@@ -50,7 +51,7 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
 
     const { data, error } = await this.apiClient.POST('/live/speaker/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_speaker_id: Number(args.id) } as any,
+      body: { live_id: Number(args.webinarId), live_speaker_id: Number(args.id) } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

@@ -45,8 +45,8 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
   static description = 'Upload an avatar image for a speaker'
 
   static examples = [
-    '<%= config.bin %> webinar speaker set-avatar 9900 ./avatar.jpg',
-    '<%= config.bin %> webinar speaker set-avatar 9900 ./avatar.png --chunk-size 524288',
+    '<%= config.bin %> webinar speaker set-avatar 12345 9900 ./avatar.jpg',
+    '<%= config.bin %> webinar speaker set-avatar 12345 9900 ./avatar.png --chunk-size 524288',
   ]
 
   static enableJsonFlag = true
@@ -64,6 +64,7 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Speaker ID', required: true }),
     file: Args.string({ description: 'Path to image file', required: true }),
   }
@@ -96,6 +97,7 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
         bearerToken: this.activeWorkspace.bearer_token || undefined,
         chunkSize: flags['chunk-size'],
         concurrency: flags.concurrency,
+        extraFields: { live_id: String(args.webinarId) },
         onProgress(bytesUploaded, total) {
           const elapsed = (Date.now() - startTime) / 1000
           const speed = elapsed > 0 ? bytesUploaded / elapsed : 0
@@ -107,7 +109,7 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
     }
 
     this.log(chalk.green('Speaker avatar uploaded'))
-    this.log(`ID: ${args.id}`)
+    this.log(`Speaker ID: ${args.id}`)
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
@@ -116,6 +118,7 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
         summary: 'Speaker avatar uploaded',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
+          { resource: 'webinar', id: args.webinarId },
           { resource: 'speaker', id: args.id },
         ],
       })
