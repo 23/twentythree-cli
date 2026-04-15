@@ -17,34 +17,37 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
   static description = 'List polls for a webinar'
 
   static examples = [
-    '<%= config.bin %> poll list 12345',
-    '<%= config.bin %> poll list 12345 --json',
+    '<%= config.bin %> poll list --webinar-id 12345',
+    '<%= config.bin %> poll list --webinar-id 12345 --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID',
+      required: true,
+    }),
     token: Flags.string({
       description: 'Webinar token (auto-looked up if omitted)',
       required: false,
     }),
   }
 
-  static args = {
-    id: Args.string({ description: 'Webinar ID', required: true }),
-  }
+  static args = {}
 
   public async run(): Promise<void | object> {
-    const { args, flags } = await this.parse(PollList)
+    const { flags } = await this.parse(PollList)
     this.printWorkspaceHeader()
 
+    const webinarId = Number(flags['webinar-id'])
     // CRITICAL: object_token (not live_token) for poll endpoints
-    const objectToken = flags.token ?? await this.fetchWebinarToken(Number(args.id))
+    const objectToken = flags.token ?? await this.fetchWebinarToken(webinarId)
 
     // CRITICAL: object_id (NOT live_id) for poll endpoints
     const { data, error } = await this.apiClient.GET('/poll/list', {
-      params: { query: { object_id: Number(args.id), object_token: objectToken } as any },
+      params: { query: { object_id: webinarId, object_token: objectToken } as any },
     })
 
     if (error) {
@@ -67,6 +70,7 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
         summary: `${polls.length} poll${polls.length === 1 ? '' : 's'}`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
+          { resource: 'webinar', id: flags['webinar-id'] },
           { resource: 'poll' },
         ],
       })
