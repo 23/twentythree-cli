@@ -126,13 +126,13 @@ Plans:
 
 ### Phase 06.1: Download and store swagger file; prescribe api-change workflow with claude-aided code updates (INSERTED)
 
-**Goal:** [Urgent work - to be planned]
+**Goal:** Store the OpenAPI spec locally, create a repeatable update-diff-regenerate shell script, and document the API change workflow in CLAUDE.md
 **Requirements**: TBD
 **Depends on:** Phase 6
-**Plans:** 4/4 plans complete
+**Plans:** 1 plan
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 06.1 to break down)
+- [ ] 06.1-01-PLAN.md — API spec storage, update script, and workflow documentation
 
 ### Phase 7: Analytics & Audience
 **Goal**: A developer can query any analytics dimension (video, live, conversions, usage sub-dimensions) and manage the full audience — members, fields, companies, collectors, funnels, and timelines
@@ -172,5 +172,6 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 4. Category & Webinar Core | 0/4 | Planned | - |
 | 5. Webinar Deep | 0/5 | Planned | - |
 | 6. Engagement & Actions | 4/4 | Complete   | 2026-04-15 |
+| 6.1 API Spec Workflow | 0/1 | Planned | - |
 | 7. Analytics & Audience | 0/4 | Not started | - |
 | 8. Platform & Polish | 0/5 | Not started | - |
