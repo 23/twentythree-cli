@@ -17,15 +17,23 @@ export default class WebinarMailUpdate extends AuthenticatedCommand<typeof Webin
   static description = 'Update a webinar email'
 
   static examples = [
-    '<%= config.bin %> webinar mail update 555 --subject "Updated Subject"',
-    '<%= config.bin %> webinar mail update 555 --message "New content"',
-    '<%= config.bin %> webinar mail update 555 --subject "Updated" --json',
+    '<%= config.bin %> webinar mail update 555 --webinar-id 12345 --subject "Updated Subject"',
+    '<%= config.bin %> webinar mail update 555 --series-id 67890 --message "New content"',
+    '<%= config.bin %> webinar mail update 555 --webinar-id 12345 --subject "Updated" --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID (mutually exclusive with --series-id)',
+      exclusive: ['series-id'],
+    }),
+    'series-id': Flags.string({
+      description: 'Series ID (mutually exclusive with --webinar-id)',
+      exclusive: ['webinar-id'],
+    }),
     subject: Flags.string({
       description: 'Email subject',
       required: false,
@@ -44,8 +52,17 @@ export default class WebinarMailUpdate extends AuthenticatedCommand<typeof Webin
     const { args, flags } = await this.parse(WebinarMailUpdate)
     this.printWorkspaceHeader()
 
-    // CRITICAL: body uses live_mail_id (NOT live_id)
-    const body: Record<string, unknown> = { live_mail_id: Number(args.id) }
+    const contextField = flags['webinar-id']
+      ? { live_id: Number(flags['webinar-id']) }
+      : flags['series-id']
+        ? { live_series_id: Number(flags['series-id']) }
+        : null
+
+    if (!contextField) {
+      this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
+    }
+
+    const body: Record<string, unknown> = { ...contextField, live_mail_id: Number(args.id) }
     if (flags.subject !== undefined) body.subject = flags.subject
     if (flags.message !== undefined) body.message = flags.message
 

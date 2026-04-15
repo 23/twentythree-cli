@@ -1,4 +1,4 @@
-import { Args } from '@oclif/core'
+import { Args, Flags } from '@oclif/core'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
 import { formatJsonOutput, renderTable, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
@@ -14,6 +14,7 @@ export default class WebinarMailList extends AuthenticatedCommand<typeof Webinar
 
   static examples = [
     '<%= config.bin %> webinar mail list 12345',
+    '<%= config.bin %> webinar mail list --series-id 67890',
     '<%= config.bin %> webinar mail list 12345 --json',
   ]
 
@@ -21,18 +22,31 @@ export default class WebinarMailList extends AuthenticatedCommand<typeof Webinar
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'series-id': Flags.string({
+      description: 'Series ID — list mails for a series instead of a webinar',
+    }),
   }
 
   static args = {
-    id: Args.string({ description: 'Webinar ID', required: true }),
+    id: Args.string({ description: 'Webinar ID (omit when using --series-id)', required: false }),
   }
 
   public async run(): Promise<void | object> {
-    const { args } = await this.parse(WebinarMailList)
+    const { args, flags } = await this.parse(WebinarMailList)
     this.printWorkspaceHeader()
 
+    const contextField = flags['series-id']
+      ? { live_series_id: Number(flags['series-id']) }
+      : args.id
+        ? { live_id: Number(args.id) }
+        : null
+
+    if (!contextField) {
+      this.error(applyCliTerms('Either a webinar ID argument or --series-id is required'), { exit: EXIT_ERROR })
+    }
+
     const { data, error } = await this.apiClient.GET('/live/mail/list', {
-      params: { query: { live_id: Number(args.id) } },
+      params: { query: contextField },
     })
 
     if (error) {

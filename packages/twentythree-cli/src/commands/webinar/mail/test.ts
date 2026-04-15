@@ -18,15 +18,23 @@ export default class WebinarMailTest extends AuthenticatedCommand<typeof Webinar
   static description = 'Send a test email'
 
   static examples = [
-    '<%= config.bin %> webinar mail test 555 --email me@example.com',
-    '<%= config.bin %> webinar mail test 555',
-    '<%= config.bin %> webinar mail test 555 --email me@example.com --json',
+    '<%= config.bin %> webinar mail test 555 --webinar-id 12345 --email me@example.com',
+    '<%= config.bin %> webinar mail test 555 --series-id 67890',
+    '<%= config.bin %> webinar mail test 555 --webinar-id 12345 --email me@example.com --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID (mutually exclusive with --series-id)',
+      exclusive: ['series-id'],
+    }),
+    'series-id': Flags.string({
+      description: 'Series ID (mutually exclusive with --webinar-id)',
+      exclusive: ['webinar-id'],
+    }),
     email: Flags.string({
       description: 'Recipient email for test',
       required: false,
@@ -40,6 +48,16 @@ export default class WebinarMailTest extends AuthenticatedCommand<typeof Webinar
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailTest)
     this.printWorkspaceHeader()
+
+    const contextField = flags['webinar-id']
+      ? { live_id: Number(flags['webinar-id']) }
+      : flags['series-id']
+        ? { live_series_id: Number(flags['series-id']) }
+        : null
+
+    if (!contextField) {
+      this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
+    }
 
     let email = flags.email
 
@@ -56,7 +74,7 @@ export default class WebinarMailTest extends AuthenticatedCommand<typeof Webinar
 
     const { data, error } = await this.apiClient.POST('/live/mail/test', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_mail_id: Number(args.id), email } as any,
+      body: { ...contextField, live_mail_id: Number(args.id), email } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

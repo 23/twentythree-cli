@@ -1,4 +1,4 @@
-import { Args } from '@oclif/core'
+import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
 import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
@@ -16,14 +16,22 @@ export default class WebinarMailSend extends AuthenticatedCommand<typeof Webinar
   static description = 'Send a webinar email'
 
   static examples = [
-    '<%= config.bin %> webinar mail send 555',
-    '<%= config.bin %> webinar mail send 555 --json',
+    '<%= config.bin %> webinar mail send 555 --webinar-id 12345',
+    '<%= config.bin %> webinar mail send 555 --series-id 67890 --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID (mutually exclusive with --series-id)',
+      exclusive: ['series-id'],
+    }),
+    'series-id': Flags.string({
+      description: 'Series ID (mutually exclusive with --webinar-id)',
+      exclusive: ['webinar-id'],
+    }),
   }
 
   static args = {
@@ -31,12 +39,22 @@ export default class WebinarMailSend extends AuthenticatedCommand<typeof Webinar
   }
 
   public async run(): Promise<void | object> {
-    const { args } = await this.parse(WebinarMailSend)
+    const { args, flags } = await this.parse(WebinarMailSend)
     this.printWorkspaceHeader()
+
+    const contextField = flags['webinar-id']
+      ? { live_id: Number(flags['webinar-id']) }
+      : flags['series-id']
+        ? { live_series_id: Number(flags['series-id']) }
+        : null
+
+    if (!contextField) {
+      this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
+    }
 
     const { data, error } = await this.apiClient.POST('/live/mail/send', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_mail_id: Number(args.id) } as any,
+      body: { ...contextField, live_mail_id: Number(args.id) } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

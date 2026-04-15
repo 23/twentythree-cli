@@ -19,7 +19,7 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
 
   static examples = [
     '<%= config.bin %> webinar mail add 12345 --subject "Reminder" --message "Join us tomorrow!"',
-    '<%= config.bin %> webinar mail add 12345',
+    '<%= config.bin %> webinar mail add --series-id 67890 --subject "Reminder"',
     '<%= config.bin %> webinar mail add 12345 --subject "Reminder" --message "Join us!" --json',
   ]
 
@@ -27,6 +27,9 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'series-id': Flags.string({
+      description: 'Series ID — add mail to a series instead of a webinar',
+    }),
     subject: Flags.string({
       description: 'Email subject',
       required: false,
@@ -38,12 +41,22 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
   }
 
   static args = {
-    id: Args.string({ description: 'Webinar ID', required: true }),
+    id: Args.string({ description: 'Webinar ID (omit when using --series-id)', required: false }),
   }
 
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailAdd)
     this.printWorkspaceHeader()
+
+    const contextField = flags['series-id']
+      ? { live_series_id: Number(flags['series-id']) }
+      : args.id
+        ? { live_id: Number(args.id) }
+        : null
+
+    if (!contextField) {
+      this.error(applyCliTerms('Either a webinar ID argument or --series-id is required'), { exit: EXIT_ERROR })
+    }
 
     let subject = flags.subject
     let message = flags.message
@@ -71,7 +84,7 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
 
     const { data, error } = await this.apiClient.POST('/live/mail/add', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_id: Number(args.id), subject, message } as any,
+      body: { ...contextField, subject, message } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
