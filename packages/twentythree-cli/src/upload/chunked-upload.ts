@@ -49,6 +49,7 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
     uploadToken,
     uploadUrl,
     tokenFieldName = 'upload_token',
+    bearerToken,
     chunkSize = DEFAULT_CHUNK_SIZE,
     concurrency = DEFAULT_CONCURRENCY,
     maxRetries = DEFAULT_MAX_RETRIES,
@@ -121,8 +122,14 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
         }
       }
 
+      const headers: HeadersInit = {}
+      if (bearerToken) {
+        headers['Authorization'] = `Bearer ${bearerToken}`
+      }
+
       const response = await fetch(uploadUrl, {
         method: 'POST',
+        headers,
         body: formData,
       })
 
