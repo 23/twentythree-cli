@@ -10,7 +10,6 @@ import { applyCliTerms } from '../../../lib/term-map.js'
  * Action command pattern (Decision D-1): outputs a single green success line only.
  *
  * Threat mitigations:
- *   T-05-10: Never display upload_token from recording response — security sensitive
  *   T-05-12: applyCliTerms() on all error messages — no 'live'/'photo'/'album' leaks
  */
 export default class WebinarRecordingSplit extends AuthenticatedCommand<typeof WebinarRecordingSplit> {
@@ -47,7 +46,6 @@ export default class WebinarRecordingSplit extends AuthenticatedCommand<typeof W
     }
 
     // Action command pattern: single green success line
-    // SECURITY T-05-10: Do NOT log upload_token from response
     this.log(chalk.green('Recording split'))
 
     if (this.jsonEnabled()) {

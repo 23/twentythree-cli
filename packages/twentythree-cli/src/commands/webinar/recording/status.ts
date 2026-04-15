@@ -7,7 +7,6 @@ import { applyCliTerms } from '../../../lib/term-map.js'
  * Webinar recording status command — gets recording status for a webinar.
  *
  * Threat mitigations:
- *   T-05-11: Display only status field, filter out upload_token from table
  *   T-05-12: applyCliTerms() on all error messages — no 'live'/'photo'/'album' leaks
  */
 export default class WebinarRecordingStatus extends AuthenticatedCommand<typeof WebinarRecordingStatus> {
@@ -54,15 +53,11 @@ export default class WebinarRecordingStatus extends AuthenticatedCommand<typeof 
       })
     }
 
-    // SECURITY T-05-11: Display only the status field — never display upload_token
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const status = String((data as any)?.status ?? (data as any)?.data?.status ?? 'unknown')
+    const d: Record<string, unknown> = (data as any)?.data ?? data ?? {}
+    const rows = Object.entries(d).map(([k, v]) => [k, String(v ?? '')])
 
-    const table = renderTable(
-      ['Field', 'Value'],
-      [['Status', status]],
-    )
-
+    const table = renderTable(['Field', 'Value'], rows)
     this.log(table.toString())
   }
 }
