@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "generate-types": "pnpm --filter twentythree-cli exec openapi-typescript https://video.twentythree.com/apidocs/swagger.json -o src/api/types.ts"
+    "generate-types": "pnpm --filter twentythree-cli exec openapi-typescript specs/twentythree-api-swagger.json -o src/api/types.ts",
+    "update-api-spec": "cd packages/twentythree-cli && ./update-api-spec.sh"
   },
   "devDependencies": {
     "turbo": "^2.9.6",
