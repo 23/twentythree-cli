@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: "Completed 06-04-PLAN.md (player commands: list, update, delete, embed, embed-versions, styles)"
-last_updated: "2026-04-15T21:56:54.607Z"
+stopped_at: Completed 06.1-01-PLAN.md (API spec storage, update script, CLAUDE.md workflow)
+last_updated: "2026-04-15T22:18:44.842Z"
 last_activity: 2026-04-15
 progress:
   total_phases: 9
-  completed_phases: 6
-  total_plans: 26
-  completed_plans: 26
+  completed_phases: 7
+  total_plans: 27
+  completed_plans: 27
   percent: 100
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 06 — engagement-actions
+**Current focus:** Phase 06.1 — download-and-store-swagger-file-prescribe-api-change-workflo
 
 ## Current Position
 
-Phase: 06 (engagement-actions) — EXECUTING
-Plan: 4 of 4
+Phase: 06.1 (download-and-store-swagger-file-prescribe-api-change-workflo) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-15
 
@@ -64,6 +64,7 @@ Progress: [██████████] 100%
 | Phase 06-engagement-actions P06-02 | 3min | 2 tasks | 5 files |
 | Phase 06-engagement-actions P06-03 | 3min | 3 tasks | 10 files |
 | Phase 06-engagement-actions P06-04 | 4min | 2 tasks | 6 files |
+| Phase 06.1 P06.1-01 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ Recent decisions affecting current work:
 - [Phase 06-engagement-actions]: D-3 applied: comment/reaction/ directory creates 3-level oclif topic automatically via filesystem discovery
 - [Phase 06-engagement-actions]: D-4 applied: player/embed uses apiClient.GET (not native fetch), extracts embed_code from JSON data.embed_code, writes via process.stdout.write (no newline)
 - [Phase 06-engagement-actions]: Pitfall 2 applied: player/list sends pagination in POST body with Content-Type application/x-www-form-urlencoded
+- [Phase 06.1]: D-1: Store spec at packages/twentythree-cli/specs/ — keeps API inputs near the consuming package
+- [Phase 06.1]: D-3: Shell script update-api-spec.sh + pnpm root alias — download/diff/regenerate in one command
+- [Phase 06.1]: D-4: API Change Workflow appended to CLAUDE.md — self-contained guide for cold-start Claude agents
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-15T21:56:54.605Z
-Stopped at: Completed 06-04-PLAN.md (player commands: list, update, delete, embed, embed-versions, styles)
+Last session: 2026-04-15T22:18:44.839Z
+Stopped at: Completed 06.1-01-PLAN.md (API spec storage, update script, CLAUDE.md workflow)
 Resume file: None
