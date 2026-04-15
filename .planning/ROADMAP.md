@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Video Core** - Chunked upload engine and all video/subtitle/section commands (completed 2026-04-14)
 - [ ] **Phase 4: Category & Webinar Core** - Category CRUD and core webinar lifecycle commands
 - [ ] **Phase 5: Webinar Deep** - Speakers, mail, recording, transcription, series, room, polls, attachments, queued videos
-- [ ] **Phase 6: Engagement & Actions** - Action CTAs, collector, comment, player, and tag commands
+- [x] **Phase 6: Engagement & Actions** - Action CTAs, collector, comment, player, and tag commands (completed 2026-04-15)
 - [ ] **Phase 7: Analytics & Audience** - All analytics sub-dimensions and all audience commands
 - [ ] **Phase 8: Platform & Polish** - Spot, thumbnail, webhook, app, presentation, protection, session, openupload, site/setting, user, doctor, agent help
 
@@ -122,14 +122,14 @@ Plans:
 - [x] 06-01-PLAN.md — Action CTA commands (add, delete, types, update, get, list, exclude, include, upload)
 - [x] 06-02-PLAN.md — Collector and Tag commands (list, include, exclude, tag list, tag related)
 - [x] 06-03-PLAN.md — Comment commands including reaction 3-level topic (list, add, update, delete, promote, clone, set-order, reaction add/list/remove)
-- [ ] 06-04-PLAN.md — Player commands (list, update, delete, embed, embed-versions, styles)
+- [x] 06-04-PLAN.md — Player commands (list, update, delete, embed, embed-versions, styles)
 
 ### Phase 06.1: Download and store swagger file; prescribe api-change workflow with claude-aided code updates (INSERTED)
 
 **Goal:** [Urgent work - to be planned]
 **Requirements**: TBD
 **Depends on:** Phase 6
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 06.1 to break down)
@@ -171,6 +171,6 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 3. Video Core | 5/5 | Complete   | 2026-04-14 |
 | 4. Category & Webinar Core | 0/4 | Planned | - |
 | 5. Webinar Deep | 0/5 | Planned | - |
-| 6. Engagement & Actions | 3/4 | In Progress|  |
+| 6. Engagement & Actions | 4/4 | Complete   | 2026-04-15 |
 | 7. Analytics & Audience | 0/4 | Not started | - |
 | 8. Platform & Polish | 0/5 | Not started | - |

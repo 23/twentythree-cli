@@ -92,12 +92,12 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Player Commands
 
-- [ ] **PLY-01**: `twentythree player list` lists players in the active workspace
-- [ ] **PLY-02**: `twentythree player update <id>` updates player settings
-- [ ] **PLY-03**: `twentythree player delete <id>` deletes a player with confirmation prompt
-- [ ] **PLY-04**: `twentythree player embed <id>` generates embed code for a player
-- [ ] **PLY-05**: `twentythree player embed-versions` lists available embed versions
-- [ ] **PLY-06**: `twentythree player styles` lists available player styles
+- [x] **PLY-01**: `twentythree player list` lists players in the active workspace
+- [x] **PLY-02**: `twentythree player update <id>` updates player settings
+- [x] **PLY-03**: `twentythree player delete <id>` deletes a player with confirmation prompt
+- [x] **PLY-04**: `twentythree player embed <id>` generates embed code for a player
+- [x] **PLY-05**: `twentythree player embed-versions` lists available embed versions
+- [x] **PLY-06**: `twentythree player styles` lists available player styles
 
 ### Action Commands (CTAs)
 
@@ -379,12 +379,12 @@ Explicitly excluded. Documented to prevent scope creep.
 | CMT-06 | Phase 6 | Complete |
 | CMT-07 | Phase 6 | Complete |
 | CMT-08 | Phase 6 | Complete |
-| PLY-01 | Phase 6 | Pending |
-| PLY-02 | Phase 6 | Pending |
-| PLY-03 | Phase 6 | Pending |
-| PLY-04 | Phase 6 | Pending |
-| PLY-05 | Phase 6 | Pending |
-| PLY-06 | Phase 6 | Pending |
+| PLY-01 | Phase 6 | Complete |
+| PLY-02 | Phase 6 | Complete |
+| PLY-03 | Phase 6 | Complete |
+| PLY-04 | Phase 6 | Complete |
+| PLY-05 | Phase 6 | Complete |
+| PLY-06 | Phase 6 | Complete |
 | TAG-01 | Phase 6 | Complete |
 | TAG-02 | Phase 6 | Complete |
 | ANL-01 | Phase 7 | Pending |
