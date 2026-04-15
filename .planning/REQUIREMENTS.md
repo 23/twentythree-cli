@@ -113,9 +113,9 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Collector Commands
 
-- [ ] **COL-01**: `twentythree collector list` lists workspace collectors with optional analytics flag
-- [ ] **COL-02**: `twentythree collector include <id>` attaches a collector to a video or webinar
-- [ ] **COL-03**: `twentythree collector exclude <id>` blocks a collector from displaying on a video/webinar
+- [x] **COL-01**: `twentythree collector list` lists workspace collectors with optional analytics flag
+- [x] **COL-02**: `twentythree collector include <id>` attaches a collector to a video or webinar
+- [x] **COL-03**: `twentythree collector exclude <id>` blocks a collector from displaying on a video/webinar
 
 ### Comment Commands
 
@@ -239,8 +239,8 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Tag Commands
 
-- [ ] **TAG-01**: `twentythree tag list` lists tags in the active workspace
-- [ ] **TAG-02**: `twentythree tag related` lists related tags
+- [x] **TAG-01**: `twentythree tag list` lists tags in the active workspace
+- [x] **TAG-02**: `twentythree tag related` lists related tags
 
 ### Cross-Cutting CLI Quality
 
@@ -368,9 +368,9 @@ Explicitly excluded. Documented to prevent scope creep.
 | ACT-07 | Phase 6 | Complete |
 | ACT-08 | Phase 6 | Complete |
 | ACT-09 | Phase 6 | Complete |
-| COL-01 | Phase 6 | Pending |
-| COL-02 | Phase 6 | Pending |
-| COL-03 | Phase 6 | Pending |
+| COL-01 | Phase 6 | Complete |
+| COL-02 | Phase 6 | Complete |
+| COL-03 | Phase 6 | Complete |
 | CMT-01 | Phase 6 | Pending |
 | CMT-02 | Phase 6 | Pending |
 | CMT-03 | Phase 6 | Pending |
@@ -385,8 +385,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | PLY-04 | Phase 6 | Pending |
 | PLY-05 | Phase 6 | Pending |
 | PLY-06 | Phase 6 | Pending |
-| TAG-01 | Phase 6 | Pending |
-| TAG-02 | Phase 6 | Pending |
+| TAG-01 | Phase 6 | Complete |
+| TAG-02 | Phase 6 | Complete |
 | ANL-01 | Phase 7 | Pending |
 | ANL-02 | Phase 7 | Pending |
 | ANL-03 | Phase 7 | Pending |
