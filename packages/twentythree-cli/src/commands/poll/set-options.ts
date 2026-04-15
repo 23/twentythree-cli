@@ -21,14 +21,18 @@ export default class PollSetOptions extends AuthenticatedCommand<typeof PollSetO
   static description = 'Set options for a poll'
 
   static examples = [
-    '<%= config.bin %> poll set-options 99 --option "Yes" --option "No" --option "Maybe"',
-    '<%= config.bin %> poll set-options 99 --option "Option A" --option "Option B" --json',
+    '<%= config.bin %> poll set-options 99 --webinar-id 12345 --option "Yes" --option "No" --option "Maybe"',
+    '<%= config.bin %> poll set-options 99 --webinar-id 12345 --option "Option A" --option "Option B" --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID',
+      required: true,
+    }),
     option: Flags.string({
       description: 'Poll option (repeat for multiple)',
       multiple: true,
@@ -72,7 +76,7 @@ export default class PollSetOptions extends AuthenticatedCommand<typeof PollSetO
     const optionsJson = JSON.stringify(options)
 
     const { data, error } = await this.apiClient.POST('/poll/set-options', {
-      body: { poll_id: Number(args.id), options: optionsJson } as any,
+      body: { object_id: Number(flags['webinar-id']), poll_id: Number(args.id), options: optionsJson } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

@@ -1,4 +1,4 @@
-import { Args } from '@oclif/core'
+import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
@@ -16,14 +16,18 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
   static description = 'Remove a poll'
 
   static examples = [
-    '<%= config.bin %> poll remove 99',
-    '<%= config.bin %> poll remove 99 --json',
+    '<%= config.bin %> poll remove 99 --webinar-id 12345',
+    '<%= config.bin %> poll remove 99 --webinar-id 12345 --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    'webinar-id': Flags.string({
+      description: 'Webinar ID',
+      required: true,
+    }),
   }
 
   static args = {
@@ -31,7 +35,7 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
   }
 
   public async run(): Promise<void | object> {
-    const { args } = await this.parse(PollRemove)
+    const { args, flags } = await this.parse(PollRemove)
     this.printWorkspaceHeader()
 
     if (!this.jsonEnabled()) {
@@ -47,7 +51,7 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
 
     const { data, error } = await this.apiClient.POST('/poll/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { poll_id: Number(args.id) } as any,
+      body: { object_id: Number(flags['webinar-id']), poll_id: Number(args.id) } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
