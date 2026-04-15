@@ -18,16 +18,16 @@ export default class PollAdd extends AuthenticatedCommand<typeof PollAdd> {
   static description = 'Create a new poll for a webinar'
 
   static examples = [
-    '<%= config.bin %> poll add --webinar-id 12345 --question "What is your preference?"',
-    '<%= config.bin %> poll add --webinar-id 12345 --question "How are you?" --json',
+    '<%= config.bin %> poll add --object-id 12345 --question "What is your preference?"',
+    '<%= config.bin %> poll add --object-id 12345 --question "How are you?" --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    'webinar-id': Flags.string({
-      description: 'Webinar ID',
+    'object-id': Flags.string({
+      description: 'Object ID (webinar or live object)',
       required: true,
     }),
     question: Flags.string({
@@ -62,7 +62,7 @@ export default class PollAdd extends AuthenticatedCommand<typeof PollAdd> {
 
     // CRITICAL: object_id (NOT live_id) for poll endpoints
     const { data, error } = await this.apiClient.POST('/poll/add', {
-      body: { object_id: Number(flags['webinar-id']), question } as any,
+      body: { object_id: Number(flags['object-id']), question } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
@@ -80,7 +80,7 @@ export default class PollAdd extends AuthenticatedCommand<typeof PollAdd> {
         summary: 'Poll created',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
-          { resource: 'webinar', id: flags['webinar-id'] },
+          { resource: 'object', id: flags['object-id'] },
           { resource: 'poll', id: String(pollId ?? '') },
         ],
       })

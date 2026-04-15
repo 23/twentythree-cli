@@ -18,24 +18,24 @@ export default class PollAnswer extends AuthenticatedCommand<typeof PollAnswer> 
   static description = 'Submit a poll answer'
 
   static examples = [
-    '<%= config.bin %> poll answer 99 --webinar-id 12345 --option-id 3',
-    '<%= config.bin %> poll answer 99 --webinar-id 12345 --option-id 3 --json',
+    '<%= config.bin %> poll answer 99 --object-id 12345 --option-id 3',
+    '<%= config.bin %> poll answer 99 --object-id 12345 --option-id 3 --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    'webinar-id': Flags.string({
-      description: 'Webinar ID',
+    'object-id': Flags.string({
+      description: 'Object ID (webinar or live object)',
+      required: false,
+    }),
+    'object-token': Flags.string({
+      description: 'Object token (auto-looked up if omitted)',
       required: false,
     }),
     'option-id': Flags.string({
       description: 'Poll option ID',
-      required: false,
-    }),
-    token: Flags.string({
-      description: 'Webinar token (auto-looked up if omitted)',
       required: false,
     }),
   }
@@ -48,20 +48,20 @@ export default class PollAnswer extends AuthenticatedCommand<typeof PollAnswer> 
     const { args, flags } = await this.parse(PollAnswer)
     this.printWorkspaceHeader()
 
-    let webinarId = flags['webinar-id']
+    let objectId = flags['object-id']
     let optionId = flags['option-id']
 
     // Interactive fallback when required fields not provided in non-JSON mode
-    if (!webinarId && !this.jsonEnabled()) {
-      const result = await text({ message: 'Webinar ID' })
+    if (!objectId && !this.jsonEnabled()) {
+      const result = await text({ message: 'Object ID' })
       if (isCancel(result)) {
         process.exit(EXIT_CANCELLED)
       }
-      webinarId = result as string
+      objectId = result as string
     }
 
-    if (!webinarId) {
-      this.error('--webinar-id is required in non-interactive mode', { exit: EXIT_ERROR })
+    if (!objectId) {
+      this.error('--object-id is required in non-interactive mode', { exit: EXIT_ERROR })
     }
 
     if (!optionId && !this.jsonEnabled()) {
@@ -76,14 +76,12 @@ export default class PollAnswer extends AuthenticatedCommand<typeof PollAnswer> 
       this.error('--option-id is required in non-interactive mode', { exit: EXIT_ERROR })
     }
 
-    // CRITICAL: object_token (not live_token) for poll endpoints
-    const objectToken = flags.token ?? await this.fetchWebinarToken(Number(webinarId))
+    const objectToken = flags['object-token'] ?? await this.fetchWebinarToken(Number(objectId))
 
-    // CRITICAL: object_id (NOT live_id) for poll endpoints
     const { data, error } = await this.apiClient.POST('/poll/answer', {
       body: {
         poll_id: Number(args.id),
-        object_id: Number(webinarId),
+        object_id: Number(objectId),
         object_token: objectToken,
         poll_option_id: Number(optionId),
       } as any,

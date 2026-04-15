@@ -17,20 +17,16 @@ export default class PollUpdate extends AuthenticatedCommand<typeof PollUpdate> 
   static description = 'Update a poll'
 
   static examples = [
-    '<%= config.bin %> poll update 99 --webinar-id 12345 --question "Updated question?"',
-    '<%= config.bin %> poll update 99 --webinar-id 12345 --open',
-    '<%= config.bin %> poll update 99 --webinar-id 12345 --no-display-results',
-    '<%= config.bin %> poll update 99 --webinar-id 12345 --question "New?" --open --json',
+    '<%= config.bin %> poll update 99 --question "Updated question?"',
+    '<%= config.bin %> poll update 99 --open',
+    '<%= config.bin %> poll update 99 --no-display-results',
+    '<%= config.bin %> poll update 99 --question "New?" --open --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    'webinar-id': Flags.string({
-      description: 'Webinar ID',
-      required: true,
-    }),
     question: Flags.string({
       description: 'Poll question',
       required: false,
@@ -55,7 +51,7 @@ export default class PollUpdate extends AuthenticatedCommand<typeof PollUpdate> 
     const { args, flags } = await this.parse(PollUpdate)
     this.printWorkspaceHeader()
 
-    const body: Record<string, unknown> = { object_id: Number(flags['webinar-id']), poll_id: Number(args.id) }
+    const body: Record<string, unknown> = { poll_id: Number(args.id) }
     if (flags.question !== undefined) body.question = flags.question
     if (flags.open !== undefined) body.open_p = flags.open ? 1 : 0
     if (flags['display-results'] !== undefined) body.display_results_p = flags['display-results'] ? 1 : 0

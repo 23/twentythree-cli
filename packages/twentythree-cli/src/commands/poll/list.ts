@@ -17,20 +17,20 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
   static description = 'List polls for a webinar'
 
   static examples = [
-    '<%= config.bin %> poll list --webinar-id 12345',
-    '<%= config.bin %> poll list --webinar-id 12345 --json',
+    '<%= config.bin %> poll list --object-id 12345',
+    '<%= config.bin %> poll list --object-id 12345 --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    'webinar-id': Flags.string({
-      description: 'Webinar ID',
+    'object-id': Flags.string({
+      description: 'Object ID (webinar or live object)',
       required: true,
     }),
-    token: Flags.string({
-      description: 'Webinar token (auto-looked up if omitted)',
+    'object-token': Flags.string({
+      description: 'Object token (auto-looked up if omitted)',
       required: false,
     }),
   }
@@ -41,13 +41,11 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
     const { flags } = await this.parse(PollList)
     this.printWorkspaceHeader()
 
-    const webinarId = Number(flags['webinar-id'])
-    // CRITICAL: object_token (not live_token) for poll endpoints
-    const objectToken = flags.token ?? await this.fetchWebinarToken(webinarId)
+    const objectId = Number(flags['object-id'])
+    const objectToken = flags['object-token'] ?? await this.fetchWebinarToken(objectId)
 
-    // CRITICAL: object_id (NOT live_id) for poll endpoints
     const { data, error } = await this.apiClient.GET('/poll/list', {
-      params: { query: { object_id: webinarId, object_token: objectToken } as any },
+      params: { query: { object_id: objectId, object_token: objectToken } as any },
     })
 
     if (error) {
@@ -70,7 +68,7 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
         summary: `${polls.length} poll${polls.length === 1 ? '' : 's'}`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
-          { resource: 'webinar', id: flags['webinar-id'] },
+          { resource: 'object', id: flags['object-id'] },
           { resource: 'poll' },
         ],
       })
