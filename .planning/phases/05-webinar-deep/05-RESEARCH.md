@@ -691,7 +691,7 @@ Test files following the existing `*.test.ts` pattern in `src/commands/webinar/_
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Speaker `set-avatar` token field name**
    - What we know: API endpoint `/live/speaker/set-avatar` accepts `file` parameter; description says "valid `live_speaker_id`"
