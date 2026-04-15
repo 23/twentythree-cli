@@ -18,8 +18,8 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
   static description = 'Remove an agenda section from a webinar'
 
   static examples = [
-    '<%= config.bin %> webinar section remove 99',
-    '<%= config.bin %> webinar section remove 99 --json',
+    '<%= config.bin %> webinar section remove 12345 99',
+    '<%= config.bin %> webinar section remove 12345 99 --json',
   ]
 
   static enableJsonFlag = true
@@ -29,6 +29,7 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Section ID', required: true }),
   }
 
@@ -47,9 +48,8 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
     }
 
     const { data, error } = await this.apiClient.POST('/live/section/remove', {
-      // CRITICAL: live_section_id (section's own ID), NOT live_id
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { live_section_id: Number(args.id) } as any,
+      body: { live_id: Number(args.webinarId), live_section_id: Number(args.id) } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
@@ -66,6 +66,7 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
         summary: `Section ${args.id} removed`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
+          { resource: 'webinar', id: args.webinarId },
           { resource: 'section', id: args.id },
         ],
       })

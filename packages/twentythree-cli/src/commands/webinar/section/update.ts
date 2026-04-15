@@ -17,9 +17,9 @@ export default class WebinarSectionUpdate extends AuthenticatedCommand<typeof We
   static description = 'Update an agenda section'
 
   static examples = [
-    '<%= config.bin %> webinar section update 99 --title "Updated Title"',
-    '<%= config.bin %> webinar section update 99 --start-time 1800',
-    '<%= config.bin %> webinar section update 99 --title "Q&A" --description "Audience questions" --json',
+    '<%= config.bin %> webinar section update 12345 99 --title "Updated Title"',
+    '<%= config.bin %> webinar section update 12345 99 --start-time 1800',
+    '<%= config.bin %> webinar section update 12345 99 --title "Q&A" --description "Audience questions" --json',
   ]
 
   static enableJsonFlag = true
@@ -41,6 +41,7 @@ export default class WebinarSectionUpdate extends AuthenticatedCommand<typeof We
   }
 
   static args = {
+    webinarId: Args.string({ description: 'Webinar ID', required: true }),
     id: Args.string({ description: 'Section ID', required: true }),
   }
 
@@ -48,8 +49,8 @@ export default class WebinarSectionUpdate extends AuthenticatedCommand<typeof We
     const { args, flags } = await this.parse(WebinarSectionUpdate)
     this.printWorkspaceHeader()
 
-    // CRITICAL: uses live_section_id (section's own ID), NOT live_id
     const body: Record<string, unknown> = {
+      live_id: Number(args.webinarId),
       live_section_id: Number(args.id),
     }
 
