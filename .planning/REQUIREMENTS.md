@@ -101,15 +101,15 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Action Commands (CTAs)
 
-- [ ] **ACT-01**: `twentythree action list` lists CTAs for a given video/webinar
-- [ ] **ACT-02**: `twentythree action get` fetches actions by object or action ID
-- [ ] **ACT-03**: `twentythree action types` lists available action type definitions
-- [ ] **ACT-04**: `twentythree action add` creates a new CTA with default values
-- [ ] **ACT-05**: `twentythree action update <id>` modifies action name, timing, and data fields
-- [ ] **ACT-06**: `twentythree action delete <id>` removes a CTA permanently with confirmation
-- [ ] **ACT-07**: `twentythree action include <id>` adds an object to a CTA's scope
-- [ ] **ACT-08**: `twentythree action exclude <id>` prevents a CTA from displaying on a specific object
-- [ ] **ACT-09**: `twentythree action upload <id>` uploads an image/video file to an action variable; uses the shared chunked upload engine (UPL-01–UPL-08) when the file is a video
+- [x] **ACT-01**: `twentythree action list` lists CTAs for a given video/webinar
+- [x] **ACT-02**: `twentythree action get` fetches actions by object or action ID
+- [x] **ACT-03**: `twentythree action types` lists available action type definitions
+- [x] **ACT-04**: `twentythree action add` creates a new CTA with default values
+- [x] **ACT-05**: `twentythree action update <id>` modifies action name, timing, and data fields
+- [x] **ACT-06**: `twentythree action delete <id>` removes a CTA permanently with confirmation
+- [x] **ACT-07**: `twentythree action include <id>` adds an object to a CTA's scope
+- [x] **ACT-08**: `twentythree action exclude <id>` prevents a CTA from displaying on a specific object
+- [x] **ACT-09**: `twentythree action upload <id>` uploads an image/video file to an action variable; uses the shared chunked upload engine (UPL-01–UPL-08) when the file is a video
 
 ### Collector Commands
 
@@ -359,15 +359,15 @@ Explicitly excluded. Documented to prevent scope creep.
 | POL-04 | Phase 5 | Pending |
 | POL-05 | Phase 5 | Pending |
 | POL-06 | Phase 5 | Pending |
-| ACT-01 | Phase 6 | Pending |
-| ACT-02 | Phase 6 | Pending |
-| ACT-03 | Phase 6 | Pending |
-| ACT-04 | Phase 6 | Pending |
-| ACT-05 | Phase 6 | Pending |
-| ACT-06 | Phase 6 | Pending |
-| ACT-07 | Phase 6 | Pending |
-| ACT-08 | Phase 6 | Pending |
-| ACT-09 | Phase 6 | Pending |
+| ACT-01 | Phase 6 | Complete |
+| ACT-02 | Phase 6 | Complete |
+| ACT-03 | Phase 6 | Complete |
+| ACT-04 | Phase 6 | Complete |
+| ACT-05 | Phase 6 | Complete |
+| ACT-06 | Phase 6 | Complete |
+| ACT-07 | Phase 6 | Complete |
+| ACT-08 | Phase 6 | Complete |
+| ACT-09 | Phase 6 | Complete |
 | COL-01 | Phase 6 | Pending |
 | COL-02 | Phase 6 | Pending |
 | COL-03 | Phase 6 | Pending |

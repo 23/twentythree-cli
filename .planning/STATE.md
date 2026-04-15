@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 complete — all 5 plans executed
-last_updated: "2026-04-15T09:00:00.000Z"
-last_activity: 2026-04-15 -- Phase 05 complete (42 commands delivered)
+stopped_at: Completed 06-01-PLAN.md (action CTA commands)
+last_updated: "2026-04-15T21:45:29.784Z"
+last_activity: 2026-04-15
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 5
-  total_plans: 22
-  completed_plans: 22
-  percent: 100
+  total_plans: 26
+  completed_plans: 23
+  percent: 88
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 05 — webinar-deep
+**Current focus:** Phase 06 — engagement-actions
 
 ## Current Position
 
-Phase: 05 (webinar-deep) — COMPLETE
-Plan: 5 of 5
-Status: Phase 05 complete — 42 commands delivered across 5 plans
-Last activity: 2026-04-15 -- Phase 05 complete
+Phase: 06 (engagement-actions) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-04-15
 
 Progress: [██████████] 100%
 
@@ -60,8 +60,13 @@ Progress: [██████████] 100%
 | Phase 03-video-core P03 | 3 | 2 tasks | 5 files |
 | Phase 03-video-core P04 | ~25min | 2 tasks | 10 files |
 | Phase 03-video-core P05 | 15min | 2 tasks | 11 files |
+| Phase 06-engagement-actions P06-01 | 4m | 3 tasks | 9 files |
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 6.1 inserted after Phase 6: Download and store swagger file; prescribe api-change workflow with claude-aided code updates (URGENT)
 
 ### Decisions
 
@@ -88,6 +93,7 @@ Recent decisions affecting current work:
 - [Phase 03-video-core]: video update flag mode: only flags !== undefined added to body — prevents clearing unset fields (Pitfall 3 / T-03-07 mitigation)
 - [Phase 03-video-core]: tokenFieldName optional param added to ChunkedUploadParams — replace flow needs replace_token field name not upload_token; defaults to upload_token for backward compat
 - [Phase 03-video-core]: archive/get-progress is POST not GET per OpenAPI types — types.ts is authoritative over plan prose descriptions
+- [Phase 06-engagement-actions]: D-1 applied: action/upload uses native fetch + FormData (no chunked engine); D-5: action/get all params optional with positional action_id
 
 ### Pending Todos
 
@@ -99,6 +105,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-15T06:21:44.350Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-webinar-deep/05-CONTEXT.md
+Last session: 2026-04-15T21:45:29.782Z
+Stopped at: Completed 06-01-PLAN.md (action CTA commands)
+Resume file: None
