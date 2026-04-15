@@ -6,9 +6,10 @@ import { renderTable, formatJsonOutput, parseBoolParam, formatApiError, EXIT_ERR
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
- * Webinar list command — lists all webinars in the active workspace with auto-pagination.
- * Renders a cli-table3 table with columns: ID, Title, Status, Date, Private.
- * Supports --json output with { ok, data, summary, breadcrumbs } shape (CLI-01).
+ * Webinar list command — lists webinars in the active workspace.
+ * Defaults to the first 20 results; use --limit N or --all for more.
+ * Streaming details are excluded by default (include_streaming_details_p: false)
+ * to avoid slow per-webinar credential fetches.
  *
  * CRITICAL schema note: API schema uses photo_id but runtime response includes live_id.
  * Use `item.live_id ?? item.photo_id` defensively for the ID column.
@@ -18,14 +19,23 @@ export default class WebinarList extends AuthenticatedCommand<typeof WebinarList
 
   static examples = [
     '<%= config.bin %> webinar list',
-    '<%= config.bin %> webinar list --json',
-    '<%= config.bin %> webinar list --status upcoming',
+    '<%= config.bin %> webinar list --limit 50',
+    '<%= config.bin %> webinar list --all',
+    '<%= config.bin %> webinar list --status upcoming --json',
   ]
 
   static enableJsonFlag = true
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    limit: Flags.integer({
+      description: 'Maximum number of webinars to return (default: 20)',
+      default: 20,
+    }),
+    all: Flags.boolean({
+      description: 'Fetch all webinars across all pages (overrides --limit)',
+      required: false,
+    }),
     'include-private': Flags.boolean({
       description: 'Include private webinars in the results',
       allowNo: true,
@@ -48,33 +58,60 @@ export default class WebinarList extends AuthenticatedCommand<typeof WebinarList
     const { flags } = await this.parse(WebinarList)
     this.printWorkspaceHeader()
 
+    const includePrivate = parseBoolParam(flags['include-private'], flags['include-private-p'])
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const webinars = await fetchAllPages<any>(async (page, size) => {
-      const includePrivate = parseBoolParam(flags['include-private'], flags['include-private-p'])
+    let webinars: any[]
+
+    if (flags.all) {
+      // Paginate through all results
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      webinars = await fetchAllPages<any>(async (page, size) => {
+        const { data, error } = await this.apiClient.GET('/live/list', {
+          params: {
+            query: {
+              p: page,
+              size,
+              include_private_p: includePrivate ?? undefined,
+              live_status: flags.status as any,
+              search: flags.search,
+              include_streaming_details_p: false,
+            },
+          },
+        })
+        if (error) {
+          this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const resp = data as any
+        const items: unknown[] = Array.isArray(resp?.data)
+          ? resp.data
+          : resp?.data
+          ? [resp.data]
+          : []
+        return { data: items, total_count: resp?.total_count }
+      })
+    } else {
+      // Single page up to --limit (default 20) — fast path
       const { data, error } = await this.apiClient.GET('/live/list', {
         params: {
           query: {
-            p: page,
-            size,
+            p: 1,
+            size: flags.limit,
             include_private_p: includePrivate ?? undefined,
             live_status: flags.status as any,
             search: flags.search,
+            include_streaming_details_p: false,
           },
         },
       })
       if (error) {
         this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
       }
-      // Cast to any — API schema mismatch: runtime response shape differs from OpenAPI spec.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const resp = data as any
-      const items: unknown[] = Array.isArray(resp?.data)
-        ? resp.data
-        : resp?.data
-        ? [resp.data]
-        : []
-      return { data: items, total_count: resp?.total_count }
-    })
+      webinars = Array.isArray(resp?.data) ? resp.data : resp?.data ? [resp.data] : []
+    }
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
