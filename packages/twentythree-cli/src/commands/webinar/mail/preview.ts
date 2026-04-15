@@ -56,21 +56,27 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
       this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
     }
 
-    // openapi-fetch types may not include /live/mail/preview — cast to any to avoid
-    // type errors if the path isn't in the generated spec
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (this.apiClient as any).GET('/live/mail/preview', {
-      params: { query: { ...contextField, live_mail_id: Number(args.id) } },
+    // Use native fetch — openapi-fetch parses the response as JSON, but this endpoint
+    // returns raw HTML. We need the body as text.
+    const query = new URLSearchParams({
+      ...Object.fromEntries(Object.entries(contextField!).map(([k, v]) => [k, String(v)])),
+      live_mail_id: String(args.id),
     })
+    const headers: HeadersInit = {}
+    if (this.activeWorkspace.bearer_token) {
+      headers['Authorization'] = `Bearer ${this.activeWorkspace.bearer_token}`
+    }
+    const response = await fetch(`${this.apiBaseUrl}live/mail/preview?${query}`, { headers })
+    const html = await response.text()
 
-    if (error) {
-      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
+    if (!response.ok) {
+      this.error(applyCliTerms(`API error ${response.status}: ${html}`), { exit: EXIT_ERROR })
     }
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data,
+        data: html,
         summary: 'Mail preview',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
@@ -81,6 +87,6 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
 
     // CRITICAL (Decision D-3): write raw HTML directly to stdout without trailing newline
     // this.log() would add a newline that corrupts HTML piping
-    process.stdout.write(String(data))
+    process.stdout.write(html)
   }
 }
