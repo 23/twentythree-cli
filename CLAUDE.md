@@ -138,3 +138,57 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 > Profile not yet configured. Run `/gsd-profile-user` to generate your developer profile.
 > This section is managed by `generate-claude-profile` -- do not edit manually.
 <!-- GSD:profile-end -->
+
+## API Change Workflow
+
+The TwentyThree OpenAPI spec is stored locally at `packages/twentythree-cli/specs/twentythree-api-swagger.json`. When the spec changes, follow this workflow to update the types and fix any affected commands.
+
+### 1. Run the update script
+
+From the repo root:
+```bash
+pnpm update-api-spec
+```
+
+Or directly from the CLI package:
+```bash
+cd packages/twentythree-cli && ./update-api-spec.sh
+```
+
+The script downloads the latest spec, shows a diff of what changed, and regenerates `src/api/types.ts`.
+
+### 2. Read the diff output
+
+The script prints a raw `git diff` of `specs/twentythree-api-swagger.json`. The diff shows:
+- New endpoints (added paths)
+- Removed endpoints (deleted paths)
+- Changed parameters, response shapes, or required fields
+
+This diff is direct input for Claude — no further summarization needed.
+
+### 3. Apply changes with Claude Code
+
+1. Run `pnpm --filter twentythree-cli exec tsc --noEmit` to capture TypeScript errors introduced by the spec update
+2. Open a Claude Code session
+3. Paste the diff output and any new TypeScript errors
+4. Ask Claude to update affected command files and fix broken types
+
+Note: The codebase currently has pre-existing type errors unrelated to spec changes. Focus on errors that are newly introduced after running `pnpm generate-types` — not the pre-existing ones.
+
+### 4. Verify
+
+```bash
+pnpm --filter twentythree-cli exec tsc --noEmit
+pnpm --filter twentythree-cli test --run
+```
+
+Both commands should complete without new errors introduced by the spec update.
+
+### 5. Commit
+
+Commit the following files together in one commit:
+- `packages/twentythree-cli/specs/twentythree-api-swagger.json` (updated spec)
+- `packages/twentythree-cli/src/api/types.ts` (regenerated types)
+- Any command files updated to match the new spec
+
+Example commit message: `chore: update API spec and regenerate types (YYYY-MM-DD)`
