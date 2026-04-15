@@ -119,14 +119,14 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Comment Commands
 
-- [ ] **CMT-01**: `twentythree comment list <id>` lists comments on a video or webinar
-- [ ] **CMT-02**: `twentythree comment add <id>` adds a comment
-- [ ] **CMT-03**: `twentythree comment update <id>` updates a comment
-- [ ] **CMT-04**: `twentythree comment delete <id>` deletes a comment with confirmation
-- [ ] **CMT-05**: `twentythree comment promote <id>` promotes a comment
-- [ ] **CMT-06**: `twentythree comment clone <id>` clones a comment
-- [ ] **CMT-07**: `twentythree comment set-order <id>` sets comment display order
-- [ ] **CMT-08**: `twentythree comment reaction list|add|remove <id>` manages comment reactions
+- [x] **CMT-01**: `twentythree comment list <id>` lists comments on a video or webinar
+- [x] **CMT-02**: `twentythree comment add <id>` adds a comment
+- [x] **CMT-03**: `twentythree comment update <id>` updates a comment
+- [x] **CMT-04**: `twentythree comment delete <id>` deletes a comment with confirmation
+- [x] **CMT-05**: `twentythree comment promote <id>` promotes a comment
+- [x] **CMT-06**: `twentythree comment clone <id>` clones a comment
+- [x] **CMT-07**: `twentythree comment set-order <id>` sets comment display order
+- [x] **CMT-08**: `twentythree comment reaction list|add|remove <id>` manages comment reactions
 
 ### Poll Commands
 
@@ -371,14 +371,14 @@ Explicitly excluded. Documented to prevent scope creep.
 | COL-01 | Phase 6 | Complete |
 | COL-02 | Phase 6 | Complete |
 | COL-03 | Phase 6 | Complete |
-| CMT-01 | Phase 6 | Pending |
-| CMT-02 | Phase 6 | Pending |
-| CMT-03 | Phase 6 | Pending |
-| CMT-04 | Phase 6 | Pending |
-| CMT-05 | Phase 6 | Pending |
-| CMT-06 | Phase 6 | Pending |
-| CMT-07 | Phase 6 | Pending |
-| CMT-08 | Phase 6 | Pending |
+| CMT-01 | Phase 6 | Complete |
+| CMT-02 | Phase 6 | Complete |
+| CMT-03 | Phase 6 | Complete |
+| CMT-04 | Phase 6 | Complete |
+| CMT-05 | Phase 6 | Complete |
+| CMT-06 | Phase 6 | Complete |
+| CMT-07 | Phase 6 | Complete |
+| CMT-08 | Phase 6 | Complete |
 | PLY-01 | Phase 6 | Pending |
 | PLY-02 | Phase 6 | Pending |
 | PLY-03 | Phase 6 | Pending |

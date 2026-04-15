@@ -121,7 +121,7 @@ Plans:
 Plans:
 - [x] 06-01-PLAN.md — Action CTA commands (add, delete, types, update, get, list, exclude, include, upload)
 - [x] 06-02-PLAN.md — Collector and Tag commands (list, include, exclude, tag list, tag related)
-- [ ] 06-03-PLAN.md — Comment commands including reaction 3-level topic (list, add, update, delete, promote, clone, set-order, reaction add/list/remove)
+- [x] 06-03-PLAN.md — Comment commands including reaction 3-level topic (list, add, update, delete, promote, clone, set-order, reaction add/list/remove)
 - [ ] 06-04-PLAN.md — Player commands (list, update, delete, embed, embed-versions, styles)
 
 ### Phase 06.1: Download and store swagger file; prescribe api-change workflow with claude-aided code updates (INSERTED)
@@ -129,7 +129,7 @@ Plans:
 **Goal:** [Urgent work - to be planned]
 **Requirements**: TBD
 **Depends on:** Phase 6
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 06.1 to break down)
@@ -171,6 +171,6 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 3. Video Core | 5/5 | Complete   | 2026-04-14 |
 | 4. Category & Webinar Core | 0/4 | Planned | - |
 | 5. Webinar Deep | 0/5 | Planned | - |
-| 6. Engagement & Actions | 2/4 | In Progress|  |
+| 6. Engagement & Actions | 3/4 | In Progress|  |
 | 7. Analytics & Audience | 0/4 | Not started | - |
 | 8. Platform & Polish | 0/5 | Not started | - |
