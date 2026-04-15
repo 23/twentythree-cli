@@ -1,0 +1,68 @@
+import { Args } from '@oclif/core'
+import { AuthenticatedCommand } from '../../../lib/base-command.js'
+import { formatJsonOutput, renderTable, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
+import { applyCliTerms } from '../../../lib/term-map.js'
+
+/**
+ * Webinar recording status command — gets recording status for a webinar.
+ *
+ * Threat mitigations:
+ *   T-05-11: Display only status field, filter out upload_token from table
+ *   T-05-12: applyCliTerms() on all error messages — no 'live'/'photo'/'album' leaks
+ */
+export default class WebinarRecordingStatus extends AuthenticatedCommand<typeof WebinarRecordingStatus> {
+  static description = 'Get recording status for a webinar'
+
+  static examples = [
+    '<%= config.bin %> webinar recording status 12345',
+    '<%= config.bin %> webinar recording status 12345 --json',
+  ]
+
+  static enableJsonFlag = true
+
+  static flags = {
+    ...AuthenticatedCommand.baseFlags,
+  }
+
+  static args = {
+    id: Args.string({ description: 'Webinar ID', required: true }),
+  }
+
+  public async run(): Promise<void | object> {
+    const { args } = await this.parse(WebinarRecordingStatus)
+    this.printWorkspaceHeader()
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (this.apiClient as any).GET('/live/recording/status', {
+      params: { query: { live_id: Number(args.id) } },
+    })
+
+    if (error) {
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
+    }
+
+    if (this.jsonEnabled()) {
+      return formatJsonOutput({
+        ok: true,
+        data,
+        summary: `Recording status for webinar ${args.id}`,
+        breadcrumbs: [
+          { domain: this.activeWorkspace.domain },
+          { resource: 'webinar', id: args.id },
+          { resource: 'recording' },
+        ],
+      })
+    }
+
+    // SECURITY T-05-11: Display only the status field — never display upload_token
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const status = String((data as any)?.status ?? (data as any)?.data?.status ?? 'unknown')
+
+    const table = renderTable(
+      ['Field', 'Value'],
+      [['Status', status]],
+    )
+
+    this.log(table.toString())
+  }
+}
