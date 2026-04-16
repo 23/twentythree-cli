@@ -26,7 +26,7 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 
 ### v1.1 Repository Polish & Release
 
-- [ ] **Phase 9: Endpoint Coverage Audit** — Audit all 235 OpenAPI endpoints against command files; classify and fill any confirmed gaps
+- [x] **Phase 9: Endpoint Coverage Audit** — Audit all 235 OpenAPI endpoints against command files; classify and fill any confirmed gaps (completed 2026-04-16)
 - [ ] **Phase 10: Package Hygiene** — Wire prepack script, fill missing package.json fields, update files array
 - [ ] **Phase 11: Documentation** — Generate command reference with oclif; write getting-started and api-spec-upgrade guides
 - [ ] **Phase 12: READMEs & CHANGELOG** — Write root README, npm package README, and CHANGELOG
@@ -46,7 +46,7 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 Plans:
 - [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
 - [x] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
-- [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
+- [x] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
 ### Phase 10: Package Hygiene
 **Goal**: The package.json is publish-ready and every tarball built from it contains a fresh dist/ and manifest
@@ -59,7 +59,7 @@ Plans:
 **Plans**: 3 plans
 Plans:
 - [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
-- [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
+- [x] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
 ### Phase 11: Documentation
@@ -72,7 +72,7 @@ Plans:
   3. `docs/guides/api-spec-upgrade.md` documents the `pnpm update-api-spec` workflow end-to-end
 **Plans**: 3 plans
 Plans:
-- [ ] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
+- [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
 - [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 **UI hint**: no
@@ -118,7 +118,7 @@ Plans:
 | 6.1. API Spec Workflow (INSERTED) | v1.0 | 1/1 | Complete | 2026-04-15 |
 | 7. Analytics & Audience | v1.0 | 4/4 | Complete | 2026-04-16 |
 | 8. Platform & Polish | v1.0 | 10/10 | Complete | 2026-04-16 |
-| 9. Endpoint Coverage Audit | v1.1 | 2/3 | In Progress|  |
+| 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
 | 10. Package Hygiene | v1.1 | 0/? | Not started | - |
 | 11. Documentation | v1.1 | 0/? | Not started | - |
 | 12. READMEs & CHANGELOG | v1.1 | 0/? | Not started | - |
