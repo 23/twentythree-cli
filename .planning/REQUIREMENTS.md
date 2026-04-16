@@ -248,8 +248,8 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 - [x] **CLI-02**: All list commands handle API pagination transparently (auto-fetches all pages by default)
 - [x] **CLI-03**: All commands return correct exit codes: `0` success, `1` user error, `2` API/network error
 - [x] **CLI-04**: API errors are mapped through `term-map.ts` before display — no legacy term (`photo`, `album`, `live`) appears in user-visible output
-- [ ] **CLI-05**: `twentythree doctor` checks credentials, connectivity, and token validity and prints a structured health report
-- [ ] **CLI-06**: `--help --agent` on any command outputs machine-readable command metadata for AI agent consumption
+- [x] **CLI-05**: `twentythree doctor` checks credentials, connectivity, and token validity and prints a structured health report
+- [x] **CLI-06**: `--help --agent` on any command outputs machine-readable command metadata for AI agent consumption
 - [x] **CLI-07**: All formatted output resolves relative URLs to full URLs using the active workspace domain — API responses mix absolute (`https://video.company.com/page`) and relative (`/page`) URLs; this applies to all URL fields including page links, thumbnail URLs, and poster images; users always see full URLs
 
 ## v2 Requirements
@@ -451,8 +451,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | USR-06 | Phase 8 | Complete |
 | USR-07 | Phase 8 | Complete |
 | USR-08 | Phase 8 | Complete |
-| CLI-05 | Phase 8 | Pending |
-| CLI-06 | Phase 8 | Pending |
+| CLI-05 | Phase 8 | Complete |
+| CLI-06 | Phase 8 | Complete |
 | CLI-07 | Phase 3 | Complete |
 
 ---
