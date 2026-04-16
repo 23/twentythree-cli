@@ -82,7 +82,10 @@ Plans:
   1. Root `README.md` includes install command, quickstart with `auth credentials` as step 1, 22-topic command overview table, terminology mapping table, and link to `docs/`
   2. `packages/twentythree-cli/README.md` (npm page) contains install command, short quickstart, and link to full GitHub docs
   3. `CHANGELOG.md` exists at repo root with entries for v1.0 and v1.1
-**Plans**: [To be planned]
+**Plans**: 2 plans
+Plans:
+- [ ] 12-01-PLAN.md — Write root README.md and npm package README.md
+- [ ] 12-02-PLAN.md — Write CHANGELOG.md
 
 ### Phase 13: npm Publish
 **Goal**: The CLI is live on npm, installable globally, and future releases can be triggered by pushing a git tag
@@ -110,5 +113,5 @@ Plans:
 | 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
 | 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
 | 11. Documentation | v1.1 | 2/2 | Complete    | 2026-04-16 |
-| 12. READMEs & CHANGELOG | v1.1 | 0/? | Not started | - |
+| 12. READMEs & CHANGELOG | v1.1 | 0/2 | Not started | - |
 | 13. npm Publish | v1.1 | 0/? | Not started | - |
