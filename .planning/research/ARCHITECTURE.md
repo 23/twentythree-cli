@@ -1,240 +1,311 @@
-# Architecture Patterns — v1.1 Docs & Audit Milestone
+# Architecture Research: v1.1 Repository Polish & Release
 
-**Domain:** CLI documentation pipeline and endpoint coverage audit for a 219-command oclif v4 TypeScript CLI
+**Domain:** CLI documentation pipeline, endpoint coverage audit, and npm publish for a 219-command oclif v4 TypeScript CLI in a pnpm monorepo
 **Project:** twentythree-cli v1.1 — Repository Polish & Release
 **Researched:** 2026-04-16
-**Overall confidence:** HIGH — all findings derived directly from the live codebase
+**Overall confidence:** HIGH — all findings derived from the live codebase, oclif official docs, and npm official docs
 
 ---
 
-## Context: What Already Exists
+## Component Map (new vs modified)
 
-This architecture document is scoped to the v1.1 milestone additions only. The existing codebase state:
+### New Components
 
-- 219 command files in `packages/twentythree-cli/src/commands/` organized by topic (24 topics)
-- Every command file declares `static agentMetadata = { api_endpoint, auth_scope, output_shape, side_effects }`
-- `oclif.manifest.json` is generated at build time (`postbuild: oclif manifest`) and **already includes `agentMetadata`** for all 219 commands — this is the key leverage point for generation
-- 226 entries in the manifest (219 real commands + 7 topic index files that lack agentMetadata)
-- OpenAPI spec at `packages/twentythree-cli/specs/twentythree-api-swagger.json` with 235 endpoints across 235 paths
-- Current coverage gap: 210 of 235 spec endpoints have a matching `api_endpoint` field (25 uncovered, all in analytics sub-paths)
+| Component | Type | Location | Notes |
+|-----------|------|----------|-------|
+| `scripts/audit-endpoints.mjs` | New script | `packages/twentythree-cli/scripts/` | Plain JS (no build step); reads manifest + spec |
+| `scripts/generate-docs.mjs` | New script | `packages/twentythree-cli/scripts/` | Plain JS; reads manifest, writes docs/ |
+| `docs/` | New directory | `packages/twentythree-cli/docs/` | Package-scoped; included in npm files |
+| `docs/README.md` | New file | `packages/twentythree-cli/docs/` | Auto-generated topic index |
+| `docs/commands/*.md` | New files (24) | `packages/twentythree-cli/docs/commands/` | Auto-generated, one per topic |
+| `docs/guides/` | New directory | `packages/twentythree-cli/docs/guides/` | Hand-authored |
+| `docs/guides/getting-started.md` | New file | `packages/twentythree-cli/docs/guides/` | Install + auth + first commands |
+| `docs/guides/api-spec-upgrade.md` | New file | `packages/twentythree-cli/docs/guides/` | Formalizes the CLAUDE.md workflow |
+| `docs/guides/contributing.md` | New file | `packages/twentythree-cli/docs/guides/` | Dev setup, build, test, PR |
+| `docs/endpoint-coverage.md` | New file | `packages/twentythree-cli/docs/` | Auto-generated audit output |
+| `/README.md` | New file | Repo root | GitHub discovery surface |
+| `.github/workflows/publish.yml` | New file | `.github/workflows/` | CI publish pipeline |
+
+### Modified Files
+
+| File | Change |
+|------|--------|
+| `packages/twentythree-cli/package.json` | Add `audit`, `docs` scripts; add `/docs` to `files` array; add `repository`, `homepage`, `keywords` fields; add `publishConfig.provenance: true` |
+| `packages/twentythree-cli/README.md` | New file (does not currently exist); install-focused for npm page |
+| Root `package.json` | Add `"audit"` and `"docs"` convenience workspace scripts |
 
 ---
 
-## New Components (v1.1)
+## Endpoint Audit Script Design
 
-### What Gets Added
+### Location
 
-| Component | Type | Location |
-|-----------|------|----------|
-| README.md | New file | Repo root (`/`) |
-| docs/ folder | New directory | `packages/twentythree-cli/docs/` |
-| docs/commands/ | Auto-generated | `packages/twentythree-cli/docs/commands/` |
-| docs/guides/ | Hand-authored | `packages/twentythree-cli/docs/guides/` |
-| scripts/generate-docs.ts | New script | `packages/twentythree-cli/scripts/generate-docs.ts` |
-| scripts/audit-endpoints.ts | New script | `packages/twentythree-cli/scripts/audit-endpoints.ts` |
-| pnpm script `docs` | New | Root `package.json` scripts |
-| pnpm script `audit` | New | Root `package.json` scripts |
+`packages/twentythree-cli/scripts/audit-endpoints.mjs`
 
----
+Write as plain `.mjs`, not TypeScript. The script reads two JSON files and does set operations — TypeScript adds no value here, and plain JS avoids a build step or `tsx` dependency.
 
-## README.md Placement
+### Inputs
 
-**Put README.md at the monorepo root (`/README.md`), not inside the package.**
+1. `packages/twentythree-cli/specs/twentythree-api-swagger.json` — 235 paths
+2. `packages/twentythree-cli/oclif.manifest.json` — 226 entries (219 real commands + 7 topic indexes)
 
-Rationale:
-- GitHub renders the root README as the repository homepage — that is the primary discovery surface for contributors and users browsing the repo
-- npm also renders `packages/twentythree-cli/README.md` on the package page — this needs to exist too, but it can be a shorter install-focused version that links to the root README for full docs
-- The monorepo root README serves repo visitors; the package README serves npm visitors; they are different audiences
+**Critical:** `oclif.manifest.json` is generated by `postbuild: oclif manifest`. The script must run after `pnpm build`. Add a guard: check that the manifest file exists and is newer than `dist/` before proceeding.
 
-Recommended structure:
+### Comparison Logic
+
+The `agentMetadata.api_endpoint` field in every command already stores the raw spec path in legacy format (e.g. `GET /photo/list`). The OpenAPI spec also uses legacy paths (`/photo/`, `/album/`, `/live/`). **No translation layer is needed** — the comparison is a direct string match.
+
+Commands that don't call the API declare `api_endpoint: 'local'` (auth:status, workspace:use, workspace:list). Filter these out before computing coverage.
 
 ```
-/README.md                          (repo root — full README for GitHub)
-packages/twentythree-cli/README.md  (npm package README — install + quickstart + link to docs/)
+spec_endpoints   = { "METHOD /path" for each method+path in spec.paths }
+command_endpoints = { cmd.agentMetadata.api_endpoint for cmd in manifest
+                      where agentMetadata exists AND api_endpoint !== 'local' }
+
+covered   = intersection(spec_endpoints, command_endpoints)
+uncovered = spec_endpoints - command_endpoints      ← gaps to fill
+phantom   = command_endpoints - spec_endpoints      ← bugs (stale endpoint refs)
+duplicates = endpoints with 2+ covering commands    ← expected for some (video:list / video:get)
 ```
 
-The root README should contain: what it is, install command, quickstart (auth + first command), link to `docs/` for the full command reference.
+### Output
 
-The package README can be shorter: install one-liner, auth setup, one example command, link to GitHub for full docs.
+- Print a human-readable report to stdout (totals + lists)
+- Write machine-readable output to `docs/endpoint-coverage.md`
+- **Exit code 1 if uncovered > 0 OR phantom > 0** — enables use as a CI gate
+- Phantom endpoints are higher priority than uncovered: a phantom means a command is calling a deleted or renamed endpoint
+
+### Known Current State (from live codebase)
+
+- 235 spec endpoints
+- 210 matched by `api_endpoint` values
+- 25 uncovered (all in analytics timeseries/totals sub-paths)
+- 5 duplicates (expected — e.g. `GET /photo/list` covered by both `video list` and `video get`)
+- 3 `api_endpoint: 'local'` (correct, filtered out)
+
+### Adding to Scripts
+
+```json
+// packages/twentythree-cli/package.json
+"audit": "node scripts/audit-endpoints.mjs"
+
+// Root package.json
+"audit": "pnpm --filter twentythree-cli exec node scripts/audit-endpoints.mjs"
+```
 
 ---
 
-## docs/ Folder Structure
+## npm Publish Integration
 
-Place the docs folder **inside the package**, not at the repo root:
+### oclif pack vs npm publish
+
+**Use plain `npm publish`**, not `oclif pack`.
+
+`oclif pack` creates platform-specific standalone tarballs (with bundled Node.js binary) for users who don't have Node.js installed. This project's target audience is developers with Node.js already installed. `npm publish` is the correct distribution method for a developer tool. `oclif pack` is appropriate for end-user desktop CLIs (e.g. Heroku CLI, Salesforce CLI) — not for this use case.
+
+**Confidence: HIGH** — confirmed on oclif.io/docs/releasing: "use `npm publish` like any other npm project." Oclif automatically includes `run.cmd` for Windows, which already exists at `packages/twentythree-cli/bin/run.cmd`.
+
+### package.json Fields Needed
+
+The current `packages/twentythree-cli/package.json` already has the required functional fields (`name`, `version`, `bin`, `main`, `files`, `engines`, `oclif`). These fields need to be added before first publish:
+
+```json
+{
+  "description": "Terminal access to every TwentyThree API endpoint",
+  "keywords": ["twentythree", "video", "cli", "api"],
+  "author": "TwentyThree",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR-ORG/twentythree-cli.git"
+  },
+  "homepage": "https://github.com/YOUR-ORG/twentythree-cli#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
+```
+
+The `publishConfig.provenance: true` opts into npm provenance attestation automatically (no flag needed on the CLI command). This links the published package to the exact GitHub commit it was built from via Sigstore — a supply-chain security best practice that npm now surfaces in the package registry UI.
+
+### files Field
+
+The existing `files` array is correct for function but should include `/docs` for offline reference:
+
+```json
+"files": [
+  "/bin",
+  "/dist",
+  "/oclif.manifest.json",
+  "/docs",
+  "/README.md"
+]
+```
+
+**Do not add an `.npmignore` file.** The `files` whitelist in `package.json` is the safer pattern in a monorepo: it explicitly declares what ships rather than trying to exclude everything else. An `.npmignore` in a pnpm monorepo package can interact unexpectedly with pnpm's hoisting and `pnpm deploy` behavior.
+
+### Monorepo-Specific Concerns
+
+- Publish runs from `packages/twentythree-cli/`, not the repo root. `pnpm publish --filter twentythree-cli` handles this.
+- The root `package.json` has `"private": true` — it will never accidentally be published.
+- The turbo `build` task outputs `dist/**`. Ensure `pnpm build` runs before publish (turbo caches the output, so a fresh build is not always re-executed — add `--force` or check cache freshness in CI).
+- `oclif.manifest.json` is in `.gitignore` (correct — it's generated). It must be generated at build time and included in the published package via the `files` array. The `postbuild: oclif manifest` already handles this.
+
+### npm Provenance
+
+npm trusted publishing via OIDC is generally available as of July 2025. It replaces long-lived `NPM_TOKEN` secrets with short-lived OIDC tokens. For first publish, plain `NPM_TOKEN` with `--provenance` is fine. For ongoing releases, trusted publishing is the preferred pattern.
+
+**Minimum GitHub Actions workflow for publish:**
+
+```yaml
+name: Publish
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required for provenance attestation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build                          # turbo build
+      - run: pnpm audit                          # exit 1 if coverage gaps
+      - run: pnpm docs                           # regenerate docs from fresh manifest
+      - run: pnpm publish --filter twentythree-cli --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+`id-token: write` is required for provenance attestation. `--no-git-checks` is needed in pnpm publish because the working tree has generated files (`docs/`, `oclif.manifest.json`) that aren't committed.
+
+### Version Bump Workflow
+
+```bash
+# From packages/twentythree-cli/
+npm version patch   # or minor / major — bumps package.json + creates git tag
+git push --follow-tags
+# → triggers publish workflow
+```
+
+Alternatively, `@changesets/cli` is already in the root dev dependencies. Changesets is appropriate if multiple packages in the monorepo need coordinated version bumps. For a single-package monorepo like this, plain `npm version` is simpler.
+
+---
+
+## README & Docs Placement
+
+### Two READMEs, Different Audiences
+
+| File | Audience | Content |
+|------|----------|---------|
+| `/README.md` (repo root) | GitHub visitors, contributors | Full: what it is, install, quickstart, feature overview, links to docs/ |
+| `packages/twentythree-cli/README.md` | npm page visitors | Focused: install one-liner, auth setup, one example command, link to GitHub for full docs |
+
+GitHub renders the root README as the repository homepage. npm renders the package README on the package page. They are different discovery surfaces with different user intent.
+
+The package README must exist because npm will render it on the package page — if it's absent, npm shows nothing. Keep it short (under 100 lines): install command, auth setup, two example commands, and a "Full documentation" link to the GitHub repo. npm visitors who want more will follow the link.
+
+### docs/ Placement
+
+Place inside the package, not at the repo root:
 
 ```
 packages/twentythree-cli/
 └── docs/
-    ├── README.md                    Index — links to all doc sections
-    ├── commands/                    Auto-generated command reference (one file per topic)
+    ├── README.md                      Auto-generated topic index
+    ├── commands/                      Auto-generated (one file per topic)
     │   ├── action.md
     │   ├── analytics.md
     │   ├── auth.md
-    │   ├── category.md
-    │   ├── ...                      (one file per topic, 24 total)
-    │   └── video.md
+    │   └── ... (24 files total)
     ├── guides/
-    │   ├── getting-started.md       Install + auth setup + first commands
-    │   ├── api-spec-upgrade.md      How to run update-api-spec.sh and fix types
-    │   └── contributing.md          Dev setup, build, test, PR process
-    └── endpoint-coverage.md         Auto-generated audit output (see below)
+    │   ├── getting-started.md         Hand-authored
+    │   ├── api-spec-upgrade.md        Hand-authored (formalizes CLAUDE.md workflow)
+    │   └── contributing.md            Hand-authored
+    └── endpoint-coverage.md           Auto-generated by audit script
 ```
 
-**Why one file per topic (not one file per command):** 219 individual files would be unnavigable. Topic-level files (24 files) match how users think: "I want to know about video commands," not "I want the file for video:list specifically." Each topic file lists all commands in that topic with flags, examples, and the mapped API endpoint.
+**Why one file per topic, not one per command:** 219 individual files would be unnavigable. Topic-level files (24 files) match how users browse: "video commands," not "video:list specifically."
 
-**Why docs/ inside the package:** The docs are specific to the CLI package. Root-level docs/ implies cross-package scope. Keeping it inside `packages/twentythree-cli/docs/` keeps the package self-contained and means the published npm package can include docs in its `files` array if desired.
+**Why docs/ inside the package:** The docs are specific to the CLI package. A root-level `docs/` implies cross-package scope. Keeping it inside `packages/twentythree-cli/docs/` keeps the package self-contained.
 
-**Include docs/ in the npm package files array** (optional but recommended for offline reference):
-```json
-"files": ["/bin", "/dist", "/oclif.manifest.json", "/docs"]
+### Command Reference Generation
+
+**Source of truth: `oclif.manifest.json`**, not TypeScript source files.
+
+The manifest is generated at build time, already contains `agentMetadata` for all 219 real commands, and includes all flag metadata needed for a reference (type, required, description, char, hidden). Parsing TypeScript source with regex or AST re-implements what the manifest already provides.
+
+Filter real commands by presence of `agentMetadata` — the 7 topic index entries lack it.
+
 ```
+Build → dist/ + oclif.manifest.json
+         ↓
+scripts/generate-docs.mjs
+         ↓
+docs/commands/*.md (24 files) + docs/README.md
+```
+
+**Prefer plain `.mjs`** for both scripts. No `tsx` dependency, no build step, directly executable by Node.js 22.
 
 ---
 
-## Command Reference Generation Pipeline
+## Suggested Build Order
 
-### Source of Truth: oclif.manifest.json
-
-The manifest is the right data source for doc generation — **not the TypeScript source files**. Reasons:
-
-1. The manifest is already generated at build time (`postbuild: oclif manifest`) — reading it requires no TypeScript compilation in the docs script
-2. It already contains `agentMetadata` (confirmed in the live manifest: all 219 real commands have it)
-3. It contains flags with descriptions, `required`, `type`, `allowNo`, `char` — everything needed for a flags reference table
-4. It contains `examples`, `description`, `args`, `enableJsonFlag`
-5. Topic index files (the 7 entries without `agentMetadata`) can be filtered out by checking for the presence of `agentMetadata`
-
-### Script: scripts/generate-docs.ts
-
-**Input:** `oclif.manifest.json` (relative to package root)
-**Output:** `docs/commands/*.md` (one file per topic) + `docs/README.md` (index)
-
-**Algorithm:**
+Dependencies are strict — each step requires the previous to be complete.
 
 ```
-1. Read oclif.manifest.json
-2. Filter to real commands: entries where agentMetadata exists
-3. Group by topic: split command id on ':' → topic = id.split(':')[0]
-4. For each topic, sort commands alphabetically by full id
-5. Write docs/commands/{topic}.md with:
-   - H1: Topic name (capitalized)
-   - Topic description (from the topic index command's description field)
-   - Table of commands: | Command | Description | API Endpoint | Auth Scope |
-   - Per command section:
-     - H2: twentythree {command id with spaces instead of colons}
-     - Description paragraph
-     - Flags table: | Flag | Type | Required | Description |
-     - Examples block (fenced code)
-     - agentMetadata summary line: "API: {api_endpoint} | Scope: {auth_scope}"
-6. Write docs/README.md as a topic index table linking to each topic file
+Step 1: Write audit script
+  Location: packages/twentythree-cli/scripts/audit-endpoints.mjs
+  Reads: manifest + spec (both already exist)
+  Run immediately: pnpm audit → get the actual gap report
+  No dependencies; can run against current codebase
+
+Step 2: Fill coverage gaps found by audit
+  Currently: 25 uncovered analytics endpoints
+  Add missing command files, rebuild, rerun audit until exit 0
+  Critical: docs must reflect complete coverage — don't generate docs until gaps are filled
+
+Step 3: Write generate-docs script
+  Location: packages/twentythree-cli/scripts/generate-docs.mjs
+  Run: pnpm build && pnpm docs
+  Output: docs/commands/*.md (24 files) + docs/README.md
+
+Step 4: Write hand-authored docs
+  docs/guides/getting-started.md
+  docs/guides/api-spec-upgrade.md  (formalize the CLAUDE.md workflow)
+  docs/guides/contributing.md
+
+Step 5: Write README files
+  packages/twentythree-cli/README.md  (install + quickstart, ~100 lines)
+  /README.md  (full repo README, links to docs/)
+
+Step 6: Update package.json
+  Add repository, homepage, keywords, publishConfig.provenance
+  Add /docs to files array
+  Add audit + docs scripts
+
+Step 7: npm publish readiness check
+  pnpm build && pnpm audit && pnpm docs (all must succeed)
+  npm pack --dry-run (verify what gets published)
+  npm publish (first publish)
+
+Step 8 (optional, post-first-publish): GitHub Actions publish workflow
+  .github/workflows/publish.yml
+  Tag-triggered, with provenance attestation
 ```
 
-**Flag table columns:** `--flag` / `-shortchar`, type (`string` | `boolean` | `integer`), Required (`yes` | `no`), Description. Hidden flags (like `--include-unpublished-p`) should be omitted — filter entries where `hidden: true`.
+**Critical path:** audit script → fill gaps → generate-docs → READMEs → package.json fields → publish.
 
-**Dependency on build:** The script reads `oclif.manifest.json` which is only accurate after `pnpm build`. Wire this as a `postbuild` step or a separate `docs` script that requires build to have run first. A simple check at script start — verify manifest exists and is newer than src/ — can guard against stale manifests.
-
-**Add to package.json scripts:**
-```json
-"docs": "tsx scripts/generate-docs.ts"
-```
-
-Add `tsx` as a dev dependency (or use `ts-node`). Alternatively, write the script in plain JavaScript to avoid a compile step — the manifest is already JSON, and the output is Markdown, so no TypeScript features are needed. A plain `.mjs` script avoids the tsx dependency.
-
-**Recommended: write generate-docs as a plain Node.js `.mjs` script** — simpler, no build step needed, directly readable.
-
-### Build Order
-
-```
-pnpm build                          (tsdown compile + oclif manifest regenerate)
-    → dist/ and oclif.manifest.json updated
-pnpm docs                           (reads manifest, writes docs/commands/*.md)
-    → docs/commands/*.md updated
-```
-
-In CI, run `pnpm build && pnpm docs` before publishing to ensure docs reflect the built manifest.
-
----
-
-## Endpoint Audit Script
-
-### Problem
-
-The audit must compare 235 OpenAPI spec endpoints against the `api_endpoint` field declared in each command's `agentMetadata`. The complication is the legacy naming in the spec: spec paths use `/photo/`, `/album/`, `/live/` but commands use `api_endpoint: 'GET /photo/list'` — they intentionally retain the spec's legacy path names in `agentMetadata` (the mapping to modern CLI terms happens in command UX, not in the API path).
-
-This means the comparison is **direct string match** between spec paths (`METHOD /path`) and `agentMetadata.api_endpoint` values. No translation layer is needed in the audit script.
-
-### Current Coverage (from live codebase analysis)
-
-- 235 spec endpoints
-- 219 `agentMetadata.api_endpoint` declarations (some commands have `api_endpoint: 'local'` for commands that don't call the API)
-- 210 direct matches between spec endpoints and command `api_endpoint` values
-- 25 uncovered spec endpoints (all in analytics sub-paths: timeseries/totals variants)
-- 5 commands with duplicate `api_endpoint` (two commands cover the same endpoint — expected for `GET /photo/list` which maps to both `video list` and `video get`)
-- 3 commands with `api_endpoint: 'local'` (auth:status, workspace:use, workspace:list — correct, these don't call the API)
-
-### Script: scripts/audit-endpoints.ts (or .mjs)
-
-**Inputs:**
-1. `specs/twentythree-api-swagger.json` — OpenAPI spec
-2. `oclif.manifest.json` — command manifest with agentMetadata
-
-**Algorithm:**
-
-```
-1. Read spec, extract all (METHOD PATH) strings:
-   for each path in spec.paths:
-     for each method in [get, post, put, delete, patch]:
-       if method exists: spec_endpoints.add(`${METHOD} ${path}`)
-
-2. Read manifest, extract all api_endpoint values:
-   for each command where agentMetadata exists:
-     ep = command.agentMetadata.api_endpoint
-     if ep && ep !== 'local': command_endpoints.add(ep)
-
-3. Compute:
-   covered = intersection(spec_endpoints, command_endpoints)
-   uncovered = spec_endpoints - command_endpoints
-   phantom = command_endpoints - spec_endpoints  (command references non-existent endpoint)
-   duplicates = endpoints covered by 2+ commands
-
-4. Output report to stdout and write docs/endpoint-coverage.md:
-   - Total spec endpoints: N
-   - Covered: N (percent)
-   - Uncovered: N (list)
-   - Phantom: N (list — these are bugs)
-   - Duplicate coverage: N (list — may be intentional)
-   - Exit code 0 if uncovered == 0 && phantom == 0, else exit code 1
-```
-
-**Exit code 1 on gaps** makes this usable as a CI gate.
-
-**Phantom endpoints** (command `api_endpoint` values that don't match any spec path) are more important than uncovered — they indicate a command is calling a deleted or renamed endpoint.
-
-### Data Flow
-
-```
-specs/twentythree-api-swagger.json
-          |
-          v
-    audit-endpoints.mjs
-          |
-          v
-    oclif.manifest.json
-          |
-          v
-    stdout report + docs/endpoint-coverage.md
-    exit 0 (full coverage) or exit 1 (gaps found)
-```
-
-**Add to root package.json scripts:**
-```json
-"audit": "pnpm --filter twentythree-cli exec node scripts/audit-endpoints.mjs"
-```
-
-Or add directly to `packages/twentythree-cli/package.json`:
-```json
-"audit": "node scripts/audit-endpoints.mjs"
-```
+The audit result drives everything else. Do not skip to docs or README until the audit shows exit 0.
 
 ---
 
@@ -242,108 +313,40 @@ Or add directly to `packages/twentythree-cli/package.json`:
 
 | New Component | Reads From | Writes To | Depends On |
 |---------------|-----------|----------|-----------|
-| `scripts/generate-docs.mjs` | `oclif.manifest.json` | `docs/commands/*.md`, `docs/README.md` | Build must run first (manifest must be current) |
-| `scripts/audit-endpoints.mjs` | `oclif.manifest.json`, `specs/twentythree-api-swagger.json` | `docs/endpoint-coverage.md`, stdout | Manifest must be current; spec must be current |
-| `/README.md` | — | — | Hand-authored once; references docs/ paths |
-| `packages/twentythree-cli/README.md` | — | — | Hand-authored once; shorter install-focused |
+| `scripts/audit-endpoints.mjs` | `oclif.manifest.json`, `specs/*.json` | `docs/endpoint-coverage.md`, stdout | `pnpm build` must run first |
+| `scripts/generate-docs.mjs` | `oclif.manifest.json` | `docs/commands/*.md`, `docs/README.md` | `pnpm build` must run first; gaps filled |
+| `/README.md` | — | — | Hand-authored once |
+| `packages/twentythree-cli/README.md` | — | — | Hand-authored once |
 | `docs/guides/*.md` | — | — | Hand-authored; no generation dependency |
-
----
-
-## Modified Files
-
-| File | Change |
-|------|--------|
-| `packages/twentythree-cli/package.json` | Add `"docs"` and `"audit"` scripts; optionally add `/docs` to `files` array |
-| `packages/twentythree-cli/package.json` | Add `tsx` or leave as plain `.mjs` (no new dep if plain JS) |
-| Root `package.json` | Add `"docs"` and `"audit"` workspace scripts for convenience |
-
----
-
-## Build Order for v1.1 Work
-
-This reflects hard dependencies — each step requires the previous to be complete.
-
-```
-Step 1: Write audit script (scripts/audit-endpoints.mjs)
-  — No dependencies; reads existing manifest and spec
-  — Run it immediately to get the actual gap report
-  — Fix gaps found before writing docs (docs should reflect complete coverage)
-
-Step 2: Fill coverage gaps found by audit
-  — 25 uncovered analytics endpoints currently
-  — Add missing command files, rebuild, rerun audit until exit 0
-
-Step 3: Write generate-docs script (scripts/generate-docs.mjs)
-  — After coverage is complete, manifest is authoritative
-  — Generate initial docs/commands/*.md files
-
-Step 4: Write hand-authored docs
-  — docs/guides/getting-started.md
-  — docs/guides/api-spec-upgrade.md  (already described in CLAUDE.md; formalize it)
-  — docs/guides/contributing.md
-
-Step 5: Write README files
-  — packages/twentythree-cli/README.md  (install + quickstart)
-  — /README.md  (repo root — links to package README and docs/)
-
-Step 6: Verify npm publish readiness
-  — pnpm build && pnpm audit && pnpm docs
-  — All three must succeed cleanly before publish
-```
-
-**Critical path:** audit script → fill gaps → generate-docs → READMEs. The docs cannot be final until coverage is complete.
+| `.github/workflows/publish.yml` | — | npm registry | All prior steps complete |
 
 ---
 
 ## Anti-Patterns to Avoid
 
-### Reading TypeScript Source for Doc Generation
+### Using oclif pack Instead of npm publish
+oclif pack bundles a Node.js binary for users without Node installed. The target audience (developers) already has Node. Use `npm publish`.
 
-**Problem:** Parsing TypeScript source with regex or AST to extract agentMetadata
-**Why bad:** Fragile, requires TypeScript parsing infrastructure, re-implements what oclif manifest already provides
-**Instead:** Read `oclif.manifest.json` — it already contains the compiled, normalized metadata
+### Adding .npmignore in a pnpm Monorepo
+An `.npmignore` file in `packages/twentythree-cli/` creates a blocklist that is hard to maintain and can interact with `pnpm deploy` unexpectedly. The `files` whitelist in `package.json` is the correct approach — declare what ships, exclude everything else implicitly.
 
-### One Markdown File Per Command
+### Publishing Without Running the Audit
+If the audit script fails (exit code 1), publish should not proceed. Wire `pnpm audit` as a required step before publish in CI. A published package with broken `api_endpoint` references is harder to fix than a delayed release.
 
-**Problem:** Writing 219 individual `.md` files under `docs/commands/`
-**Why bad:** Unnavigable, high file count, GitHub directory rendering becomes useless
-**Instead:** One file per topic (24 files) with all commands in that topic listed
+### Generating Docs Before Filling Gaps
+Running `pnpm docs` before the audit passes means the generated `endpoint-coverage.md` will document incomplete coverage. Fix gaps first; generate docs second.
 
-### Generating Docs Without Build Dependency
-
-**Problem:** Running generate-docs before or instead of build
-**Why bad:** `oclif.manifest.json` is generated by `oclif manifest` as a postbuild step; if docs run against a stale manifest, they will reflect outdated command definitions
-**Instead:** Always run `pnpm build` before `pnpm docs`; add a manifest-freshness guard in the script
-
-### Audit Script With Fuzzy Matching
-
-**Problem:** Trying to match CLI command names (modern terms) against spec paths (legacy terms) via heuristics
-**Why bad:** The `api_endpoint` field in `agentMetadata` already stores the legacy spec path — the mapping is already done. Fuzzy matching introduces false positives and false negatives.
-**Instead:** Direct string comparison between spec `METHOD /path` and `agentMetadata.api_endpoint` values
-
-### Treating Topic Index Commands as Real Commands
-
-**Problem:** Including topic index entries (category, video, webinar, thumbnail, video:section, video:subtitle) in the command reference output
-**Why bad:** These are display-only entries for `twentythree help video` — they have no flags, no args, no agentMetadata
-**Instead:** Filter by presence of `agentMetadata` field in the manifest entry — all 219 real commands have it; the 7 topic indexes do not
-
----
-
-## Scalability Notes
-
-The generate-docs script will run in under a second — it reads one ~560KB JSON file and writes 24 markdown files. No performance considerations needed.
-
-The audit script is equally fast — two JSON file reads and set operations over 235 and 219 items.
-
-If the API grows significantly (e.g. to 500+ endpoints), the one-file-per-topic structure still works because topics will grow naturally with the API. The only change needed is adding new topic files as new resource groups are introduced.
+### Committing oclif.manifest.json
+The manifest is in `.gitignore` (correct). It must be generated fresh at build time and included in the published npm package via the `files` array. Do not add it to git — it changes on every build and creates noisy diffs.
 
 ---
 
 ## Sources
 
-- Live codebase analysis: `packages/twentythree-cli/oclif.manifest.json` (226 entries confirmed)
-- Live codebase analysis: endpoint coverage gap computed directly (210/235 matched, 25 uncovered)
-- agentMetadata confirmed present in manifest for all 219 real commands; absent for all 7 topic indexes
-- oclif manifest generation: `postbuild: oclif manifest` in `packages/twentythree-cli/package.json`
-- Spec path format confirmed: uses legacy naming (`/photo/`, `/album/`, `/live/`) matching `api_endpoint` field values in source
+- oclif releasing docs: https://oclif.io/docs/releasing/ (confirmed: use `npm publish` for Node.js-present audiences)
+- oclif pack docs: https://github.com/oclif/oclif/blob/main/docs/pack.md (confirmed: pack is for bundled-Node distributes)
+- npm provenance / trusted publishing: https://philna.sh/blog/2026/01/28/trusted-publishing-npm/
+- npm trusted publishing GA: https://github.blog/changelog/2025-07-31-npm-trusted-publishing-with-oidc-is-generally-available/
+- npm provenance statements: https://docs.npmjs.com/generating-provenance-statements/
+- files vs .npmignore in pnpm monorepos: https://github.com/pnpm/pnpm/issues/5119
+- Live codebase: `packages/twentythree-cli/package.json`, `oclif.manifest.json`, `bin/run.js`, `turbo.json`
