@@ -10,7 +10,7 @@
 
 ### Endpoint Coverage (AUDIT)
 
-- [ ] **AUDIT-01**: Developer can manually compare OpenAPI spec endpoints against `agentMetadata.api_endpoint` values across all command files to identify missing coverage
+- [x] **AUDIT-01**: Developer can manually compare OpenAPI spec endpoints against `agentMetadata.api_endpoint` values across all command files to identify missing coverage
 - [ ] **AUDIT-02**: All confirmed-missing commands are implemented; intentional omissions are documented with rationale until audit passes cleanly
 
 ### Package Hygiene (PKG)

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Repository Polish & Release
-status: planning
-stopped_at: Phase 9 context gathered
-last_updated: "2026-04-16T14:25:57.441Z"
-last_activity: 2026-04-16 — Milestone v1.1 roadmap created (5 phases)
+status: executing
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-04-16T15:04:33.487Z"
+last_activity: 2026-04-16
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-16)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** v1.1 — Repository Polish & Release (5 phases, Phases 9–13)
+**Current focus:** Phase 09 — endpoint-coverage-audit
 
 ## Current Position
 
-Phase: 9 — Endpoint Coverage Audit (not started)
-Plan: —
-Status: Ready to plan Phase 9
-Last activity: 2026-04-16 — Milestone v1.1 roadmap created (5 phases)
+Phase: 09 (endpoint-coverage-audit) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-04-16
 
 Progress: [          ] 0%
 
@@ -49,6 +49,8 @@ Recent decisions affecting current work:
 - v1.1: No .npmignore — whitelist `files` approach is safer in pnpm monorepo
 - v1.1: `oclif readme --multi --nested-topics-depth 2` for docs generation — zero hand-writing for command reference
 - v1.1: CI publish workflow in scope (PUBLISH-03) — defer OIDC trusted publishing to v1.2
+- [Phase 09]: EXCLUDED_OPERATIONS uses regex-parsed source (not import) in audit script because tsx is not in devDependencies
+- [Phase 09]: video/frame.ts agentMetadata fixed from POST to GET to match OpenAPI spec; HTTP call left as POST
 
 ### Pending Todos
 
@@ -61,6 +63,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-16T14:25:57.435Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-endpoint-coverage-audit/09-CONTEXT.md
+Last session: 2026-04-16T15:04:33.485Z
+Stopped at: Completed 09-01-PLAN.md
+Resume file: None
