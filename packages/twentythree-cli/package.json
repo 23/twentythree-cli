@@ -17,6 +17,7 @@
     "/oclif.manifest.json"
   ],
   "scripts": {
+    "audit-endpoints": "node scripts/audit-endpoints.mjs",
     "build": "tsdown --config-loader unrun",
     "postbuild": "oclif manifest",
     "dev": "node ./bin/dev.js",
