@@ -129,7 +129,7 @@ Plans:
 **Goal:** Store the OpenAPI spec locally, create a repeatable update-diff-regenerate shell script, and document the API change workflow in CLAUDE.md
 **Requirements**: TBD
 **Depends on:** Phase 6
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 06.1-01-PLAN.md — API spec storage, update script, and workflow documentation
@@ -144,7 +144,12 @@ Plans:
   3. All eight `twentythree analytics usage` sub-dimensions (devices, domains, locations, sources, sourceids, spots, storage, traffic) return correct data
   4. All analytics commands support `--json` output
   5. All twelve `twentythree audience` commands work — list, search, register, unregister, remove, metrics, funnel, timelines, companies, identity-sources, list-collectors, and field management
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [x] 07-01-PLAN.md — Shared analytics flags module + 5 video analytics sub-dimension commands
+- [ ] 07-02-PLAN.md — Root analytics videos + 6 live sub-dimensions + 2 conversions sub-dimensions
+- [ ] 07-03-PLAN.md — All 8 analytics usage sub-dimension commands
+- [ ] 07-04-PLAN.md — All 15 audience commands (11 top-level + 4 field sub-commands)
 
 ### Phase 8: Platform & Polish
 **Goal**: The complete platform surface is covered — spot, thumbnail, webhook, app, presentation, protection, session, openupload, site/setting, and user commands all work; `twentythree doctor` gives an instant health check; `--help --agent` exposes machine-readable metadata; the CLI is distribution-ready
@@ -173,5 +178,5 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 5. Webinar Deep | 0/5 | Planned | - |
 | 6. Engagement & Actions | 4/4 | Complete   | 2026-04-15 |
 | 6.1 API Spec Workflow | 0/1 | Planned | - |
-| 7. Analytics & Audience | 0/4 | Not started | - |
+| 7. Analytics & Audience | 1/4 | Executing | - |
 | 8. Platform & Polish | 0/5 | Not started | - |
