@@ -8,6 +8,17 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
+## Current Milestone: v1.1 Repository Polish & Release
+
+**Goal:** Make the CLI publishable, fully documented, and verified to have complete endpoint coverage before going public on npm.
+
+**Target features:**
+- Endpoint audit — compare OpenAPI spec against command files; fill any gaps found
+- npm publish — get package live on npm (first publish)
+- Install verification — test end-to-end `npm install -g` flow and document it
+- README.md — install + quickstart entry point, links into docs/
+- docs/ reference — full command reference, API spec upgrade guide, contributing / dev setup
+
 ## Requirements
 
 ### Validated
@@ -21,6 +32,14 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - ✓ Full API coverage — 235 endpoints across 22 resource groups, hand-authored commands using generated OpenAPI types — v1.0
 
 ### Active
+
+- [ ] Endpoint audit — compare OpenAPI spec against all command files; fill any gaps found
+- [ ] npm publish — get `twentythree-cli` package live on npm (first publish)
+- [ ] Install verification — test `npm install -g twentythree-cli` end-to-end and document
+- [ ] README.md — install + quickstart entry point at repo root, links into docs/
+- [ ] docs/ — full command reference, API spec upgrade guide, contributing / dev setup
+
+### Deferred (post-v1.1)
 
 - [ ] AI skills package — installable agent skills wrapping the CLI (e.g., `npx skills add twentythree/skills`), published alongside the CLI
 - [ ] `twentythree auth login --scope read|write|admin` — browser-based OAuth flow
@@ -88,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after v1.0 MVP milestone — all 235 endpoints shipped across 9 phases*
+*Last updated: 2026-04-16 — v1.1 milestone started (repository polish & release)*
