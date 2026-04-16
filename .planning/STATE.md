@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-08-PLAN.md
-last_updated: "2026-04-16T09:36:10.535Z"
+stopped_at: Completed 08-09-PLAN.md
+last_updated: "2026-04-16T09:42:45.770Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 41
-  completed_plans: 39
-  percent: 95
+  completed_plans: 40
+  percent: 98
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 08 (platform-polish) — EXECUTING
-Plan: 9 of 10
+Plan: 10 of 10
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -75,6 +75,7 @@ Progress: [██████████] 100%
 | Phase 08-platform-polish P06 | 3min | 2 tasks | 6 files |
 | Phase 08-platform-polish P07 | 69s | 2 tasks | 2 files |
 | Phase 08-platform-polish P08 | 7min | 2 tasks | 57 files |
+| Phase 08-platform-polish P09 | 291s | 2 tasks | 50 files |
 
 ## Accumulated Context
 
@@ -140,6 +141,9 @@ Recent decisions affecting current work:
 - [Phase 08-platform-polish]: agent handler uses process.argv.includes before flag parsing in BaseCommand.init()
 - [Phase 08]: subtitle/delete.ts api_endpoint is POST /photo/subtitle/remove (not /delete) — API endpoint name differs from CLI command name
 - [Phase 08]: analytics/usage/storage.ts uses output_shape key-value (single object response, not array)
+- [Phase 08]: poll/list and poll/answer: anonymous auth_scope per OpenAPI spec
+- [Phase 08]: collector include/exclude: side_effects none (GET association endpoints, not destructive)
+- [Phase 08]: workspace/list, workspace/use, auth/status: api_endpoint local (no API call)
 
 ### Pending Todos
 
@@ -151,6 +155,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-16T09:36:10.533Z
-Stopped at: Completed 08-08-PLAN.md
+Last session: 2026-04-16T09:42:45.767Z
+Stopped at: Completed 08-09-PLAN.md
 Resume file: None

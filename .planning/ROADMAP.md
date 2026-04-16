@@ -171,7 +171,7 @@ Plans:
 - [x] 08-06-PLAN.md — Site (get, search) + Setting (update) + Open upload (list, upload-file, update-file)
 - [x] 08-07-PLAN.md — Doctor health check command + --agent global flag on BaseCommand
 - [x] 08-08-PLAN.md — Backfill agentMetadata: video + action + analytics commands
-- [ ] 08-09-PLAN.md — Backfill agentMetadata: audience + comment + player + poll + category + collector + tag + workspace + auth
+- [x] 08-09-PLAN.md — Backfill agentMetadata: audience + comment + player + poll + category + collector + tag + workspace + auth
 - [ ] 08-10-PLAN.md — Backfill agentMetadata: all webinar commands
 
 ## Progress
@@ -190,4 +190,4 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 6. Engagement & Actions | 4/4 | Complete   | 2026-04-15 |
 | 6.1 API Spec Workflow | 0/1 | Planned | - |
 | 7. Analytics & Audience | 2/4 | In Progress|  |
-| 8. Platform & Polish | 8/10 | In Progress|  |
+| 8. Platform & Polish | 9/10 | In Progress|  |
