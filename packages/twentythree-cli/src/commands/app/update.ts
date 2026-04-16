@@ -17,6 +17,7 @@ export default class AppUpdate extends AuthenticatedCommand<typeof AppUpdate> {
 
   static examples = [
     '<%= config.bin %> app update 12345 --name "Updated Name"',
+    '<%= config.bin %> app update 12345 --description "New description"',
     '<%= config.bin %> app update 12345 --name "Updated Name" --description "New description"',
     '<%= config.bin %> app update 12345 --name "Updated Name" --json',
   ]
@@ -27,7 +28,7 @@ export default class AppUpdate extends AuthenticatedCommand<typeof AppUpdate> {
     ...AuthenticatedCommand.baseFlags,
     name: Flags.string({
       description: 'App name',
-      required: true,
+      required: false,
     }),
     description: Flags.string({
       description: 'App description',
@@ -56,8 +57,13 @@ export default class AppUpdate extends AuthenticatedCommand<typeof AppUpdate> {
     const { args, flags } = await this.parse(AppUpdate)
     this.printWorkspaceHeader()
 
-    const body: Record<string, unknown> = { app_id: Number(args.id), name: flags.name }
+    if (flags.name === undefined && flags.description === undefined && flags.style === undefined) {
+      this.error('Provide at least one field to update (--name, --description, or --style)', { exit: EXIT_ERROR })
+    }
 
+    const body: Record<string, unknown> = { app_id: Number(args.id) }
+
+    if (flags.name !== undefined) body.name = flags.name
     if (flags.description !== undefined) body.description = flags.description
     if (flags.style !== undefined) body.style = flags.style
 
