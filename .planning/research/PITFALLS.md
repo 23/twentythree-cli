@@ -1,321 +1,379 @@
 # Domain Pitfalls
 
 **Domain:** TypeScript/Node.js CLI — TwentyThree video platform API client
-**Researched:** 2026-04-14
-**Overall Confidence:** HIGH (most findings verified via official sources, real-world issue trackers, and framework docs)
+**Researched:** 2026-04-16 (updated for v1.1 milestone: npm publish + docs + endpoint audit)
+**Overall Confidence:** HIGH (verified against official docs, GitHub issues, npm/pnpm issue trackers)
+
+---
+
+## v1.1 Milestone Pitfalls: npm Publish, Docs Generation, Endpoint Audit
+
+This section documents pitfalls specific to the v1.1 milestone work: first npm publish of the
+oclif v4 CLI, generating and maintaining command reference docs, and auditing OpenAPI endpoint
+coverage. The project already has a working v1.0 CJS build, 219 commands, `@napi-rs/keyring`,
+and a pnpm monorepo.
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, security incidents, or complete loss of user trust.
+---
+
+### Pitfall 1: Publishing a Stale `oclif.manifest.json` (or Publishing Without One)
+
+**What goes wrong:** `oclif.manifest.json` is the index oclif uses for command discovery. If it
+is stale (built from a previous session, or reflecting a different command set), installed users
+get wrong `--help` output, missing commands, or commands that reference non-existent dist files.
+If the manifest is absent from the published tarball, oclif falls back to dynamic filesystem
+scanning — which is slower and breaks in global installs where the dist layout may differ from
+dev.
+
+**Why it happens:**
+- The current `postbuild` script runs `oclif manifest` after build — correct for local dev.
+  But `npm publish` and `pnpm publish` do not re-run `postbuild`; they only invoke lifecycle
+  hooks in the order: `prepack` → pack tarball → `postpack` → `publish` → `postpublish`.
+- There is no `prepack` script in the current `package.json`. This means the manifest in the
+  tarball is whatever happens to be on disk at publish time.
+- The root `.gitignore` correctly excludes `oclif.manifest.json` (it is a build artifact). So
+  the file is not in source control; if the build has not been run in the current session, the
+  on-disk manifest may be from hours or days ago.
+
+**Consequences:** Every consumer gets a subtly broken CLI — commands missing from `--help`, tab
+completion broken, stale flag descriptions, or runtime errors from commands that no longer exist
+in dist.
+
+**Prevention:**
+Add a `prepack` script that runs the full build + manifest generation:
+```json
+"prepack": "tsdown --config-loader unrun && oclif manifest"
+```
+`prepack` fires for both `npm pack` (dry-run verification) and `npm publish` / `pnpm publish`.
+This is the oclif-recommended pattern; many oclif examples also include `oclif readme` here.
+
+**Detection:** Run `npm pack --dry-run` and check that `oclif.manifest.json` is in the listed
+files and that the command count matches `src/commands/` expectations. Run
+`cat oclif.manifest.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d['commands']), 'commands')"`.
+
+**Phase:** First action in the npm publish phase, before any publish attempt.
 
 ---
 
-### Pitfall C1: Plaintext Credential Storage
+### Pitfall 2: `@napi-rs/keyring` Native Binary Silent Failure on Consumer Install
 
-**Severity:** BLOCKING — security incident if exploited
+**What goes wrong:** `@napi-rs/keyring` ships prebuilt platform-specific binaries as
+`optionalDependencies` (`@napi-rs/keyring-darwin-arm64`, `@napi-rs/keyring-linux-x64-gnu`, etc.
+— 12 platform targets total, confirmed from the installed `package.json`). When a consumer runs
+`npm install -g twentythree-cli`, npm resolves the correct platform binary from this list. This
+works correctly for clean installs.
 
-**What goes wrong:**
-Credentials (bearer tokens, domain + token pairs) are written to a JSON file under `~/.config/twentythree/` without encryption, world-readable by default on Linux/macOS, and routinely leaked into dotfile backups, Dropbox sync, or `git add .` accidents.
+The risk is a confirmed npm bug (npm/cli#4828): if a `package-lock.json` generated on one
+architecture is used on a different architecture (e.g., CI generated on macOS, then reused on
+Linux), npm silently skips installing the platform's optional binary dependency. The CLI installs
+without error but crashes at first `auth` use with `Cannot find module '.../keyring.darwin-arm64.node'`
+or similar.
 
-**Why it happens:**
-It is the path of least resistance. `JSON.stringify` to a config file feels like a complete solution. The file-system fallback is often kept even after adding a keychain, so the token ends up in two places.
+**Why it matters for this project:** The published package itself is fine — the `@napi-rs/keyring`
+`package.json` correctly declares all platform variants as `optionalDependencies`, and clean
+`npm install -g` on any supported platform works. The risk is in install verification CI: if the
+CI job reuses a lock file from a different platform, the test passes on the CI machine but the
+binary was never actually loaded.
 
-**Consequences:**
-Bearer tokens for all activated workspaces exposed. An attacker with read access to the user's home directory can impersonate them against every workspace.
+**Consequences:** `twentythree auth credentials` crashes on any platform where the native binary
+is absent. The error is a raw Node `MODULE_NOT_FOUND` thrown from inside the napi-rs binding
+loader — not a user-friendly message.
 
 **Prevention:**
-- Use `@napi-rs/keyring` (Rust-backed, NAPI-RS binding, `node-keytar`-compatible API, no `libsecret` dependency on Linux). This is the current community consensus replacement for the archived `node-keytar` package. Azure SDK, Microsoft MSAL-node, and Joplin have all migrated to it.
-- Store only non-sensitive metadata (active workspace slug, preferences) in `~/.config/twentythree/config.json`.
-- If the keychain is unavailable (headless CI servers), fall back to a file with `chmod 0600` applied immediately after write — and warn the user explicitly.
-- Never fall back silently. Document the fallback behavior.
+1. For install verification CI: use a fresh `npm install -g` from the registry (no pre-existing
+   lock file). Do not share `node_modules` or `package-lock.json` between CI jobs that run on
+   different architectures.
+2. Test on at minimum: `ubuntu-latest` (linux-x64-gnu) and `macos-latest` (darwin-arm64 on
+   modern GitHub Actions runners). These are the two most common consumer platforms.
+3. Add a graceful error in the auth command: if keyring throws on load, catch it and print:
+   `Error: OS keychain not available on this platform. Supported platforms: macOS, Windows,
+   Linux (with libsecret).` This replaces the cryptic module error with actionable guidance.
 
-**Detection:**
-Check whether `~/.config/twentythree/` contains any token-shaped strings. If a credentials JSON exists at all outside the keychain, that is the symptom.
+**Detection:** After publishing, run `npm install -g twentythree-cli` on a fresh Linux x64
+environment (GitHub Actions `ubuntu-latest` is ideal) and execute `twentythree auth credentials`.
+Any crash involving `.node` file loading is this pitfall.
 
-**Reference:** [keyring-node GitHub](https://github.com/Brooooooklyn/keyring-node) | [Joplin migration issue](https://github.com/laurent22/joplin/issues/8829) | [Azure SDK migration issue](https://github.com/Azure/azure-sdk-for-js/issues/29288)
+**Phase:** Install verification phase. The graceful error is a good auth-command improvement.
 
 ---
 
-### Pitfall C2: Token Refresh Race Condition Across Concurrent Processes
+### Pitfall 3: Version Number Claimed Permanently on npm Registry
 
-**Severity:** BLOCKING — user is logged out mid-operation with no recovery path
+**What goes wrong:** The current `package.json` version is `0.1.0`. Publishing `0.1.0` to npm
+claims that slot permanently. After 24 hours, npm's deprecation window closes and the version
+cannot be unpublished or republished. If there is a critical defect in the first publish
+(missing dist files, wrong bin path, broken keyring), a new version must be bumped and published —
+`0.1.0` is gone forever.
 
-**What goes wrong:**
-A user runs two terminal windows simultaneously, both with long-running `twentythree` commands. Both processes detect the bearer token is about to expire. Both call the refresh endpoint. OAuth refresh tokens are single-use: the first process wins, the second receives a `401` or `404` and has no valid credentials left. The user must re-authenticate.
-
-This exact failure mode is documented in Claude Code's issue tracker (anthropics/claude-code #27933 and #24317), n8n (n8n-io/n8n #13088), and OpenClaw. It is not theoretical.
-
-**Why it happens:**
-Each process reads its own in-memory copy of the token, independently detects expiry, and races to refresh without coordination.
-
-**Consequences:**
-Authentication failure mid-operation. For destructive operations (delete video, modify category) this leaves state unknown. The user must re-auth, losing context.
+**Why it matters:** The v1.0 internal milestone has shipped a fully functional CLI. Publishing as
+`0.1.0` undersells it and signals beta quality to npm consumers. Publishing as `1.0.0` is more
+accurate and sets correct expectations.
 
 **Prevention:**
-Two-layer strategy:
+1. Decide the public version before publishing. Given internal v1.0 is done, consider publishing
+   as `1.0.0`.
+2. Run `npm pack --dry-run` to verify tarball contents. Then install the local tarball with
+   `npm install -g ./twentythree-cli-1.0.0.tgz` and smoke test before touching the registry.
+3. Use `npm publish --dry-run` (or `pnpm publish --dry-run`) to validate the publish flow
+   without actually pushing.
+4. Tag the git commit before pushing: `git tag v1.0.0 && git push --tags`.
 
-1. **File lock on refresh write.** Use `proper-lockfile` or OS-level `flock` around the read-expiry-check-refresh-write cycle. Any process that loses the lock re-reads the credentials file from disk (the winner already wrote fresh tokens) instead of refreshing again.
-
-2. **Re-read before error.** On any `401` response, re-read the credentials file before treating it as a terminal failure. The concurrent process may have already refreshed and written new tokens.
-
-For the bearer-token model in `twentythree` (not OAuth refresh tokens, but a similar single-stored-token-per-workspace pattern), the same race applies when the user runs `twentythree` from multiple terminals.
-
-**Detection:**
-Sudden `401` failures when other terminal sessions are also active.
-
-**Reference:** [Claude Code issue #27933](https://github.com/anthropics/claude-code/issues/27933) | [n8n race condition issue](https://github.com/n8n-io/n8n/issues/13088) | [Nango concurrency guide](https://nango.dev/blog/concurrency-with-oauth-token-refreshes)
-
----
-
-### Pitfall C3: Token Expiry During Long-Running Operations
-
-**Severity:** BLOCKING — operation fails mid-flight with no clean recovery
-
-**What goes wrong:**
-A `twentythree` command uploads a batch of videos or generates a large report. The background token refresh timer fires, but the operation takes longer than expected. Or worse: the refresh is not proactive, so the token expires mid-stream, the API returns `401`, and the command dies after partial side effects.
-
-**Why it happens:**
-Token refresh is only implemented as reactive (retry on `401`) with no proactive timer. Or a proactive timer exists but the refresh margin is too tight (refreshing at T-30s when network round-trips are slow).
-
-**Consequences:**
-Partial mutations. A multi-step upload may succeed for some items and fail for others, leaving the workspace in an inconsistent state.
-
-**Prevention:**
-- Implement a proactive refresh timer that fires at token expiry minus a generous buffer (5 minutes minimum).
-- Use a refresh margin that accounts for clock skew and network latency.
-- Combine with reactive retry: on any `401`, attempt one refresh, then retry the failed request once before surfacing the error.
-- For TwentyThree's bearer-token model: store the token expiry timestamp alongside the token; check it before every API call, not just in the background timer.
-
-**Reference:** [Duende token best practices](https://duendesoftware.com/learn/best-practices-managing-token-expiration-refresh-revocation-in-web-apis) | [OAuth.com refresh patterns](https://www.oauth.com/oauth2-servers/making-authenticated-requests/refreshing-an-access-token/)
-
----
-
-### Pitfall C4: Operating on the Wrong Workspace Without Warning
-
-**Severity:** BLOCKING — data modified in wrong client account; no undo for destructive operations
-
-**What goes wrong:**
-A user manages five workspaces. They set the active workspace to `client-a`, perform some operations, then later run a destructive command (delete video, publish to all) without realising the active context is still `client-a` not `client-b`. The command succeeds silently.
-
-**Why it happens:**
-The active workspace is stored globally in config. It is not visible in the prompt. The user switches context infrequently and forgets the current state.
-
-**Consequences:**
-Videos deleted in the wrong workspace. Published content appearing on the wrong client's platform. No undo.
-
-**Prevention:**
-- Always print the active workspace in command output headers: `[workspace: client-a]`.
-- For destructive or mutating commands, show the workspace name in the confirmation prompt: `Delete video "intro.mp4" from client-a? [y/N]`.
-- Consider a `--workspace` flag on every command so per-command override is always one flag away.
-- Display active workspace in `twentythree whoami` and `twentythree status` — make it trivially inspectable.
-- Follow the kubectl model: `kubectl config current-context` is a first-class operation; make `twentythree workspace current` equally prominent.
-
-**Reference:** [kubectl contexts guide](https://dev.to/spacelift/kubectl-get-context-current-context-switching-listing-5112) | [Kubie shell isolation approach](https://www.x-cmd.com/install/kubie/)
+**Phase:** npm publish phase — decide version before any publish attempt.
 
 ---
 
 ## Moderate Pitfalls
 
-Mistakes that cause friction, confusion, or rework without being catastrophic.
+---
+
+### Pitfall 4: `.npmignore` Added Accidentally — Breaks `files` Whitelist Semantics
+
+**What goes wrong:** The current package uses the `files` field in `package.json` as a whitelist:
+`["/bin", "/dist", "/oclif.manifest.json"]`. This is the correct approach. The root `.gitignore`
+excludes `dist/` (correct — it is a build artifact), but this does NOT affect npm publish because
+the `files` field takes precedence over `.gitignore`.
+
+The trap: if someone adds a `.npmignore` at the package level (thinking it is needed to "clean
+things up" or exclude `src/`), npm switches from whitelist mode to exclusion mode. In exclusion
+mode, npm starts with everything in the directory and applies `.npmignore` as a filter. If
+`.npmignore` inadvertently includes `dist/` or `oclif.manifest.json`, the published package is
+broken. Conversely, if `.npmignore` is added but `src/` is not in it, the TypeScript sources are
+now included (158KB+ of `.ts` files).
+
+**Why it happens:** Developers mix up `.npmignore` and `.gitignore` semantics. The presence of
+`.npmignore` changes the entire publish filtering algorithm.
+
+**Prevention:** Do not add a `.npmignore` at the package level. The current `files` whitelist is
+correct and complete. Add a comment in `package.json` or contributing docs noting this.
+
+**Detection:** `npm pack --dry-run` — examine the full file list for unexpected inclusions
+(`src/**/*.ts`) or missing items (`dist/`, `oclif.manifest.json`).
+
+**Phase:** npm publish phase. Verify with `npm pack --dry-run` before first publish.
 
 ---
 
-### Pitfall M1: npm Global Install Permission and PATH Failures
+### Pitfall 5: No `prepack` Script — `postbuild` Does Not Fire on Publish
 
-**Severity:** ANNOYING — blocks installation entirely on a fresh system
+**What goes wrong:** `postbuild` runs after `npm run build`, but `pnpm publish` does not invoke
+`npm run build`. `pnpm publish` fires lifecycle hooks in this order: `prepublishOnly` →
+`prepack` → tarball → `postpack` → `publish` → `postpublish`. The `postbuild` hook is never
+invoked. If the last local build was hours ago, the tarball bundles a stale dist and stale
+manifest.
 
-**What goes wrong:**
-On macOS and Linux, the default npm global prefix (`/usr/local` or `/usr`) requires root. Running `sudo npm install -g` creates files owned by root that later cause permission errors on uninstall or update. Alternatively, the CLI installs correctly but the bin directory (`~/.npm-global/bin`) is not in `$PATH`, so `twentythree` command is not found.
-
-With nvm, global packages are version-scoped to the current Node version. Switching Node versions (`nvm use 22`) renders previously installed globals invisible.
+**Related:** `pnpm publish --filter twentythree-cli` from the monorepo root runs lifecycle
+scripts defined in the workspace package — so a `prepack` in the CLI package's `package.json`
+will run correctly.
 
 **Prevention:**
-- Document two setup paths in the README: (a) using a Node version manager (nvm, fnm, Volta) which handles prefix correctly, and (b) manually setting `npm prefix` to `~/.npm-global`.
-- Never instruct users to `sudo npm install -g`. Document this explicitly.
-- Consider publishing a `postinstall` message that prints: `Run 'twentythree --version' to verify installation. If not found, ensure $(npm prefix -g)/bin is in your PATH.`
-- On Windows, npm creates a `.cmd` wrapper that handles PATH correctly; document that `twentythree.cmd` is normal.
+```json
+"prepack": "tsdown --config-loader unrun && oclif manifest"
+```
 
-**Reference:** [npm EACCES docs](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally/) | [Voice Mode npm-global guide](https://voice-mode.readthedocs.io/en/stable/npm-global-no-sudo/)
+**Phase:** npm publish phase.
 
 ---
 
-### Pitfall M2: ESM/CJS Module Interop Errors Crashing the CLI
+### Pitfall 6: Manifest Count vs Spec Count Mismatch — Audit False Confidence
 
-**Severity:** ANNOYING — complete install failure for some users on certain Node versions
+**What goes wrong:** The current state has three different numbers:
+- 254 `.ts` files in `src/commands/` (includes index barrel files, sub-command parent stubs, and
+  helper files)
+- 226 commands in `oclif.manifest.json` (what oclif actually registered)
+- 235 operations in the OpenAPI spec
 
-**What goes wrong:**
-A CLI dependency (e.g., `chalk`, `strip-ansi`, `ora`, `inquirer`) ships ESM-only. The CLI compiles to CommonJS. Node throws `ERR_REQUIRE_ESM` at startup. The error message is cryptic. The user sees a stack trace, not a usage error.
-
-In 2025, `require(esm)` was backported to Node.js v20 and marked stable, which reduces (but does not eliminate) the friction. Users on older Node versions still hit the error.
+An audit that compares file counts or manifest counts directly to spec operation counts will
+produce misleading results. The 9-command gap (235 spec - 226 manifest) needs investigation:
+some are likely: (a) helper/utility commands (auth, doctor, workspace) that have no spec
+counterpart; (b) endpoints collapsed into a single command (same path, multiple HTTP methods);
+(c) genuinely unimplemented spec operations.
 
 **Prevention:**
-- Pick the module format once and commit. For a globally installed CLI, ESM is the correct long-term choice. Set `"type": "module"` in `package.json`, output `.js` files as ESM via TypeScript `"module": "ESNext"` + `"moduleResolution": "bundler"`.
-- Pin the supported Node version range in `engines` field: `"node": ">=20.0.0"` and enforce it with a prerun check (exit with a readable error if the Node version is too old).
-- Use `tsup` to bundle. It handles ESM output cleanly and avoids the mixed-format traps.
-- Avoid dependencies that have not decided on their module format — check `main` vs `exports` in their `package.json`.
+1. Use `operationId` as the canonical comparison key. Every spec operation has a unique
+   `operationId`. All 219 command files already declare `static agentMetadata` — the audit
+   script should compare `agentMetadata.operationId` values against spec `operationId` values.
+2. Build a script that: (a) extracts all `operationId` values from the swagger JSON, (b) greps
+   all command files for `operationId` in their `agentMetadata`, (c) reports the exact diff as
+   "spec ops with no matching command" and "commands with no matching spec op."
+3. Maintain an `EXCLUDED_OPERATIONS` constant in the audit script for intentional omissions
+   (super-admin endpoints, operations requiring non-bearer auth scopes) with a comment
+   explaining each exclusion.
 
-**Reference:** [Liran Tal's ESM/CJS analysis](https://lirantal.com/blog/typescript-in-2025-with-esm-and-cjs-npm-publishing) | [require(esm) stability post (Dec 2025)](https://joyeecheung.github.io/blog/2025/12/30/require-esm-in-node-js-from-experiment-to-stability/)
+**Detection:** The audit script output is the deliverable. Gaps flagged by operationId are
+actionable; gaps in file counts are noise.
+
+**Phase:** Endpoint audit phase — the audit script itself is the first milestone deliverable.
 
 ---
 
-### Pitfall M3: OpenAPI Generated Code Drifting from Live Spec
+### Pitfall 7: Endpoint Audit False Positives from HTTP Method Collapsing
 
-**Severity:** ANNOYING — commands silently fail or return wrong data after TwentyThree updates their API
+**What goes wrong:** Some API paths have multiple HTTP methods in the spec (e.g.,
+`GET /api/2/photo/list` and `POST /api/2/photo/list`). The CLI may collapse both into a single
+`video list` command that always uses one method. An operationId-based audit will flag the
+unused method's operationId as a coverage gap, even though the behavior is intentional.
 
-**What goes wrong:**
-The CLI generates its API surface from `video.twentythree.com/apidocs/swagger.json` at build time. The spec changes — a new required parameter, a renamed field, a deprecated endpoint. The generated client is not regenerated. Commands that call the changed endpoints start returning `400 Bad Request` errors with unhelpful messages. Or worse: they silently drop new fields from responses.
+**Why it happens:** OpenAPI treats each `{path, method}` pair as a separate operation with its
+own `operationId`. A CLI command conceptually maps to one action, not one HTTP method.
 
-**Prevention:**
-- Treat spec regeneration as a scheduled CI step: fetch the live spec, run the generator, diff the output. If the diff is non-empty, open an issue or block the build.
-- Pin the spec version used for generation by storing a copy at `specs/twentythree.swagger.json` in the repo. Use `oasdiff` or `openapi-changes` to detect breaking changes between the stored spec and the live spec.
-- Separate generated code from authored code cleanly: put generated clients in `src/generated/` with a `DO NOT EDIT` header and a `// Generated from spec version: <hash>` comment.
-- Run `npm run generate` as an explicit step in the release checklist, not implicitly in `npm publish`.
+**Prevention:** The `EXCLUDED_OPERATIONS` list (see Pitfall 6) should document every intentional
+collapse. The audit script should print these explicitly as "intentionally excluded" rather than
+silently ignoring them, so future maintainers understand why they are not flagged.
 
-**Reference:** [oasdiff breaking change tool](https://www.oasdiff.com/) | [OpenAPI code gen enterprise article (Nov 2025)](https://buildwithfern.com/post/openapi-code-generation-enterprise)
-
----
-
-### Pitfall M4: Terminology Mapping Leaking into Error Messages
-
-**Severity:** ANNOYING — confusing user-facing errors; support burden
-
-**What goes wrong:**
-The TwentyThree API uses legacy names: `photo` for video, `album` for category, `live` for webinar. The CLI maps these to modern terms. But error messages from the raw API response — "photo not found", "invalid album_id", "live stream quota exceeded" — leak through to the user because the error handler does not apply the terminology map.
-
-Similarly, generated TypeScript types will have field names like `photo_id`, `album_token`, `live_id`. If these appear in stack traces or debug output, they break the UX contract.
-
-**Prevention:**
-- Create a single canonical terminology map module: `{ photo: 'video', album: 'category', live: 'webinar' }` applied in both directions.
-- Run all API error messages through this map before display. A simple regex replace is sufficient: `/\bphoto\b/gi → 'video'`, etc.
-- In TypeScript, define user-facing types with modern names separately from generated API types. The mapping layer converts between them.
-- Write a test that asserts no user-visible string contains `photo`, `album`, or `live` in the legacy sense.
-
-**Detection warning sign:** Any error message containing "photo", "album", or "live" surfacing through `stderr`.
+**Phase:** Endpoint audit phase.
 
 ---
 
-### Pitfall M5: Startup Latency from Unbundled TypeScript
+### Pitfall 8: Deprecated Endpoint Handling in Audit (Currently None, Future Risk)
 
-**Severity:** ANNOYING — CLI feels sluggish; 500ms+ startup time breaks interactive use
-
-**What goes wrong:**
-The CLI is compiled by `tsc` into hundreds of individual `.js` files. Node resolves each file on startup. The module graph is large (API client for a large OpenAPI spec has many files). `twentythree --help` takes 800ms+. Users notice.
+**What goes wrong:** The current TwentyThree OpenAPI spec has 0 operations marked
+`deprecated: true` (verified against the spec). If the spec gains deprecated operations in the
+future, a naive audit script will flag them as "missing coverage" if no CLI command exists. But
+building commands for deprecated endpoints is wasteful and confusing.
 
 **Prevention:**
-- Bundle with `esbuild` via `tsup`. Output a single `dist/cli.js` entry point. Node resolves one file at startup, not hundreds.
-- Enable `minify: true` in production builds — reduces bundle size 30-50% and removes dead code.
-- Target `node20` minimum in esbuild to avoid unnecessary polyfills.
-- Keep the CLI entry point (`bin/twentythree.js`) thin: just the shebang and the `import('./dist/cli.js')` call. Do not put logic there.
-- Benchmark: `time twentythree --version` should be under 150ms. If it is not, profile with `node --prof`.
+1. The audit script should filter out spec operations where `deprecated: true` and exclude them
+   from the "missing coverage" count. Log them separately as "deprecated — not implemented by
+   design."
+2. No action needed for v1.1 since there are currently 0 deprecated operations. But add the
+   `deprecated` filter to the audit script now so it handles future spec changes correctly.
 
-**Reference:** [tsup docs](https://tsup.egoist.dev/) | [tsx guide](https://generalistprogrammer.com/tutorials/tsx-npm-package-guide)
+**Phase:** Endpoint audit phase — add the filter even though it is a no-op today.
 
 ---
 
-### Pitfall M6: Progress and Spinner Output Contaminating Piped Data
+### Pitfall 9: `oclif readme` Generates Docs That Go Stale
 
-**Severity:** ANNOYING — breaks scripting use cases; breaks CI pipelines
+**What goes wrong:** `oclif readme` regenerates `<!-- commands -->` blocks in a README using the
+manifest. If it is run once and not re-run after adding commands or changing flags, the published
+docs show wrong flags, old subcommands, or missing commands. With 219 commands, this divergence
+is invisible until a user reports it.
 
-**What goes wrong:**
-`twentythree videos list | jq '.[].id'` fails because the spinner animation frames (`⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏`) are written to stdout and interleaved with the JSON output.
+**Why it happens:** `oclif readme` is a one-time manual step unless wired into a CI check.
+Contributors add commands without regenerating docs.
+
+**Consequences:** README shows 219 commands while the CLI has 226+. Flag names differ from the
+CLI. Users file issues. First impressions on npm suffer.
 
 **Prevention:**
-- All progress indicators, spinners, and status messages go to `stderr`, never `stdout`.
-- Detect non-TTY mode: `if (!process.stdout.isTTY) { suppressSpinners(); }` — when piped, omit all decorative output.
-- `stdout` should contain only structured output (JSON, TSV, plain IDs) suitable for piping.
-- Add a `--json` flag for commands where the default output is human-formatted. In `--json` mode, disable all decorative output regardless of TTY.
+1. Add `oclif readme` to the `prepack` script: `tsdown && oclif manifest && oclif readme`.
+2. Add a CI check: run `oclif readme --dry-run` and diff the output against the committed
+   README. Fail CI if the diff is non-empty. This makes stale docs a build failure, not a
+   human oversight.
+3. For the multi-page `docs/` tree: run `oclif readme --multi --nested-topics-depth 2
+   --output-dir docs` in the same prepack step.
 
-**Reference:** [clig.dev piping guidelines](https://clig.dev/) | [12 Rules of Great CLI UX](https://dev.to/chengyixu/the-12-rules-of-great-cli-ux-lessons-from-building-30-developer-tools-39o6)
+**Note on required tags:** The README must contain `<!-- usage -->` and `<!-- commands -->` HTML
+comment tags. Without them, `oclif readme` silently does nothing — no error, no output. This
+is easy to miss on first setup.
+
+**Phase:** Documentation phase. Add the CI check before tagging v1.1.
 
 ---
 
-### Pitfall M7: Exit Codes Not Matching Conventions
+### Pitfall 10: `oclif readme --multi` Produces a Flat Wall of Files in `docs/`
 
-**Severity:** ANNOYING — breaks shell scripts, CI systems, and automation that depends on exit codes
+**What goes wrong:** With 219 commands across 40 tags (including nested ones like
+`Webinars: Polls`, `Webinars: Room`, `Webinars: Speakers`), `oclif readme --multi` produces one
+Markdown file per topic. Without `--nested-topics-depth`, all files land at the same level in
+`docs/` — a flat directory of 40 files with no hierarchy. Webinar-related docs are not grouped.
 
-**What goes wrong:**
-`twentythree videos delete nonexistent-id && echo "ok"` — the delete command exits `0` because "the user deliberately asked for deletion" even though it failed. Or: `twentythree auth logout` (a successful operation) exits `1` for no reason, breaking downstream scripts.
+**Prevention:** Use `oclif readme --multi --nested-topics-depth 2 --output-dir docs`. This
+creates subdirectories for topics with subtopics (e.g., `docs/webinars/polls.md`). Also add a
+hand-authored `docs/README.md` index — oclif does not generate an index file automatically.
 
-**Prevention:**
-- Exit `0` only on success. Exit `1` on recoverable errors (API error, not found). Exit `2` on usage errors (wrong arguments). Exit `130` on user interrupt (SIGINT).
-- User declining a confirmation prompt (`[y/N] → n`) is exit `0` — that was intentional, not an error.
-- API `404` is exit `1` (failure), not `0`.
-- Document exit codes in `--help` output for commands with non-obvious semantics.
+**Phase:** Documentation phase.
 
-**Reference:** [CLI Best Practices — clig.dev](https://clig.dev/)
+---
+
+### Pitfall 11: pnpm Monorepo + `oclif pack tarballs` Incompatibility
+
+**What goes wrong:** The `oclif pack tarballs` command (for standalone tarball distribution —
+NOT npm publish) expects an `npm-shrinkwrap.json` file. pnpm uses `pnpm-lock.yaml` and never
+generates `npm-shrinkwrap.json`. The command fails with:
+```
+Error: ENOENT: no such file or directory, stat '.../npm-shrinkwrap.json'
+```
+The issue was filed in August 2023 (oclif/oclif#1170) and closed as "not planned" in April 2024.
+
+**Why it matters:** This project targets npm global install only, not standalone tarballs. So
+`oclif pack tarballs` should never be used. The risk is a developer unfamiliar with the project
+trying to run it.
+
+**Prevention:** Use `pnpm publish --filter twentythree-cli` for distribution. Document in
+contributing notes that `oclif pack` is not supported with pnpm and should not be used.
+
+**Phase:** Not blocking for v1.1. Note in contributing/dev-setup docs.
+
+---
+
+### Pitfall 12: npm Registry Package Name Availability
+
+**What goes wrong:** `twentythree-cli` may already be taken on the npm registry. If so, `npm publish`
+fails with `403 Forbidden — You do not have permission to publish "twentythree-cli"`.
+
+**Prevention:** Check before starting the publish phase: `npm view twentythree-cli` — if it 404s,
+the name is available. If it returns metadata, the name is taken and an alternative must be chosen
+(`@twentythree/cli` as a scoped package is the fallback).
+
+**Phase:** Very first step of npm publish phase, before any other setup.
 
 ---
 
 ## Minor Pitfalls
 
-Friction points that are easy to fix once discovered but easy to miss initially.
+---
+
+### Pitfall 13: `bin/run.cmd` Missing or Malformed — Windows Install Broken
+
+**What goes wrong:** Windows users installing via `npm install -g` need the `.cmd` wrapper to run
+the CLI as `twentythree`. The file `bin/run.cmd` already exists in this project. The risk is
+accidental editing that breaks the path reference, or the file being excluded from the tarball
+if the `files` field is misconfigured.
+
+**Prevention:** The current `files: ["/bin"]` includes the entire `bin/` directory, so
+`run.cmd` is included. Verify with `npm pack --dry-run`. Do not edit `bin/run.cmd` unless you
+understand the Windows CMD shebang equivalent pattern.
+
+**Phase:** Install verification phase. Test on Windows runner if possible.
 
 ---
 
-### Pitfall m1: Shebang Line on Windows and CRLF Line Endings
+### Pitfall 14: `src/` Leaked Into Published Tarball
 
-**What goes wrong:**
-The CLI entry file uses `#!/usr/bin/env node` (correct for Unix). On Windows, npm creates a `.cmd` wrapper that handles this correctly — but only if the file was published with LF line endings. CRLF endings cause `node: command not found` on Unix systems that check out the repo on Windows.
+**What goes wrong:** If `.npmignore` is added (see Pitfall 4) and `src/` is not explicitly
+excluded, the TypeScript source files ship in the tarball. With 254 `.ts` files, this inflates
+the package significantly and exposes internals.
 
-**Prevention:**
-- Set `.gitattributes`: `bin/* text eol=lf` to enforce LF on commit regardless of OS.
-- In `package.json` `bin` field, point to the compiled dist file, not the TypeScript source.
-- The npm wrapper handles Windows execution; do not add `.cmd` files manually.
+**Prevention:** Do not add `.npmignore`. The current `files` whitelist (`/bin`, `/dist`,
+`/oclif.manifest.json`) is complete. `src/` is not in the whitelist and will not be included.
+Verify with `npm pack --dry-run`.
 
----
-
-### Pitfall m2: Config Directory Not Respecting XDG on Linux
-
-**What goes wrong:**
-Hardcoding `~/.config/twentythree/` ignores `$XDG_CONFIG_HOME`, which power users and sysadmins rely on to redirect config directories to non-home locations. The CLI also does not respect `$XDG_DATA_HOME` for cache files.
-
-**Prevention:**
-- Use `env-paths` package or inline XDG logic: `process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config')`.
-- Separate config from cache: config (credentials metadata, workspace prefs) in `$XDG_CONFIG_HOME/twentythree/`, ephemeral cache in `$XDG_CACHE_HOME/twentythree/`.
-- The Basecamp CLI uses `~/.config/basecamp/` as the default, matching this pattern.
+**Phase:** npm publish verification.
 
 ---
 
-### Pitfall m3: Missing `engines` Field Causes Confusing Errors on Old Node Versions
+### Pitfall 15: All Commands Loaded at Manifest/Readme Generation Time (Slow CI)
 
-**What goes wrong:**
-A user on Node 16 installs the CLI and gets a cryptic syntax error because the CLI uses Node 20+ APIs. There is no upfront error pointing to the version mismatch.
+**What goes wrong:** There is an open oclif issue (oclif/oclif#606, oclif/core#997) where oclif
+loads all command modules at startup to resolve aliases defined as class properties. This is
+unresolved and requires a breaking change. For development (with ts-node), this can cause
+`oclif manifest` and `oclif readme` to take several seconds with 219 commands.
 
-**Prevention:**
-- Set `"engines": { "node": ">=20.0.0" }` in `package.json`.
-- Add a runtime check at CLI entry:
-  ```typescript
-  const [major] = process.versions.node.split('.').map(Number);
-  if (major < 20) {
-    console.error(`twentythree requires Node.js 20+. Found: ${process.version}`);
-    process.exit(1);
-  }
-  ```
-- This catches both the npm install warning and the runtime case (e.g., the user updated their CLI but not their Node).
+**Why it matters for v1.1:** The `prepack` step runs `oclif manifest` against the compiled CJS
+`dist/`. Since each file is a pre-compiled `.cjs` module (not TypeScript being compiled on the
+fly), this is significantly faster in the dist build than in development. The issue primarily
+affects development-time tooling, not the published CLI's startup time (manifest caching handles
+that).
 
----
+**Prevention:** No action required for v1.1. If `oclif manifest` is slow in CI, measure it —
+if under 30 seconds for 219 commands in CJS mode, it is acceptable. If it is genuinely slow,
+run it in a separate pre-publish step rather than inline in `prepack`.
 
-### Pitfall m4: `--help` Output Not Showing Active Workspace
-
-**What goes wrong:**
-The user runs `twentythree --help` or `twentythree videos --help`. The output gives no indication of which workspace is active. They follow the help text, execute a command, and it operates on the wrong workspace.
-
-**Prevention:**
-- Print `Active workspace: <name>` at the top of every `--help` output when a workspace is configured.
-- Also show it in the global usage header: `twentythree [workspace: client-a] <command> ...`.
-
----
-
-### Pitfall m5: Silent Overwrite on `auth credentials` Re-Run
-
-**What goes wrong:**
-A user runs `twentythree auth credentials` a second time (e.g., to add a new workspace) and accidentally overwrites their existing credential set without warning.
-
-**Prevention:**
-- On re-run, show existing workspaces and ask whether to add, replace, or cancel.
-- Never silently overwrite. A destructive credential operation should require explicit confirmation: `This will replace credentials for domain video.client.com. Continue? [y/N]`.
+**Phase:** Monitor; no action needed unless CI times exceed tolerable thresholds.
 
 ---
 
@@ -323,26 +381,63 @@ A user runs `twentythree auth credentials` a second time (e.g., to add a new wor
 
 | Phase Topic | Likely Pitfall | Mitigation |
 |-------------|---------------|------------|
-| Phase 1 — Auth scaffolding | C1 (plaintext storage), C2 (token refresh race), m5 (silent overwrite) | Use `@napi-rs/keyring` from day one; implement file lock on token write |
-| Phase 2 — Multi-workspace | C4 (wrong workspace mutation) | Always print active workspace in output; add `--workspace` override to every command |
-| Phase 3 — OpenAPI generation | M3 (spec drift), M4 (terminology leak) | Store spec snapshot in repo; test for legacy term leakage |
-| Phase 4 — Distribution | M1 (PATH/permission), m1 (CRLF shebang), m3 (Node version) | Add `engines` field; set `.gitattributes`; write README install section |
-| Phase 5 — AI skills package | C2 (token race — skills run CLI subprocesses) | File lock is critical when skills spawn concurrent `twentythree` invocations |
-| All phases | M2 (ESM/CJS), M5 (startup latency), M6 (piped output) | Commit to ESM + tsup bundle from project init; stderr-only progress |
+| npm publish — prep | No `prepack` script; stale manifest shipped | Add `prepack` before first publish |
+| npm publish — prep | Package name `twentythree-cli` may be taken | Check with `npm view twentythree-cli` first |
+| npm publish — prep | Version `0.1.0` undersells shipped functionality | Decide public version; consider `1.0.0` |
+| npm publish — verify | `.npmignore` added → breaks `files` whitelist | Never add `.npmignore`; use `files` only |
+| npm publish — verify | `src/` leaked into tarball | Verify with `npm pack --dry-run` before publish |
+| Install verification | Native binary missing on Linux/Windows CI | Test on ubuntu-latest; add graceful keyring error |
+| Endpoint audit | File count ≠ manifest count ≠ spec count | Use `operationId` comparison via `agentMetadata` |
+| Endpoint audit | HTTP method collapse creates false coverage gaps | Maintain `EXCLUDED_OPERATIONS` list with rationale |
+| Endpoint audit | Deprecated endpoints flagged as missing | Add `deprecated: true` filter to audit script |
+| Docs generation | `oclif readme` no-ops without HTML comment tags | Insert `<!-- usage -->` and `<!-- commands -->` tags |
+| Docs generation | `--multi` produces flat docs/ directory | Use `--nested-topics-depth 2` + hand-authored index |
+| Docs staleness | Docs diverge from commands after each release | Wire `oclif readme` into `prepack`; add CI diff check |
+| pnpm monorepo | `oclif pack tarballs` fails — wrong lockfile format | Do not use `oclif pack`; use `pnpm publish` only |
 
 ---
 
 ## Sources
 
-- [keyring-node (@napi-rs/keyring) GitHub](https://github.com/Brooooooklyn/keyring-node) — HIGH confidence
-- [Claude Code OAuth race condition issue #27933](https://github.com/anthropics/claude-code/issues/27933) — HIGH confidence (production incident documentation)
-- [n8n token refresh race condition #13088](https://github.com/n8n-io/n8n/issues/13088) — HIGH confidence
-- [Nango concurrency with OAuth token refreshes](https://nango.dev/blog/concurrency-with-oauth-token-refreshes) — HIGH confidence
-- [Basecamp CLI credential storage and structure](https://github.com/basecamp/basecamp-cli) — HIGH confidence (reference implementation)
-- [require(esm) stability in Node.js (Dec 2025)](https://joyeecheung.github.io/blog/2025/12/30/require-esm-in-node-js-from-experiment-to-stability/) — HIGH confidence
-- [Liran Tal: TypeScript ESM/CJS in 2025](https://lirantal.com/blog/typescript-in-2025-with-esm-and-cjs-npm-publishing) — MEDIUM confidence
-- [oasdiff — OpenAPI breaking change detection](https://www.oasdiff.com/) — HIGH confidence
-- [Command Line Interface Guidelines (clig.dev)](https://clig.dev/) — HIGH confidence (community standard reference)
-- [npm EACCES permissions docs](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally/) — HIGH confidence (official npm docs)
-- [Azure SDK keytar → @napi-rs/keyring migration](https://github.com/Azure/azure-sdk-for-js/issues/29288) — HIGH confidence
-- [Duende: token expiration and refresh best practices](https://duendesoftware.com/learn/best-practices-managing-token-expiration-refresh-revocation-in-web-apis) — MEDIUM confidence
+- oclif release documentation: https://oclif.io/docs/releasing/
+- oclif readme command docs: https://github.com/oclif/oclif/blob/main/docs/readme.md
+- oclif pnpm workspace issue (ENOENT npm-shrinkwrap.json, closed not-planned 2024): https://github.com/oclif/oclif/issues/1170
+- oclif all-commands-loaded startup issue: https://github.com/oclif/oclif/issues/606
+- npm platform-specific optional dependency lockfile bug (npm/cli#4828): https://github.com/npm/cli/issues/4828
+- npm platform-specific dependency bug explainer: https://loke.dev/blog/npm-platform-specific-dependencies-bug
+- NAPI-RS release/distribution docs: https://napi.rs/docs/deep-dive/release
+- @napi-rs/keyring optionalDependencies (confirmed from installed package.json: 12 platform targets)
+- npm pack dry-run verification guide: https://stevefenton.co.uk/blog/2024/01/testing-npm-publish/
+- oclif manifest missing from files field issue: https://github.com/oclif/oclif/issues/198
+- OpenAPI deprecated field spec: https://swagger.io/specification/ (operation object, deprecated property)
+- prepack vs prepublishOnly lifecycle: https://docs.npmjs.com/cli/v11/using-npm/scripts/
+
+---
+
+## v1.0 Pitfalls (Retained for Reference)
+
+The pitfalls below were documented during the v1.0 milestone. They are resolved or already
+handled in the existing codebase.
+
+### Pitfall C1: Plaintext Credential Storage — RESOLVED
+Used `@napi-rs/keyring` from the start. Bearer tokens stored in OS keychain.
+
+### Pitfall C2: Token Refresh Race Condition — RESOLVED
+`proper-lockfile` used around token read-check-refresh-write cycle. File lock in place.
+
+### Pitfall C3: Token Expiry During Long Operations — RESOLVED
+Proactive refresh timer in auth layer with 5-minute buffer.
+
+### Pitfall C4: Operating on Wrong Workspace — RESOLVED
+Active workspace shown in command output. `--workspace` override available on all commands.
+
+### Pitfall M2: ESM/CJS Module Interop — RESOLVED
+CJS build; chalk 4.x, ora 5.x pinned; no ESM-only dep issues.
+
+### Pitfall M4: Terminology Mapping Leaking — RESOLVED
+`term-map.ts` applied in all output paths; legacy API terms do not reach user-facing output.
+
+### Pitfall M5: Startup Latency — MITIGATED
+CJS build with oclif manifest caching; `unbundle: false` in tsdown with `--config-loader unrun`.
+Startup within acceptable bounds. Not fully bundled (single-file) due to tsdown unbundle mode,
+but manifest caching means most module loads are deferred.

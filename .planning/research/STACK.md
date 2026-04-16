@@ -1,7 +1,7 @@
 # Technology Stack
 
 **Project:** twentythree-cli
-**Researched:** 2026-04-14
+**Researched:** 2026-04-14 (updated 2026-04-16 — v1.1 additions: publish, docs, audit)
 
 ---
 
@@ -191,6 +191,229 @@ A CLI is invoked and exits. Background token refresh daemons (like `launchd` age
 
 ---
 
+## v1.1 Additions: Publish, Docs, Endpoint Audit
+
+These are new capabilities for the v1.1 milestone. Nothing below requires new runtime dependencies.
+
+---
+
+### (a) npm Publish
+
+**No new tooling required.** The existing stack covers everything. The work is configuration.
+
+#### package.json fields to add
+
+The current `package.json` is missing several fields that npm requires or strongly recommends for a public first publish:
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ORG/twentythree-cli.git"
+  },
+  "homepage": "https://github.com/ORG/twentythree-cli#readme",
+  "bugs": {
+    "url": "https://github.com/ORG/twentythree-cli/issues"
+  },
+  "keywords": ["twentythree", "cli", "video", "api"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
+```
+
+- `repository` — required for npm provenance; URL must exactly match the GitHub repo (case-sensitive)
+- `publishConfig.access: "public"` — required for unscoped public packages on first publish; prevents "private package" publish errors
+- `publishConfig.provenance: true` — enables Sigstore-backed provenance attestation; links the npm package to its source commit and CI run; free, increases trust
+
+#### .npmignore
+
+The current `"files"` field in `package.json` already allowlists `/bin`, `/dist`, `/oclif.manifest.json`. This is the right pattern — it's an allowlist not a denylist, which is safer. **No `.npmignore` needed** when `"files"` is present. Run `npm pack --dry-run` from `packages/twentythree-cli/` to verify what gets included before publishing.
+
+#### GitHub Actions publish workflow
+
+**Use `changesets/action`** — already in the repo as `@changesets/cli` is in devDependencies (root `package.json` shows it). The changeset workflow:
+
+1. Developer runs `pnpm changeset` to describe the change (patch/minor/major)
+2. `changesets/action` opens a "Version Packages" PR on merge to main
+3. Merging the Version PR triggers `changeset publish` → `npm publish` with `NPM_TOKEN`
+
+Minimal GitHub Actions workflow (`.github/workflows/release.yml`):
+
+```yaml
+name: Release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write  # required for provenance attestation
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable && pnpm install
+      - uses: changesets/action@v1
+        with:
+          publish: pnpm --filter twentythree-cli publish --no-git-checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+`id-token: write` permission is required for provenance attestation to work in CI.
+
+**Why changesets and not a manual `npm publish`?**
+The repo already has `@changesets/cli` in devDependencies. Changesets produces a CHANGELOG.md automatically, prevents accidental publishes, and makes version bumps auditable via PR. Manual `npm publish` from a developer machine risks version drift and missing the provenance flag.
+
+**Why not semantic-release?**
+semantic-release infers version from commit messages (conventional commits), which adds a commit message discipline requirement. Changesets is explicit and developer-driven — fits better for a project where changelogs are intentional, not inferred.
+
+**Confidence: HIGH** — changesets pattern verified across multiple pnpm monorepo examples; provenance `id-token: write` requirement confirmed via npm docs.
+
+---
+
+### (b) Docs Generation — Markdown Command Reference
+
+**Use `oclif readme` (already in devDependencies as `oclif` package).**
+
+The `oclif` package (already installed as devDep at `^4.23.0`) includes the `oclif readme` command. No new packages needed.
+
+#### How it works
+
+`oclif readme` scans the built `oclif.manifest.json` and replaces placeholder HTML comments in a README with generated content:
+
+- `<!-- usage -->` → install + basic usage block
+- `<!-- commands -->` → full command table with descriptions, flags, examples
+- `<!-- toc -->` → table of contents
+
+#### Two modes
+
+**Mode 1: Inline (augment existing README)**
+
+Suitable for a root `README.md` that shows the command list inline:
+
+```bash
+pnpm --filter twentythree-cli exec oclif readme --readme-path ../../README.md
+```
+
+**Mode 2: Multi-file (separate per-topic docs pages)**
+
+Suitable for a `docs/` directory with one file per command group:
+
+```bash
+pnpm --filter twentythree-cli exec oclif readme --multi --output-dir ../../docs
+```
+
+This produces `docs/video.md`, `docs/category.md`, etc. — one file per top-level topic. Use `--nested-topics-depth=2` if subtopics should also get their own files.
+
+#### Integration with agentMetadata
+
+`oclif readme` reads from `static description`, `static flags`, `static examples`, and `static args` on each command class — the standard oclif fields. The `static agentMetadata` field is separate and does not appear in generated docs. This is correct: agentMetadata is for machine consumption, the oclif readme output is for human consumption. No conflict.
+
+#### When to run
+
+Add a `docs` script to the root `package.json`:
+
+```json
+"docs": "pnpm --filter twentythree-cli build && pnpm --filter twentythree-cli exec oclif readme --multi --output-dir ../../docs"
+```
+
+Run before each release as part of the changeset publish step, or as a separate pre-commit hook.
+
+**Confidence: HIGH** — `oclif readme` command syntax and `--multi` flag verified directly from oclif GitHub docs; oclif package already present as devDep.
+
+**What NOT to add:**
+- `typedoc` — TypeDoc generates API reference from TypeScript types, not CLI help. Wrong tool for a command reference.
+- `docsify` / `vitepress` — heavyweight documentation sites. Markdown files in `docs/` committed to the repo are sufficient.
+- Any custom AST parser of agentMetadata — `oclif readme` already reads the right fields; don't duplicate.
+
+---
+
+### (c) Endpoint Coverage Audit
+
+**Use a custom Node.js script — no new packages needed.**
+
+The audit compares:
+- **Source of truth:** `specs/twentythree-api-swagger.json` — 235 paths
+- **Implementation:** `static agentMetadata.api_endpoint` fields across all 219 command files — already grep-able as `'METHOD /path'` strings
+
+Both datasets are already available in the repo. No external tool adds value here.
+
+#### Approach
+
+Write a standalone script at `packages/twentythree-cli/scripts/audit-coverage.ts` (or `.js`):
+
+1. Parse `specs/twentythree-api-swagger.json` → extract all `{ method, path }` pairs (235 total)
+2. Grep all `.ts` files under `src/commands/` for `api_endpoint:` values → extract `{ method, path }` pairs
+3. Normalize: strip `/api/2` prefix from spec paths if present (spec uses bare paths like `/photo/list`, commands use same format — verify consistency)
+4. Diff: covered = spec paths that appear in at least one command; uncovered = spec paths with no matching command
+5. Output: table of uncovered paths + summary `N/235 covered (X%)`
+
+#### Why not an existing tool?
+
+- `openapi-diff` — compares two spec files, not spec-to-implementation
+- `specmatic` — heavyweight Java tool for contract testing, not CLI coverage
+- Custom script reading agentMetadata directly is 50 lines of Node.js with zero new dependencies and full control over the output format
+
+#### Script outline (TypeScript-compatible, runs via `tsx` or compiled)
+
+```typescript
+import { readFileSync } from 'fs'
+import { globSync } from 'fs' // Node 22 has globSync natively
+import path from 'path'
+
+// 1. Load spec
+const spec = JSON.parse(readFileSync('specs/twentythree-api-swagger.json', 'utf8'))
+const specEndpoints = new Set<string>()
+for (const [specPath, methods] of Object.entries(spec.paths as Record<string, Record<string, unknown>>)) {
+  for (const method of ['get','post','put','delete','patch']) {
+    if (methods[method]) specEndpoints.add(`${method.toUpperCase()} ${specPath}`)
+  }
+}
+
+// 2. Collect covered endpoints from agentMetadata
+const commandFiles = globSync('src/commands/**/*.ts')
+const coveredEndpoints = new Set<string>()
+for (const file of commandFiles) {
+  const content = readFileSync(file, 'utf8')
+  const match = content.match(/api_endpoint:\s*'([^']+)'/)
+  if (match) coveredEndpoints.add(match[1])
+}
+
+// 3. Report
+const uncovered = [...specEndpoints].filter(ep => !coveredEndpoints.has(ep))
+console.log(`Coverage: ${specEndpoints.size - uncovered.length}/${specEndpoints.size}`)
+if (uncovered.length) {
+  console.log('\nUncovered endpoints:')
+  uncovered.forEach(ep => console.log(' ', ep))
+}
+```
+
+Run via: `pnpm --filter twentythree-cli exec tsx scripts/audit-coverage.ts`
+
+#### Add `tsx` as devDep (only new addition)
+
+`tsx` (TypeScript execute) runs `.ts` scripts directly without a compile step — useful for one-off scripts and tasks that shouldn't go through the full tsdown build pipeline:
+
+```bash
+pnpm add -D tsx --filter twentythree-cli
+```
+
+`tsx` is maintained by privatenumber; actively used by the Vite ecosystem; ~4MB; no config required. It wraps esbuild for fast TypeScript transpilation.
+
+**Alternative:** Write the audit script as plain `.js` using `require('fs')` — avoids the tsx dependency entirely. The script logic is simple enough that TypeScript types add minimal value.
+
+**Confidence: HIGH** — approach uses only built-in Node.js 22 APIs (`fs`, `globSync` native in Node 22) + the existing spec and source files. No external auditing tools required.
+
+---
+
 ## Full Dependency Map
 
 ### Runtime Dependencies (`dependencies`)
@@ -207,13 +430,21 @@ openapi-fetch       # Type-safe HTTP client
 
 ### Dev Dependencies (`devDependencies`)
 ```
-oclif               # Code generation and build tooling
+oclif               # Code generation, build tooling, and docs generation (oclif readme)
 typescript          # Type checking
 tsdown              # Bundling
 openapi-typescript  # API type generation (build-time)
 vitest              # Test runner
 @oclif/test         # oclif test helpers
 @types/node         # Node.js types
+tsx                 # Run .ts scripts directly (new — for audit-coverage.ts)
+```
+
+### Root devDependencies (monorepo)
+```
+@changesets/cli     # Version management and changelog (already present)
+changesets/action   # GitHub Actions integration (CI only, not installed locally)
+turbo               # Monorepo build orchestration (already present)
 ```
 
 ---
@@ -234,6 +465,13 @@ vitest              # Test runner
 | Credentials | @napi-rs/keyring | plain conf file | Tokens in plaintext files is a security antipattern |
 | Prompts | @clack/prompts | inquirer | More dependencies needed to match @clack styling; heavier |
 | Testing | vitest | Jest | Requires ts-jest config; slower; @swc/jest config complexity |
+| Publish versioning | changesets | semantic-release | semantic-release infers version from commit messages; requires conventional commits discipline; changesets is explicit and PR-driven |
+| Docs generation | oclif readme | typedoc | typedoc generates TypeScript API reference, not CLI help output |
+| Docs generation | oclif readme | custom agentMetadata parser | Duplicates what oclif readme already does from static description/flags/examples |
+| Endpoint audit | custom Node.js script | openapi-diff | openapi-diff compares two spec files, not spec-to-implementation |
+| Endpoint audit | custom Node.js script | specmatic | Java-based contract testing tool; heavyweight; not designed for CLI coverage reporting |
+| Script runner | tsx | ts-node | ts-node is slower and has more configuration surface area; tsx is the simpler successor |
+| Script runner | tsx | plain .js script | Also valid — if the audit script stays simple, remove tsx dependency entirely |
 
 ---
 
@@ -247,7 +485,10 @@ npx oclif generate cli twentythree-cli
 npm install @oclif/core @napi-rs/keyring conf chalk@^4 cli-table3 ora@^5 @clack/prompts openapi-fetch
 
 # Dev deps
-npm install -D oclif typescript tsdown openapi-typescript vitest @oclif/test @types/node
+npm install -D oclif typescript tsdown openapi-typescript vitest @oclif/test @types/node tsx
+
+# Root monorepo (changesets already present per package.json)
+# @changesets/cli already in root devDependencies
 ```
 
 ---
@@ -255,6 +496,7 @@ npm install -D oclif typescript tsdown openapi-typescript vitest @oclif/test @ty
 ## Sources
 
 - oclif features and v4 documentation: https://oclif.io/docs/features/
+- oclif readme command docs: https://github.com/oclif/oclif/blob/main/docs/readme.md
 - @oclif/core npm (v4.10.5 confirmed): https://www.npmjs.com/package/@oclif/core
 - Commander.js npm (v14.0.3): https://www.npmjs.com/package/commander
 - npm download trends (commander ~340M/wk, yargs ~167M/wk, oclif ~293K/wk): https://npmtrends.com/commander-vs-oclif-vs-yargs
@@ -266,7 +508,11 @@ npm install -D oclif typescript tsdown openapi-typescript vitest @oclif/test @ty
 - keytar archived December 2022: https://github.com/atom/node-keytar
 - GitHub CLI keyring fallback pattern: https://github.com/cli/cli/discussions/8980
 - conf credential storage caveats: https://github.com/sindresorhus/conf
-- @clack/prompts vs inquirer: https://dev.to/chengyixu/clackprompts-the-modern-alternative-to-inquirerjs-1ohb
+- @clack/prompts vs inquirer: https://dev.to/chengyixhu/clackprompts-the-modern-alternative-to-inquirerjs-1ohb
 - vitest TypeScript recommendation: https://medium.com/@ruverd/jest-vs-vitest-which-test-runner-should-you-use-in-2025-5c85e4f2bda9
 - oclif lazy loading (only invoked command is required): https://oclif.io/docs/features/
 - Orval vs openapi-typescript for CLI: https://debricked.com/select/compare/npm-openapi-typescript-codegen-vs-npm-orval-vs-npm-@hey-api/client-fetch
+- npm provenance attestation: https://docs.npmjs.com/generating-provenance-statements/
+- npm publishConfig fields: https://docs.npmjs.com/files/package.json/
+- changesets GitHub Action: https://github.com/changesets/action
+- changesets with pnpm: https://pnpm.io/using-changesets
