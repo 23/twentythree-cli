@@ -185,17 +185,17 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Webhook Commands
 
-- [ ] **WHK-01**: `twentythree webhook list` lists webhook subscriptions
-- [ ] **WHK-02**: `twentythree webhook subscribe` creates a new webhook subscription
-- [ ] **WHK-03**: `twentythree webhook unsubscribe <id>` removes a webhook subscription
-- [ ] **WHK-04**: `twentythree webhook events` lists available webhook event types
-- [ ] **WHK-05**: `twentythree webhook sample <event>` retrieves a sample payload for an event type
+- [x] **WHK-01**: `twentythree webhook list` lists webhook subscriptions
+- [x] **WHK-02**: `twentythree webhook subscribe` creates a new webhook subscription
+- [x] **WHK-03**: `twentythree webhook unsubscribe <id>` removes a webhook subscription
+- [x] **WHK-04**: `twentythree webhook events` lists available webhook event types
+- [x] **WHK-05**: `twentythree webhook sample <event>` retrieves a sample payload for an event type
 
 ### App Commands
 
-- [ ] **APP-01**: `twentythree app add` installs an app integration
-- [ ] **APP-02**: `twentythree app update <id>` updates app settings
-- [ ] **APP-03**: `twentythree app delete <id>` removes an app with confirmation
+- [x] **APP-01**: `twentythree app add` installs an app integration
+- [x] **APP-02**: `twentythree app update <id>` updates app settings
+- [x] **APP-03**: `twentythree app delete <id>` removes an app with confirmation
 
 ### Presentation Commands
 
@@ -421,14 +421,14 @@ Explicitly excluded. Documented to prevent scope creep.
 | THB-05 | Phase 8 | Pending |
 | THB-06 | Phase 8 | Pending |
 | THB-07 | Phase 8 | Pending |
-| WHK-01 | Phase 8 | Pending |
-| WHK-02 | Phase 8 | Pending |
-| WHK-03 | Phase 8 | Pending |
-| WHK-04 | Phase 8 | Pending |
-| WHK-05 | Phase 8 | Pending |
-| APP-01 | Phase 8 | Pending |
-| APP-02 | Phase 8 | Pending |
-| APP-03 | Phase 8 | Pending |
+| WHK-01 | Phase 8 | Complete |
+| WHK-02 | Phase 8 | Complete |
+| WHK-03 | Phase 8 | Complete |
+| WHK-04 | Phase 8 | Complete |
+| WHK-05 | Phase 8 | Complete |
+| APP-01 | Phase 8 | Complete |
+| APP-02 | Phase 8 | Complete |
+| APP-03 | Phase 8 | Complete |
 | PRS-01 | Phase 8 | Pending |
 | PRS-02 | Phase 8 | Pending |
 | PRS-03 | Phase 8 | Pending |
