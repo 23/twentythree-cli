@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Repository Polish & Release
-status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-04-16T18:06:17.246Z"
+status: verifying
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-04-16T18:09:02.654Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
-  completed_plans: 5
-  percent: 83
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-16)
 
 Phase: 11 (documentation) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-16
 
 Progress: [          ] 0%
@@ -57,6 +57,8 @@ Recent decisions affecting current work:
 - [Phase 10-package-hygiene]: prepack (not prepare or prepublishOnly) used for build lifecycle — fires on npm pack and npm publish, not on consumer install
 - [Phase 11-documentation]: Run oclif readme from package dir with relative --output-dir to avoid doubled path segments
 - [Phase 11-documentation]: oclif readme --multi --nested-topics-depth 2 generates 156 files (not 49) — correct behavior, all sub-commands get individual pages
+- [Phase 11-documentation]: getting-started uses space-separated commands (twentythree video list) per topicSeparator config
+- [Phase 11-documentation]: api-spec-upgrade.md written as standalone readable prose — does not reference CLAUDE.md per D-09
 
 ### Pending Todos
 
@@ -69,6 +71,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-16T18:06:17.243Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-04-16T18:09:02.652Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None

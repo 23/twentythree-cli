@@ -28,7 +28,7 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 9: Endpoint Coverage Audit** — Audit all 235 OpenAPI endpoints against command files; classify and fill any confirmed gaps (completed 2026-04-16)
 - [x] **Phase 10: Package Hygiene** — Wire prepack script, fill missing package.json fields, update files array (completed 2026-04-16)
-- [ ] **Phase 11: Documentation** — Generate command reference with oclif; write getting-started and api-spec-upgrade guides
+- [x] **Phase 11: Documentation** — Generate command reference with oclif; write getting-started and api-spec-upgrade guides (completed 2026-04-16)
 - [ ] **Phase 12: READMEs & CHANGELOG** — Write root README, npm package README, and CHANGELOG
 - [ ] **Phase 13: npm Publish** — Version, publish to npm, verify installation, wire GitHub Actions CI
 
@@ -71,7 +71,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 11-01-PLAN.md — Generate command reference with oclif readme + handwritten topic index
-- [ ] 11-02-PLAN.md — Write getting-started and api-spec-upgrade guides
+- [x] 11-02-PLAN.md — Write getting-started and api-spec-upgrade guides
 **UI hint**: no
 
 ### Phase 12: READMEs & CHANGELOG
@@ -109,6 +109,6 @@ Plans:
 | 8. Platform & Polish | v1.0 | 10/10 | Complete | 2026-04-16 |
 | 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
 | 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
-| 11. Documentation | v1.1 | 1/2 | In Progress|  |
+| 11. Documentation | v1.1 | 2/2 | Complete   | 2026-04-16 |
 | 12. READMEs & CHANGELOG | v1.1 | 0/? | Not started | - |
 | 13. npm Publish | v1.1 | 0/? | Not started | - |
