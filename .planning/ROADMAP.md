@@ -70,7 +70,7 @@ Plans:
   3. `docs/guides/api-spec-upgrade.md` documents the `pnpm update-api-spec` workflow end-to-end
 **Plans**: 2 plans
 Plans:
-- [ ] 11-01-PLAN.md — Generate command reference with oclif readme + handwritten topic index
+- [x] 11-01-PLAN.md — Generate command reference with oclif readme + handwritten topic index
 - [ ] 11-02-PLAN.md — Write getting-started and api-spec-upgrade guides
 **UI hint**: no
 
@@ -109,6 +109,6 @@ Plans:
 | 8. Platform & Polish | v1.0 | 10/10 | Complete | 2026-04-16 |
 | 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
 | 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
-| 11. Documentation | v1.1 | 0/2 | Planning | - |
+| 11. Documentation | v1.1 | 1/2 | In Progress|  |
 | 12. READMEs & CHANGELOG | v1.1 | 0/? | Not started | - |
 | 13. npm Publish | v1.1 | 0/? | Not started | - |
