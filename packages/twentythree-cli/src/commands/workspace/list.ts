@@ -6,6 +6,13 @@ import { getWorkspaces, getActiveWorkspace, type WorkspaceEntry } from '../../au
 export default class List extends BaseCommand<typeof List> {
   static description = 'List all configured workspaces'
 
+  static agentMetadata = {
+    api_endpoint: 'local',
+    auth_scope: 'none' as const,
+    output_shape: { type: 'table' as const, columns: ['Domain', 'Display Name', 'Status'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = ['<%= config.bin %> workspace list']
 
   static enableJsonFlag = true

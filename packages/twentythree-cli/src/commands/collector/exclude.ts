@@ -11,6 +11,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CollectorExclude extends AuthenticatedCommand<typeof CollectorExclude> {
   static description = 'Block a collector from a video or webinar'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /collector/exclude',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> collector exclude 456 --object-id 123',
   ]

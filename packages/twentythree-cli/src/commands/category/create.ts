@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CategoryCreate extends AuthenticatedCommand<typeof CategoryCreate> {
   static description = 'Create a new category'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /album/create',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> category create --title "My Category"',
     '<%= config.bin %> category create --title "My Category" --json',

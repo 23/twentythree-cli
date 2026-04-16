@@ -17,6 +17,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollAnswer extends AuthenticatedCommand<typeof PollAnswer> {
   static description = 'Submit a poll answer'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /poll/answer',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll answer 99 --object-id 12345 --option-id 3',
     '<%= config.bin %> poll answer 99 --object-id 12345 --option-id 3 --json',

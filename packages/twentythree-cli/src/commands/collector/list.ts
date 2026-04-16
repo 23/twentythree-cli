@@ -11,6 +11,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CollectorList extends AuthenticatedCommand<typeof CollectorList> {
   static description = 'List collectors in the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /collector/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Name', 'Type'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> collector list',
     '<%= config.bin %> collector list --object-id 123',

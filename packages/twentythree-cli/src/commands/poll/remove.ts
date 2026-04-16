@@ -15,6 +15,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> {
   static description = 'Remove a poll'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /poll/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll remove 99',
     '<%= config.bin %> poll remove 99 --json',

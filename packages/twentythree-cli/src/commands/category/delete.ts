@@ -28,6 +28,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CategoryDelete extends AuthenticatedCommand<typeof CategoryDelete> {
   static description = 'Delete a category from the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /album/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> category delete 42',
     '<%= config.bin %> category delete 42 --json',

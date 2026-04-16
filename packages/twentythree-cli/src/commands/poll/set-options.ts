@@ -20,6 +20,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollSetOptions extends AuthenticatedCommand<typeof PollSetOptions> {
   static description = 'Set options for a poll'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /poll/set-options',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll set-options 99 --option "Yes" --option "No" --option "Maybe"',
     '<%= config.bin %> poll set-options 99 --option "Option A" --option "Option B" --json',

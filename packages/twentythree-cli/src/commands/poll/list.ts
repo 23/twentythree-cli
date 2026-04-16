@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollList extends AuthenticatedCommand<typeof PollList> {
   static description = 'List polls for a webinar'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /poll/list',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Question', 'Open', 'Results Visible'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll list --object-id 12345',
     '<%= config.bin %> poll list --object-id 12345 --json',

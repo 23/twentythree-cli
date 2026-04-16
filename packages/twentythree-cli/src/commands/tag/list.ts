@@ -11,6 +11,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class TagList extends AuthenticatedCommand<typeof TagList> {
   static description = 'List tags in the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /tag/list',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'table' as const, columns: ['Tag', 'Count'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> tag list',
     '<%= config.bin %> tag list --search marketing',

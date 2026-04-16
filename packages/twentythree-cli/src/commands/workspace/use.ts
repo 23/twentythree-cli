@@ -12,6 +12,13 @@ import {
 export default class Use extends BaseCommand<typeof Use> {
   static description = 'Switch the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'local',
+    auth_scope: 'none' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> workspace use company.video23.com',
     '<%= config.bin %> workspace use "Company Name"',

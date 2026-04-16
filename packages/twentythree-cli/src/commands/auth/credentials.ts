@@ -12,6 +12,13 @@ import { fetchWorkspaceTokens } from '../../auth/token-refresh.js'
 export default class Credentials extends Command {
   static description = 'Configure domain and bearer token for a TwentyThree workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'interactive',
+    auth_scope: 'none' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = ['<%= config.bin %> auth credentials']
 
   public async run(): Promise<void> {

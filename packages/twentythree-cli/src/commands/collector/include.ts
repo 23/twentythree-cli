@@ -11,6 +11,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CollectorInclude extends AuthenticatedCommand<typeof CollectorInclude> {
   static description = 'Attach a collector to a video or webinar'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /collector/include',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> collector include 456 --object-id 123',
   ]

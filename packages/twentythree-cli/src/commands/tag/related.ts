@@ -10,6 +10,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class TagRelated extends AuthenticatedCommand<typeof TagRelated> {
   static description = 'List tags related to a given tag'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /tag/related',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'table' as const, columns: ['Tag'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> tag related marketing',
     '<%= config.bin %> tag related marketing --json',

@@ -23,6 +23,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CategoryUpdate extends AuthenticatedCommand<typeof CategoryUpdate> {
   static description = 'Update metadata for a category'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /album/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> category update 42 --title "New Title"',
     '<%= config.bin %> category update 42 --hidden',

@@ -27,6 +27,13 @@ function formatExpiry(expirationTime: string): string {
 export default class Status extends BaseCommand<typeof Status> {
   static description = 'Show authentication status and active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'local',
+    auth_scope: 'none' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = ['<%= config.bin %> auth status']
 
   static enableJsonFlag = true

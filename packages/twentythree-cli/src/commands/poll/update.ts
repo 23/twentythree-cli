@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollUpdate extends AuthenticatedCommand<typeof PollUpdate> {
   static description = 'Update a poll'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /poll/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll update 99 --question "Updated question?"',
     '<%= config.bin %> poll update 99 --open',

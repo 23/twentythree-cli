@@ -17,6 +17,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PollAdd extends AuthenticatedCommand<typeof PollAdd> {
   static description = 'Create a new poll for a webinar'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /poll/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> poll add --object-id 12345 --question "What is your preference?"',
     '<%= config.bin %> poll add --object-id 12345 --question "How are you?" --json',

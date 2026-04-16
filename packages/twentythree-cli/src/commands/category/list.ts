@@ -19,6 +19,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CategoryList extends AuthenticatedCommand<typeof CategoryList> {
   static description = 'List categories in the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /album/list',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Title', 'Hidden', 'Created'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> category list',
     '<%= config.bin %> category list --json',
