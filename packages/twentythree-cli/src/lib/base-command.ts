@@ -15,6 +15,13 @@ export type BaseFlags<T extends typeof Command> = Interfaces.InferredFlags<
   (typeof BaseCommand)['baseFlags'] & T['flags']
 >
 
+export interface AgentMetadata {
+  api_endpoint: string
+  auth_scope: 'anonymous' | 'none' | 'read' | 'write' | 'admin' | 'super'
+  output_shape: { type: 'table'; columns: string[] } | { type: 'key-value' } | { type: 'none' }
+  side_effects: 'none' | 'destructive' | 'creates' | 'updates'
+}
+
 export abstract class BaseCommand<T extends typeof Command> extends Command {
   static enableJsonFlag = true
 
@@ -23,6 +30,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       char: 'w',
       summary: 'Workspace domain or display name to use for this invocation.',
       helpGroup: 'GLOBAL',
+    }),
+    agent: Flags.boolean({
+      description: 'Output machine-readable command metadata for AI agent consumption',
+      helpGroup: 'GLOBAL',
+      hidden: true,
     }),
   }
 
@@ -35,6 +47,40 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   public async init(): Promise<void> {
     await super.init()
+
+    // Handle --agent flag before workspace resolution (D-2)
+    // Check raw argv since flags haven't been parsed yet at this point
+    if (process.argv.includes('--agent')) {
+      const ctor = this.ctor as any
+      const flagDefs = ctor.flags ?? {}
+      const agentMeta: AgentMetadata | undefined = ctor.agentMetadata
+
+      // Build flags array from oclif flag definitions
+      const flagsArr = Object.entries(flagDefs)
+        .filter(([name]) => !['workspace', 'agent', 'json'].includes(name))
+        .map(([name, def]: [string, any]) => ({
+          name,
+          type: def.type ?? 'string',
+          required: def.required ?? false,
+          default: def.default ?? null,
+          description: def.description ?? def.summary ?? '',
+        }))
+
+      const output = {
+        command: this.id,
+        description: ctor.description ?? '',
+        flags: flagsArr,
+        examples: (ctor.examples ?? []).map((e: any) => typeof e === 'string' ? e : e?.command ?? String(e)),
+        api_endpoint: agentMeta?.api_endpoint ?? null,
+        auth_scope: agentMeta?.auth_scope ?? 'read',
+        output_shape: agentMeta?.output_shape ?? { type: 'none' },
+        side_effects: agentMeta?.side_effects ?? 'none',
+      }
+
+      process.stdout.write(JSON.stringify(output, null, 2) + '\n')
+      process.exit(0)
+    }
+
     const { flags } = await this.parse({
       flags: this.ctor.flags,
       baseFlags: (super.ctor as typeof BaseCommand).baseFlags,
