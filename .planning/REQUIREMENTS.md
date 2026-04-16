@@ -145,7 +145,7 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 - [x] **ANL-04**: `twentythree analytics live timeseries|totals|weekday|event|event-timeseries|event-totals` retrieves aggregated live analytics
 - [x] **ANL-05**: `twentythree analytics conversions` retrieves conversion analytics
 - [x] **ANL-06**: `twentythree analytics conversions timeseries|totals` retrieves aggregated conversion analytics
-- [ ] **ANL-07**: `twentythree analytics usage devices|domains|locations|sources|sourceids|spots|storage|traffic` retrieves usage analytics
+- [x] **ANL-07**: `twentythree analytics usage devices|domains|locations|sources|sourceids|spots|storage|traffic` retrieves usage analytics
 - [x] **ANL-08**: All analytics commands support `--json` output and accept standard date range filters
 
 ### Audience Commands
@@ -393,7 +393,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | ANL-04 | Phase 7 | Complete |
 | ANL-05 | Phase 7 | Complete |
 | ANL-06 | Phase 7 | Complete |
-| ANL-07 | Phase 7 | Pending |
+| ANL-07 | Phase 7 | Complete |
 | ANL-08 | Phase 7 | Complete |
 | AUD-01 | Phase 7 | Pending |
 | AUD-02 | Phase 7 | Pending |
