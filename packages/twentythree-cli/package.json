@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "description": "Terminal access to every TwentyThree API endpoint",
   "license": "MIT",
+  "author": "TwentyThree",
+  "keywords": ["twentythree", "video", "api", "cli"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/23/twentythree-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/23/twentythree-cli/issues"
+  },
+  "homepage": "https://github.com/23/twentythree-cli#readme",
   "type": "commonjs",
   "engines": {
     "node": ">=22.0.0"
@@ -14,12 +24,15 @@
   "files": [
     "/bin",
     "/dist",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/docs",
+    "/README.md"
   ],
   "scripts": {
     "audit-endpoints": "node scripts/audit-endpoints.mjs",
     "build": "tsdown --config-loader unrun",
     "postbuild": "oclif manifest",
+    "prepack": "pnpm build",
     "dev": "node ./bin/dev.js",
     "test": "vitest run"
   },
