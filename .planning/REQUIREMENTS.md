@@ -20,17 +20,17 @@ Requirements for initial release. Maps to roadmap phases.
 
 ### Authentication & Workspaces
 
-- [ ] **AUTH-01**: `twentythree auth credentials` prompts for domain and bearer token (token is optional — press Enter to skip for anonymous-only access) and stores them securely in the OS keychain via `@napi-rs/keyring`
-- [ ] **AUTH-02**: When a token is provided, CLI calls `/api/2/user/tokens?cross_sites_p=1` to discover all available workspaces; when domain-only, workspace is the provided domain itself
-- [ ] **AUTH-03**: User is prompted to select which workspaces to activate and set a default workspace (skipped in domain-only/anonymous mode)
-- [ ] **AUTH-04**: Active workspace name is printed in every command's output header and all destructive confirmation prompts
-- [ ] **AUTH-05**: Token refresh runs proactively before expiry while CLI is active; a file lock prevents race conditions on concurrent invocations
-- [ ] **AUTH-06**: `twentythree auth status` shows current credentials, active workspace, token expiry, and auth mode (anonymous / authenticated / scope level)
-- [ ] **AUTH-07**: `twentythree workspace list` lists all available workspaces with the default marked
-- [ ] **AUTH-08**: `twentythree workspace use <name>` switches the default workspace
-- [ ] **AUTH-09**: Every command accepts a `--workspace <name>` flag to override the active workspace for a single invocation
-- [ ] **AUTH-10**: Commands requiring authentication that are invoked in anonymous/domain-only mode fail with a clear error: "This command requires authentication — run `twentythree auth credentials` to add a bearer token"
-- [ ] **AUTH-11**: The API client layer sends `Authorization: Bearer <token>` only when a token is configured; anonymous-scope endpoints are called without the header when in domain-only mode
+- [x] **AUTH-01**: `twentythree auth credentials` prompts for domain and bearer token (token is optional — press Enter to skip for anonymous-only access) and stores them securely in the OS keychain via `@napi-rs/keyring`
+- [x] **AUTH-02**: When a token is provided, CLI calls `/api/2/user/tokens?cross_sites_p=1` to discover all available workspaces; when domain-only, workspace is the provided domain itself
+- [x] **AUTH-03**: User is prompted to select which workspaces to activate and set a default workspace (skipped in domain-only/anonymous mode)
+- [x] **AUTH-04**: Active workspace name is printed in every command's output header and all destructive confirmation prompts
+- [x] **AUTH-05**: Token refresh runs proactively before expiry while CLI is active; a file lock prevents race conditions on concurrent invocations
+- [x] **AUTH-06**: `twentythree auth status` shows current credentials, active workspace, token expiry, and auth mode (anonymous / authenticated / scope level)
+- [x] **AUTH-07**: `twentythree workspace list` lists all available workspaces with the default marked
+- [x] **AUTH-08**: `twentythree workspace use <name>` switches the default workspace
+- [x] **AUTH-09**: Every command accepts a `--workspace <name>` flag to override the active workspace for a single invocation
+- [x] **AUTH-10**: Commands requiring authentication that are invoked in anonymous/domain-only mode fail with a clear error: "This command requires authentication — run `twentythree auth credentials` to add a bearer token"
+- [x] **AUTH-11**: The API client layer sends `Authorization: Bearer <token>` only when a token is configured; anonymous-scope endpoints are called without the header when in domain-only mode
 
 ### Uploads (Chunked & Resumable)
 
@@ -54,41 +54,41 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 - [x] **VID-03**: `twentythree video upload <file>` uploads a video file using the chunked upload protocol (UPL-01–UPL-08)
 - [x] **VID-04**: `twentythree video update <id>` updates video metadata
 - [x] **VID-05**: `twentythree video delete <id>` deletes a video with confirmation prompt
-- [ ] **VID-06**: `twentythree video replace <id> <file>` replaces a video file using `photo/get-replace-token` + chunked upload
-- [ ] **VID-07**: `twentythree video transcoding-progress <id>` retrieves transcoding status
-- [ ] **VID-08**: `twentythree video frame <id>` extracts a frame/thumbnail from a video
-- [ ] **VID-09**: `twentythree video section list|create|update|delete|set-thumbnail <id>` manages video sections/chapters
+- [x] **VID-06**: `twentythree video replace <id> <file>` replaces a video file using `photo/get-replace-token` + chunked upload
+- [x] **VID-07**: `twentythree video transcoding-progress <id>` retrieves transcoding status
+- [x] **VID-08**: `twentythree video frame <id>` extracts a frame/thumbnail from a video
+- [x] **VID-09**: `twentythree video section list|create|update|delete|set-thumbnail <id>` manages video sections/chapters
 - [x] **VID-10**: `twentythree video subtitle list|create|update|delete|upload|data|locales|types|duplicate|set-primary|archive` manages subtitles
 
 ### Category Commands (`album` → `category`)
 
-- [ ] **CAT-01**: `twentythree category list` lists categories in the active workspace
-- [ ] **CAT-02**: `twentythree category create` creates a new category
-- [ ] **CAT-03**: `twentythree category update <id>` updates category metadata
-- [ ] **CAT-04**: `twentythree category delete <id>` deletes a category with confirmation prompt
+- [x] **CAT-01**: `twentythree category list` lists categories in the active workspace
+- [x] **CAT-02**: `twentythree category create` creates a new category
+- [x] **CAT-03**: `twentythree category update <id>` updates category metadata
+- [x] **CAT-04**: `twentythree category delete <id>` deletes a category with confirmation prompt
 
 ### Webinar Commands (`live` → `webinar`)
 
-- [ ] **WEB-01**: `twentythree webinar list` lists webinars in the active workspace with pagination
-- [ ] **WEB-02**: `twentythree webinar create` creates a new webinar
-- [ ] **WEB-03**: `twentythree webinar update <id>` updates webinar details
-- [ ] **WEB-04**: `twentythree webinar delete <id>` deletes a webinar with confirmation prompt
-- [ ] **WEB-05**: `twentythree webinar upload-image <id> <file>` uploads a webinar image/thumbnail
-- [ ] **WEB-06**: `twentythree webinar metrics <id>` retrieves webinar metrics
-- [ ] **WEB-07**: `twentythree webinar clips <id>` lists generated clips from a webinar
-- [ ] **WEB-08**: `twentythree webinar highlights <id>` lists highlights
-- [ ] **WEB-09**: `twentythree webinar list-formats` lists available webinar formats
-- [ ] **WEB-10**: `twentythree webinar log <id>` retrieves the webinar event log
-- [ ] **WEB-11**: `twentythree webinar repeat <id>` repeats/schedules a recurring webinar
-- [ ] **WEB-12**: `twentythree webinar attachment list|upload|delete|set-hidden <id>` manages webinar attachments; `attachment upload` uses the shared chunked upload engine (UPL-01–UPL-08) since handouts/PDFs/slides can be large
-- [ ] **WEB-13**: `twentythree webinar section list|add|update|remove <id>` manages webinar agenda sections
-- [ ] **WEB-14**: `twentythree webinar speaker list|add|add-from-user|add-from-speaker|update|remove|set-avatar|remove-avatar|set-order|send-invitation|request-guest|cancel-guest-request|connection-types|library` manages speakers
-- [ ] **WEB-15**: `twentythree webinar mail list|add|update|remove|preview|send|test` manages webinar email communications
-- [ ] **WEB-16**: `twentythree webinar recording start|stop|status` controls webinar recording
-- [ ] **WEB-17**: `twentythree webinar transcription list|connect|locales|transcriptionlist` manages transcriptions
-- [ ] **WEB-18**: `twentythree webinar room info|themes|send-recording|connect` manages the webinar room
-- [ ] **WEB-19**: `twentythree webinar series list|create|update|delete|metrics|recurrences|apply-recurrence|skip-recurrence|cancel|set-ondemand|mapped-objects|upload-thumbnail` manages webinar series
-- [ ] **WEB-20**: `twentythree webinar queued-video add|remove` manages queued videos for a webinar
+- [x] **WEB-01**: `twentythree webinar list` lists webinars in the active workspace with pagination
+- [x] **WEB-02**: `twentythree webinar create` creates a new webinar
+- [x] **WEB-03**: `twentythree webinar update <id>` updates webinar details
+- [x] **WEB-04**: `twentythree webinar delete <id>` deletes a webinar with confirmation prompt
+- [x] **WEB-05**: `twentythree webinar upload-image <id> <file>` uploads a webinar image/thumbnail
+- [x] **WEB-06**: `twentythree webinar metrics <id>` retrieves webinar metrics
+- [x] **WEB-07**: `twentythree webinar clips <id>` lists generated clips from a webinar
+- [x] **WEB-08**: `twentythree webinar highlights <id>` lists highlights
+- [x] **WEB-09**: `twentythree webinar list-formats` lists available webinar formats
+- [x] **WEB-10**: `twentythree webinar log <id>` retrieves the webinar event log
+- [x] **WEB-11**: `twentythree webinar repeat <id>` repeats/schedules a recurring webinar
+- [x] **WEB-12**: `twentythree webinar attachment list|upload|delete|set-hidden <id>` manages webinar attachments; `attachment upload` uses the shared chunked upload engine (UPL-01–UPL-08) since handouts/PDFs/slides can be large
+- [x] **WEB-13**: `twentythree webinar section list|add|update|remove <id>` manages webinar agenda sections
+- [x] **WEB-14**: `twentythree webinar speaker list|add|add-from-user|add-from-speaker|update|remove|set-avatar|remove-avatar|set-order|send-invitation|request-guest|cancel-guest-request|connection-types|library` manages speakers
+- [x] **WEB-15**: `twentythree webinar mail list|add|update|remove|preview|send|test` manages webinar email communications
+- [x] **WEB-16**: `twentythree webinar recording start|stop|status` controls webinar recording
+- [x] **WEB-17**: `twentythree webinar transcription list|connect|locales|transcriptionlist` manages transcriptions
+- [x] **WEB-18**: `twentythree webinar room info|themes|send-recording|connect` manages the webinar room
+- [x] **WEB-19**: `twentythree webinar series list|create|update|delete|metrics|recurrences|apply-recurrence|skip-recurrence|cancel|set-ondemand|mapped-objects|upload-thumbnail` manages webinar series
+- [x] **WEB-20**: `twentythree webinar queued-video add|remove` manages queued videos for a webinar
 
 ### Player Commands
 
@@ -130,17 +130,17 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Poll Commands
 
-- [ ] **POL-01**: `twentythree poll list <id>` lists polls for a webinar
-- [ ] **POL-02**: `twentythree poll add <id>` creates a new poll
-- [ ] **POL-03**: `twentythree poll update <id>` updates a poll
-- [ ] **POL-04**: `twentythree poll remove <id>` removes a poll with confirmation
-- [ ] **POL-05**: `twentythree poll set-options <id>` sets poll options
-- [ ] **POL-06**: `twentythree poll answer <id>` submits a poll answer
+- [x] **POL-01**: `twentythree poll list <id>` lists polls for a webinar
+- [x] **POL-02**: `twentythree poll add <id>` creates a new poll
+- [x] **POL-03**: `twentythree poll update <id>` updates a poll
+- [x] **POL-04**: `twentythree poll remove <id>` removes a poll with confirmation
+- [x] **POL-05**: `twentythree poll set-options <id>` sets poll options
+- [x] **POL-06**: `twentythree poll answer <id>` submits a poll answer
 
 ### Analytics Commands
 
 - [x] **ANL-01**: `twentythree analytics videos` retrieves video analytics data
-- [ ] **ANL-02**: `twentythree analytics videos timeseries|totals|weekday|performance|published` retrieves aggregated video analytics
+- [x] **ANL-02**: `twentythree analytics videos timeseries|totals|weekday|performance|published` retrieves aggregated video analytics
 - [x] **ANL-03**: `twentythree analytics live` retrieves live/webinar analytics data
 - [x] **ANL-04**: `twentythree analytics live timeseries|totals|weekday|event|event-timeseries|event-totals` retrieves aggregated live analytics
 - [x] **ANL-05**: `twentythree analytics conversions` retrieves conversion analytics

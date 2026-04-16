@@ -13,12 +13,12 @@ Eight phases take the project from a bare monorepo scaffold to a fully functiona
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Monorepo scaffold, oclif wiring, OpenAPI types, and term-map module (completed 2026-04-14)
-- [ ] **Phase 2: Auth & Workspaces** - Credential storage, workspace discovery, token refresh, and workspace switching
+- [x] **Phase 2: Auth & Workspaces** - Credential storage, workspace discovery, token refresh, and workspace switching (completed 2026-04-14)
 - [x] **Phase 3: Video Core** - Chunked upload engine and all video/subtitle/section commands (completed 2026-04-14)
-- [ ] **Phase 4: Category & Webinar Core** - Category CRUD and core webinar lifecycle commands
-- [ ] **Phase 5: Webinar Deep** - Speakers, mail, recording, transcription, series, room, polls, attachments, queued videos
+- [x] **Phase 4: Category & Webinar Core** - Category CRUD and core webinar lifecycle commands (completed 2026-04-15)
+- [x] **Phase 5: Webinar Deep** - Speakers, mail, recording, transcription, series, room, polls, attachments, queued videos (completed 2026-04-15)
 - [x] **Phase 6: Engagement & Actions** - Action CTAs, collector, comment, player, and tag commands (completed 2026-04-15)
-- [ ] **Phase 7: Analytics & Audience** - All analytics sub-dimensions and all audience commands
+- [x] **Phase 7: Analytics & Audience** - All analytics sub-dimensions and all audience commands (completed 2026-04-16)
 - [x] **Phase 8: Platform & Polish** - Spot, thumbnail, webhook, app, presentation, protection, session, openupload, site/setting, user, doctor, agent help (completed 2026-04-16)
 
 ## Phase Details
@@ -50,11 +50,11 @@ Plans:
   5. Every command output header shows the active workspace name; destructive confirmation prompts include the workspace name
 **Plans**: 5 plans
 Plans:
-- [ ] 02-01-PLAN.md — Install deps, inspect live /user/tokens response, create test stubs (Wave 0)
-- [ ] 02-02-PLAN.md — Credential store + workspace config modules (Wave 1)
-- [ ] 02-03-PLAN.md — Token refresh with file locking (Wave 1)
-- [ ] 02-04-PLAN.md — API client factory + BaseCommand/AuthenticatedCommand (Wave 2)
-- [ ] 02-05-PLAN.md — Auth + workspace commands with end-to-end verification (Wave 3)
+- [x] 02-01-PLAN.md — Install deps, inspect live /user/tokens response, create test stubs (Wave 0)
+- [x] 02-02-PLAN.md — Credential store + workspace config modules (Wave 1)
+- [x] 02-03-PLAN.md — Token refresh with file locking (Wave 1)
+- [x] 02-04-PLAN.md — API client factory + BaseCommand/AuthenticatedCommand (Wave 2)
+- [x] 02-05-PLAN.md — Auth + workspace commands with end-to-end verification (Wave 3)
 
 ### Phase 3: Video Core
 **Goal**: A developer can upload, list, get, update, delete, replace, and manage sections and subtitles for videos — with resumable chunked uploads, progress feedback, pagination, and zero legacy terminology in output
@@ -85,10 +85,10 @@ Plans:
   4. All new commands in this phase respect the `--json` flag, auto-paginate lists, and apply the term map to all output
 **Plans**: 4 plans
 Plans:
-- [ ] 04-01-PLAN.md — Category CRUD commands (list, create, update, delete) + tests
-- [ ] 04-02-PLAN.md — Webinar CRUD commands (list, create, update, delete) + fetchWebinarToken + tests
-- [ ] 04-03-PLAN.md — Upload engine extraFields extension + webinar upload-image command + tests
-- [ ] 04-04-PLAN.md — Webinar read-only commands (metrics, clips, highlights, list-formats, log, repeat) + tests
+- [x] 04-01-PLAN.md — Category CRUD commands (list, create, update, delete) + tests
+- [x] 04-02-PLAN.md — Webinar CRUD commands (list, create, update, delete) + fetchWebinarToken + tests
+- [x] 04-03-PLAN.md — Upload engine extraFields extension + webinar upload-image command + tests
+- [x] 04-04-PLAN.md — Webinar read-only commands (metrics, clips, highlights, list-formats, log, repeat) + tests
 
 ### Phase 5: Webinar Deep
 **Goal**: The full webinar surface is operable — speakers, mail, recording, transcription, series, room, polls, attachments, sections, and queued videos can all be managed from the terminal
@@ -102,11 +102,11 @@ Plans:
   5. `twentythree poll` CRUD commands and `webinar queued-video add|remove` work correctly
 **Plans**: 5 plans
 Plans:
-- [ ] 05-01-PLAN.md — Webinar attachment (list, upload, delete, set-hidden) + section (list, add, update, remove)
-- [ ] 05-02-PLAN.md — Webinar speaker (14 commands) + mail (7 commands)
-- [ ] 05-03-PLAN.md — Recording (start, stop, status) + transcription (4) + room (4) + queued-video (2)
-- [ ] 05-04-PLAN.md — Webinar series (12 commands including recurrences + thumbnail upload)
-- [ ] 05-05-PLAN.md — Poll CRUD (6 commands — new top-level topic)
+- [x] 05-01-PLAN.md — Webinar attachment (list, upload, delete, set-hidden) + section (list, add, update, remove)
+- [x] 05-02-PLAN.md — Webinar speaker (14 commands) + mail (7 commands)
+- [x] 05-03-PLAN.md — Recording (start, stop, status) + transcription (4) + room (4) + queued-video (2)
+- [x] 05-04-PLAN.md — Webinar series (12 commands including recurrences + thumbnail upload)
+- [x] 05-05-PLAN.md — Poll CRUD (6 commands — new top-level topic)
 
 ### Phase 6: Engagement & Actions
 **Goal**: A developer can manage action CTAs, collectors, comments, players, and tags from the terminal with the same behavioral guarantees established in earlier phases
@@ -132,7 +132,7 @@ Plans:
 **Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 06.1-01-PLAN.md — API spec storage, update script, and workflow documentation
+- [x] 06.1-01-PLAN.md — API spec storage, update script, and workflow documentation
 
 ### Phase 7: Analytics & Audience
 **Goal**: A developer can query any analytics dimension (video, live, conversions, usage sub-dimensions) and manage the full audience — members, fields, companies, collectors, funnels, and timelines
