@@ -40,6 +40,13 @@ export default class WebinarQueuedVideoRemove extends AuthenticatedCommand<typeo
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/queuedvideos/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarQueuedVideoRemove)
     this.printWorkspaceHeader()

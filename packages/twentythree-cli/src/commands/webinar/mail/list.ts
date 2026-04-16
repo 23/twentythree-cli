@@ -31,6 +31,16 @@ export default class WebinarMailList extends AuthenticatedCommand<typeof Webinar
     id: Args.string({ description: 'Webinar ID (omit when using --series-id)', required: false }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/mail/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Subject', 'Status', 'Send Date'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailList)
     this.printWorkspaceHeader()

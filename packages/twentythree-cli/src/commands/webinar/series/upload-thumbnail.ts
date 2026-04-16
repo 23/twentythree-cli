@@ -66,6 +66,13 @@ export default class WebinarSeriesUploadThumbnail extends AuthenticatedCommand<t
     file: Args.string({ description: 'Path to the image file to upload', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/series/upload-thumbnail',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSeriesUploadThumbnail)
     this.printWorkspaceHeader()

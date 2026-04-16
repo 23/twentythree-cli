@@ -30,6 +30,13 @@ export default class WebinarRoomInfo extends AuthenticatedCommand<typeof Webinar
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/webinar/info',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarRoomInfo)
     this.printWorkspaceHeader()

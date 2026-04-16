@@ -37,6 +37,13 @@ export default class WebinarSeriesSetOndemand extends AuthenticatedCommand<typeo
     id: Args.string({ description: 'Series ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/series/set-ondemand',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSeriesSetOndemand)
     this.printWorkspaceHeader()

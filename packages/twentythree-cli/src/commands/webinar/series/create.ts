@@ -39,6 +39,13 @@ export default class WebinarSeriesCreate extends AuthenticatedCommand<typeof Web
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/series/create',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { flags } = await this.parse(WebinarSeriesCreate)
     this.printWorkspaceHeader()

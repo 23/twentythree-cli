@@ -42,6 +42,13 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
     id: Args.string({ description: 'Mail ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/mail/preview',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailPreview)
     this.printWorkspaceHeader()

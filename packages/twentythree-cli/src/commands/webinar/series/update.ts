@@ -40,6 +40,13 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
     id: Args.string({ description: 'Series ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/series/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSeriesUpdate)
     this.printWorkspaceHeader()

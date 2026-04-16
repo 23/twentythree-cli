@@ -29,6 +29,16 @@ export default class WebinarTranscriptionTranscriptionlist extends Authenticated
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/transcriptionlist',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Webinar ID', 'Language', 'Status'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     await this.parse(WebinarTranscriptionTranscriptionlist)
     this.printWorkspaceHeader()

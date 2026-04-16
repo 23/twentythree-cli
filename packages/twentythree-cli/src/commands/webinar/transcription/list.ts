@@ -35,6 +35,16 @@ export default class WebinarTranscriptionList extends AuthenticatedCommand<typeo
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/transcription/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Language', 'Status'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarTranscriptionList)
     this.printWorkspaceHeader()

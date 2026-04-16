@@ -4,17 +4,17 @@ import { renderTable, formatJsonOutput, formatApiError, EXIT_ERROR } from '../..
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
- * Webinar series mapped-objects command — lists objects mapped to a series.
+ * Webinar series recurrences command — lists recurrences for a webinar series.
  *
  * Threat mitigations:
  *   T-05-16: applyCliTerms() on all error messages
  */
-export default class WebinarSeriesMappedObjects extends AuthenticatedCommand<typeof WebinarSeriesMappedObjects> {
-  static description = 'List mapped objects for a webinar series'
+export default class WebinarSeriesRecurrences extends AuthenticatedCommand<typeof WebinarSeriesRecurrences> {
+  static description = 'List recurrences for a webinar series'
 
   static examples = [
-    '<%= config.bin %> webinar series mapped-objects 42',
-    '<%= config.bin %> webinar series mapped-objects 42 --json',
+    '<%= config.bin %> webinar series recurrences 42',
+    '<%= config.bin %> webinar series recurrences 42 --json',
   ]
 
   static enableJsonFlag = true
@@ -28,20 +28,20 @@ export default class WebinarSeriesMappedObjects extends AuthenticatedCommand<typ
   }
 
   static agentMetadata = {
-    api_endpoint: 'GET /live/series/mapped-objects',
+    api_endpoint: 'GET /live/series/recurrences',
     auth_scope: 'read' as const,
     output_shape: {
       type: 'table' as const,
-      columns: ['ID', 'Type', 'Title'],
+      columns: ['ID', 'Start Time', 'Status', 'Skipped'],
     },
     side_effects: 'none' as const,
   }
 
   public async run(): Promise<void | object> {
-    const { args } = await this.parse(WebinarSeriesMappedObjects)
+    const { args } = await this.parse(WebinarSeriesRecurrences)
     this.printWorkspaceHeader()
 
-    const { data, error } = await this.apiClient.GET('/live/series/mapped-objects', {
+    const { data, error } = await this.apiClient.GET('/live/series/recurrences', {
       params: { query: { live_series_id: Number(args.id) } as any },
     })
 
@@ -53,7 +53,7 @@ export default class WebinarSeriesMappedObjects extends AuthenticatedCommand<typ
       return formatJsonOutput({
         ok: true,
         data,
-        summary: `Mapped objects for series ${args.id}`,
+        summary: `Recurrences for series ${args.id}`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
           { resource: 'series', id: args.id },
@@ -63,27 +63,28 @@ export default class WebinarSeriesMappedObjects extends AuthenticatedCommand<typ
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const resp = data as any
-    const objects: unknown[] = Array.isArray(resp?.data)
+    const recurrences: unknown[] = Array.isArray(resp?.data)
       ? resp.data
       : resp?.data
       ? [resp.data]
       : []
 
-    if (objects.length === 0) {
-      this.log('No mapped objects found.')
+    if (recurrences.length === 0) {
+      this.log('No recurrences found.')
       return
     }
 
-    const headers = ['ID', 'Type', 'Title']
+    const headers = ['ID', 'Start Time', 'Status', 'Skipped']
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rows = objects.map((o: any) => [
-      String(o.object_id ?? o.id ?? o.live_id ?? ''),
-      String(o.object_type ?? o.type ?? ''),
-      applyCliTerms(String(o.title ?? o.name ?? '')),
+    const rows = recurrences.map((r: any) => [
+      String(r.recurrence_id ?? r.id ?? ''),
+      String(r.start_time ?? r.scheduled_at ?? ''),
+      String(r.status ?? ''),
+      r.skipped_p ? 'yes' : 'no',
     ])
 
     const table = renderTable(headers, rows)
     this.log(table.toString())
-    this.log(`${objects.length} object${objects.length === 1 ? '' : 's'}`)
+    this.log(`${recurrences.length} recurrence${recurrences.length === 1 ? '' : 's'}`)
   }
 }

@@ -30,6 +30,13 @@ export default class WebinarRecordingStart extends AuthenticatedCommand<typeof W
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/recording/start',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarRecordingStart)
     this.printWorkspaceHeader()

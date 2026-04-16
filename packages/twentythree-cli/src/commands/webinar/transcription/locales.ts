@@ -35,6 +35,16 @@ export default class WebinarTranscriptionLocales extends AuthenticatedCommand<ty
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/transcription/locales',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Locale', 'Name'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarTranscriptionLocales)
     this.printWorkspaceHeader()

@@ -42,6 +42,13 @@ export default class WebinarSeriesSkipRecurrence extends AuthenticatedCommand<ty
     id: Args.string({ description: 'Series ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/series/skip-recurrence',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSeriesSkipRecurrence)
     this.printWorkspaceHeader()

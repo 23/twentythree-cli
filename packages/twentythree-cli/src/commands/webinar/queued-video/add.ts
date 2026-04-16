@@ -40,6 +40,13 @@ export default class WebinarQueuedVideoAdd extends AuthenticatedCommand<typeof W
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/queuedvideos/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarQueuedVideoAdd)
     this.printWorkspaceHeader()

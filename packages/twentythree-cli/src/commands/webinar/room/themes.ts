@@ -28,6 +28,16 @@ export default class WebinarRoomThemes extends AuthenticatedCommand<typeof Webin
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/webinar/room-themes',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Name', 'Description'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     await this.parse(WebinarRoomThemes)
     this.printWorkspaceHeader()

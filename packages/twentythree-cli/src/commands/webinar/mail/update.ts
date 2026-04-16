@@ -48,6 +48,13 @@ export default class WebinarMailUpdate extends AuthenticatedCommand<typeof Webin
     id: Args.string({ description: 'Mail ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/mail/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailUpdate)
     this.printWorkspaceHeader()

@@ -38,6 +38,13 @@ export default class WebinarMailSend extends AuthenticatedCommand<typeof Webinar
     id: Args.string({ description: 'Mail ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/mail/send',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailSend)
     this.printWorkspaceHeader()

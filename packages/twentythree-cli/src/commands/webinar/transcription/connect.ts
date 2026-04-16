@@ -35,6 +35,13 @@ export default class WebinarTranscriptionConnect extends AuthenticatedCommand<ty
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/transcription/connect',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarTranscriptionConnect)
     this.printWorkspaceHeader()

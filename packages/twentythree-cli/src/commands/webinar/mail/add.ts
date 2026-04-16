@@ -44,6 +44,13 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
     id: Args.string({ description: 'Webinar ID (omit when using --series-id)', required: false }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/mail/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarMailAdd)
     this.printWorkspaceHeader()
