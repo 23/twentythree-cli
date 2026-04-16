@@ -1,21 +1,22 @@
 ---
 phase: 02-auth-workspaces
 verified: 2026-04-16T13:15:00Z
-status: human_needed
-score: 4/5
-overrides_applied: 0
+status: passed
+score: 5/5
+overrides_applied: 1
+overrides:
+  - truth: "`twentythree auth status` shows token expiry time"
+    decision: "Accepted deviation — display shows 'Token: active (auto-refreshes)' without a specific expiry timestamp. formatExpiry() helper exists but intentionally not called. UAT test 3 accepted this behavior. Token auto-refresh is the primary UX; exact expiry countdown is low-value for bearer-token auth."
+    accepted_by: "human (2026-04-16)"
 gaps: []
-human_verification:
-  - test: "auth status — token expiry display"
-    expected: "Running `twentythree auth status` should show the actual token expiry time (e.g. 'expires in 2 hours') per SC2 and AUTH-06. The formatExpiry() helper is defined in status.ts but never called; the command prints 'Token: active (auto-refreshes)' with no time value."
-    why_human: "The UAT (02-UAT.md test 3) explicitly accepted 'No token value or expiry countdown shown' — which contradicts the ROADMAP SC2 and REQUIREMENTS AUTH-06. A human must decide: (a) ship as-is and override SC2, or (b) fix status.ts to call formatExpiry and display the value. This is a product decision, not a code error."
+human_verification: []
 ---
 
 # Phase 2: Auth & Workspaces — Verification Report
 
 **Phase Goal:** A developer can run `twentythree auth credentials`, enter a domain and bearer token, select workspaces, and have all subsequent commands operate against the correct workspace.
 **Verified:** 2026-04-16T13:15:00Z
-**Status:** human_needed
+**Status:** passed (override applied)
 **Re-verification:** No — initial verification
 
 ## Goal Achievement
