@@ -79,14 +79,15 @@ export default class SpotList extends AuthenticatedCommand<typeof SpotList> {
 
     const { data, error } = await this.apiClient.GET('/spot/list', {
       params: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         query: {
           search: flags.search,
-          spot_type: flags['spot-type'],
-          active_p: activeVal !== undefined ? (activeVal ? 1 : 0) : undefined,
+          spot_type: flags['spot-type'] as any,
+          active_p: activeVal !== undefined ? activeVal : undefined,
           p: flags.page,
           size: flags.size,
-          orderby: flags.orderby,
-          order: flags.order,
+          orderby: flags.orderby as any,
+          order: flags.order as any,
         },
       },
     })
