@@ -22,7 +22,7 @@ export default class VideoFrame extends AuthenticatedCommand<typeof VideoFrame> 
   static enableJsonFlag = true
 
   static agentMetadata = {
-    api_endpoint: 'GET /photo/frame',
+    api_endpoint: 'POST /photo/frame',
     auth_scope: 'write' as const,
     output_shape: { type: 'key-value' as const },
     side_effects: 'updates' as const,
