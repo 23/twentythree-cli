@@ -33,7 +33,7 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 
 ### Active
 
-- [ ] Endpoint audit — compare OpenAPI spec against all command files; fill any gaps found
+- ✓ Endpoint audit — compare OpenAPI spec against all command files; fill any gaps found — Validated in Phase 9: Endpoint Coverage Audit. Audit script exits 0 (Gaps: 0, Phantoms: 0), 18 analytics sub-series commands added.
 - [ ] npm publish — get `twentythree-cli` package live on npm (first publish)
 - [ ] Install verification — test `npm install -g twentythree-cli` end-to-end and document
 - [ ] README.md — install + quickstart entry point at repo root, links into docs/
@@ -107,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 — v1.1 milestone started (repository polish & release)*
+*Last updated: 2026-04-16 — Phase 9 complete (endpoint coverage audit; audit exits 0, 18 analytics commands added)*
