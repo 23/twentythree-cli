@@ -52,14 +52,4 @@ export const EXCLUDED_OPERATIONS: ExcludedOperation[] = [
     reason: 'Covered by video subtitle archive --progress flag (dual-endpoint command)',
     category: 'non-standard',
   },
-  {
-    endpoint: 'POST /live/recording/split',
-    reason: 'Endpoint not in OpenAPI spec; command references undocumented API',
-    category: 'non-standard',
-  },
-  {
-    endpoint: 'GET /user/tokens',
-    reason: 'Not in OpenAPI spec; internal token management endpoint',
-    category: 'internal',
-  },
 ]

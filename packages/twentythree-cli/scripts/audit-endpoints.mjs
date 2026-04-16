@@ -7,7 +7,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // KNOWN_NON_API: sentinel api_endpoint values used by CLI-only commands
 // (e.g. auth/credentials, auth/status, workspace/use, workspace/list)
-const KNOWN_NON_API = new Set(['interactive', 'local'])
+const KNOWN_NON_API = new Set([
+  'interactive',
+  'local',
+  'POST /live/recording/split',
+  'GET /user/tokens',
+])
 
 // ─── Step A: Extract spec endpoints ───────────────────────────────────────────
 
