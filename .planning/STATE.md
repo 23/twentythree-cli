@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-03-PLAN.md
-last_updated: "2026-04-16T09:11:36.552Z"
+stopped_at: Completed 08-04-PLAN.md
+last_updated: "2026-04-16T09:16:02.308Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 41
-  completed_plans: 34
-  percent: 83
+  completed_plans: 35
+  percent: 85
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 08 (platform-polish) — EXECUTING
-Plan: 4 of 10
+Plan: 5 of 10
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -70,6 +70,7 @@ Progress: [██████████] 100%
 | Phase 08-platform-polish P01 | 3min | 2 tasks | 7 files |
 | Phase 08-platform-polish P02 | 3min | 2 tasks | 8 files |
 | Phase 08-platform-polish P03 | 3min | 2 tasks | 10 files |
+| Phase 08-platform-polish P04 | 3min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -122,6 +123,10 @@ Recent decisions affecting current work:
 - [Phase 08-platform-polish]: webhook/sample outputs raw JSON.stringify — sample payloads are complex nested JSON not suitable for key-value render
 - [Phase 08-platform-polish]: thumbnail/file/upload uses direct multipart POST with bodySerializer FormData (D-3) — NOT the chunked engine
 - [Phase 08-platform-polish]: thumbnail/data outputs raw JSON.stringify — nested Liquid render data not suitable for key-value format
+- [Phase 08-platform-polish]: user/update uses multipart/form-data with bodySerializer for profile_image; falls back to form-urlencoded when no image provided (Pitfall 7)
+- [Phase 08-platform-polish]: user/get include_invitation_p passes boolean directly to match OpenAPI types
+- [Phase 08-platform-polish]: user/tokens uses raw fetch (not apiClient) since /user/tokens is absent from OpenAPI spec (USR-08)
+- [Phase 08-platform-polish]: user/get-login-token summary string never contains actual token value (T-08-10 information disclosure mitigation)
 
 ### Pending Todos
 
@@ -133,6 +138,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-16T09:11:36.550Z
-Stopped at: Completed 08-03-PLAN.md
+Last session: 2026-04-16T09:16:02.306Z
+Stopped at: Completed 08-04-PLAN.md
 Resume file: None

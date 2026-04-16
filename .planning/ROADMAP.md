@@ -166,7 +166,7 @@ Plans:
 - [x] 08-01-PLAN.md — Spot commands (list, create, update, delete, set-videos, check, reset-version)
 - [x] 08-02-PLAN.md — Webhook commands (list, subscribe, unsubscribe, events, sample) + App commands (add, update, delete)
 - [x] 08-03-PLAN.md — Thumbnail commands (list, add, update, delete, duplicate, data) + file subtopic (list, upload, delete)
-- [ ] 08-04-PLAN.md — User commands (list, get, create, update, send-invitation, get-login-token, redeem-login-token, tokens)
+- [x] 08-04-PLAN.md — User commands (list, get, create, update, send-invitation, get-login-token, redeem-login-token, tokens)
 - [ ] 08-05-PLAN.md — Presentation (setting list, setting update, page link-locations) + Protection (protect, unprotect, verify) + Session (get-token, redeem-token)
 - [ ] 08-06-PLAN.md — Site (get, search) + Setting (update) + Open upload (list, upload-file, update-file)
 - [ ] 08-07-PLAN.md — Doctor health check command + --agent global flag on BaseCommand
@@ -190,4 +190,4 @@ Note: Phases 6 and 7 both depend on Phase 3 and can be planned/executed in paral
 | 6. Engagement & Actions | 4/4 | Complete   | 2026-04-15 |
 | 6.1 API Spec Workflow | 0/1 | Planned | - |
 | 7. Analytics & Audience | 2/4 | In Progress|  |
-| 8. Platform & Polish | 3/10 | In Progress|  |
+| 8. Platform & Polish | 4/10 | In Progress|  |
