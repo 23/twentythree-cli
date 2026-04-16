@@ -50,7 +50,7 @@ export default class UserGet extends AuthenticatedCommand<typeof UserGet> {
       params: {
         query: {
           user_id: Number(args.id),
-          include_invitation_p: inclVal !== undefined ? (inclVal ? 1 : 0) : undefined,
+          include_invitation_p: inclVal,
         },
       },
     })
