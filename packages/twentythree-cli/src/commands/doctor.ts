@@ -44,7 +44,9 @@ export default class Doctor extends Command {
       const baseUrl = ws!.api_base_url.replace(/\/?$/, '/')
       try {
         const resp = await fetch(baseUrl, { method: 'HEAD', signal: AbortSignal.timeout(10000) })
-        checks.push({ name: 'Connectivity', passed: resp.ok || resp.status < 500, detail: domain! })
+        // Accept any HTTP response as proof of connectivity — the host is reachable
+        // regardless of status code; token validity is checked separately in check 3
+        checks.push({ name: 'Connectivity', passed: true, detail: `${domain!} (HTTP ${resp.status})` })
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Connection failed'
         checks.push({ name: 'Connectivity', passed: false, detail: message })
