@@ -41,7 +41,7 @@ export default class UserUpdate extends AuthenticatedCommand<typeof UserUpdate> 
       required: false,
     }),
     password: Flags.string({
-      description: 'New password',
+      description: 'New password (WARNING: visible in process list and shell history — prefer interactive prompt for sensitive environments)',
       required: false,
     }),
     'profile-image': Flags.string({
