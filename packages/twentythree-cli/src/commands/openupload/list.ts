@@ -98,7 +98,7 @@ export default class OpenuploadList extends AuthenticatedCommand<typeof Openuplo
       rows.map((r: any) => [
         String(r.token_upload_id ?? ''),
         String(r.name ?? ''),
-        String(r.token ?? ''),
+        r.token ? String(r.token).slice(0, 8) + '…' : '',
         String(r.public_p ?? ''),
       ]),
     )
