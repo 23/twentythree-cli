@@ -94,25 +94,25 @@ export default class OpenuploadUploadFile extends AuthenticatedCommand<typeof Op
 
     this.printWorkspaceHeader()
 
-    // Validate file exists
+    // Validate file exists and capture size in a single syscall
+    let fileStat: import('node:fs').Stats
     try {
-      await stat(flags['file-path'])
+      fileStat = await stat(flags['file-path'])
     } catch {
       this.error(`File not found: ${flags['file-path']}`, { exit: EXIT_ERROR })
+      return // unreachable but satisfies TypeScript definite assignment
     }
 
-    const fileStat = await stat(flags['file-path'])
     const totalBytes = fileStat.size
     const bar = new ProgressBar()
     const startTime = Date.now()
-    let result: Awaited<ReturnType<typeof uploadChunked>>
-
     // Show initial 0% so the bar is visible from the start
     bar.render(0, totalBytes, 0)
 
+    // CRITICAL (Pitfall 3): tokenFieldName must be 'token', NOT 'upload_token'
+    // The open upload endpoint uses 'token' as the multipart field name.
+    let result: Awaited<ReturnType<typeof uploadChunked>>
     try {
-      // CRITICAL (Pitfall 3): tokenFieldName must be 'token', NOT 'upload_token'
-      // The open upload endpoint uses 'token' as the multipart field name.
       result = await uploadChunked({
         filePath: flags['file-path'],
         uploadToken: flags.token,
@@ -130,16 +130,18 @@ export default class OpenuploadUploadFile extends AuthenticatedCommand<typeof Op
           bar.render(bytesUploaded, total, speed)
         },
       })
-    } finally {
+    } catch (err) {
       bar.finish()
+      throw err
     }
+    bar.finish()
 
     this.log(chalk.green('File uploaded via open upload'))
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: result!,
+        data: result,
         summary: 'File uploaded via open upload',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
