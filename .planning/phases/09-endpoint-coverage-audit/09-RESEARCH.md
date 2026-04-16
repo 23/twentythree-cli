@@ -481,22 +481,25 @@ export default class AnalyticsUsageDevicesTimeseries extends AuthenticatedComman
 | A3 | `tsx` is available as a transitive dev dependency for running the TypeScript audit file | Architecture Patterns | If not available, audit script must parse `EXCLUDED_OPERATIONS` from source with regex instead of importing it |
 | A4 | The 18 analytics sub-series endpoints return the same data shape as their parent endpoints (timeseries/totals) | Gap Inventory | If shapes differ, column names in `output_shape` and table rendering need per-endpoint tuning |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `video subtitle archive --progress` be split into two commands?**
    - What we know: The command handles two endpoints via a flag; only one is in agentMetadata; the gap is `POST /photo/subtitle/archive/get-progress`
    - What's unclear: Whether splitting is preferred or excluding the progress endpoint is acceptable per D-04
    - Recommendation: Planner should split into two commands to preserve the one-command/one-endpoint pattern unless user feedback says otherwise
+   - **RESOLVED:** Exclusion approach chosen — Plan 09-01 adds `POST /photo/subtitle/archive/get-progress` to `EXCLUDED_OPERATIONS` with `reason: "Covered by video subtitle archive --progress flag (dual-endpoint command)"`, `category: 'non-standard'`. No split needed per D-04.
 
 2. **Is `POST /live/recording/split` a real endpoint?**
    - What we know: It is NOT in `twentythree-api-swagger.json`; the command source says nothing about it being undocumented
    - What's unclear: Whether the endpoint exists in the live API but is missing from the spec
    - Recommendation: Check TwentyThree API docs or test the endpoint; if it exists, add spec note; if not, exclude the command or remove it
+   - **RESOLVED:** Treated as phantom (not in spec) — Plan 09-01 adds `POST /live/recording/split` to `EXCLUDED_OPERATIONS` with `reason: "Not present in OpenAPI spec; command api_endpoint appears to be non-standard or internal"`, `category: 'internal'`.
 
 3. **`tsx` availability for TypeScript import in audit script**
    - What we know: `tsx` is not in `devDependencies` in `packages/twentythree-cli/package.json`
    - What's unclear: Whether it's available as a transitive dep or needs adding
    - Recommendation: Verify with `node_modules/.bin/tsx --version` before writing the script; fall back to regex parsing if absent
+   - **RESOLVED:** Regex parsing approach chosen — Plan 09-01 Task 2 reads `src/lib/audit.ts` source text and extracts endpoint strings with regex. No `tsx` import needed.
 
 ## Environment Availability
 [VERIFIED: direct inspection]
