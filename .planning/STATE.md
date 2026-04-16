@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 07-03-PLAN.md (analytics usage commands)
-last_updated: "2026-04-16T07:32:57.074Z"
+stopped_at: Completed 07-04-PLAN.md (audience commands)
+last_updated: "2026-04-16T07:39:09.531Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 9
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 31
-  completed_plans: 30
-  percent: 97
+  completed_plans: 31
+  percent: 100
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 07 (analytics-audience) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -66,6 +66,7 @@ Progress: [██████████] 100%
 | Phase 06-engagement-actions P06-04 | 4min | 2 tasks | 6 files |
 | Phase 07-analytics-audience P02 | 4 | 3 tasks | 20 files |
 | Phase 07-analytics-audience P03 | 3 | 2 tasks | 8 files |
+| Phase 07-analytics-audience P04 | 5 | 3 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 - [Phase 07-analytics-audience]: Live event sub-commands use hyphenated CLI filenames but map to slash API paths (/live/event/timeseries, /live/event/totals per OpenAPI spec)
 - [Phase 07-analytics-audience]: Conversions root has no pagination (no p/size per OpenAPI spec); live root has pagination
 - [Phase 07-analytics-audience]: storage endpoint has query?: never in generated types -- date/filter flags exposed on command per D-3 but not forwarded to API call
+- [Phase 07-analytics-audience]: audience/search uses GET (not POST) per Pitfall 3 -- required --text flag for query param
+- [Phase 07-analytics-audience]: audience/field/list uses GET (not POST) per Pitfall 4 -- D-5 documentation note claiming POST is an error; OpenAPI spec is authoritative
+- [Phase 07-analytics-audience]: remove and field/remove have confirm() prompts before POST execution -- JSON mode skips for automation (T-07-08, T-07-09)
 
 ### Pending Todos
 
@@ -119,6 +123,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-16T07:32:57.071Z
-Stopped at: Completed 07-03-PLAN.md (analytics usage commands)
+Last session: 2026-04-16T07:39:09.528Z
+Stopped at: Completed 07-04-PLAN.md (audience commands)
 Resume file: None

@@ -150,18 +150,18 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Audience Commands
 
-- [ ] **AUD-01**: `twentythree audience list` lists audience members
-- [ ] **AUD-02**: `twentythree audience search` searches audience members
-- [ ] **AUD-03**: `twentythree audience register` registers a new audience member
-- [ ] **AUD-04**: `twentythree audience unregister <id>` removes an audience member
-- [ ] **AUD-05**: `twentythree audience remove <id>` removes audience data
-- [ ] **AUD-06**: `twentythree audience metrics` retrieves audience metrics
-- [ ] **AUD-07**: `twentythree audience funnel` retrieves funnel analytics
-- [ ] **AUD-08**: `twentythree audience timelines <id>` retrieves audience member timelines
-- [ ] **AUD-09**: `twentythree audience companies` lists audience companies
-- [ ] **AUD-10**: `twentythree audience identity-sources` lists available identity sources
-- [ ] **AUD-11**: `twentythree audience list-collectors` lists collectors linked to audience
-- [ ] **AUD-12**: `twentythree audience field list|set|remove|types` manages custom audience fields
+- [x] **AUD-01**: `twentythree audience list` lists audience members
+- [x] **AUD-02**: `twentythree audience search` searches audience members
+- [x] **AUD-03**: `twentythree audience register` registers a new audience member
+- [x] **AUD-04**: `twentythree audience unregister <id>` removes an audience member
+- [x] **AUD-05**: `twentythree audience remove <id>` removes audience data
+- [x] **AUD-06**: `twentythree audience metrics` retrieves audience metrics
+- [x] **AUD-07**: `twentythree audience funnel` retrieves funnel analytics
+- [x] **AUD-08**: `twentythree audience timelines <id>` retrieves audience member timelines
+- [x] **AUD-09**: `twentythree audience companies` lists audience companies
+- [x] **AUD-10**: `twentythree audience identity-sources` lists available identity sources
+- [x] **AUD-11**: `twentythree audience list-collectors` lists collectors linked to audience
+- [x] **AUD-12**: `twentythree audience field list|set|remove|types` manages custom audience fields
 
 ### Spot Commands
 
@@ -395,18 +395,18 @@ Explicitly excluded. Documented to prevent scope creep.
 | ANL-06 | Phase 7 | Complete |
 | ANL-07 | Phase 7 | Complete |
 | ANL-08 | Phase 7 | Complete |
-| AUD-01 | Phase 7 | Pending |
-| AUD-02 | Phase 7 | Pending |
-| AUD-03 | Phase 7 | Pending |
-| AUD-04 | Phase 7 | Pending |
-| AUD-05 | Phase 7 | Pending |
-| AUD-06 | Phase 7 | Pending |
-| AUD-07 | Phase 7 | Pending |
-| AUD-08 | Phase 7 | Pending |
-| AUD-09 | Phase 7 | Pending |
-| AUD-10 | Phase 7 | Pending |
-| AUD-11 | Phase 7 | Pending |
-| AUD-12 | Phase 7 | Pending |
+| AUD-01 | Phase 7 | Complete |
+| AUD-02 | Phase 7 | Complete |
+| AUD-03 | Phase 7 | Complete |
+| AUD-04 | Phase 7 | Complete |
+| AUD-05 | Phase 7 | Complete |
+| AUD-06 | Phase 7 | Complete |
+| AUD-07 | Phase 7 | Complete |
+| AUD-08 | Phase 7 | Complete |
+| AUD-09 | Phase 7 | Complete |
+| AUD-10 | Phase 7 | Complete |
+| AUD-11 | Phase 7 | Complete |
+| AUD-12 | Phase 7 | Complete |
 | SPT-01 | Phase 8 | Pending |
 | SPT-02 | Phase 8 | Pending |
 | SPT-03 | Phase 8 | Pending |

@@ -149,7 +149,7 @@ Plans:
 - [x] 07-01-PLAN.md — Shared analytics flags module + 5 video analytics sub-dimension commands
 - [x] 07-02-PLAN.md — Root analytics videos + 6 live sub-dimensions + 2 conversions sub-dimensions
 - [x] 07-03-PLAN.md — All 8 analytics usage sub-dimension commands
-- [ ] 07-04-PLAN.md — All 15 audience commands (11 top-level + 4 field sub-commands)
+- [x] 07-04-PLAN.md — All 15 audience commands (11 top-level + 4 field sub-commands)
 
 ### Phase 8: Platform & Polish
 **Goal**: The complete platform surface is covered — spot, thumbnail, webhook, app, presentation, protection, session, openupload, site/setting, and user commands all work; `twentythree doctor` gives an instant health check; `--help --agent` exposes machine-readable metadata; the CLI is distribution-ready
