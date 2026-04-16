@@ -61,7 +61,12 @@ export default class UserTokens extends AuthenticatedCommand<typeof UserTokens> 
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const json = await response.json() as any
+    let json: any
+    try {
+      json = await response.json()
+    } catch {
+      this.error(`API returned non-JSON response (status ${response.status})`, { exit: EXIT_ERROR })
+    }
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
