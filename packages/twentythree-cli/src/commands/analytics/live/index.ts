@@ -25,6 +25,13 @@ export default class AnalyticsLiveIndex extends AuthenticatedCommand<typeof Anal
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/live',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Plays', 'Peak Viewers', 'Engagement', 'Playrate', 'Avg View Time'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

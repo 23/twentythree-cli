@@ -24,6 +24,13 @@ export default class AnalyticsVideoTimeseries extends AuthenticatedCommand<typeo
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/videos/timeseries',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Date', 'Plays', 'Engagement', 'Playrate', 'Traffic'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

@@ -25,6 +25,13 @@ export default class AnalyticsUsageSpots extends AuthenticatedCommand<typeof Ana
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/usage/spots',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Spot', 'Plays', 'Engagement', 'Traffic', 'Impressions'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

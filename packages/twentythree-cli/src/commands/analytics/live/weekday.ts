@@ -24,6 +24,13 @@ export default class AnalyticsLiveWeekday extends AuthenticatedCommand<typeof An
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/live/weekday',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Day', 'Plays', 'Peak Viewers', 'Engagement', 'Playrate'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

@@ -29,6 +29,13 @@ export default class ActionDelete extends AuthenticatedCommand<typeof ActionDele
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /action/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
   }

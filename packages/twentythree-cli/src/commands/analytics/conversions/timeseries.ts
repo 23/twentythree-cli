@@ -24,6 +24,13 @@ export default class AnalyticsConversionsTimeseries extends AuthenticatedCommand
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/conversions/timeseries',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Date', 'Conversions', 'Views', 'Visits'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

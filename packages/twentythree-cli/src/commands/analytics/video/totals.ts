@@ -24,6 +24,13 @@ export default class AnalyticsVideoTotals extends AuthenticatedCommand<typeof An
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/videos/totals',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Plays', 'Engagement', 'Playrate', 'Avg View Time', 'Traffic'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

@@ -25,6 +25,13 @@ export default class AnalyticsUsageLocations extends AuthenticatedCommand<typeof
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/usage/locations',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Location', 'Plays', 'Engagement', 'Traffic', 'Impressions'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

@@ -24,6 +24,13 @@ export default class AnalyticsLiveEvent extends AuthenticatedCommand<typeof Anal
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/live/event',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Event', 'Plays', 'Peak Viewers', 'Engagement', 'Performance'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

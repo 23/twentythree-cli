@@ -25,6 +25,13 @@ export default class AnalyticsVideoWeekday extends AuthenticatedCommand<typeof A
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/videos/weekday',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Day', 'Plays', 'Engagement', 'Playrate', 'Traffic'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

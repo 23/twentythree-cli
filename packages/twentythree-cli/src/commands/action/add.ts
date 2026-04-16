@@ -23,6 +23,13 @@ export default class ActionAdd extends AuthenticatedCommand<typeof ActionAdd> {
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /action/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     type: Flags.string({

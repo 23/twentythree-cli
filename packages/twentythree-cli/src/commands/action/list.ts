@@ -26,6 +26,13 @@ export default class ActionList extends AuthenticatedCommand<typeof ActionList> 
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /action/get',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Name', 'Type', 'Start', 'End'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     'object-id': Flags.string({

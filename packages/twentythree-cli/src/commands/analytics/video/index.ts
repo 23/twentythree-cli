@@ -25,6 +25,13 @@ export default class AnalyticsVideoIndex extends AuthenticatedCommand<typeof Ana
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/videos',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Plays', 'Engagement', 'Playrate', 'Avg View Time', 'Traffic'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

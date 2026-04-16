@@ -21,6 +21,13 @@ export default class ActionUpdate extends AuthenticatedCommand<typeof ActionUpda
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /action/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'updates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     name: Flags.string({

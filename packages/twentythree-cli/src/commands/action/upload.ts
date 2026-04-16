@@ -27,6 +27,13 @@ export default class ActionUpload extends AuthenticatedCommand<typeof ActionUplo
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /action/upload',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
   }

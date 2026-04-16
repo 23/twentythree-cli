@@ -21,6 +21,13 @@ export default class ActionTypes extends AuthenticatedCommand<typeof ActionTypes
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /action/types',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Type', 'Name / Description'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     'exclude-internal': Flags.boolean({

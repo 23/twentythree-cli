@@ -23,6 +23,13 @@ export default class AnalyticsLiveTimeseries extends AuthenticatedCommand<typeof
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/live/timeseries',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Date', 'Plays', 'Peak Viewers', 'Engagement', 'Playrate'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

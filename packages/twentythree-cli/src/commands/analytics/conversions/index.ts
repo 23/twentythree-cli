@@ -24,6 +24,13 @@ export default class AnalyticsConversionsIndex extends AuthenticatedCommand<type
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/conversions',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Conversions', 'Views', 'Visits', 'Engagement'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

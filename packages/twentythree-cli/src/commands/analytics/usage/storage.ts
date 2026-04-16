@@ -24,6 +24,13 @@ export default class AnalyticsUsageStorage extends AuthenticatedCommand<typeof A
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/usage/storage',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   // No ANALYTICS_PAGINATION_FLAGS — storage endpoint has no p/size per API spec
   static flags = {
     ...AuthenticatedCommand.baseFlags,

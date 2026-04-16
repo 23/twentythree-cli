@@ -21,6 +21,13 @@ export default class ActionExclude extends AuthenticatedCommand<typeof ActionExc
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /action/exclude',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'updates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     'object-id': Flags.string({

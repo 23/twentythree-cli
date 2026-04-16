@@ -25,6 +25,13 @@ export default class AnalyticsUsageDevices extends AuthenticatedCommand<typeof A
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/usage/devices',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Device', 'Plays', 'Engagement', 'Traffic', 'Impressions'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,

@@ -25,6 +25,13 @@ export default class AnalyticsVideoPerformance extends AuthenticatedCommand<type
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /analytics/data/videos/performance',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Title', 'Plays', 'Engagement', 'Playrate', 'Performance'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     ...ANALYTICS_DATE_FLAGS,
