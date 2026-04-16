@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Repository Polish & Release
 status: executing
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-04-16T15:04:33.487Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-04-16T15:08:00.459Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-16)
 ## Current Position
 
 Phase: 09 (endpoint-coverage-audit) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -51,6 +51,7 @@ Recent decisions affecting current work:
 - v1.1: CI publish workflow in scope (PUBLISH-03) — defer OIDC trusted publishing to v1.2
 - [Phase 09]: EXCLUDED_OPERATIONS uses regex-parsed source (not import) in audit script because tsx is not in devDependencies
 - [Phase 09]: video/frame.ts agentMetadata fixed from POST to GET to match OpenAPI spec; HTTP call left as POST
+- [Phase 09]: Sub-series commands use ANALYTICS_DATE_FLAGS + ANALYTICS_FILTER_FLAGS only -- no pagination, matching timeseries/totals endpoint contracts
 
 ### Pending Todos
 
@@ -63,6 +64,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-16T15:04:33.485Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-04-16T15:08:00.457Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None

@@ -45,7 +45,7 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 **Plans**: 3 plans
 Plans:
 - [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
-- [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
+- [x] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
 ### Phase 10: Package Hygiene
@@ -58,7 +58,7 @@ Plans:
   3. `package.json` contains `repository`, `bugs`, `homepage`, `keywords`, and `author` fields
 **Plans**: 3 plans
 Plans:
-- [ ] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
+- [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
 - [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
@@ -118,7 +118,7 @@ Plans:
 | 6.1. API Spec Workflow (INSERTED) | v1.0 | 1/1 | Complete | 2026-04-15 |
 | 7. Analytics & Audience | v1.0 | 4/4 | Complete | 2026-04-16 |
 | 8. Platform & Polish | v1.0 | 10/10 | Complete | 2026-04-16 |
-| 9. Endpoint Coverage Audit | v1.1 | 1/3 | In Progress|  |
+| 9. Endpoint Coverage Audit | v1.1 | 2/3 | In Progress|  |
 | 10. Package Hygiene | v1.1 | 0/? | Not started | - |
 | 11. Documentation | v1.1 | 0/? | Not started | - |
 | 12. READMEs & CHANGELOG | v1.1 | 0/? | Not started | - |
