@@ -165,13 +165,13 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Spot Commands
 
-- [ ] **SPT-01**: `twentythree spot list` lists spots in the active workspace
-- [ ] **SPT-02**: `twentythree spot create` creates a new spot
-- [ ] **SPT-03**: `twentythree spot update <id>` updates spot settings
-- [ ] **SPT-04**: `twentythree spot delete <id>` deletes a spot with confirmation
-- [ ] **SPT-05**: `twentythree spot set-videos <id>` sets videos assigned to a spot
-- [ ] **SPT-06**: `twentythree spot check <id>` checks spot status
-- [ ] **SPT-07**: `twentythree spot reset-version <id>` resets a spot version
+- [x] **SPT-01**: `twentythree spot list` lists spots in the active workspace
+- [x] **SPT-02**: `twentythree spot create` creates a new spot
+- [x] **SPT-03**: `twentythree spot update <id>` updates spot settings
+- [x] **SPT-04**: `twentythree spot delete <id>` deletes a spot with confirmation
+- [x] **SPT-05**: `twentythree spot set-videos <id>` sets videos assigned to a spot
+- [x] **SPT-06**: `twentythree spot check <id>` checks spot status
+- [x] **SPT-07**: `twentythree spot reset-version <id>` resets a spot version
 
 ### Thumbnail Commands
 
@@ -407,13 +407,13 @@ Explicitly excluded. Documented to prevent scope creep.
 | AUD-10 | Phase 7 | Complete |
 | AUD-11 | Phase 7 | Complete |
 | AUD-12 | Phase 7 | Complete |
-| SPT-01 | Phase 8 | Pending |
-| SPT-02 | Phase 8 | Pending |
-| SPT-03 | Phase 8 | Pending |
-| SPT-04 | Phase 8 | Pending |
-| SPT-05 | Phase 8 | Pending |
-| SPT-06 | Phase 8 | Pending |
-| SPT-07 | Phase 8 | Pending |
+| SPT-01 | Phase 8 | Complete |
+| SPT-02 | Phase 8 | Complete |
+| SPT-03 | Phase 8 | Complete |
+| SPT-04 | Phase 8 | Complete |
+| SPT-05 | Phase 8 | Complete |
+| SPT-06 | Phase 8 | Complete |
+| SPT-07 | Phase 8 | Complete |
 | THB-01 | Phase 8 | Pending |
 | THB-02 | Phase 8 | Pending |
 | THB-03 | Phase 8 | Pending |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 8 context gathered
-last_updated: "2026-04-16T08:25:03.520Z"
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-04-16T09:03:10.297Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 9
   completed_phases: 8
-  total_plans: 31
-  completed_plans: 31
-  percent: 100
+  total_plans: 41
+  completed_plans: 32
+  percent: 78
 ---
 
 # Project State
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 07 — analytics-audience
+**Current focus:** Phase 08 — platform-polish
 
 ## Current Position
 
-Phase: 8
-Plan: Not started
+Phase: 08 (platform-polish) — EXECUTING
+Plan: 2 of 10
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -67,6 +67,7 @@ Progress: [██████████] 100%
 | Phase 07-analytics-audience P02 | 4 | 3 tasks | 20 files |
 | Phase 07-analytics-audience P03 | 3 | 2 tasks | 8 files |
 | Phase 07-analytics-audience P04 | 5 | 3 tasks | 15 files |
+| Phase 08-platform-polish P01 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,8 @@ Recent decisions affecting current work:
 - [Phase 07-analytics-audience]: audience/search uses GET (not POST) per Pitfall 3 -- required --text flag for query param
 - [Phase 07-analytics-audience]: audience/field/list uses GET (not POST) per Pitfall 4 -- D-5 documentation note claiming POST is an error; OpenAPI spec is authoritative
 - [Phase 07-analytics-audience]: remove and field/remove have confirm() prompts before POST execution -- JSON mode skips for automation (T-07-08, T-07-09)
+- [Phase 08-platform-polish]: spot/list query params cast to any for spot_type/orderby/order enum constraints — CLI accepts free strings for forward-compat
+- [Phase 08-platform-polish]: active_p passed as boolean (not 1/0) to GET /spot/list query — API types define active_p as boolean for GET (unlike POST body which uses 1/0)
 
 ### Pending Todos
 
@@ -123,6 +126,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-16T08:25:03.517Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-platform-polish/08-CONTEXT.md
+Last session: 2026-04-16T09:03:10.295Z
+Stopped at: Completed 08-01-PLAN.md
+Resume file: None
