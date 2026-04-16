@@ -28,6 +28,16 @@ export default class WebinarMetrics extends AuthenticatedCommand<typeof WebinarM
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/metrics',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Metric', 'Value'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarMetrics)
     this.printWorkspaceHeader()

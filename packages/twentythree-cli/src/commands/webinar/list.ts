@@ -54,6 +54,16 @@ export default class WebinarList extends AuthenticatedCommand<typeof WebinarList
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Title', 'Status', 'Date', 'Private'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { flags } = await this.parse(WebinarList)
     this.printWorkspaceHeader()

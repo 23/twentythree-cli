@@ -34,6 +34,13 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
     id: Args.string({ description: 'Speaker ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/speaker/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarSpeakerRemove)
     this.printWorkspaceHeader()

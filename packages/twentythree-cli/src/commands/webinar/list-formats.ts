@@ -23,6 +23,16 @@ export default class WebinarListFormats extends AuthenticatedCommand<typeof Webi
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/list-formats',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Key', 'Name'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { } = await this.parse(WebinarListFormats)
     this.printWorkspaceHeader()

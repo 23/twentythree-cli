@@ -33,6 +33,16 @@ export default class WebinarSectionList extends AuthenticatedCommand<typeof Webi
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/section/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Title', 'Start Time', 'Description'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSectionList)
     this.printWorkspaceHeader()

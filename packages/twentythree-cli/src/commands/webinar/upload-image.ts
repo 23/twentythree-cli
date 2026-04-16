@@ -73,6 +73,13 @@ export default class WebinarUploadImage extends AuthenticatedCommand<typeof Webi
     file: Args.string({ description: 'Path to the image file to upload', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/upload-image',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarUploadImage)
     this.printWorkspaceHeader()

@@ -68,6 +68,13 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarUpdate)
     this.printWorkspaceHeader()

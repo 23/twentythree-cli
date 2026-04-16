@@ -24,6 +24,16 @@ export default class WebinarSpeakerLibrary extends AuthenticatedCommand<typeof W
 
   static args = {}
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/speaker/library/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['ID', 'Name', 'Email'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     await this.parse(WebinarSpeakerLibrary)
     this.printWorkspaceHeader()

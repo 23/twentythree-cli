@@ -72,6 +72,13 @@ export default class WebinarAttachmentUpload extends AuthenticatedCommand<typeof
     file: Args.string({ description: 'Path to file to upload', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/attachment/upload',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarAttachmentUpload)
     this.printWorkspaceHeader()

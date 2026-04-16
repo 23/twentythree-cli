@@ -35,6 +35,13 @@ export default class WebinarDelete extends AuthenticatedCommand<typeof WebinarDe
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarDelete)
     this.printWorkspaceHeader()

@@ -40,6 +40,13 @@ export default class WebinarSpeakerSetOrder extends AuthenticatedCommand<typeof 
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/speaker/set-order',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSpeakerSetOrder)
     this.printWorkspaceHeader()

@@ -30,6 +30,16 @@ export default class WebinarHighlights extends AuthenticatedCommand<typeof Webin
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/highlights',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Type', 'Start', 'End', 'Absolute Start'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarHighlights)
     this.printWorkspaceHeader()

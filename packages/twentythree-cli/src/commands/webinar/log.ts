@@ -26,6 +26,16 @@ export default class WebinarLog extends AuthenticatedCommand<typeof WebinarLog> 
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/log',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Event', 'Start', 'End'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarLog)
     this.printWorkspaceHeader()

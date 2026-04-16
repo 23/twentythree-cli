@@ -39,6 +39,16 @@ export default class WebinarAttachmentList extends AuthenticatedCommand<typeof W
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'GET /live/attachment/list',
+    auth_scope: 'read' as const,
+    output_shape: {
+      type: 'table' as const,
+      columns: ['Filename', 'Size', 'Hidden'],
+    },
+    side_effects: 'none' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarAttachmentList)
     this.printWorkspaceHeader()

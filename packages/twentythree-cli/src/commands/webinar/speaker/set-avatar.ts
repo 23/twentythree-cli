@@ -69,6 +69,13 @@ export default class WebinarSpeakerSetAvatar extends AuthenticatedCommand<typeof
     file: Args.string({ description: 'Path to image file', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/speaker/set-avatar',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSpeakerSetAvatar)
     this.printWorkspaceHeader()

@@ -36,6 +36,13 @@ export default class WebinarSpeakerAddFromUser extends AuthenticatedCommand<type
     id: Args.string({ description: 'Webinar ID', required: true }),
   }
 
+  static agentMetadata = {
+    api_endpoint: 'POST /live/speaker/add-from-user',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(WebinarSpeakerAddFromUser)
     this.printWorkspaceHeader()
