@@ -199,32 +199,32 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Presentation Commands
 
-- [ ] **PRS-01**: `twentythree presentation setting list` lists presentation settings
-- [ ] **PRS-02**: `twentythree presentation setting update` updates presentation settings
-- [ ] **PRS-03**: `twentythree presentation page link-locations` retrieves page link location options
+- [x] **PRS-01**: `twentythree presentation setting list` lists presentation settings
+- [x] **PRS-02**: `twentythree presentation setting update` updates presentation settings
+- [x] **PRS-03**: `twentythree presentation page link-locations` retrieves page link location options
 
 ### Protection Commands
 
-- [ ] **PRT-01**: `twentythree protection protect <id>` applies protection to a resource
-- [ ] **PRT-02**: `twentythree protection unprotect <id>` removes protection from a resource
-- [ ] **PRT-03**: `twentythree protection verify` verifies protection credentials
+- [x] **PRT-01**: `twentythree protection protect <id>` applies protection to a resource
+- [x] **PRT-02**: `twentythree protection unprotect <id>` removes protection from a resource
+- [x] **PRT-03**: `twentythree protection verify` verifies protection credentials
 
 ### Session Commands
 
-- [ ] **SES-01**: `twentythree session get-token` creates a session token
-- [ ] **SES-02**: `twentythree session redeem-token` redeems a session token
+- [x] **SES-01**: `twentythree session get-token` creates a session token
+- [x] **SES-02**: `twentythree session redeem-token` redeems a session token
 
 ### Open Upload Commands
 
-- [ ] **OUP-01**: `twentythree openupload list` lists open upload entries
-- [ ] **OUP-02**: `twentythree openupload upload-file` uploads a file via open upload; uses the shared chunked upload engine (UPL-01–UPL-08) since open uploads accept arbitrary large files
-- [ ] **OUP-03**: `twentythree openupload update-file <id>` updates an open upload entry
+- [x] **OUP-01**: `twentythree openupload list` lists open upload entries
+- [x] **OUP-02**: `twentythree openupload upload-file` uploads a file via open upload; uses the shared chunked upload engine (UPL-01–UPL-08) since open uploads accept arbitrary large files
+- [x] **OUP-03**: `twentythree openupload update-file <id>` updates an open upload entry
 
 ### Site & Setting Commands
 
-- [ ] **SITE-01**: `twentythree site get` retrieves site settings for the active workspace
-- [ ] **SITE-02**: `twentythree site search` searches within the site
-- [ ] **SITE-03**: `twentythree setting update` updates global site settings
+- [x] **SITE-01**: `twentythree site get` retrieves site settings for the active workspace
+- [x] **SITE-02**: `twentythree site search` searches within the site
+- [x] **SITE-03**: `twentythree setting update` updates global site settings
 
 ### User Commands
 
@@ -429,20 +429,20 @@ Explicitly excluded. Documented to prevent scope creep.
 | APP-01 | Phase 8 | Complete |
 | APP-02 | Phase 8 | Complete |
 | APP-03 | Phase 8 | Complete |
-| PRS-01 | Phase 8 | Pending |
-| PRS-02 | Phase 8 | Pending |
-| PRS-03 | Phase 8 | Pending |
-| PRT-01 | Phase 8 | Pending |
-| PRT-02 | Phase 8 | Pending |
-| PRT-03 | Phase 8 | Pending |
-| SES-01 | Phase 8 | Pending |
-| SES-02 | Phase 8 | Pending |
-| OUP-01 | Phase 8 | Pending |
-| OUP-02 | Phase 8 | Pending |
-| OUP-03 | Phase 8 | Pending |
-| SITE-01 | Phase 8 | Pending |
-| SITE-02 | Phase 8 | Pending |
-| SITE-03 | Phase 8 | Pending |
+| PRS-01 | Phase 8 | Complete |
+| PRS-02 | Phase 8 | Complete |
+| PRS-03 | Phase 8 | Complete |
+| PRT-01 | Phase 8 | Complete |
+| PRT-02 | Phase 8 | Complete |
+| PRT-03 | Phase 8 | Complete |
+| SES-01 | Phase 8 | Complete |
+| SES-02 | Phase 8 | Complete |
+| OUP-01 | Phase 8 | Complete |
+| OUP-02 | Phase 8 | Complete |
+| OUP-03 | Phase 8 | Complete |
+| SITE-01 | Phase 8 | Complete |
+| SITE-02 | Phase 8 | Complete |
+| SITE-03 | Phase 8 | Complete |
 | USR-01 | Phase 8 | Complete |
 | USR-02 | Phase 8 | Complete |
 | USR-03 | Phase 8 | Complete |

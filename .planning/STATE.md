@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-05-PLAN.md
-last_updated: "2026-04-16T09:20:09.984Z"
+stopped_at: Completed 08-06-PLAN.md
+last_updated: "2026-04-16T09:25:12.969Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 41
-  completed_plans: 36
-  percent: 88
+  completed_plans: 37
+  percent: 90
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 08 (platform-polish) — EXECUTING
-Plan: 6 of 10
+Plan: 7 of 10
 Status: Ready to execute
 Last activity: 2026-04-16
 
@@ -72,6 +72,7 @@ Progress: [██████████] 100%
 | Phase 08-platform-polish P03 | 3min | 2 tasks | 10 files |
 | Phase 08-platform-polish P04 | 3min | 2 tasks | 8 files |
 | Phase 08-platform-polish P05 | 2min | 2 tasks | 8 files |
+| Phase 08-platform-polish P06 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -130,6 +131,8 @@ Recent decisions affecting current work:
 - [Phase 08-platform-polish]: user/get-login-token summary string never contains actual token value (T-08-10 information disclosure mitigation)
 - [Phase 08-platform-polish]: protection/verify maps --video-id → photo_id and --webinar-id → live_id at the flag level (term mapping at flag boundary)
 - [Phase 08-platform-polish]: session/get-token summary string never contains actual token value (T-08-15 information disclosure mitigation)
+- [Phase 08-platform-polish]: site/get include_presentation_p and include_quota_p passed as boolean — API types define GET query params as boolean not 1/0
+- [Phase 08-platform-polish]: openupload/upload-file uses tokenFieldName: 'token' (Pitfall 3) — open upload endpoint uses 'token' field not 'upload_token'
 
 ### Pending Todos
 
@@ -141,6 +144,6 @@ None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json`
 
 ## Session Continuity
 
-Last session: 2026-04-16T09:20:09.981Z
-Stopped at: Completed 08-05-PLAN.md
+Last session: 2026-04-16T09:25:12.967Z
+Stopped at: Completed 08-06-PLAN.md
 Resume file: None
