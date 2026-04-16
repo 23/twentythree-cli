@@ -59,7 +59,7 @@ walkDir(commandsDir)
 
 const auditSrc = readFileSync(resolve(__dirname, '../src/lib/audit.ts'), 'utf8')
 const excludedEndpoints = new Set()
-for (const match of auditSrc.matchAll(/endpoint:\s*'([^']+)'/g)) {
+for (const match of auditSrc.matchAll(/endpoint:\s*['"]([^'"]+)['"]/g)) {
   excludedEndpoints.add(match[1])
 }
 
