@@ -37,6 +37,8 @@ export default class SiteGet extends AuthenticatedCommand<typeof SiteGet> {
     'include-quota-p': Flags.string({ hidden: true, required: false }),
   }
 
+  static args = {}
+
   static agentMetadata = {
     api_endpoint: 'GET /site/get',
     auth_scope: 'read' as const,
