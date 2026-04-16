@@ -60,7 +60,7 @@ Plans:
 Plans:
 - [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
 - [x] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
-- [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
+- [x] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
 ### Phase 11: Documentation
 **Goal**: A developer can find reference docs for every command and follow step-by-step guides to set up auth and upgrade the API spec
@@ -73,7 +73,7 @@ Plans:
 **Plans**: 3 plans
 Plans:
 - [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
-- [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
+- [x] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 **UI hint**: no
 
@@ -87,7 +87,7 @@ Plans:
   3. `CHANGELOG.md` exists at repo root with entries for v1.0 and v1.1
 **Plans**: 3 plans
 Plans:
-- [ ] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
+- [x] 09-01-PLAN.md — Audit infrastructure (EXCLUDED_OPERATIONS, audit script, phantom fixes)
 - [ ] 09-02-PLAN.md — Video & live analytics gap fill (8 commands)
 - [ ] 09-03-PLAN.md — Usage analytics gap fill (10 commands) + final audit pass
 
