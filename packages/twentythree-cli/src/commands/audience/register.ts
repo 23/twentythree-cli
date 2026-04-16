@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceRegister extends AuthenticatedCommand<typeof AudienceRegister> {
   static description = 'Register an audience contact'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/register',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience register --email "jane@example.com"',
     '<%= config.bin %> audience register --email "john@acme.com" --object-id 123 --firstname "John" --lastname "Doe"',

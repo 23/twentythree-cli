@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerList extends AuthenticatedCommand<typeof PlayerList> {
   static description = 'List players in the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /player/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Name', 'Default'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player list',
     '<%= config.bin %> player list --json',

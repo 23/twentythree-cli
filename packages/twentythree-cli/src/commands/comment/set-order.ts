@@ -12,6 +12,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentSetOrder extends AuthenticatedCommand<typeof CommentSetOrder> {
   static description = 'Set display order of comments on an object'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /comment/set-order',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment set-order --object-id 123 --order "789,456,123"',
     '<%= config.bin %> comment set-order --object-id 123 --order "789,456" --comment-type question',

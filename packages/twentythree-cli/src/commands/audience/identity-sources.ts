@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceIdentitySources extends AuthenticatedCommand<typeof AudienceIdentitySources> {
   static description = 'List audience identity sources'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/identity-sources',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Source', 'Title', 'Service'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience identity-sources',
     '<%= config.bin %> audience identity-sources --json',

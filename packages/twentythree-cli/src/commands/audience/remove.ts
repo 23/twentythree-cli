@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceRemove extends AuthenticatedCommand<typeof AudienceRemove> {
   static description = 'Permanently remove an audience contact'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience remove --email "jane@example.com"',
     '<%= config.bin %> audience remove --uuid "abc-def-ghi"',

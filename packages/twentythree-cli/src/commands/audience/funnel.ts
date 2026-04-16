@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceFunnel extends AuthenticatedCommand<typeof AudienceFunnel> {
   static description = 'Get audience funnel analytics'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/funnel',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience funnel',
     '<%= config.bin %> audience funnel --objects "123 456" --json',

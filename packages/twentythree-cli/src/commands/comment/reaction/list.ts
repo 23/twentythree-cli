@@ -17,6 +17,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class CommentReactionList extends AuthenticatedCommand<typeof CommentReactionList> {
   static description = 'List reactions on comments for an object'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /comment/reaction/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Comment ID', 'Emoji', 'Count'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment reaction list --object-id 123 --object-token abc',
     '<%= config.bin %> comment reaction list --object-id 123 --object-token abc --object-type photo',

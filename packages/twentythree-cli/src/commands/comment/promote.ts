@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentPromote extends AuthenticatedCommand<typeof CommentPromote> {
   static description = 'Promote or toggle promoted status of a comment'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /comment/promote',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment promote 789',
     '<%= config.bin %> comment promote 789 --promoted',

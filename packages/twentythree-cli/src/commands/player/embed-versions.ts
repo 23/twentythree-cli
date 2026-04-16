@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerEmbedVersions extends AuthenticatedCommand<typeof PlayerEmbedVersions> {
   static description = 'List available embed versions for an object'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /player/embed-versions',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Type', 'Key', 'Label'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player embed-versions --object-type photo --object-id 123',
     '<%= config.bin %> player embed-versions --object-type live --object-id 456 --json',

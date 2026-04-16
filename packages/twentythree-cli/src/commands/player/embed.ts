@@ -23,6 +23,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerEmbed extends AuthenticatedCommand<typeof PlayerEmbed> {
   static description = 'Generate embed code for a video, webinar, or category'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /player/embed',
+    auth_scope: 'anonymous' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player embed --video-id 123',
     '<%= config.bin %> player embed --video-id 123 --responsive > embed.html',

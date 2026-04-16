@@ -12,6 +12,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentClone extends AuthenticatedCommand<typeof CommentClone> {
   static description = 'Clone an existing comment'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /comment/clone',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment clone 789',
     '<%= config.bin %> comment clone 789 --clone-type question',

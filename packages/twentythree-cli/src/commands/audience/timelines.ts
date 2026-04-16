@@ -12,6 +12,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceTimelines extends AuthenticatedCommand<typeof AudienceTimelines> {
   static description = 'Get audience member timelines'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/timelines',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['UUID', 'Object ID', 'Type', 'Engagement', 'Sessions', 'Source'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience timelines',
     '<%= config.bin %> audience timelines --uuid "abc-123" --size 20',

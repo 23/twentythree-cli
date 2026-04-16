@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentDelete extends AuthenticatedCommand<typeof CommentDelete> {
   static description = 'Delete a comment'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /comment/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment delete 789',
     '<%= config.bin %> comment delete 789 --json',

@@ -12,6 +12,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerStyles extends AuthenticatedCommand<typeof PlayerStyles> {
   static description = 'List available player visual styles'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /player/styles',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Style', 'Name', 'Icon'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player styles',
     '<%= config.bin %> player styles --json',

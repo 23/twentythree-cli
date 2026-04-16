@@ -17,6 +17,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class CommentReactionRemove extends AuthenticatedCommand<typeof CommentReactionRemove> {
   static description = 'Remove a reaction from a comment'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /comment/reaction/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment reaction remove 789 --object-id 123 --object-token abc --reaction "👍"',
     '<%= config.bin %> comment reaction remove 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo',

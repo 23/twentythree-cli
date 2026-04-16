@@ -10,6 +10,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentUpdate extends AuthenticatedCommand<typeof CommentUpdate> {
   static description = "Update a comment's status"
 
+  static agentMetadata = {
+    api_endpoint: 'POST /comment/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment update 789 --object-id 123 --status answered',
     '<%= config.bin %> comment update 789 --object-id 123 --status dismissed',

@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class CommentAdd extends AuthenticatedCommand<typeof CommentAdd> {
   static description = 'Add a comment to an object'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /comment/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment add --object-id 123 --object-type photo --content "Great video!"',
     '<%= config.bin %> comment add --object-id 456 --object-type live --content "Question?" --comment-type question',

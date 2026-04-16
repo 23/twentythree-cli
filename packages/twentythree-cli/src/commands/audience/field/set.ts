@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class AudienceFieldSet extends AuthenticatedCommand<typeof AudienceFieldSet> {
   static description = 'Create or update a custom audience field'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/field/set',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience field set --key "department" --type text --label "Department"',
     '<%= config.bin %> audience field set --key "tier" --type enum --label "Customer Tier" --options "free;pro;enterprise"',

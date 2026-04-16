@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceMetrics extends AuthenticatedCommand<typeof AudienceMetrics> {
   static description = 'Get audience aggregate metrics'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/metrics',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience metrics',
     '<%= config.bin %> audience metrics --identified --json',

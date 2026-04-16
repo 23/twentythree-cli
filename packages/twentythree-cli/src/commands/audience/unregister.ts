@@ -12,6 +12,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceUnregister extends AuthenticatedCommand<typeof AudienceUnregister> {
   static description = 'Remove a registration for an audience contact'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/unregister',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience unregister --object-id 123 --email "jane@example.com"',
     '<%= config.bin %> audience unregister --object-id 456 --uuid "abc-def-ghi"',

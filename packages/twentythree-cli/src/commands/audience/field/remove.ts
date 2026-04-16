@@ -18,6 +18,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class AudienceFieldRemove extends AuthenticatedCommand<typeof AudienceFieldRemove> {
   static description = 'Remove a custom audience field'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/field/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience field remove --key "department"',
     '<%= config.bin %> audience field remove --key "old-field" --json',

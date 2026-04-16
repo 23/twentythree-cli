@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceListCollectors extends AuthenticatedCommand<typeof AudienceListCollectors> {
   static description = 'List collectors linked to audience'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/list-collectors',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Action ID', 'Name', 'Start', 'End', 'Require Email'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience list-collectors',
     '<%= config.bin %> audience list-collectors --object-id 123',

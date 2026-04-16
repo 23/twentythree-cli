@@ -13,6 +13,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class AudienceSearch extends AuthenticatedCommand<typeof AudienceSearch> {
   static description = 'Search audience members'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /audience/search',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['UUID', 'Name', 'Email', 'Company', 'Score', 'Last Seen'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience search --text "john doe"',
     '<%= config.bin %> audience search --text "acme" --size 20 --json',

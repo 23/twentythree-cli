@@ -17,6 +17,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class CommentReactionAdd extends AuthenticatedCommand<typeof CommentReactionAdd> {
   static description = 'Add a reaction to a comment'
 
+  static agentMetadata = {
+    api_endpoint: 'GET /comment/reaction/add',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'creates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> comment reaction add 789 --object-id 123 --object-token abc --reaction "👍"',
     '<%= config.bin %> comment reaction add 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo',

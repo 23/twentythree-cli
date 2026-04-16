@@ -24,6 +24,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerDelete extends AuthenticatedCommand<typeof PlayerDelete> {
   static description = 'Delete a player from the active workspace'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /player/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player delete 42',
     '<%= config.bin %> player delete 42 --json',

@@ -14,6 +14,13 @@ import { applyCliTerms } from '../../../lib/term-map.js'
 export default class AudienceFieldTypes extends AuthenticatedCommand<typeof AudienceFieldTypes> {
   static description = 'List valid audience field types'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /audience/field/types',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Type', 'Label'] },
+    side_effects: 'none' as const,
+  }
+
   static examples = [
     '<%= config.bin %> audience field types',
     '<%= config.bin %> audience field types --json',

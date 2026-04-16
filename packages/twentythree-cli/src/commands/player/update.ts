@@ -16,6 +16,13 @@ import { applyCliTerms } from '../../lib/term-map.js'
 export default class PlayerUpdate extends AuthenticatedCommand<typeof PlayerUpdate> {
   static description = 'Update settings for a player'
 
+  static agentMetadata = {
+    api_endpoint: 'POST /player/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'none' as const },
+    side_effects: 'updates' as const,
+  }
+
   static examples = [
     '<%= config.bin %> player update 42 --name "My Player"',
     '<%= config.bin %> player update 42 --description "New description"',
