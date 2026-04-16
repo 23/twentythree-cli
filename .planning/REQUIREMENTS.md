@@ -175,13 +175,13 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Thumbnail Commands
 
-- [ ] **THB-01**: `twentythree thumbnail list` lists thumbnail templates
-- [ ] **THB-02**: `twentythree thumbnail add` creates a new thumbnail template
-- [ ] **THB-03**: `twentythree thumbnail update <id>` updates a thumbnail template
-- [ ] **THB-04**: `twentythree thumbnail delete <id>` deletes a thumbnail template with confirmation
-- [ ] **THB-05**: `twentythree thumbnail duplicate <id>` duplicates a thumbnail template
-- [ ] **THB-06**: `twentythree thumbnail data <id>` retrieves template data
-- [ ] **THB-07**: `twentythree thumbnail file list|upload|delete <id>` manages template files
+- [x] **THB-01**: `twentythree thumbnail list` lists thumbnail templates
+- [x] **THB-02**: `twentythree thumbnail add` creates a new thumbnail template
+- [x] **THB-03**: `twentythree thumbnail update <id>` updates a thumbnail template
+- [x] **THB-04**: `twentythree thumbnail delete <id>` deletes a thumbnail template with confirmation
+- [x] **THB-05**: `twentythree thumbnail duplicate <id>` duplicates a thumbnail template
+- [x] **THB-06**: `twentythree thumbnail data <id>` retrieves template data
+- [x] **THB-07**: `twentythree thumbnail file list|upload|delete <id>` manages template files
 
 ### Webhook Commands
 
@@ -228,14 +228,14 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### User Commands
 
-- [ ] **USR-01**: `twentythree user list` lists users in the active workspace
-- [ ] **USR-02**: `twentythree user get <id>` retrieves a user's details
-- [ ] **USR-03**: `twentythree user create` creates a new user
-- [ ] **USR-04**: `twentythree user update <id>` updates user details
-- [ ] **USR-05**: `twentythree user send-invitation <id>` sends a user invitation
-- [ ] **USR-06**: `twentythree user get-login-token <id>` generates a login token for a user
-- [ ] **USR-07**: `twentythree user redeem-login-token` redeems a login token
-- [ ] **USR-08**: `twentythree user tokens` retrieves cross-site tokens for the authenticated user
+- [x] **USR-01**: `twentythree user list` lists users in the active workspace
+- [x] **USR-02**: `twentythree user get <id>` retrieves a user's details
+- [x] **USR-03**: `twentythree user create` creates a new user
+- [x] **USR-04**: `twentythree user update <id>` updates user details
+- [x] **USR-05**: `twentythree user send-invitation <id>` sends a user invitation
+- [x] **USR-06**: `twentythree user get-login-token <id>` generates a login token for a user
+- [x] **USR-07**: `twentythree user redeem-login-token` redeems a login token
+- [x] **USR-08**: `twentythree user tokens` retrieves cross-site tokens for the authenticated user
 
 ### Tag Commands
 
@@ -414,13 +414,13 @@ Explicitly excluded. Documented to prevent scope creep.
 | SPT-05 | Phase 8 | Complete |
 | SPT-06 | Phase 8 | Complete |
 | SPT-07 | Phase 8 | Complete |
-| THB-01 | Phase 8 | Pending |
-| THB-02 | Phase 8 | Pending |
-| THB-03 | Phase 8 | Pending |
-| THB-04 | Phase 8 | Pending |
-| THB-05 | Phase 8 | Pending |
-| THB-06 | Phase 8 | Pending |
-| THB-07 | Phase 8 | Pending |
+| THB-01 | Phase 8 | Complete |
+| THB-02 | Phase 8 | Complete |
+| THB-03 | Phase 8 | Complete |
+| THB-04 | Phase 8 | Complete |
+| THB-05 | Phase 8 | Complete |
+| THB-06 | Phase 8 | Complete |
+| THB-07 | Phase 8 | Complete |
 | WHK-01 | Phase 8 | Complete |
 | WHK-02 | Phase 8 | Complete |
 | WHK-03 | Phase 8 | Complete |
@@ -443,14 +443,14 @@ Explicitly excluded. Documented to prevent scope creep.
 | SITE-01 | Phase 8 | Pending |
 | SITE-02 | Phase 8 | Pending |
 | SITE-03 | Phase 8 | Pending |
-| USR-01 | Phase 8 | Pending |
-| USR-02 | Phase 8 | Pending |
-| USR-03 | Phase 8 | Pending |
-| USR-04 | Phase 8 | Pending |
-| USR-05 | Phase 8 | Pending |
-| USR-06 | Phase 8 | Pending |
-| USR-07 | Phase 8 | Pending |
-| USR-08 | Phase 8 | Pending |
+| USR-01 | Phase 8 | Complete |
+| USR-02 | Phase 8 | Complete |
+| USR-03 | Phase 8 | Complete |
+| USR-04 | Phase 8 | Complete |
+| USR-05 | Phase 8 | Complete |
+| USR-06 | Phase 8 | Complete |
+| USR-07 | Phase 8 | Complete |
+| USR-08 | Phase 8 | Complete |
 | CLI-05 | Phase 8 | Pending |
 | CLI-06 | Phase 8 | Pending |
 | CLI-07 | Phase 3 | Complete |
