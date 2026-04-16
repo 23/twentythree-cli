@@ -139,14 +139,14 @@ The chunked upload engine is **shared infrastructure** used by any command that 
 
 ### Analytics Commands
 
-- [ ] **ANL-01**: `twentythree analytics videos` retrieves video analytics data
+- [x] **ANL-01**: `twentythree analytics videos` retrieves video analytics data
 - [ ] **ANL-02**: `twentythree analytics videos timeseries|totals|weekday|performance|published` retrieves aggregated video analytics
-- [ ] **ANL-03**: `twentythree analytics live` retrieves live/webinar analytics data
-- [ ] **ANL-04**: `twentythree analytics live timeseries|totals|weekday|event|event-timeseries|event-totals` retrieves aggregated live analytics
-- [ ] **ANL-05**: `twentythree analytics conversions` retrieves conversion analytics
-- [ ] **ANL-06**: `twentythree analytics conversions timeseries|totals` retrieves aggregated conversion analytics
+- [x] **ANL-03**: `twentythree analytics live` retrieves live/webinar analytics data
+- [x] **ANL-04**: `twentythree analytics live timeseries|totals|weekday|event|event-timeseries|event-totals` retrieves aggregated live analytics
+- [x] **ANL-05**: `twentythree analytics conversions` retrieves conversion analytics
+- [x] **ANL-06**: `twentythree analytics conversions timeseries|totals` retrieves aggregated conversion analytics
 - [ ] **ANL-07**: `twentythree analytics usage devices|domains|locations|sources|sourceids|spots|storage|traffic` retrieves usage analytics
-- [ ] **ANL-08**: All analytics commands support `--json` output and accept standard date range filters
+- [x] **ANL-08**: All analytics commands support `--json` output and accept standard date range filters
 
 ### Audience Commands
 
@@ -387,14 +387,14 @@ Explicitly excluded. Documented to prevent scope creep.
 | PLY-06 | Phase 6 | Complete |
 | TAG-01 | Phase 6 | Complete |
 | TAG-02 | Phase 6 | Complete |
-| ANL-01 | Phase 7 | Pending |
+| ANL-01 | Phase 7 | Complete |
 | ANL-02 | Phase 7 | Pending |
-| ANL-03 | Phase 7 | Pending |
-| ANL-04 | Phase 7 | Pending |
-| ANL-05 | Phase 7 | Pending |
-| ANL-06 | Phase 7 | Pending |
+| ANL-03 | Phase 7 | Complete |
+| ANL-04 | Phase 7 | Complete |
+| ANL-05 | Phase 7 | Complete |
+| ANL-06 | Phase 7 | Complete |
 | ANL-07 | Phase 7 | Pending |
-| ANL-08 | Phase 7 | Pending |
+| ANL-08 | Phase 7 | Complete |
 | AUD-01 | Phase 7 | Pending |
 | AUD-02 | Phase 7 | Pending |
 | AUD-03 | Phase 7 | Pending |
