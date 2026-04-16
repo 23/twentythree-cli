@@ -2,7 +2,7 @@ import { Args } from '@oclif/core'
 import chalk from 'chalk'
 import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -64,7 +64,7 @@ export default class ThumbnailDelete extends AuthenticatedCommand<typeof Thumbna
     })
 
     if (deleteError) {
-      this.error(applyCliTerms(String(deleteError)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(deleteError)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Thumbnail template ${args.id} deleted`))
