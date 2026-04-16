@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Repository Polish & Release
-status: defining_requirements
+status: roadmap_ready
 stopped_at: ~
 last_updated: "2026-04-16T12:00:00.000Z"
 last_activity: 2026-04-16
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-16)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Planning next milestone (v1.1) — run `/gsd-new-milestone` to start
+**Current focus:** v1.1 roadmap defined — run `/gsd-plan-phase 9` to start Phase 9
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Phase 9 — Endpoint Coverage Audit (not started)
 Plan: —
-Status: Defining requirements for v1.1
-Last activity: 2026-04-16 — Milestone v1.1 started
+Status: Roadmap created; ready to plan Phase 9
+Last activity: 2026-04-16 — v1.1 roadmap created (5 phases, 14 requirements mapped)
 
 Progress: [          ] 0%
 
@@ -84,6 +84,7 @@ Progress: [          ] 0%
 ### Roadmap Evolution
 
 - Phase 6.1 inserted after Phase 6: Download and store swagger file; prescribe api-change workflow with claude-aided code updates (URGENT)
+- v1.1 roadmap created 2026-04-16: 5 phases (9–13), 14 requirements mapped
 
 ### Decisions
 
@@ -155,10 +156,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None — the public OpenAPI spec at `video.twentythree.com/apidocs/swagger.json` exposes all endpoints without authentication. Type generation script can fetch it directly.
+- Run `npm view twentythree-cli` before Phase 10 to confirm the package name is available on npm. If taken, all docs and publish steps need a name change.
 
 ## Session Continuity
 
-Last session: 2026-04-16T09:52:35.616Z
-Stopped at: Completed 08-10-PLAN.md
+Last session: 2026-04-16
+Stopped at: v1.1 roadmap created (Phases 9–13)
 Resume file: None

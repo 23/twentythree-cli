@@ -61,17 +61,17 @@
 
 | REQ-ID | Phase | Plan | Status |
 |--------|-------|------|--------|
-| AUDIT-01 | — | — | Pending |
-| AUDIT-02 | — | — | Pending |
-| PKG-01 | — | — | Pending |
-| PKG-02 | — | — | Pending |
-| PKG-03 | — | — | Pending |
-| PUBLISH-01 | — | — | Pending |
-| PUBLISH-02 | — | — | Pending |
-| PUBLISH-03 | — | — | Pending |
-| DOCS-01 | — | — | Pending |
-| DOCS-02 | — | — | Pending |
-| DOCS-03 | — | — | Pending |
-| README-01 | — | — | Pending |
-| README-02 | — | — | Pending |
-| README-03 | — | — | Pending |
+| AUDIT-01 | Phase 9 | — | Pending |
+| AUDIT-02 | Phase 9 | — | Pending |
+| PKG-01 | Phase 10 | — | Pending |
+| PKG-02 | Phase 10 | — | Pending |
+| PKG-03 | Phase 10 | — | Pending |
+| DOCS-01 | Phase 11 | — | Pending |
+| DOCS-02 | Phase 11 | — | Pending |
+| DOCS-03 | Phase 11 | — | Pending |
+| README-01 | Phase 12 | — | Pending |
+| README-02 | Phase 12 | — | Pending |
+| README-03 | Phase 12 | — | Pending |
+| PUBLISH-01 | Phase 13 | — | Pending |
+| PUBLISH-02 | Phase 13 | — | Pending |
+| PUBLISH-03 | Phase 13 | — | Pending |
