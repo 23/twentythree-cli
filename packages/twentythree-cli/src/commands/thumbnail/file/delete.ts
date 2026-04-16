@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -73,7 +73,7 @@ export default class ThumbnailFileDelete extends AuthenticatedCommand<typeof Thu
     })
 
     if (deleteError) {
-      this.error(applyCliTerms(String(deleteError)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(deleteError)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`File "${flags.filename}" deleted from template ${flags['template-id']}`))
