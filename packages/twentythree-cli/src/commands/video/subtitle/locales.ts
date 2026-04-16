@@ -1,5 +1,5 @@
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, renderTable, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, renderTable, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -15,6 +15,13 @@ export default class VideoSubtitleLocales extends AuthenticatedCommand<typeof Vi
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /photo/subtitle/locales',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Code', 'Name', 'Auto Transcribe', 'Auto Translate', 'Live'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
   }
@@ -25,7 +32,7 @@ export default class VideoSubtitleLocales extends AuthenticatedCommand<typeof Vi
     const { data, error } = await this.apiClient.GET('/photo/subtitle/locales', {})
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

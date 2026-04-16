@@ -1,6 +1,6 @@
 import { Args, Flags } from '@oclif/core'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, renderTable, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, renderTable, parseBoolParam, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -17,12 +17,21 @@ export default class VideoSubtitleList extends AuthenticatedCommand<typeof Video
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /photo/subtitle/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['Locale', 'Language', 'Type', 'Status', 'Primary'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     'include-drafts': Flags.boolean({
       description: 'Include draft (unpublished) subtitle tracks',
-      default: false,
+      allowNo: true,
+      required: false,
     }),
+    'include-drafts-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {
@@ -34,18 +43,20 @@ export default class VideoSubtitleList extends AuthenticatedCommand<typeof Video
 
     this.printWorkspaceHeader()
 
+    const token = await this.fetchVideoToken(args.id)
+
     const { data, error } = await this.apiClient.GET('/photo/subtitle/list', {
       params: {
         query: {
           photo_id: Number(args.id),
-          token: '',
-          ...(flags['include-drafts'] && { include_drafts_p: true }),
+          token,
+          ...(parseBoolParam(flags['include-drafts'], flags['include-drafts-p']) && { include_drafts_p: true }),
         },
       },
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

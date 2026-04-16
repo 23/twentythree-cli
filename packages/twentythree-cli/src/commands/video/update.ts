@@ -2,7 +2,7 @@ import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { text, select, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, parseBoolParam, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -28,6 +28,13 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
   ]
 
   static enableJsonFlag = true
+
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'updates' as const,
+  }
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
@@ -66,6 +73,10 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       allowNo: true,
       required: false,
     }),
+    // Hidden raw _p-suffixed alternatives (undocumented, for advanced users)
+    'published-p': Flags.string({ hidden: true, required: false }),
+    'promoted-p': Flags.string({ hidden: true, required: false }),
+    'video-360-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {
@@ -93,6 +104,9 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       flags.promote,
       flags['publish-date'],
       flags['360'],
+      flags['published-p'],
+      flags['promoted-p'],
+      flags['video-360-p'],
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { photo_id: videoId }
@@ -104,7 +118,7 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       })
 
       if (error) {
-        this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+        this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -166,10 +180,13 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       if (flags.description !== undefined) body.description = flags.description
       if (flags.tags !== undefined) body.tags = flags.tags
       if (flags['category-id'] !== undefined) body.album_id = flags['category-id']
-      if (flags.publish !== undefined) body.published_p = flags.publish ? 1 : 0
-      if (flags.promote !== undefined) body.promoted_p = flags.promote ? 1 : 0
+      const publishVal = parseBoolParam(flags.publish, flags['published-p'])
+      const promoteVal = parseBoolParam(flags.promote, flags['promoted-p'])
+      const video360Val = parseBoolParam(flags['360'], flags['video-360-p'])
+      if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
+      if (promoteVal !== undefined) body.promoted_p = promoteVal ? 1 : 0
       if (flags['publish-date'] !== undefined) body['publish_date'] = flags['publish-date']
-      if (flags['360'] !== undefined) body.video_360_p = flags['360'] ? 1 : 0
+      if (video360Val !== undefined) body.video_360_p = video360Val ? 1 : 0
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/photo/update', {

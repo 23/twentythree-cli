@@ -10,7 +10,7 @@ import { DEFAULT_CHUNK_SIZE, DEFAULT_CONCURRENCY } from '../../upload/types.js'
 /**
  * Simple inline progress bar that writes directly to stderr using \r.
  * Avoids all TTY-detection issues that afflict cli-progress.
- * T-03-06: shows only byte counts, never the upload_token.
+ * T-03-10: shows only byte counts, never the replace_token.
  */
 class ProgressBar {
   private lastLen = 0
@@ -26,64 +26,42 @@ class ProgressBar {
   }
 
   finish(): void {
-    // Commit the final state with a newline so the 100% bar stays visible
     process.stderr.write('\n')
     this.lastLen = 0
   }
 }
 
 /**
- * Video upload command — uploads a video file using the chunked upload engine.
+ * Video replace command — replaces a video file using the replace-token flow.
  *
  * Flow:
- *   1. GET /photo/get-upload-token (with optional metadata)
- *   2. Upload file in chunks with inline progress bar
+ *   1. GET /photo/get-replace-token (with photo_id)
+ *   2. Upload replacement file in chunks using chunked-upload engine to /photo/replace
  *   3. Display success message; optionally return --json result
  *
  * Threat mitigations:
- *   T-03-06: upload_token is never logged to stdout — only byte counts shown
+ *   T-03-10: replace_token is never logged — only byte counts shown in progress bar
  *   T-03-09: extends AuthenticatedCommand — anonymous mode rejected
  */
-export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload> {
-  static description = 'Upload a video file to the active workspace'
+export default class VideoReplace extends AuthenticatedCommand<typeof VideoReplace> {
+  static description = 'Replace the video file for an existing video'
 
   static examples = [
-    '<%= config.bin %> video upload ./video.mp4',
-    '<%= config.bin %> video upload ./video.mp4 --title "My Video" --publish',
-    '<%= config.bin %> video upload ./video.mp4 --chunk-size 52428800 --concurrency 3',
+    '<%= config.bin %> video replace 12345 ./new-video.mp4',
+    '<%= config.bin %> video replace 12345 ./new-video.mp4 --chunk-size 52428800 --concurrency 3',
   ]
 
   static enableJsonFlag = true
 
   static agentMetadata = {
-    api_endpoint: 'POST /photo/redeem-upload-token',
+    api_endpoint: 'POST /photo/replace',
     auth_scope: 'write' as const,
     output_shape: { type: 'key-value' as const },
-    side_effects: 'creates' as const,
+    side_effects: 'updates' as const,
   }
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    title: Flags.string({
-      description: 'Title for the uploaded video',
-      required: false,
-    }),
-    description: Flags.string({
-      description: 'Description for the uploaded video',
-      required: false,
-    }),
-    tags: Flags.string({
-      description: 'Space-separated tags for the uploaded video',
-      required: false,
-    }),
-    'category-id': Flags.string({
-      description: 'Category ID (or comma-separated IDs) to assign the video to',
-      required: false,
-    }),
-    publish: Flags.boolean({
-      description: 'Publish the video immediately after upload',
-      default: false,
-    }),
     'chunk-size': Flags.integer({
       description: `Chunk size in bytes (default: ${DEFAULT_CHUNK_SIZE} = 100MB)`,
       default: DEFAULT_CHUNK_SIZE,
@@ -95,11 +73,12 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
   }
 
   static args = {
-    file: Args.string({ description: 'Path to the video file to upload', required: true }),
+    id: Args.string({ description: 'Video ID to replace', required: true }),
+    file: Args.string({ description: 'Path to the replacement video file', required: true }),
   }
 
   public async run(): Promise<void | object> {
-    const { args, flags } = await this.parse(VideoUpload)
+    const { args, flags } = await this.parse(VideoReplace)
 
     this.printWorkspaceHeader()
 
@@ -110,15 +89,10 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
       this.error(`File not found: ${args.file}`, { exit: EXIT_ERROR })
     }
 
-    // Step 1: Get upload token
-    const { data: tokenData, error: tokenError } = await this.apiClient.GET('/photo/get-upload-token', {
+    // Step 1: Get replace token (not upload token — T-03-10, Pitfall 1)
+    const { data: tokenData, error: tokenError } = await this.apiClient.GET('/photo/get-replace-token', {
       params: {
-        query: {
-          title: flags.title,
-          description: flags.description,
-          tags: flags.tags,
-          album_id: flags['category-id'],
-        },
+        query: { photo_id: args.id },
       },
     })
 
@@ -127,9 +101,9 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uploadToken = (tokenData as any)?.data?.upload_token as string | undefined
-    if (!uploadToken) {
-      this.error('Failed to obtain upload token from API', { exit: EXIT_ERROR })
+    const replaceToken = (tokenData as any)?.data?.replace_token as string | undefined
+    if (!replaceToken) {
+      this.error('Failed to obtain replace token from API', { exit: EXIT_ERROR })
     }
 
     // Step 2: Upload chunks with inline progress bar
@@ -145,8 +119,9 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
     try {
       result = await uploadChunked({
         filePath: args.file,
-        uploadToken,
-        uploadUrl: `${this.apiBaseUrl}photo/redeem-upload-token`,
+        uploadToken: replaceToken,
+        tokenFieldName: 'replace_token',
+        uploadUrl: `${this.apiBaseUrl}photo/replace`,
         bearerToken: this.activeWorkspace.bearer_token || undefined,
         chunkSize: flags['chunk-size'],
         concurrency: flags.concurrency,
@@ -160,22 +135,19 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
       bar.finish()
     }
 
-    const videoId = result!.photo_id
-    const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${videoId}`
-    this.log(chalk.green('Video uploaded successfully'))
-    if (videoId) {
-      this.log(`ID:    ${videoId}`)
-      this.log(`Admin: ${adminUrl}`)
-    }
+    const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${args.id}`
+    this.log(chalk.green(`Video ${args.id} replaced successfully`))
+    this.log(`ID:    ${args.id}`)
+    this.log(`Admin: ${adminUrl}`)
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
         data: result!,
-        summary: 'Video uploaded',
+        summary: `Video ${args.id} replaced`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
-          { resource: 'video', id: result!.photo_id ? String(result!.photo_id) : undefined },
+          { resource: 'video', id: args.id },
         ],
       })
     }

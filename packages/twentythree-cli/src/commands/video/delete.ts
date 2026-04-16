@@ -32,6 +32,13 @@ export default class VideoDelete extends AuthenticatedCommand<typeof VideoDelete
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/delete',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
   }

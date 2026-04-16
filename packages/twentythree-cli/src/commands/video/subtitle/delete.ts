@@ -28,6 +28,13 @@ export default class VideoSubtitleDelete extends AuthenticatedCommand<typeof Vid
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/subtitle/remove',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'destructive' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     'subtitle-id': Flags.string({
@@ -72,7 +79,7 @@ export default class VideoSubtitleDelete extends AuthenticatedCommand<typeof Vid
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Subtitle track "${flags['subtitle-id']}" deleted from video ${args.id}`))

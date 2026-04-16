@@ -1,6 +1,6 @@
 import { Args, Flags } from '@oclif/core'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -16,6 +16,13 @@ export default class VideoSubtitleData extends AuthenticatedCommand<typeof Video
   ]
 
   static enableJsonFlag = true
+
+  static agentMetadata = {
+    api_endpoint: 'GET /photo/subtitle/data',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
@@ -54,7 +61,7 @@ export default class VideoSubtitleData extends AuthenticatedCommand<typeof Video
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     if (this.jsonEnabled()) {

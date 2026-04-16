@@ -1,7 +1,7 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, parseBoolParam, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -17,6 +17,13 @@ export default class VideoSubtitleUpdate extends AuthenticatedCommand<typeof Vid
   ]
 
   static enableJsonFlag = true
+
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/subtitle/update',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'updates' as const,
+  }
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
@@ -38,6 +45,8 @@ export default class VideoSubtitleUpdate extends AuthenticatedCommand<typeof Vid
       required: false,
       allowNo: true,
     }),
+    'draft-p': Flags.string({ hidden: true, required: false }),
+    'default-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {
@@ -57,12 +66,10 @@ export default class VideoSubtitleUpdate extends AuthenticatedCommand<typeof Vid
     if (flags.type !== undefined) {
       body.type = flags.type
     }
-    if (flags.draft !== undefined) {
-      body.draft_p = flags.draft
-    }
-    if (flags.default !== undefined) {
-      body.default_p = flags.default
-    }
+    const draftVal = parseBoolParam(flags.draft, flags['draft-p'])
+    const defaultVal = parseBoolParam(flags.default, flags['default-p'])
+    if (draftVal !== undefined) body.draft_p = draftVal
+    if (defaultVal !== undefined) body.default_p = defaultVal
 
     const { data, error } = await this.apiClient.POST('/photo/subtitle/update', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,7 +78,7 @@ export default class VideoSubtitleUpdate extends AuthenticatedCommand<typeof Vid
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Subtitle track ${flags['subtitle-id']} updated for video ${args.id}`))

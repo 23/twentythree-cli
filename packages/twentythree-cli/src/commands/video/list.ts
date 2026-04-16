@@ -2,7 +2,7 @@ import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
 import { fetchAllPages } from '../../lib/pagination.js'
-import { renderTable, formatJsonOutput, EXIT_ERROR } from '../../lib/output.js'
+import { renderTable, formatJsonOutput, parseBoolParam, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -20,26 +20,46 @@ export default class VideoList extends AuthenticatedCommand<typeof VideoList> {
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /photo/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'table' as const, columns: ['ID', 'Title', 'Duration', 'Status', 'Published', 'Updated'] },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     limit: Flags.integer({
       description: 'Maximum number of videos to return (default: all)',
       required: false,
     }),
+    'include-unpublished': Flags.boolean({
+      description: 'Include unpublished videos in the results',
+      allowNo: true,
+      required: false,
+    }),
+    'include-unpublished-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {}
 
   public async run(): Promise<void | object> {
+    const { flags } = await this.parse(VideoList)
     this.printWorkspaceHeader()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const videos = await fetchAllPages<any>(async (page, size) => {
       const { data, error } = await this.apiClient.GET('/photo/list', {
-        params: { query: { p: page, size } },
+        params: {
+          query: {
+            p: page,
+            size,
+            include_unpublished_p: parseBoolParam(flags['include-unpublished'], flags['include-unpublished-p']) ? 1 : undefined,
+          },
+        },
       })
       if (error) {
-        this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+        this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
       }
       // The API returns paginated items under data (typed as single object in schema
       // but actual response contains a list-like structure with total_count at top level).

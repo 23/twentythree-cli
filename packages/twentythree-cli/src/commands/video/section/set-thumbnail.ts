@@ -5,20 +5,21 @@ import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/outpu
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
- * Video subtitle set-primary command — sets a subtitle track as the primary language.
+ * Video section set-thumbnail command — sets the thumbnail for a section.
  */
-export default class VideoSubtitleSetPrimary extends AuthenticatedCommand<typeof VideoSubtitleSetPrimary> {
-  static description = 'Set a subtitle track as the primary language for a video'
+export default class VideoSectionSetThumbnail extends AuthenticatedCommand<typeof VideoSectionSetThumbnail> {
+  static description = 'Set the thumbnail for a video section'
 
   static examples = [
-    '<%= config.bin %> video subtitle set-primary 12345 --subtitle-id en_US',
-    '<%= config.bin %> video subtitle set-primary 12345 --subtitle-id fr_FR --json',
+    '<%= config.bin %> video section set-thumbnail 12345 --section-id 67',
+    '<%= config.bin %> video section set-thumbnail 12345 --section-id 67 --time 15',
+    '<%= config.bin %> video section set-thumbnail 12345 --section-id 67 --time 15 --json',
   ]
 
   static enableJsonFlag = true
 
   static agentMetadata = {
-    api_endpoint: 'POST /photo/subtitle/set-primary',
+    api_endpoint: 'POST /photo/section/set-thumbnail',
     auth_scope: 'write' as const,
     output_shape: { type: 'key-value' as const },
     side_effects: 'updates' as const,
@@ -26,9 +27,13 @@ export default class VideoSubtitleSetPrimary extends AuthenticatedCommand<typeof
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
-    'subtitle-id': Flags.string({
-      description: 'Locale of the subtitle track to set as primary (e.g. en_US)',
+    'section-id': Flags.string({
+      description: 'Section ID',
       required: true,
+    }),
+    time: Flags.integer({
+      description: 'Time offset in seconds for the thumbnail frame',
+      required: false,
     }),
   }
 
@@ -37,14 +42,15 @@ export default class VideoSubtitleSetPrimary extends AuthenticatedCommand<typeof
   }
 
   public async run(): Promise<void | object> {
-    const { args, flags } = await this.parse(VideoSubtitleSetPrimary)
+    const { args, flags } = await this.parse(VideoSectionSetThumbnail)
 
     this.printWorkspaceHeader()
 
-    const { data, error } = await this.apiClient.POST('/photo/subtitle/set-primary', {
+    const { data, error } = await this.apiClient.POST('/photo/section/set-thumbnail', {
       body: {
         photo_id: Number(args.id),
-        locale: flags['subtitle-id'],
+        section_id: flags['section-id'],
+        ...(flags.time !== undefined && { time: flags.time }),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -54,21 +60,17 @@ export default class VideoSubtitleSetPrimary extends AuthenticatedCommand<typeof
       this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
-    this.log(
-      chalk.green(
-        `Subtitle track "${flags['subtitle-id']}" set as primary language for video ${args.id}`,
-      ),
-    )
+    this.log(chalk.green(`Thumbnail set for section ${flags['section-id']} of video ${args.id}`))
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
         data,
-        summary: `Subtitle track "${flags['subtitle-id']}" set as primary language for video ${args.id}`,
+        summary: `Thumbnail set for section ${flags['section-id']} of video ${args.id}`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
           { resource: 'video', id: args.id },
-          { resource: 'subtitle', id: flags['subtitle-id'] },
+          { resource: 'section', id: flags['section-id'] },
         ],
       })
     }

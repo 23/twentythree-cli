@@ -1,6 +1,6 @@
 import { Args } from '@oclif/core'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -21,6 +21,13 @@ export default class VideoGet extends AuthenticatedCommand<typeof VideoGet> {
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'GET /photo/list',
+    auth_scope: 'read' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'none' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
   }
@@ -35,11 +42,11 @@ export default class VideoGet extends AuthenticatedCommand<typeof VideoGet> {
     this.printWorkspaceHeader()
 
     const { data, error } = await this.apiClient.GET('/photo/list', {
-      params: { query: { photo_id: Number(args.id) } },
+      params: { query: { photo_id: Number(args.id), include_unpublished_p: 1 } },
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     // Cast to any to handle real runtime shape (API returns list data under data field)

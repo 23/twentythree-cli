@@ -1,7 +1,7 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, parseBoolParam, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -16,6 +16,13 @@ export default class VideoSubtitleDuplicate extends AuthenticatedCommand<typeof 
   ]
 
   static enableJsonFlag = true
+
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/subtitle/duplicate',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
@@ -37,8 +44,10 @@ export default class VideoSubtitleDuplicate extends AuthenticatedCommand<typeof 
     }),
     draft: Flags.boolean({
       description: 'Create the duplicated track as a draft',
-      default: false,
+      allowNo: true,
+      required: false,
     }),
+    'draft-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {
@@ -57,14 +66,14 @@ export default class VideoSubtitleDuplicate extends AuthenticatedCommand<typeof 
         to_locale: flags['target-locale'],
         type_from: flags['source-type'] as 'general' | 'closedcaptions' | 'audiodescriptions',
         type_to: flags['target-type'] as 'general' | 'closedcaptions' | 'audiodescriptions',
-        ...(flags.draft && { draft_p: true }),
+        ...(parseBoolParam(flags.draft, flags['draft-p']) !== undefined && { draft_p: parseBoolParam(flags.draft, flags['draft-p']) }),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     this.log(

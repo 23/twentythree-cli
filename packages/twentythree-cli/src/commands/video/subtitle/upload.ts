@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, parseBoolParam, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -23,6 +23,13 @@ export default class VideoSubtitleUpload extends AuthenticatedCommand<typeof Vid
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/subtitle/upload',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     locale: Flags.string({
@@ -35,8 +42,10 @@ export default class VideoSubtitleUpload extends AuthenticatedCommand<typeof Vid
     }),
     draft: Flags.boolean({
       description: 'Upload as a draft (hidden from viewers until published)',
-      default: false,
+      allowNo: true,
+      required: false,
     }),
+    'draft-p': Flags.string({ hidden: true, required: false }),
   }
 
   static args = {
@@ -66,7 +75,7 @@ export default class VideoSubtitleUpload extends AuthenticatedCommand<typeof Vid
         file: fileBlob as unknown as Record<string, never>,
         locale: flags.locale,
         type: flags.type,
-        ...(flags.draft && { draft_p: true }),
+        ...(parseBoolParam(flags.draft, flags['draft-p']) !== undefined && { draft_p: parseBoolParam(flags.draft, flags['draft-p']) }),
       },
       bodySerializer(body) {
         const fd = new FormData()
@@ -84,7 +93,7 @@ export default class VideoSubtitleUpload extends AuthenticatedCommand<typeof Vid
     })
 
     if (error) {
-      this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Subtitle file uploaded for video ${args.id} (locale: ${flags.locale})`))

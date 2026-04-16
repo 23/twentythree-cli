@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -27,6 +27,13 @@ export default class VideoSubtitleArchive extends AuthenticatedCommand<typeof Vi
 
   static enableJsonFlag = true
 
+  static agentMetadata = {
+    api_endpoint: 'POST /photo/subtitle/archive/transcribe',
+    auth_scope: 'write' as const,
+    output_shape: { type: 'key-value' as const },
+    side_effects: 'creates' as const,
+  }
+
   static flags = {
     ...AuthenticatedCommand.baseFlags,
     progress: Flags.boolean({
@@ -49,7 +56,7 @@ export default class VideoSubtitleArchive extends AuthenticatedCommand<typeof Vi
       })
 
       if (error) {
-        this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+        this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
       }
 
       if (this.jsonEnabled()) {
@@ -76,7 +83,7 @@ export default class VideoSubtitleArchive extends AuthenticatedCommand<typeof Vi
       })
 
       if (error) {
-        this.error(applyCliTerms(String(error)), { exit: EXIT_ERROR })
+        this.error(applyCliTerms(formatApiError(error)), { exit: EXIT_ERROR })
       }
 
       this.log(chalk.green('Transcription started for all videos in the workspace archive'))
