@@ -40,7 +40,7 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 
 ### v1.2 Burnin & Quality of Life
 
-- [ ] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence
+- [x] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence (completed 2026-04-17)
 - [ ] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh
 - [ ] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input
 
@@ -123,7 +123,7 @@ Plans:
 
 Plans:
 - [x] 14-01-PLAN.md — Fix all 15 TypeScript errors (missing imports, type mismatches, tsconfig)
-- [ ] 14-02-PLAN.md — Bump version to 1.0.1, rebuild, publish to npm
+- [x] 14-02-PLAN.md — Bump version to 1.0.1, rebuild, publish to npm
 
 ### Phase 15: Tab Completion
 **Goal**: Users can enable tab completion once and then use `<TAB>` to discover subcommands and flags for every `twentythree` command
@@ -171,6 +171,6 @@ Plans:
 | 11. Documentation | v1.1 | 2/2 | Complete | 2026-04-16 |
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
-| 14. Bug Audit & Fix | v1.2 | 1/2 | In Progress|  |
+| 14. Bug Audit & Fix | v1.2 | 2/2 | Complete   | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 0/2 | Not started | - |
 | 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |
