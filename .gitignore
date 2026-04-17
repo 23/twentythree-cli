@@ -4,3 +4,4 @@ dist/
 .turbo/
 oclif.manifest.json
 .DS_Store
+tmp/
