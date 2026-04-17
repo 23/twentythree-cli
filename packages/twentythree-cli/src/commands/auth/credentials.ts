@@ -56,7 +56,7 @@ export default class Credentials extends Command {
       const s = p.spinner()
       s.start('Discovering workspaces...')
 
-      let workspaces: WorkspaceEntry[]
+      let workspaces: WorkspaceEntry[] = []
       try {
         workspaces = await fetchWorkspaceTokens(domain as string, trimmedToken)
         s.stop('Workspaces discovered')
@@ -66,6 +66,7 @@ export default class Credentials extends Command {
           `Could not discover workspaces: ${err instanceof Error ? err.message : String(err)}`,
           { exit: 1 },
         )
+        return // unreachable but makes the flow explicit for static analysis
       }
 
       let selectedWorkspaces: WorkspaceEntry[]
