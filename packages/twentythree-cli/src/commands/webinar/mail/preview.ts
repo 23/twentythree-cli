@@ -61,12 +61,13 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
 
     if (!contextField) {
       this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
+      return // unreachable — this.error() throws; explicit return for TypeScript narrowing
     }
 
     // Use native fetch — openapi-fetch parses the response as JSON, but this endpoint
     // returns raw HTML. We need the body as text.
     const query = new URLSearchParams({
-      ...Object.fromEntries(Object.entries(contextField!).map(([k, v]) => [k, String(v)])),
+      ...Object.fromEntries(Object.entries(contextField).map(([k, v]) => [k, String(v)])),
       live_mail_id: String(args.id),
     })
     const headers: Record<string, string> = {}
