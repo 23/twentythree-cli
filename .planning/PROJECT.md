@@ -29,11 +29,11 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - ✓ Commands scoped to the active workspace; user can switch workspace or override default — v1.0
 - ✓ Full API coverage — 235 endpoints across 22 resource groups, hand-authored commands using generated OpenAPI types — v1.0
 - ✓ Bug audit & fix — `parseBoolParam is not defined` on `video list` fixed; 15 TypeScript errors swept and resolved; `twentythree-cli@1.0.1` published to npm — Validated in Phase 14
+- ✓ Prompt on missing required flags — `BaseCommand.catch()` intercepts `FailedFlagValidationError` in TTY mode; prompts sequentially via `@clack/prompts`; re-dispatches with collected argv; non-TTY gets original oclif error unchanged — Validated in Phase 16
 
 ### Active
 
 - [ ] Tab completion — oclif autocomplete plugin for subcommands and flags in bash/zsh
-- [ ] Prompt on missing required flags — interactive prompt instead of error when required flag is omitted
 
 ### Deferred (post-v1.1)
 
@@ -103,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 — Phase 14 complete (bug audit & fix; 1.0.1 published)*
+*Last updated: 2026-04-17 — Phase 16 complete (interactive prompts for missing required flags)*
