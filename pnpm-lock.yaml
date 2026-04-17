@@ -29,12 +29,12 @@ importers:
       '@oclif/core':
         specifier: ^4.10.5
         version: 4.10.5
+      '@oclif/plugin-autocomplete':
+        specifier: ^3.2.45
+        version: 3.2.45
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
-      cli-progress:
-        specifier: ^3.12.0
-        version: 3.12.0
       cli-table3:
         specifier: ^0.6.5
         version: 0.6.5
@@ -54,9 +54,6 @@ importers:
       '@oclif/test':
         specifier: ^4.0.0
         version: 4.1.18(@oclif/core@4.10.5)
-      '@types/cli-progress':
-        specifier: ^3.11.6
-        version: 3.11.6
       '@types/proper-lockfile':
         specifier: ^4.1.4
         version: 4.1.4
@@ -634,6 +631,10 @@ packages:
     resolution: {integrity: sha512-k/ntRgDcUprTT+aaNoF+whk3cY3f9fRD2lkF6ul7JeCUg2MaMXVXZXfbRhJCfsiX51X8/5Pqo0LGdO9SLYXNHg==}
     engines: {node: '>=18.0.0'}
 
+  '@oclif/plugin-autocomplete@3.2.45':
+    resolution: {integrity: sha512-ENrUg8rbVCjh40uvi3MC9kGbiUoEf11nyqE59RBzegeeLpRXNo/Zp27L9j1tUmPEqGgfS2/wvHPihNzkpK1FDw==}
+    engines: {node: '>=18.0.0'}
+
   '@oclif/plugin-help@6.2.44':
     resolution: {integrity: sha512-x03Se2LtlOOlGfTuuubt5C4Z8NHeR4zKXtVnfycuLU+2VOMu2WpsGy9nbs3nYuInuvsIY1BizjVaTjUz060Sig==}
     engines: {node: '>=18.0.0'}
@@ -1037,9 +1038,6 @@ packages:
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
 
-  '@types/cli-progress@3.11.6':
-    resolution: {integrity: sha512-cE3+jb9WRlu+uOSAugewNpITJDt1VF8dHOopPO4IABFc3SXYL5WE/+PTz/FCdZRRfIujiWW3n3aMbv1eIGVRWA==}
-
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
 
@@ -1244,10 +1242,6 @@ packages:
   cli-cursor@3.1.0:
     resolution: {integrity: sha512-I/zHAwsKf9FqGoXM4WWRACob9+SNukZTd94DWF57E4toouRulbCxcUh6RKUEOQlYTHJnzkPMySvPNaaSLNfLZw==}
     engines: {node: '>=8'}
-
-  cli-progress@3.12.0:
-    resolution: {integrity: sha512-tRkV3HJ1ASwm19THiiLIXLO7Im7wlTuKnvkYaTkyoAPefqjNg7W7DHKUlGRxy9vxDvbyCYQkQozvptuMkGCg8A==}
-    engines: {node: '>=4'}
 
   cli-spinners@2.9.2:
     resolution: {integrity: sha512-ywqV+5MmyL4E7ybXgKys4DugZbX0FC6LnwrhjuykIjnK9k8OQacQ7axGKnjDXWNhns0xot3bZI5h55H8yo9cJg==}
@@ -3442,6 +3436,15 @@ snapshots:
       wordwrap: 1.0.0
       wrap-ansi: 7.0.0
 
+  '@oclif/plugin-autocomplete@3.2.45':
+    dependencies:
+      '@oclif/core': 4.10.5
+      ansis: 3.17.0
+      debug: 4.4.3
+      ejs: 3.1.10
+    transitivePeerDependencies:
+      - supports-color
+
   '@oclif/plugin-help@6.2.44':
     dependencies:
       '@oclif/core': 4.10.5
@@ -3935,10 +3938,6 @@ snapshots:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
 
-  '@types/cli-progress@3.11.6':
-    dependencies:
-      '@types/node': 22.19.17
-
   '@types/deep-eql@4.0.2': {}
 
   '@types/estree@1.0.8': {}
@@ -4157,10 +4156,6 @@ snapshots:
   cli-cursor@3.1.0:
     dependencies:
       restore-cursor: 3.1.0
-
-  cli-progress@3.12.0:
-    dependencies:
-      string-width: 4.2.3
 
   cli-spinners@2.9.2: {}
 

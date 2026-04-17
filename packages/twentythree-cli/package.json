@@ -4,7 +4,12 @@
   "description": "Terminal access to every TwentyThree API endpoint",
   "license": "MIT",
   "author": "TwentyThree",
-  "keywords": ["twentythree", "video", "api", "cli"],
+  "keywords": [
+    "twentythree",
+    "video",
+    "api",
+    "cli"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/23/twentythree-cli.git"
@@ -40,12 +45,14 @@
     "bin": "twentythree",
     "dirname": "twentythree",
     "commands": "./dist/commands",
-    "topicSeparator": " "
+    "topicSeparator": " ",
+    "plugins": ["@oclif/plugin-autocomplete"]
   },
   "dependencies": {
     "@clack/prompts": "^1.2.0",
     "@napi-rs/keyring": "^1.2.0",
     "@oclif/core": "^4.10.5",
+    "@oclif/plugin-autocomplete": "^3.2.45",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.5",
     "conf": "^15.1.0",
