@@ -23,7 +23,7 @@ decisions:
 metrics:
   duration_seconds: 241
   completed_date: "2026-04-17"
-  tasks_completed: 2
+  tasks_completed: 3
   tasks_total: 3
   files_created: 0
   files_modified: 5
@@ -47,8 +47,8 @@ Docs updated with tab completion instructions in README.md and getting-started.m
 - Rebuilt dist/ with `pnpm --filter twentythree-cli run build` — tsdown + `oclif manifest` both exited 0
 - All 158 tests pass, 0 failures
 
-### Task 3 (Checkpoint — Pending)
-Human verification of tab completion in interactive shell and manual npm publish to follow.
+### Task 3 (Checkpoint — Approved)
+Human verified tab completion works in interactive shell. npm publish to 1.0.2 approved and completed.
 
 ## Verification Results
 
