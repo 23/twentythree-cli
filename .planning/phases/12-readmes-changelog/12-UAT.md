@@ -3,7 +3,7 @@ status: complete
 phase: 12-readmes-changelog
 source: [12-01-SUMMARY.md, 12-02-SUMMARY.md]
 started: 2026-04-17T00:00:00Z
-updated: 2026-04-17T00:03:00Z
+updated: 2026-04-17T00:04:00Z
 ---
 
 ## Current Test
@@ -27,6 +27,7 @@ expected: |
 result: issue
 reported: "For object terms, don't label something 'legacy' vs 'modern', use neutral differentiation instead. Otherwise looks great."
 severity: minor
+fixed: "Changed intro to: 'The TwentyThree API and CLI use different names for some objects:' (commit 3aa872a)"
 
 ### 2. npm package README is short and focused
 expected: |
@@ -65,9 +66,9 @@ blocked: 0
 ## Gaps
 
 - truth: "Terminology section intro uses neutral language (not 'legacy'/'modern') to describe the API-to-CLI name mapping"
-  status: failed
+  status: resolved
   reason: "User reported: intro line uses 'legacy object names' and 'modern terms' — should use neutral differentiation instead"
   severity: minor
   test: 1
   artifacts: [README.md]
-  missing: ["neutral intro line for Terminology section"]
+  fix: "commit 3aa872a — neutral phrasing applied inline"
