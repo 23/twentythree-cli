@@ -36,8 +36,8 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - ✓ Endpoint audit — compare OpenAPI spec against all command files; fill any gaps found — Validated in Phase 9: Endpoint Coverage Audit. Audit script exits 0 (Gaps: 0, Phantoms: 0), 18 analytics sub-series commands added.
 - [ ] npm publish — get `twentythree-cli` package live on npm (first publish)
 - [ ] Install verification — test `npm install -g twentythree-cli` end-to-end and document
-- [ ] README.md — install + quickstart entry point at repo root, links into docs/
-- [ ] docs/ — full command reference, API spec upgrade guide, contributing / dev setup
+- ✓ README.md — install + quickstart entry point at repo root, links into docs/ — Validated in Phase 12: readmes-changelog. Root README with badges, quickstart, 25-topic command table, terminology mapping. npm README short and focused. CHANGELOG with v1.0 and v1.1 entries in Keep a Changelog format.
+- ✓ docs/ — full command reference, API spec upgrade guide — Validated in Phase 11: Documentation.
 
 ### Deferred (post-v1.1)
 
