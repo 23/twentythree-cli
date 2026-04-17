@@ -15,9 +15,9 @@
 
 ### Tab Completion (COMPLETE)
 
-- [ ] **COMPLETE-01**: User can run a one-time setup command to enable tab completion for `twentythree` in their bash/zsh shell
-- [ ] **COMPLETE-02**: Tab completion suggests available subcommands (e.g. `twentythree video <TAB>` lists `list`, `get`, `upload`, etc.)
-- [ ] **COMPLETE-03**: Tab completion suggests available flags for each command (e.g. `twentythree video list --<TAB>`)
+- [x] **COMPLETE-01**: User can run a one-time setup command to enable tab completion for `twentythree` in their bash/zsh shell
+- [x] **COMPLETE-02**: Tab completion suggests available subcommands (e.g. `twentythree video <TAB>` lists `list`, `get`, `upload`, etc.)
+- [x] **COMPLETE-03**: Tab completion suggests available flags for each command (e.g. `twentythree video list --<TAB>`)
 
 ### Interactive Prompts (PROMPT)
 

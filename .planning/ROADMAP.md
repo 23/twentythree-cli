@@ -136,7 +136,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 15-01-PLAN.md — Register @oclif/plugin-autocomplete and implement guided setup command with @clack/prompts
+- [x] 15-01-PLAN.md — Register @oclif/plugin-autocomplete and implement guided setup command with @clack/prompts
 - [ ] 15-02-PLAN.md — Update docs (README + getting-started), bump to 1.0.2, publish to npm
 
 ### Phase 16: Interactive Prompts
@@ -172,5 +172,5 @@ Plans:
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 15. Tab Completion | v1.2 | 0/2 | Not started | - |
+| 15. Tab Completion | v1.2 | 1/2 | In Progress|  |
 | 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |
