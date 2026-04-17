@@ -107,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 — Phase 11 complete (documentation; 157 oclif-generated command docs, getting-started guide, api-spec-upgrade contributor guide)*
+*Last updated: 2026-04-17 — Phase 13 complete (npm-publish; twentythree-cli@1.0.0 live on npm, CI release pipeline operational)*
