@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm --filter twentythree-cli test --run
+
+      - name: Build
+        run: pnpm --filter twentythree-cli run build
+
+      - name: Publish to npm
+        working-directory: packages/twentythree-cli
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  smoke-test:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Wait for registry propagation
+        run: |
+          for i in 1 2 3 4 5; do
+            npm view twentythree-cli@${GITHUB_REF_NAME#v} version 2>/dev/null && break
+            echo "Attempt $i: not yet available, waiting 15s..."
+            sleep 15
+          done
+
+      - name: Install globally
+        run: npm install -g twentythree-cli
+
+      - name: Verify CLI works
+        run: twentythree --version
