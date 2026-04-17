@@ -171,6 +171,6 @@ Plans:
 | 11. Documentation | v1.1 | 2/2 | Complete | 2026-04-16 |
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
-| 14. Bug Audit & Fix | v1.2 | 2/2 | Complete   | 2026-04-17 |
+| 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 0/2 | Not started | - |
 | 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |
