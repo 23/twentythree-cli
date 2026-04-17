@@ -29,7 +29,7 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 9: Endpoint Coverage Audit** — Audit all 235 OpenAPI endpoints against command files; classify and fill any confirmed gaps (completed 2026-04-16)
 - [x] **Phase 10: Package Hygiene** — Wire prepack script, fill missing package.json fields, update files array (completed 2026-04-16)
 - [x] **Phase 11: Documentation** — Generate command reference with oclif; write getting-started and api-spec-upgrade guides (completed 2026-04-16)
-- [ ] **Phase 12: READMEs & CHANGELOG** — Write root README, npm package README, and CHANGELOG
+- [x] **Phase 12: READMEs & CHANGELOG** — Write root README, npm package README, and CHANGELOG (completed 2026-04-17)
 - [ ] **Phase 13: npm Publish** — Version, publish to npm, verify installation, wire GitHub Actions CI
 
 ## Phase Details
@@ -84,8 +84,8 @@ Plans:
   3. `CHANGELOG.md` exists at repo root with entries for v1.0 and v1.1
 **Plans**: 2 plans
 Plans:
-- [ ] 12-01-PLAN.md — Write root README.md and npm package README.md
-- [ ] 12-02-PLAN.md — Write CHANGELOG.md
+- [x] 12-01-PLAN.md — Write root README.md and npm package README.md
+- [x] 12-02-PLAN.md — Write CHANGELOG.md
 
 ### Phase 13: npm Publish
 **Goal**: The CLI is live on npm, installable globally, and future releases can be triggered by pushing a git tag
@@ -113,5 +113,5 @@ Plans:
 | 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
 | 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
 | 11. Documentation | v1.1 | 2/2 | Complete    | 2026-04-16 |
-| 12. READMEs & CHANGELOG | v1.1 | 0/2 | Not started | - |
+| 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete    | 2026-04-17 |
 | 13. npm Publish | v1.1 | 0/? | Not started | - |
