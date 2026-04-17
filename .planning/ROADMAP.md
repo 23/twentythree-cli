@@ -119,11 +119,11 @@ Plans:
   1. `twentythree video list` executes without a `ReferenceError: parseBoolParam is not defined` error
   2. All 219 command files are audited for the same undefined-reference pattern; every occurrence is fixed
   3. The vitest test suite passes with no new failures after all fixes are applied
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 14-01: Diagnose root cause of `parseBoolParam is not defined` and fix `video list`
-- [ ] 14-02: Audit all 219 command files for the same pattern and fix every occurrence
+- [ ] 14-01-PLAN.md — Fix all 15 TypeScript errors (missing imports, type mismatches, tsconfig)
+- [ ] 14-02-PLAN.md — Bump version to 1.0.1, rebuild, publish to npm
 
 ### Phase 15: Tab Completion
 **Goal**: Users can enable tab completion once and then use `<TAB>` to discover subcommands and flags for every `twentythree` command
