@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-04-17
+
+### Added
+
+- Tab completion for bash and zsh via `@oclif/plugin-autocomplete`
+- Guided `twentythree autocomplete` setup command with @clack/prompts: detects shell, builds completion cache, and displays eval line to paste into RC file
+
 ## [1.1.0] - 2026-04-16
 
 ### Added
