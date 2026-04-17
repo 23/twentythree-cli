@@ -1108,6 +1108,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/app/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List apps
+         * @description Returns a paginated list of player design apps available on the current workspace. Each item includes the app's ID, name, description, type, thumbnail URL, and creation and build dates.
+         */
+        post: operations["appList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/app/remove-thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove app thumbnail
+         * @description Remove the custom thumbnail for an app, reverting it to the default thumbnail image. Requires admin permission.
+         */
+        post: operations["appRemoveThumbnail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/app/set-thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set app thumbnail
+         * @description Upload and set a custom thumbnail image for an app. The image is supplied as a file upload via the `file` parameter. Requires admin permission.
+         */
+        post: operations["appSetThumbnail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/app/update": {
         parameters: {
             query?: never;
@@ -1921,7 +1981,7 @@ export interface paths {
         put?: never;
         /**
          * List players
-         * @description Returns a paginated list of video player configurations available for the current workspace. Supports pagination via `p` and `size`. An optional `source` parameter is recorded for analytics purposes.
+         * @description Returns a paginated list of video player configurations available for the current workspace.
          */
         post: operations["playerList"];
         delete?: never;
@@ -2876,6 +2936,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/photo/section/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate video sections
+         * @description Automatically generates sections for a video by analysing its transcript using AI. Existing sections are replaced. Requires the video to have a transcript available.
+         */
+        post: operations["videoSectionGenerate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/photo/section/list": {
         parameters: {
             query?: never;
@@ -3597,6 +3677,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/live/section/add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add webinar highlight
+         * @description Add a new highlight to a webinar. Requires admin permission and a valid `live_id`. Optionally accepts a `title`, `description`, and `start_time` in UTC epoch seconds.
+         */
+        post: operations["liveSectionAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/section/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List webinar highlights
+         * @description List all highlights for a webinar. Authentication is via a `token` paired with the `live_id`, and no login is required.
+         */
+        get: operations["liveSectionList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/section/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove webinar highlight
+         * @description Remove a highlight from a webinar. Requires admin permission and a valid `live_section_id`.
+         */
+        post: operations["liveSectionRemove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/section/update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update webinar highlight
+         * @description Update one or more fields of an existing webinar highlight. Requires admin permission and a valid `live_section_id`. All fields (`title`, `description`, `start_time`) are optional and only provided values are applied.
+         */
+        post: operations["liveSectionUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/live/mail/add": {
         parameters: {
             query?: never;
@@ -3992,86 +4152,6 @@ export interface paths {
         get: operations["liveWebinarInfo"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/live/section/add": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add webinar section
-         * @description Add a new section to a webinar. Requires admin-level write permissions and a valid `live_id`. Optionally accepts a `title`, `description`, and `start_time` in UTC epoch seconds.
-         */
-        post: operations["liveSectionAdd"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/live/section/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List webinar sections
-         * @description List all sections for a webinar. Authentication is via a `token` paired with the `live_id`, and no login is required.
-         */
-        get: operations["liveSectionList"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/live/section/remove": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Remove webinar section
-         * @description Remove a section from a webinar. Requires admin-level write permissions and a valid `live_section_id`.
-         */
-        post: operations["liveSectionRemove"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/live/section/update": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Update webinar section
-         * @description Update one or more fields of an existing webinar section. Requires admin-level write permissions and a valid `live_section_id`. All fields (`title`, `description`, `start_time`) are optional and only provided values are applied.
-         */
-        post: operations["liveSectionUpdate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5407,11 +5487,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example none */
-                        permission_level?: string;
-                        /** @example true */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
@@ -6139,23 +6230,23 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7693944 */
+                            /** @example 101 */
                             action_id?: number;
                             /** @example Newsletter Signup */
                             name?: string;
-                            /** @example collector */
+                            /** @example form */
                             type?: string;
                             /** @example  */
                             data?: string;
-                            /** @example  */
-                            start_time?: string;
-                            /** @example  */
-                            end_time?: string;
+                            /** @example 30 */
+                            start_time?: number;
+                            /** @example 60 */
+                            end_time?: number;
                             /** @example false */
                             force_p?: boolean;
                             /** @example true */
                             require_email_p?: boolean;
-                            /** @example true */
+                            /** @example false */
                             require_name_p?: boolean;
                             /** @example false */
                             require_phone_p?: boolean;
@@ -6167,7 +6258,7 @@ export interface operations {
                             before_text?: string;
                             /** @example false */
                             require_optin_p?: boolean;
-                            /** @example Thank you for signing up! */
+                            /** @example Thank you! */
                             after_text?: string;
                             /** @example Submit */
                             submit_text?: string;
@@ -6175,9 +6266,9 @@ export interface operations {
                             active_p?: boolean;
                             /** @example true */
                             show_success_message_p?: boolean;
-                            /** @example Thank you! */
+                            /** @example You have been signed up. */
                             success_message?: string;
-                            /** @example All videos */
+                            /** @example  */
                             configuration_label?: string;
                             /** @example true */
                             allow_skip_p?: boolean;
@@ -6189,9 +6280,11 @@ export interface operations {
                             require_work_email_p?: boolean;
                             /** @example false */
                             always_show_marketing_optin_checkbox_p?: boolean;
-                            /** @example 0 */
+                            /** @example 1800 */
                             total_engagement_seconds?: number;
                         }[];
+                        /** @example 3 */
+                        total_count?: number;
                     };
                 };
             };
@@ -8122,19 +8215,25 @@ export interface operations {
                          */
                         total_count?: number;
                         data?: {
-                            /** @example 1234 */
-                            plays?: number;
-                            /** @example 0.65 */
-                            engagement?: number;
-                            /** @example 0.42 */
-                            playrate?: number;
-                            /** @example 87 */
-                            avg_viewtime?: number;
-                            /** @example 2948 */
-                            impressions?: number;
-                            /** @example 0.78 */
-                            performance?: number;
-                        }[];
+                            analytics?: {
+                                rows?: {
+                                    /** @example 1001 */
+                                    spot_id?: number;
+                                    /** @example 540 */
+                                    plays?: number;
+                                    /** @example 0.66 */
+                                    engagement?: number;
+                                    /** @example 0.58 */
+                                    playrate?: number;
+                                    /** @example 1400 */
+                                    avg_viewtime?: number;
+                                    /** @example 930 */
+                                    impressions?: number;
+                                    /** @example 0.61 */
+                                    performance?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -8371,7 +8470,16 @@ export interface operations {
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        data?: Record<string, never>;
+                        data?: {
+                            analytics?: {
+                                rows?: {
+                                    /** @example 2024-01 */
+                                    month?: string;
+                                    /** @example 5368709120 */
+                                    storage_bytes?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -8522,21 +8630,39 @@ export interface operations {
                          */
                         total_count?: number;
                         data?: {
-                            /** @example 3200 */
-                            visits?: number;
-                            /** @example 1234 */
-                            plays?: number;
-                            /** @example 0.65 */
-                            engagement?: number;
-                            /** @example 0.42 */
-                            playrate?: number;
-                            /** @example 87 */
-                            avg_viewtime?: number;
-                            /** @example 2948 */
-                            impressions?: number;
-                            /** @example 0.78 */
-                            performance?: number;
-                        }[];
+                            analytics?: {
+                                rows?: {
+                                    /** @example 1001 */
+                                    spot_id?: number;
+                                    /** @example embed */
+                                    source?: string;
+                                    /** @example abc123 */
+                                    source_id?: string;
+                                    /** @example 1200 */
+                                    visits?: number;
+                                    /** @example 540 */
+                                    plays?: number;
+                                    /** @example 0.66 */
+                                    engagement?: number;
+                                    /** @example 0.45 */
+                                    playrate?: number;
+                                    /** @example 1400 */
+                                    avg_viewtime?: number;
+                                    /** @example 930 */
+                                    impressions?: number;
+                                    /** @example 0.61 */
+                                    performance?: number;
+                                }[];
+                                timeseries?: {
+                                    /** @example 2024-01-01 */
+                                    date?: string;
+                                    /** @example 40 */
+                                    visits?: number;
+                                    /** @example 18 */
+                                    plays?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -9410,9 +9536,25 @@ export interface operations {
                          */
                         total_count?: number;
                         data?: {
-                            /** @example 0.78 */
-                            performance?: number;
-                        }[];
+                            analytics?: {
+                                rows?: {
+                                    /** @example 11111 */
+                                    object_id?: number;
+                                    /** @example Product Demo */
+                                    name?: string;
+                                    /** @example 0.7 */
+                                    performance?: number;
+                                    /** @example 180 */
+                                    duration?: number;
+                                }[];
+                                timeseries?: {
+                                    /** @example 2024-01-01 */
+                                    date?: string;
+                                    /** @example 0.7 */
+                                    performance?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -11691,21 +11833,27 @@ export interface operations {
                          */
                         total_count?: number;
                         data?: {
-                            /** @example 842 */
-                            plays?: number;
-                            /** @example 310 */
-                            peakviewers?: number;
-                            /** @example 0.72 */
-                            engagement?: number;
-                            /** @example 0.55 */
-                            playrate?: number;
-                            /** @example 2640 */
-                            avg_viewtime?: number;
-                            /** @example 1530 */
-                            impressions?: number;
-                            /** @example 0.68 */
-                            performance?: number;
-                        }[];
+                            analytics?: {
+                                rows?: {
+                                    /** @example Monday */
+                                    day?: string;
+                                    /** @example 140 */
+                                    plays?: number;
+                                    /** @example 42 */
+                                    peakviewers?: number;
+                                    /** @example 0.7 */
+                                    engagement?: number;
+                                    /** @example 0.6 */
+                                    playrate?: number;
+                                    /** @example 1800 */
+                                    avg_viewtime?: number;
+                                    /** @example 230 */
+                                    impressions?: number;
+                                    /** @example 0.65 */
+                                    performance?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -12126,19 +12274,35 @@ export interface operations {
                          */
                         total_count?: number;
                         data?: {
-                            /** @example 842 */
-                            plays?: number;
-                            /** @example 310 */
-                            peakviewers?: number;
-                            /** @example 0.72 */
-                            engagement?: number;
-                            /** @example 0.55 */
-                            playrate?: number;
-                            /** @example 2640 */
-                            avg_viewtime?: number;
-                            /** @example 0.68 */
-                            performance?: number;
-                        }[];
+                            analytics?: {
+                                rows?: {
+                                    /** @example 56789 */
+                                    object_id?: number;
+                                    /** @example My Webinar */
+                                    name?: string;
+                                    /** @example 320 */
+                                    plays?: number;
+                                    /** @example 85 */
+                                    peakviewers?: number;
+                                    /** @example 0.72 */
+                                    engagement?: number;
+                                    /** @example 0.65 */
+                                    playrate?: number;
+                                    /** @example 1820 */
+                                    avg_viewtime?: number;
+                                    /** @example 0.68 */
+                                    performance?: number;
+                                }[];
+                                timeseries?: {
+                                    /** @example 2024-01-01 */
+                                    date?: string;
+                                    /** @example 320 */
+                                    plays?: number;
+                                    /** @example 85 */
+                                    peakviewers?: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
@@ -12526,11 +12690,11 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7693944 */
+                            /** @example 12345 */
                             app_id?: number;
-                            /** @example My Player */
+                            /** @example My Player App */
                             name?: string;
-                            /** @example A custom video player */
+                            /** @example A player for our homepage */
                             description?: string;
                             /** @example player */
                             type?: string;
@@ -12643,6 +12807,364 @@ export interface operations {
                         cache_time?: number;
                         data?: Record<string, never>;
                         /** @example The app was deleted */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    appList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description Limit results to a specific app. */
+                    app_id?: number;
+                    /**
+                     * @description Page offset for the request.
+                     * @default 1
+                     */
+                    p?: number;
+                    /**
+                     * @description Number of objects to include in the response. Default is `20` and maximum value is `pagination_max`.
+                     * @default 20
+                     */
+                    size?: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example read */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 20 */
+                        size?: number;
+                        /** @example 5 */
+                        total_count?: number;
+                        data?: {
+                            /** @example 8072198 */
+                            app_id?: number;
+                            /** @example Standard Player */
+                            name?: string;
+                            /** @example Default video player design for the workspace. */
+                            description?: string;
+                            /** @example player */
+                            type?: string;
+                            /** @example /8072198.ihtml/23-app-thumbnail.png */
+                            thumbnail_url?: string;
+                            /** @example 1704896727 */
+                            build_date?: number;
+                            /** @example 1622508187 */
+                            creation_date?: number;
+                        }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    appRemoveThumbnail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the app to update. */
+                    app_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 8072198 */
+                            app_id?: number;
+                        };
+                        /** @example The thumbnail has been removed */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    appSetThumbnail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** @description ID of the app to update. */
+                    app_id: number;
+                    /** @description The image file to use as the app thumbnail. */
+                    file: Record<string, never>;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 8072198 */
+                            app_id?: number;
+                        };
+                        /** @example The thumbnail has been updated */
                         message?: string;
                     };
                 };
@@ -13771,13 +14293,13 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example collector */
+                            /** @example email */
                             identity_source?: string;
-                            /** @example Collector */
+                            /** @example Email */
                             title?: string;
-                            /** @example internal */
+                            /** @example hubspot */
                             service?: string;
-                            /** @example form */
+                            /** @example crm */
                             type?: string;
                         }[];
                     };
@@ -14254,7 +14776,10 @@ export interface operations {
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        data?: Record<string, never>;
+                        data?: {
+                            /** @example a1b2c3d4-e5f6-7890-abcd-ef1234567890 */
+                            uuid?: string;
+                        };
                         /** @example The contact has been removed */
                         message?: string;
                     };
@@ -14482,19 +15007,23 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 9a590500-b843-84b1-a483-1c912c7746e8 */
-                            uuid?: string;
-                            /** @example Jane Smith */
-                            name?: string;
-                            /** @example jane.smith@example.com */
-                            email?: string;
-                            /** @example Acme Corp */
-                            company?: string;
-                            /** @example 87 */
-                            score?: number;
-                            /** @example 2024-03-15T10:30:00Z */
-                            last_seen?: string;
-                        }[];
+                            profiles?: {
+                                /** @example a1b2c3d4-e5f6-7890-abcd-ef1234567890 */
+                                uuid?: string;
+                                /** @example Jane Doe */
+                                name?: string;
+                                /** @example jane@example.com */
+                                email?: string;
+                            }[];
+                            companies?: {
+                                /** @example 42 */
+                                company_id?: number;
+                                /** @example Acme Corp */
+                                name?: string;
+                            }[];
+                            /** @example 5 */
+                            total_count?: number;
+                        };
                     };
                 };
             };
@@ -15272,47 +15801,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example anonymous */
-                        permission_level?: string;
-                        /** @example true */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        /** @example 1 */
+                        /**
+                         * @description The pagination page.
+                         * @example 1
+                         */
                         p?: number;
-                        /** @example 20 */
+                        /**
+                         * @description The size of the pagination page, i.e. the max number of items returned in the response.
+                         * @example 10
+                         */
                         size?: number;
-                        /** @example 150 */
+                        /**
+                         * @description The total number of items matching the query and to be returned across all pages.
+                         * @example 23
+                         */
                         total_count?: number;
                         data?: {
-                            /** @example 7557730 */
+                            /** @example 8754252 */
                             album_id?: number;
-                            /** @example Another test folder */
+                            /** @example Content Generation Benchmarking */
                             title?: string;
-                            /** @example December 04, 2020 */
+                            /** @example January 17, 2025 */
                             pretty_date?: string;
-                            /** @example 10:34 AM */
+                            /** @example 03:28 PM */
                             pretty_time?: string;
-                            /** @example /another-test-folder */
+                            /** @example /content-generation-benchmarking */
                             one?: string;
-                            /** @example 2020-12-04 10:34:16 */
+                            /** @example 2025-01-17 15:28:08 */
                             creation_date_ansi?: string;
-                            /** @example 7557582 */
+                            /** @example 8605085 */
                             user_id?: number;
-                            /** @example veselinteam */
-                            display_name?: string;
                             user_url?: string;
-                            /** @example veselinteam */
+                            /** @example peterkanev */
                             username?: string;
-                            /** @example 64CE703715366DD64E2278F72366D6F */
-                            token?: string;
-                            /** @example false */
-                            hide_p?: boolean;
                         }[];
                     };
                 };
@@ -15643,7 +16186,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7690975 */
+                            /** @example 9877 */
                             comment_id?: number;
                         };
                         /** @example The comment was added */
@@ -16174,7 +16717,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7690974 */
+                            /** @example 9876 */
                             comment_id?: number;
                         };
                         /** @example The comment was added */
@@ -16835,9 +17378,9 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example primaryColor */
+                            /** @example hidePlayerControls */
                             setting?: string;
-                            /** @example #0057b8 */
+                            /** @example false */
                             value?: string;
                         }[];
                     };
@@ -17320,16 +17863,14 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7667553 */
+                            /** @example 7594595 */
                             photo_id?: number;
                             /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p */
                             upload_key?: string;
-                            /** @example fed31eb3e314f7f66610018420f2e3d5 */
+                            /** @example 4102d10bf214a908a3d1 */
                             token?: string;
-                            /** @example 7340 */
-                            tree_id?: number;
-                            /** @example <iframe src="https://example.com/v.ihtml/player.html?source=embed&photo%5fid=7667553" ...></iframe> */
-                            embed_html?: string;
+                            /** @example abc123 */
+                            tree_id?: string;
                         };
                         /** @example The file was successfully uploaded */
                         message?: string;
@@ -17569,11 +18110,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example anonymous */
-                        permission_level?: string;
-                        /** @example false */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
@@ -17581,7 +18133,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example <div style="width:100%; height:0; position: relative; padding-bottom:56.24999999296875%"><iframe src="//preview.ranguinc.com/v.ihtml/player.html?source=embed&autoPlay=0" style="width:100%; height:100%; position: absolute; top: 0; left: 0;" frameborder="0" border="0" scrolling="no" mozallowfullscreen="1" webkitallowfullscreen="1" allowfullscreen="1" allow="autoplay; fullscreen"></iframe></div> */
+                            /** @example <div style="width:100%; height:0; position: relative; padding-bottom:56.24999999296875%"><iframe title="Video Player" src="//preview.ranguinc.com/v.ihtml/player.html?source=embed" style="width:100%; height:100%; position: absolute; top: 0; left: 0;" frameborder="0" border="0" scrolling="no" loading="lazy" allowfullscreen allow="autoplay; fullscreen"></iframe></div> */
                             embed_code?: string;
                         };
                     };
@@ -17895,20 +18447,22 @@ export interface operations {
             content: {
                 "application/x-www-form-urlencoded": {
                     /**
+                     * @description Context hint indicating where the player list is being requested from.
+                     * @default share
+                     */
+                    source?: string;
+                    /** @description Filter to a specific player. */
+                    player_id?: number;
+                    /**
                      * @description Page offset for the request.
                      * @default 1
                      */
                     p?: number;
                     /**
-                     * @description Number of objects to include in the response.
+                     * @description Number of objects to include in the response. Default is `20` and maximum value is `pagination_max`.
                      * @default 20
                      */
                     size?: number;
-                    /**
-                     * @description A source for the request, designed to be used in analytics.
-                     * @default share
-                     */
-                    source?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
                 };
@@ -17933,20 +18487,20 @@ export interface operations {
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        data?: {
-                            /** @example 101 */
-                            player_id?: number;
-                            /** @example Standard Player */
-                            player_name?: string;
-                            /** @example true */
-                            default_p?: boolean;
-                        }[];
                         /** @example 1 */
                         p?: number;
                         /** @example 20 */
                         size?: number;
-                        /** @example 150 */
+                        /** @example 4 */
                         total_count?: number;
+                        data?: {
+                            /** @example 7664900 */
+                            player_id?: number;
+                            /** @example Default Player */
+                            player_name?: string;
+                            /** @example true */
+                            default_p?: boolean;
+                        }[];
                     };
                 };
             };
@@ -18511,13 +19065,13 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example /videos */
+                            /** @example / */
                             return_url?: string;
                             /** @example user@example.com */
                             email?: string;
-                            /** @example Jane Smith */
+                            /** @example Jane Doe */
                             full_name?: string;
-                            /** @example a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4 */
+                            /** @example f502148063d66d8e581473dc88befec6 */
                             access_token?: string;
                         };
                         /** @example The session access token is ready to use */
@@ -18615,11 +19169,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example none */
-                        permission_level?: string;
-                        /** @example false */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
@@ -19556,9 +20121,9 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 1234 */
+                            /** @example 55 */
                             spot_id?: number;
-                            /** @example 111,222,333 */
+                            /** @example 12345678,23456789 */
                             videos?: string;
                         };
                         /** @example The spot videos were updated */
@@ -19669,6 +20234,8 @@ export interface operations {
                             /** @example /tag/marketing */
                             url?: string;
                         }[];
+                        /** @example 12 */
+                        total_count?: number;
                     };
                 };
             };
@@ -19926,7 +20493,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 88 */
+                            /** @example 101 */
                             thumbnail_template_id?: number;
                         };
                         /** @example The thumbnail template was created */
@@ -20254,7 +20821,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 89 */
+                            /** @example 102 */
                             thumbnail_template_id?: number;
                         };
                         /** @example The thumbnail template was duplicated */
@@ -20478,17 +21045,19 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example background.png */
+                            /** @example logo.png */
                             filename?: string;
                             /** @example 204800 */
                             size?: number;
                             /** @example 200 KB */
                             size_fmt?: string;
-                            /** @example /files/thumbnailstudio/background.png */
+                            /** @example /files/thumbnailtemplate/101/logo.png */
                             url?: string;
                             /** @example image */
                             icon_name?: string;
                         }[];
+                        /** @example 3 */
+                        total_count?: number;
                     };
                 };
             };
@@ -20592,13 +21161,13 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 88 */
+                            /** @example 101 */
                             thumbnail_template_id?: number;
-                            /** @example Product Launch Thumbnail */
+                            /** @example Webinar Banner */
                             name?: string;
-                            /** @example photo */
+                            /** @example live */
                             object_type?: string;
-                            /** @example <div>{{ photo.title }}</div> */
+                            /** @example <div>{{ live.title }}</div> */
                             liquid_template?: string;
                             /** @example div { font-size: 24px; } */
                             scss_template?: string;
@@ -20608,7 +21177,7 @@ export interface operations {
                             width?: number;
                             /** @example 900 */
                             height?: number;
-                            /** @example 1743897600 */
+                            /** @example 1710510000 */
                             creation_time__epoch?: number;
                         }[];
                     };
@@ -20839,11 +21408,11 @@ export interface operations {
                         data?: {
                             /** @example logo.png */
                             filename?: string;
-                            /** @example 51200 */
+                            /** @example 204800 */
                             size?: number;
-                            /** @example 50 KB */
+                            /** @example 200 KB */
                             size_fmt?: string;
-                            /** @example /files/thumbnailstudio/logo.png */
+                            /** @example /files/thumbnailtemplate/101/logo.png */
                             url?: string;
                             /** @example image */
                             icon_name?: string;
@@ -20953,11 +21522,11 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example /videos */
+                            /** @example / */
                             return_url?: string;
-                            /** @example 3841022 */
+                            /** @example 4821 */
                             user_id?: number;
-                            /** @example a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4 */
+                            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
                             login_token?: string;
                         };
                         /** @example The user login token is ready to use */
@@ -22191,19 +22760,19 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7667553 */
+                            /** @example 7594595 */
                             photo_id?: number;
                             /** @example 1 */
                             max_uploads?: number;
                             /** @example 180 */
                             valid_minutes?: number;
-                            /** @example 1717200000 */
+                            /** @example 1611683360 */
                             valid_until?: number;
                             /** @example false */
                             background_return_p?: boolean;
-                            /** @example https://example.com/callback */
+                            /** @example  */
                             return_url?: string;
-                            /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 */
+                            /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9 */
                             replace_token?: string;
                         };
                         /** @example The replace token is ready to use */
@@ -22419,15 +22988,15 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7667553 */
+                            /** @example 7594595 */
                             photo_id?: number;
                             /** @example 1 */
                             max_uses?: number;
                             /** @example 180 */
                             valid_minutes?: number;
-                            /** @example 1717200000 */
+                            /** @example 1611683360 */
                             valid_until?: number;
-                            /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 */
+                            /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9 */
                             update_token?: string;
                         };
                         /** @example The update token is ready to use */
@@ -23380,9 +23949,9 @@ export interface operations {
                         data?: {
                             /** @example 7667553 */
                             photo_id?: number;
-                            /** @example 7340 */
+                            /** @example 1234567 */
                             tree_id?: number;
-                            /** @example fed31eb3e314f7f66610018420f2e3d5 */
+                            /** @example abcdef1234567890 */
                             token?: string;
                         };
                         /** @example The photo was successfully replaced */
@@ -23763,9 +24332,9 @@ export interface operations {
                         data?: {
                             /** @example 7667553 */
                             photo_id?: number;
-                            /** @example 7340 */
+                            /** @example 1234567 */
                             tree_id?: number;
-                            /** @example fed31eb3e314f7f66610018420f2e3d5 */
+                            /** @example abcdef1234567890 */
                             token?: string;
                         };
                         /** @example The file was successfully uploaded */
@@ -23881,7 +24450,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 1234 */
+                            /** @example 42 */
                             section_id?: number;
                             /** @example 7667553 */
                             photo_id?: number;
@@ -23889,9 +24458,9 @@ export interface operations {
                             thumbnail_photo_id?: number;
                             /** @example Introduction */
                             title?: string;
-                            /** @example An overview of the topic. */
+                            /** @example Opening section of the video */
                             description?: string;
-                            /** @example 30 */
+                            /** @example 0 */
                             start_time?: number;
                         };
                         /** @example The section was successfully created */
@@ -24004,6 +24573,113 @@ export interface operations {
                         cache_time?: number;
                         data?: Record<string, never>;
                         /** @example The section was deleted */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    videoSectionGenerate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The ID of the video to generate sections for. */
+                    photo_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: Record<string, never>;
+                        /** @example Sections were generated successfully */
                         message?: string;
                     };
                 };
@@ -25839,14 +26515,13 @@ export interface operations {
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        data?: {
-                            /** @example photo.new */
-                            event?: string;
-                            /** @example 8254168 */
-                            photo_id?: number;
-                            /** @example 7519857 */
-                            site_id?: number;
-                        }[];
+                        data?: Record<string, never>[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 10 */
+                        size?: number;
+                        /** @example 10 */
+                        total_count?: number;
                     };
                 };
             };
@@ -26050,13 +26725,17 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 15 */
+                            /** @example 47 */
                             webhook_id?: number;
-                            /** @example photo.new */
+                            /** @example any_conversion */
                             event?: string;
-                            /** @example https://example.com/webhook */
+                            /** @example https://hooks.example.com/webhook */
                             target_url?: string;
                         }[];
+                        /** @example 3 */
+                        size?: number;
+                        /** @example 3 */
+                        total_count?: number;
                     };
                 };
             };
@@ -26965,11 +27644,17 @@ export interface operations {
                         data?: {
                             /** @example total_views */
                             metric?: string;
-                            /** @example 1523 */
+                            /** @example 1234 */
                             value?: number;
-                            /** @example 1,523 */
+                            /** @example 1,234 */
                             formated?: string;
                         }[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 5 */
+                        size?: number;
+                        /** @example 5 */
+                        total_count?: number;
                     };
                 };
             };
@@ -27226,6 +27911,12 @@ export interface operations {
                             /** @example Webinar */
                             name?: string;
                         }[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 3 */
+                        size?: number;
+                        /** @example 3 */
+                        total_count?: number;
                     };
                 };
             };
@@ -28588,6 +29279,473 @@ export interface operations {
                             icon_name?: string;
                         };
                         /** @example The attachment has been uploaded */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    liveSectionAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the webinar to add the highlight to. */
+                    live_id: number;
+                    /** @description Title for the highlight. */
+                    title?: string;
+                    /** @description Description for the highlight. */
+                    description?: string;
+                    /** @description Start time for the highlight, as a Unix timestamp (UTC epoch seconds). */
+                    start_time?: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 8831042 */
+                            live_section_id?: number;
+                        };
+                        /** @example The webinar highlight has been created */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    liveSectionList: {
+        parameters: {
+            query: {
+                /** @description ID for the webinar. */
+                live_id: number;
+                /** @description Token for the webinar. */
+                token: string;
+                /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example anonymous */
+                        permission_level?: string;
+                        /** @example true */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 8831042 */
+                            live_section_id?: number;
+                            /** @example 7520100 */
+                            live_id?: number;
+                            /** @example 7519784 */
+                            site_id?: number;
+                            /** @example Introduction */
+                            title?: string;
+                            /** @example Opening remarks and agenda overview. */
+                            description?: string;
+                            /** @example 2024-03-15 09:05:00+00 */
+                            start_time?: string;
+                            /** @example 1710493500 */
+                            start_time_epoch?: number;
+                            /** @example 2024-03-10 14:20:00+00 */
+                            creation_date?: string;
+                            /** @example 1710075600 */
+                            creation_date_epoch?: number;
+                            /** @example 2024-03-14 11:00:00+00 */
+                            updated_date?: string;
+                            /** @example 1710414000 */
+                            updated_date_epoch?: number;
+                        }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    liveSectionRemove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the webinar to remove the highlight from. */
+                    live_id: number;
+                    /** @description ID of the webinar highlight to remove. */
+                    live_section_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: Record<string, never>;
+                        /** @example The webinar highlight has been removed */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    liveSectionUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the webinar highlight to update. */
+                    live_section_id: number;
+                    /** @description Title for the highlight. */
+                    title?: string;
+                    /** @description Description for the highlight. */
+                    description?: string;
+                    /** @description Start time for the highlight, as a Unix timestamp (UTC epoch seconds). */
+                    start_time?: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 8831042 */
+                            live_section_id?: number;
+                        };
+                        /** @example The webinar highlight has been updated */
                         message?: string;
                     };
                 };
@@ -30388,7 +31546,7 @@ export interface operations {
                         data?: {
                             /** @example recording */
                             status?: string;
-                            /** @example abc123def456 */
+                            /** @example abc123uploadtoken */
                             upload_token?: string;
                         };
                         /** @example Retrieved status */
@@ -30498,7 +31656,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example abc123def456 */
+                            /** @example abc123uploadtoken */
                             upload_token?: string;
                         };
                         /** @example The stream has started recording */
@@ -30608,7 +31766,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example abc123def456 */
+                            /** @example abc123uploadtoken */
                             upload_token?: string;
                         };
                         /** @example The stream has stopped recording */
@@ -31088,471 +32246,6 @@ export interface operations {
             };
         };
     };
-    liveSectionAdd: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/x-www-form-urlencoded": {
-                    /** @description ID of the webinar for the section. */
-                    live_id: number;
-                    /** @description Optional title for the section. */
-                    title?: string;
-                    /** @description Optional description for the section. */
-                    description?: string;
-                    /** @description Optional start time for the section, as a Unix timestamp (UTC epoch seconds). */
-                    start_time?: number;
-                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
-                    fields?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example write */
-                        permission_level?: string;
-                        /** @example false */
-                        cached?: boolean;
-                        /**
-                         * @description If the reponse is returned from cache, this property details the cache time.
-                         * @example 1610486659
-                         */
-                        cache_time?: number;
-                        data?: {
-                            /** @example 9012345 */
-                            live_section_id?: number;
-                        };
-                        /** @example The live section has been created */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation400"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation401"];
-                };
-            };
-            /** @description Operation forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation403"];
-                };
-            };
-            /** @description Object not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation404"];
-                };
-            };
-            /** @description Not Acceptable */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation406"];
-                };
-            };
-            /** @description Precondition Failed */
-            412: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation412"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation500"];
-                };
-            };
-        };
-    };
-    liveSectionList: {
-        parameters: {
-            query: {
-                /** @description ID for the webinar. */
-                live_id: number;
-                /** @description Token for the webinar. */
-                token: string;
-                /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
-                fields?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example anonymous */
-                        permission_level?: string;
-                        /** @example true */
-                        cached?: boolean;
-                        /**
-                         * @description If the reponse is returned from cache, this property details the cache time.
-                         * @example 1610486659
-                         */
-                        cache_time?: number;
-                        data?: {
-                            /** @example 9012345 */
-                            live_section_id?: number;
-                            /** @example 7597097 */
-                            live_id?: number;
-                            /** @example 7340 */
-                            site_id?: number;
-                            /** @example Introduction */
-                            title?: string;
-                            /** @example Opening remarks and agenda overview. */
-                            description?: string;
-                            /** @example 2024-03-15 10:00:00+00 */
-                            start_time?: string;
-                            /** @example 1710496800 */
-                            start_time_epoch?: number;
-                            /** @example 2024-03-10 08:00:00+00 */
-                            creation_date?: string;
-                            /** @example 1710057600 */
-                            creation_date_epoch?: number;
-                            /** @example 2024-03-12 09:00:00+00 */
-                            updated_date?: string;
-                            /** @example 1710234000 */
-                            updated_date_epoch?: number;
-                        }[];
-                    };
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation400"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation401"];
-                };
-            };
-            /** @description Operation forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation403"];
-                };
-            };
-            /** @description Object not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation404"];
-                };
-            };
-            /** @description Not Acceptable */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation406"];
-                };
-            };
-            /** @description Precondition Failed */
-            412: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation412"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation500"];
-                };
-            };
-        };
-    };
-    liveSectionRemove: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/x-www-form-urlencoded": {
-                    /** @description ID of the live section to be removed. */
-                    live_section_id: number;
-                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
-                    fields?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example write */
-                        permission_level?: string;
-                        /** @example false */
-                        cached?: boolean;
-                        /**
-                         * @description If the reponse is returned from cache, this property details the cache time.
-                         * @example 1610486659
-                         */
-                        cache_time?: number;
-                        data?: Record<string, never>;
-                        /** @example The live section has been removed */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation400"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation401"];
-                };
-            };
-            /** @description Operation forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation403"];
-                };
-            };
-            /** @description Object not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation404"];
-                };
-            };
-            /** @description Not Acceptable */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation406"];
-                };
-            };
-            /** @description Precondition Failed */
-            412: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation412"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation500"];
-                };
-            };
-        };
-    };
-    liveSectionUpdate: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/x-www-form-urlencoded": {
-                    /** @description ID of the live section to be updated. */
-                    live_section_id: number;
-                    /** @description Title for the live section. */
-                    title?: string;
-                    /** @description Description for the live section. */
-                    description?: string;
-                    /** @description Start time for the section, as a Unix timestamp (UTC epoch seconds). */
-                    start_time?: number;
-                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
-                    fields?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example write */
-                        permission_level?: string;
-                        /** @example false */
-                        cached?: boolean;
-                        /**
-                         * @description If the reponse is returned from cache, this property details the cache time.
-                         * @example 1610486659
-                         */
-                        cache_time?: number;
-                        data?: {
-                            /** @example 9012345 */
-                            live_section_id?: number;
-                        };
-                        /** @example The live section has been updated */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation400"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation401"];
-                };
-            };
-            /** @description Operation forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation403"];
-                };
-            };
-            /** @description Object not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation404"];
-                };
-            };
-            /** @description Not Acceptable */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation406"];
-                };
-            };
-            /** @description Precondition Failed */
-            412: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation412"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation500"];
-                };
-            };
-        };
-    };
     liveSeriesApplyRecurrence: {
         parameters: {
             query: {
@@ -31588,7 +32281,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7597097 */
+                            /** @example 99 */
                             live_id?: number;
                         };
                         /** @example The live series recurrence was applied */
@@ -32272,15 +32965,23 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7695612 */
+                            /** @example 10 */
                             live_series_id?: number;
-                            /** @example 7597097 */
+                            /** @example 42 */
                             live_id?: number;
-                            /** @example 7597097 */
+                            /** @example 200 */
+                            photo_id?: number;
+                            /** @example 42 */
                             mapped_object_id?: number;
                             /** @example live */
                             mapped_object_type?: string;
                         }[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 4 */
+                        size?: number;
+                        /** @example 4 */
+                        total_count?: number;
                     };
                 };
             };
@@ -32384,21 +33085,21 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 1234567 */
+                            /** @example 1 */
                             recurrence_id?: number;
-                            /** @example 2024-04-01 14:00:00+00 */
+                            /** @example 2024-06-01 14:00:00 */
                             recurrence_time?: string;
-                            /** @example April 1, 2024 */
+                            /** @example 2024-06-01 */
                             recurrence_time__date?: string;
-                            /** @example 14:00 */
+                            /** @example 14:00:00 */
                             recurrence_time__time?: string;
-                            /** @example 1711972800 */
+                            /** @example 1717243200 */
                             recurrence_time_epoch?: number;
                             /** @example false */
                             skipped_p?: boolean;
                             /** @example true */
                             matches_current_recurrence_rule_p?: boolean;
-                            /** @example 7597097 */
+                            /** @example 99 */
                             live_id?: number;
                         }[];
                     };
@@ -32784,7 +33485,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7695612 */
+                            /** @example 10 */
                             live_series_id?: number;
                         };
                         /** @example The live series was updated */
@@ -32896,7 +33597,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7695612 */
+                            /** @example 10 */
                             live_series_id?: number;
                         };
                         /** @example The series thumbnail was updated */
@@ -33458,7 +34159,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 8345678 */
+                            /** @example 7594595 */
                             live_speaker_id?: number;
                         };
                         /** @example The speaker has been created */
@@ -33681,12 +34382,10 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example webrtc */
-                            type?: string;
-                            /** @example Connect from browser */
-                            label?: string;
-                            /** @example push */
-                            method?: string;
+                            /** @example WebRTC */
+                            name?: string;
+                            /** @example Connect via browser using WebRTC */
+                            description?: string;
                         }[];
                     };
                 };
@@ -34074,7 +34773,7 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 8345678 */
+                            /** @example 7594595 */
                             live_speaker_id?: number;
                         };
                         /** @example The avatar has been remove */
@@ -34792,15 +35491,15 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7597097 */
+                            /** @example 7594584 */
                             live_id?: number;
                             /** @example 4102d10bf214a908a3d1 */
                             token?: string;
                             /** @example deepgram */
                             transcription_provider?: string;
-                            /** @example session-abc123 */
+                            /** @example wss://api.deepgram.com/v1/listen */
                             transcription_identifier?: string;
-                            /** @example eyJhbGciOiJIUzI1NiJ9.example */
+                            /** @example eyJhbGciOiJSUzI1NiJ9.example */
                             transcription_authenticator?: string;
                             /** @example en-US */
                             transcription_locale?: string;
@@ -34910,11 +35609,17 @@ export interface operations {
                         data?: {
                             /** @example en-US */
                             locale?: string;
-                            /** @example English */
+                            /** @example English (US) */
                             language?: string;
                             /** @example true */
                             default_p?: boolean;
                         }[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 5 */
+                        size?: number;
+                        /** @example 5 */
+                        total_count?: number;
                     };
                 };
             };
@@ -35022,13 +35727,19 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 5.2 */
+                            /** @example 1.5 */
                             start_time?: number;
-                            /** @example 8.7 */
+                            /** @example 3.2 */
                             end_time?: number;
-                            /** @example Welcome to today's webinar. */
+                            /** @example Hello and welcome to the webinar. */
                             text?: string;
                         }[];
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 20 */
+                        size?: number;
+                        /** @example 20 */
+                        total_count?: number;
                     };
                 };
             };
@@ -35473,11 +36184,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example none */
-                        permission_level?: string;
-                        /** @example true */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
@@ -35485,33 +36207,37 @@ export interface operations {
                          */
                         cache_time?: number;
                         data?: {
-                            /** @example 7393867 */
+                            /** @example 7519784 */
                             site_id?: number;
-                            /** @example personal */
+                            /** @example tube */
                             product_key?: string;
                             /** @example false */
                             allow_signup_p?: boolean;
-                            /** @example twentythree26 */
+                            /** @example rangupreview */
                             site_key?: string;
                             /** @example 0 */
                             license_id?: number;
-                            /** @example m1javwna.personaldev.twentythree.net */
+                            /** @example en_US */
+                            locale?: string;
+                            /** @example preview.ranguinc.com */
                             domain?: string;
-                            /** @example TwentyThree Development */
+                            /** @example Rangu Sandbox */
                             site_name?: string;
-                            /** @example https://m1javwna.personaldev.twentythree.net */
+                            /** @example TwentyThree! */
+                            company_name?: string;
+                            /** @example https://preview.ranguinc.com */
                             site_url?: string;
-                            /** @example http://m1javwna.personaldev.twentythree.net */
+                            /** @example http://preview.ranguinc.com */
                             http_url?: string;
-                            /** @example https://m1javwna.personaldev.twentythree.net */
+                            /** @example https://preview.ranguinc.com */
                             https_url?: string;
                             /** @example staging */
                             environment?: string;
-                            /** @example %q */
+                            /** @example %Q */
                             date_format?: string;
-                            /** @example %r */
+                            /** @example %H:%M */
                             time_format?: string;
-                            /** @example /files/r4 */
+                            /** @example /files/rv98.4 */
                             files_folder?: string;
                             /** @example true */
                             enable_webinar_polls_p?: boolean;
@@ -35523,34 +36249,6 @@ export interface operations {
                             enable_webinar_promo_overlays_p?: boolean;
                             /** @example 300 */
                             mischung_recording_split_seconds?: string;
-                            /** @example 1 */
-                            max_sites?: string;
-                            /** @example enterprise */
-                            product_grade?: string;
-                            /** @example false */
-                            enable_live_p?: boolean;
-                            /** @example true */
-                            custom_logo_p?: boolean;
-                            /** @example /files/r4/sitelogo.png */
-                            custom_logo_url?: string;
-                            /** @example top */
-                            page_layout?: string;
-                            /** @example Personal Trial */
-                            site_type?: string;
-                            /** @example 7393864 */
-                            subscription_id?: number;
-                            /** @example 1557091577 */
-                            creation_date_epoch?: string;
-                            /** @example 1 */
-                            current_sites?: string;
-                            /** @example 103 */
-                            current_videos?: string;
-                            /** @example 9 */
-                            current_users?: string;
-                            /** @example 0 */
-                            max_videos?: string;
-                            /** @example 0 */
-                            max_users?: string;
                         };
                     };
                 };
@@ -35649,33 +36347,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example anonymous */
-                        permission_level?: string;
-                        /** @example true */
+                        /**
+                         * @description Request status.
+                         * @example ok
+                         * @enum {string}
+                         */
+                        status?: "ok" | "error";
+                        /**
+                         * @description Authentication permission level for the request.
+                         * @example none
+                         * @enum {string}
+                         */
+                        permission_level?: "none" | "anonymous" | "read" | "write" | "admin" | "super";
+                        /**
+                         * @description Indicates whether or not the response is returned from cache.
+                         * @example true
+                         */
                         cached?: boolean;
                         /**
                          * @description If the reponse is returned from cache, this property details the cache time.
                          * @example 1610486659
                          */
                         cache_time?: number;
-                        data?: {
-                            /** @example site:photos */
-                            key?: string;
-                            /** @example 7519784 */
-                            object_id?: number;
-                            /** @example site */
-                            object_type?: string;
-                            /** @example All videos */
-                            title?: string;
-                            label?: string;
-                            /** @example false */
-                            selected_p?: boolean;
-                            token?: string;
-                            /** @example /site/7519784 */
-                            url?: string;
-                        }[];
+                        data?: Record<string, never>[];
                     };
                 };
             };
