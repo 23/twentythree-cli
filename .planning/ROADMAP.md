@@ -172,4 +172,4 @@ Plans:
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 16. Interactive Prompts | v1.2 | 1/1 | Complete   | 2026-04-17 |
+| 16. Interactive Prompts | v1.2 | 1/1 | Complete    | 2026-04-17 |
