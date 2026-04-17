@@ -48,7 +48,7 @@ export default class VideoList extends AuthenticatedCommand<typeof VideoList> {
     this.printWorkspaceHeader()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const videos = await fetchAllPages<any>(async (page, size) => {
+    const allVideos = await fetchAllPages<any>(async (page, size) => {
       const { data, error } = await this.apiClient.GET('/photo/list', {
         params: {
           query: {
@@ -73,6 +73,8 @@ export default class VideoList extends AuthenticatedCommand<typeof VideoList> {
         : []
       return { data: items, total_count: resp?.total_count }
     })
+
+    const videos = flags.limit !== undefined ? allVideos.slice(0, flags.limit) : allVideos
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
