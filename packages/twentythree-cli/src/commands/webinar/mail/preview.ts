@@ -74,11 +74,22 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
       headers['Authorization'] = `Bearer ${this.activeWorkspace.bearer_token}`
     }
     const response = await fetch(`${this.apiBaseUrl}live/mail/preview?${query}`, { headers })
-    const html = await response.text()
+    const body = await response.text()
 
     if (!response.ok) {
-      this.error(applyCliTerms(`API error ${response.status}: ${html}`), { exit: EXIT_ERROR })
+      // Parse a short error message from JSON if possible; otherwise truncate raw body
+      // to avoid leaking internal server details (e.g. stack traces, verbose HTML error pages)
+      let errMsg: string
+      try {
+        const parsed = JSON.parse(body)
+        errMsg = parsed?.message ?? parsed?.error ?? `status ${response.status}`
+      } catch {
+        errMsg = body.slice(0, 200) || `status ${response.status}`
+      }
+      this.error(applyCliTerms(`API error: ${errMsg}`), { exit: EXIT_ERROR })
     }
+
+    const html = body
 
     if (this.jsonEnabled()) {
       return formatJsonOutput({
