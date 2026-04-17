@@ -2,7 +2,7 @@ import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**

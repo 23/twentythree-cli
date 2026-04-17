@@ -69,7 +69,7 @@ export default class WebinarMailPreview extends AuthenticatedCommand<typeof Webi
       ...Object.fromEntries(Object.entries(contextField!).map(([k, v]) => [k, String(v)])),
       live_mail_id: String(args.id),
     })
-    const headers: HeadersInit = {}
+    const headers: Record<string, string> = {}
     if (this.activeWorkspace.bearer_token) {
       headers['Authorization'] = `Bearer ${this.activeWorkspace.bearer_token}`
     }

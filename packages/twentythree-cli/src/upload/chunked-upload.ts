@@ -122,7 +122,7 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
         }
       }
 
-      const headers: HeadersInit = {}
+      const headers: Record<string, string> = {}
       if (bearerToken) {
         headers['Authorization'] = `Bearer ${bearerToken}`
       }
