@@ -111,7 +111,7 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
     const totalBytes = fileStat.size
     const bar = new ProgressBar()
     const startTime = Date.now()
-    let result: Awaited<ReturnType<typeof uploadChunked>>
+    let result: Awaited<ReturnType<typeof uploadChunked>> | undefined
 
     // Show initial 0% so the bar is visible from the start
     bar.render(0, totalBytes, 0)
@@ -135,6 +135,10 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
       bar.finish()
     }
 
+    // Should never be undefined — uploadChunked throws on failure, which propagates
+    // through finally and skips the code below. Guard here for static analysis safety.
+    if (!result) return
+
     const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${args.id}`
     this.log(chalk.green(`Video ${args.id} replaced successfully`))
     this.log(`ID:    ${args.id}`)
@@ -143,7 +147,7 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: result!,
+        data: result,
         summary: `Video ${args.id} replaced`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
