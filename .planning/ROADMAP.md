@@ -147,11 +147,10 @@ Plans:
   1. Running any command that requires a flag (e.g. `twentythree video get`) without providing it triggers a `@clack/prompts` text input instead of an oclif parse error
   2. The interactive prompt matches the styling of the existing auth and workspace setup flows (uses `@clack/prompts`)
   3. Providing the value at the prompt completes the command successfully as if the flag had been passed on the command line
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 16-01: Implement missing-required-flag interception in BaseCommand using `@clack/prompts`
-- [ ] 16-02: Test the prompt flow across a representative sample of required-flag commands
+- [ ] 16-01-PLAN.md — TDD: tests + catch() override in BaseCommand for interactive missing-flag prompts
 
 ## Progress
 
@@ -173,4 +172,4 @@ Plans:
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |
+| 16. Interactive Prompts | v1.2 | 0/1 | Not started | - |
