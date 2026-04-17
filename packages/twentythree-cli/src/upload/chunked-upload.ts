@@ -75,7 +75,10 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
   }
 
   // Compute chunk descriptors (1-indexed, resumable.js convention)
-  // Uses Math.floor so the last chunk absorbs the remainder and is always >= chunkSize.
+  // Math.floor means totalChunks = floor(fileSize / chunkSize).
+  // The last chunk covers [start, totalSize) — equal to chunkSize when the file
+  // divides evenly, or < chunkSize when there is a remainder.
+  // Math.max(1, ...) handles files smaller than one chunk.
   // This matches the TwentyThree resumable.js server expectation (see resumable.js issue #51).
   const totalChunks = Math.max(1, Math.floor(totalSize / chunkSize))
   const chunks: ChunkDescriptor[] = Array.from({ length: totalChunks }, (_, i) => {
