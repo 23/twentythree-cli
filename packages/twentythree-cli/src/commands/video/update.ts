@@ -195,7 +195,7 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
     })
 
     if (updateError) {
-      this.error(applyCliTerms(String(updateError)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(updateError)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Video ${args.id} updated`))
