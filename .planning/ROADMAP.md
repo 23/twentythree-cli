@@ -133,11 +133,11 @@ Plans:
   1. User can run a single setup command (e.g. `twentythree autocomplete`) to install completion scripts for their bash or zsh shell
   2. After sourcing the completion script, `twentythree video <TAB>` lists available subcommands (`list`, `get`, `upload`, etc.)
   3. After sourcing the completion script, `twentythree video list --<TAB>` lists available flags for that command
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 15-01: Add `@oclif/plugin-autocomplete` dependency and register it in oclif config
-- [ ] 15-02: Verify completion works in bash and zsh; document setup in README and getting-started guide
+- [ ] 15-01-PLAN.md — Register @oclif/plugin-autocomplete and implement guided setup command with @clack/prompts
+- [ ] 15-02-PLAN.md — Update docs (README + getting-started), bump to 1.0.2, publish to npm
 
 ### Phase 16: Interactive Prompts
 **Goal**: Users are never dropped into a raw oclif error when they forget a required flag — instead the CLI asks them for the missing value interactively
