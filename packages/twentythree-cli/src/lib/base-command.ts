@@ -1,4 +1,4 @@
-import { Command, Flags, Interfaces } from '@oclif/core'
+import { Command, Errors, Flags, Interfaces } from '@oclif/core'
 import chalk from 'chalk'
 import * as p from '@clack/prompts'
 import {
@@ -188,11 +188,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       const label = flagDef?.description ?? flagDef?.summary ?? flagName
       const value = await p.text({
         message: label,
-        validate: (v) => v.trim().length === 0 ? 'Value is required' : undefined,
+        validate: (v) => (!v || v.trim().length === 0) ? 'Value is required' : undefined,
       })
       if (p.isCancel(value)) {
         p.cancel('Cancelled')
-        process.exit(0)
+        throw new Errors.CLIError('Cancelled', { exit: 0 })
       }
       extraArgv.push(`--${flagName}`, value as string)
     }

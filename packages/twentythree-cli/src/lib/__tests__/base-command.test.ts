@@ -382,20 +382,16 @@ describe('BaseCommand.catch() — interactive prompt for missing required flag',
     expect(mockRunCommand).toHaveBeenCalledWith('test:command', ['--target-url', 'https://example.com', '--event', 'video.uploaded'])
   })
 
-  it('calls process.exit(0) on cancel (p.isCancel returns true)', async () => {
+  it('throws CLIError on cancel (p.isCancel returns true)', async () => {
     mockPText.mockResolvedValue(Symbol('clack:cancel'))
     mockPIsCancel.mockReturnValue(true)
-    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('process.exit') })
 
     const Cmd = makeBaseCommandClass()
     const cmd = new Cmd([], makeOclifConfig())
     const err = makeFailedFlagError(['name'], { name: { description: 'Your name' } })
 
-    await expect((cmd as any).catch(err)).rejects.toThrow('process.exit')
+    await expect((cmd as any).catch(err)).rejects.toThrow('Cancelled')
     expect(mockPCancel).toHaveBeenCalledWith('Cancelled')
-    expect(exitSpy).toHaveBeenCalledWith(0)
     expect(mockRunCommand).not.toHaveBeenCalled()
-
-    exitSpy.mockRestore()
   })
 })
