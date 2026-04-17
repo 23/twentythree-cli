@@ -1,33 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Repository Polish & Release
-status: executing
-stopped_at: Completed 13-npm-publish-01-PLAN.md
-last_updated: "2026-04-17T07:55:42.633Z"
+milestone: v1.2
+milestone_name: Burnin & Quality of Life
+status: planning
+stopped_at: Defining requirements
+last_updated: "2026-04-17T00:00:00.000Z"
 last_activity: 2026-04-17
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-16)
+See: .planning/PROJECT.md (updated 2026-04-17)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 13 — npm-publish
+**Current focus:** Defining requirements for v1.2
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
-Status: Ready to execute
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
 Last activity: 2026-04-17
 
 Progress: [          ] 0%
@@ -38,6 +38,8 @@ Progress: [          ] 0%
 
 - Phase 6.1 inserted after Phase 6 in v1.0: Download and store swagger file; prescribe api-change workflow
 - v1.1 starts at Phase 9 (continuing numbering from v1.0)
+- v1.1 ended at Phase 13 (npm-publish)
+- v1.2 continues from Phase 14
 
 ### Decisions
 
@@ -49,16 +51,6 @@ Recent decisions affecting current work:
 - v1.1: No .npmignore — whitelist `files` approach is safer in pnpm monorepo
 - v1.1: `oclif readme --multi --nested-topics-depth 2` for docs generation — zero hand-writing for command reference
 - v1.1: CI publish workflow in scope (PUBLISH-03) — defer OIDC trusted publishing to v1.2
-- [Phase 09]: EXCLUDED_OPERATIONS uses regex-parsed source (not import) in audit script because tsx is not in devDependencies
-- [Phase 09]: video/frame.ts agentMetadata fixed from POST to GET to match OpenAPI spec; HTTP call left as POST
-- [Phase 09]: Sub-series commands use ANALYTICS_DATE_FLAGS + ANALYTICS_FILTER_FLAGS only -- no pagination, matching timeseries/totals endpoint contracts
-- [Phase 09-endpoint-coverage-audit]: All 10 usage analytics sub-series commands use ANALYTICS_DATE_FLAGS + ANALYTICS_FILTER_FLAGS only -- no pagination, matching timeseries/totals endpoint contracts
-- [Phase 09-endpoint-coverage-audit]: traffic timeseries/totals use row.traffic_type ?? row.type for resilient field resolution
-- [Phase 10-package-hygiene]: prepack (not prepare or prepublishOnly) used for build lifecycle — fires on npm pack and npm publish, not on consumer install
-- [Phase 11-documentation]: Run oclif readme from package dir with relative --output-dir to avoid doubled path segments
-- [Phase 11-documentation]: oclif readme --multi --nested-topics-depth 2 generates 156 files (not 49) — correct behavior, all sub-commands get individual pages
-- [Phase 11-documentation]: getting-started uses space-separated commands (twentythree video list) per topicSeparator config
-- [Phase 11-documentation]: api-spec-upgrade.md written as standalone readable prose — does not reference CLAUDE.md per D-09
 - [Phase 13-npm-publish]: NODE_AUTH_TOKEN scoped to publish step only (not job-level) per T-13-01 threat mitigation
 - [Phase 13-npm-publish]: registry-url must be set in setup-node for NODE_AUTH_TOKEN to work — without it ENEEDAUTH in CI
 - [Phase 13-npm-publish]: Version directly edited in package.json (not npm version command) to avoid GSD commit flow conflicts; developer creates v1.0.0 tag in Plan 02
@@ -69,11 +61,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- `npm view twentythree-cli` must be run before Phase 9 to confirm package name availability. Fallback: `@twentythree/cli`.
-- GitHub org URL needed for `repository` field in package.json (Phase 10).
+None.
 
 ## Session Continuity
 
-Last session: 2026-04-17T07:34:56.931Z
-Stopped at: Completed 13-npm-publish-01-PLAN.md
+Last session: 2026-04-17
+Stopped at: Milestone v1.2 started — defining requirements
 Resume file: None

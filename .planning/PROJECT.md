@@ -8,16 +8,14 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current Milestone: v1.1 Repository Polish & Release
+## Current Milestone: v1.2 Burnin & Quality of Life
 
-**Goal:** Make the CLI publishable, fully documented, and verified to have complete endpoint coverage before going public on npm.
+**Goal:** Fix real-world bugs found during burnin, add tab completion, and replace missing-flag errors with interactive prompts.
 
 **Target features:**
-- Endpoint audit — compare OpenAPI spec against command files; fill any gaps found
-- npm publish — get package live on npm (first publish)
-- Install verification — test end-to-end `npm install -g` flow and document it
-- README.md — install + quickstart entry point, links into docs/
-- docs/ reference — full command reference, API spec upgrade guide, contributing / dev setup
+- Bug audit & fix — `parseBoolParam is not defined` on `video list` and cross-command sweep to find/fix similar reference errors
+- Tab completion — oclif autocomplete plugin wired up for subcommands and flags in bash/zsh
+- Prompt on missing required flags — interactive prompt via @clack/prompts instead of error when required flag is omitted
 
 ## Requirements
 
@@ -33,11 +31,9 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 
 ### Active
 
-- ✓ Endpoint audit — compare OpenAPI spec against all command files; fill any gaps found — Validated in Phase 9: Endpoint Coverage Audit. Audit script exits 0 (Gaps: 0, Phantoms: 0), 18 analytics sub-series commands added.
-- [ ] npm publish — get `twentythree-cli` package live on npm (first publish)
-- [ ] Install verification — test `npm install -g twentythree-cli` end-to-end and document
-- ✓ README.md — install + quickstart entry point at repo root, links into docs/ — Validated in Phase 12: readmes-changelog. Root README with badges, quickstart, 25-topic command table, terminology mapping. npm README short and focused. CHANGELOG with v1.0 and v1.1 entries in Keep a Changelog format.
-- ✓ docs/ — full command reference, API spec upgrade guide — Validated in Phase 11: Documentation.
+- [ ] Bug audit & fix — `parseBoolParam is not defined` on `video list`; cross-command sweep for similar reference errors
+- [ ] Tab completion — oclif autocomplete plugin for subcommands and flags in bash/zsh
+- [ ] Prompt on missing required flags — interactive prompt instead of error when required flag is omitted
 
 ### Deferred (post-v1.1)
 
@@ -107,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 — Phase 13 complete (npm-publish; twentythree-cli@1.0.0 live on npm, CI release pipeline operational)*
+*Last updated: 2026-04-17 — Milestone v1.2 started (burnin & quality of life)*
