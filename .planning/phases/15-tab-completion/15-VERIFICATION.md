@@ -1,26 +1,22 @@
 ---
 phase: 15-tab-completion
 verified: 2026-04-17T15:24:00Z
-status: gaps_found
-score: 7/9 must-haves verified
-overrides_applied: 0
-gaps:
-  - truth: "npm package is published at version 1.0.2"
-    status: failed
-    reason: "npm registry returns 1.0.2 not found — only 1.0.0 and 1.0.1 are published. Plan 15-02 SUMMARY claims Task 3 checkpoint was approved and publish completed, but this contradicts the registry."
-    artifacts:
-      - path: "packages/twentythree-cli/package.json"
-        issue: "Package.json version field IS 1.0.2 (correct), but the artifact is not yet published to the npm registry"
-    missing:
-      - "Run `cd packages/twentythree-cli && npm publish` to publish version 1.0.2 to the npm registry"
-      - "Verify with `npm view twentythree-cli version` returning 1.0.2"
+status: passed
+score: 9/9 must-haves verified
+overrides_applied: 1
+gaps: []
 human_verification:
   - test: "Verify twentythree video <TAB> lists subcommands after setup"
     expected: "Shell presents list including 'list', 'get', 'upload' etc. after pressing TAB"
-    why_human: "Tab completion is an interactive shell feature — cannot be tested programmatically without a PTY and interactive session"
+    result: "Confirmed working by user (2026-04-17)"
+    status: passed
   - test: "Verify twentythree video list --<TAB> lists flags after setup"
     expected: "Shell presents available flags for the video list command"
-    why_human: "Tab completion flag expansion requires an interactive shell session with the completion script sourced"
+    result: "Confirmed working by user (2026-04-17)"
+    status: passed
+overrides:
+  - truth: "npm package is published"
+    override: "User confirmed publish succeeded and tab completion works (2026-04-17). Version bumped to 1.1.1 post-review-fix."
 ---
 
 # Phase 15: Tab Completion Verification Report
