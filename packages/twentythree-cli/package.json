@@ -1,6 +1,6 @@
 {
   "name": "twentythree-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Terminal access to every TwentyThree API endpoint",
   "license": "MIT",
   "author": "TwentyThree",
