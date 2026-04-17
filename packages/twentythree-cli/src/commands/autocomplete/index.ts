@@ -83,7 +83,7 @@ export default class Autocomplete extends Command {
     }
 
     const rcFile = shell === 'zsh' ? '~/.zshrc' : '~/.bashrc'
-    const evalLine = `printf "$(twentythree autocomplete script ${shell})" >> ${rcFile}; source ${rcFile}`
+    const evalLine = `grep -qF 'twentythree autocomplete script ${shell}' ${rcFile} || printf "$(twentythree autocomplete script ${shell})" >> ${rcFile}; source ${rcFile}`
 
     p.note(
       `Add tab completion to your shell by running:\n\n  ${evalLine}\n\nThen restart your terminal or run: source ${rcFile}`,
