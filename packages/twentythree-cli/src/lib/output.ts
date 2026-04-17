@@ -101,6 +101,48 @@ export function formatBytes(bytes: number): string {
   return `${bytes} B`
 }
 
+// ---- API error formatting ----
+
+/**
+ * Serialize an openapi-fetch error to a readable string.
+ * Handles plain objects (JSON error bodies) that String() would render as "[object Object]".
+ */
+export function formatApiError(error: unknown): string {
+  if (error === null || error === undefined) return 'Unknown error'
+  if (typeof error === 'string') return error
+  if (error instanceof Error) return error.message
+  if (typeof error === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const e = error as any
+    // Try common API error shapes first
+    const msg = e?.message ?? e?.error ?? e?.error_description ?? e?.detail
+    if (msg) return String(msg)
+    return JSON.stringify(error)
+  }
+  return String(error)
+}
+
+// ---- Boolean flag resolution ----
+
+/**
+ * Resolves a boolean API parameter from:
+ *   1. A hidden raw _p-suffixed string alternative (e.g. --published-p 1)
+ *   2. A primary CLI boolean flag with allowNo (e.g. --publish / --no-publish)
+ *
+ * Returns undefined when neither is provided — the param is omitted from the request.
+ * Accepts '1'/'0', 'true'/'false', 'yes'/'no' for the string alternative.
+ */
+export function parseBoolParam(
+  primary: boolean | undefined,
+  alt: string | undefined,
+): boolean | undefined {
+  if (alt !== undefined) {
+    const v = alt.toLowerCase()
+    return v === '1' || v === 'true' || v === 'yes'
+  }
+  return primary
+}
+
 // ---- URL resolution (CLI-07) ----
 
 /**

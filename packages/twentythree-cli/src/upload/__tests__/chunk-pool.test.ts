@@ -43,13 +43,13 @@ describe('uploadChunkPool', () => {
     expect(result.finalResponse).toEqual({ photo_id: 99, tree_id: 7, token: 'abc' })
   })
 
-  it('throws "Unsupported file format" when uploadFn returns 500', async () => {
+  it('throws on 500 response', async () => {
     const chunks = makeChunks(2)
     const uploadFn = vi.fn().mockResolvedValue({ status: 500 })
 
     await expect(
       uploadChunkPool({ chunks, uploadFn, concurrency: 2, maxRetries: 5 })
-    ).rejects.toThrow('Unsupported file format')
+    ).rejects.toThrow('Upload rejected by server (500)')
   })
 
   it('retries on non-200/non-500 and succeeds after 2 failures', async () => {

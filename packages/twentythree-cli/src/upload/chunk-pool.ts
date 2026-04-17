@@ -13,7 +13,8 @@ import type { ChunkDescriptor } from './types.js'
 
 export interface ChunkUploadResponse {
   status: number
-  data?: { photo_id?: number; tree_id?: number; token?: string }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
 }
 
 export interface ChunkPoolParams {
@@ -80,7 +81,8 @@ export async function uploadChunkPool(params: ChunkPoolParams): Promise<ChunkPoo
       }
 
       if (response.status === 500) {
-        throw new Error('Unsupported file format — upload aborted')
+        const detail = (response.data as any)?.error ?? (response.data as any)?.message ?? JSON.stringify(response.data)
+        throw new Error(`Upload rejected by server (500)${detail ? `: ${detail}` : ''}`)
       }
 
       // Transient failure — retry with exponential backoff
