@@ -170,9 +170,14 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       })
       if (isCancel(publishedResult)) process.exit(EXIT_CANCELLED)
 
-      body.title = titleResult as string
-      body.description = descriptionResult as string
-      body.tags = tagsResult as string
+      // Only send fields the user actually filled in; skip empty strings to avoid
+      // overwriting existing values with blanks (consistent with flag-mode behaviour)
+      const titleVal = titleResult as string
+      const descriptionVal = descriptionResult as string
+      const tagsVal = tagsResult as string
+      if (titleVal !== '') body.title = titleVal
+      if (descriptionVal !== '' || current.content_text === '') body.description = descriptionVal
+      if (tagsVal !== '' || currentTags === '') body.tags = tagsVal
       body.published_p = publishedResult === 'yes' ? 1 : 0
     } else {
       // Flag mode: only include flags the user explicitly provided (T-03-07 mitigation)
