@@ -116,7 +116,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         if (typeof chosen === 'symbol') {
           this.error('Workspace selection cancelled', { exit: 1 })
         }
-        resolved = getWorkspaceForDomain(chosen as string)
+        const found = getWorkspaceForDomain(chosen as string)
+        if (!found) {
+          this.error(`Workspace '${chosen}' could not be resolved — try running \`twentythree workspace list\``, { exit: 1 })
+        }
+        resolved = found
       } else {
         resolved = result
       }
