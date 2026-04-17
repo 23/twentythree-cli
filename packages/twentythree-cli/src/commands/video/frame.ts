@@ -45,7 +45,7 @@ export default class VideoFrame extends AuthenticatedCommand<typeof VideoFrame> 
 
     this.printWorkspaceHeader()
 
-    const { data, error } = await this.apiClient.POST('/photo/frame', {
+    const { data, error } = await this.apiClient.POST('/photo/frame' as any, {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       body: {
         photo_id: Number(args.id),

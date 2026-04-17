@@ -27,7 +27,7 @@ export default class Credentials extends Command {
 
     const domain = await p.text({
       message: 'Domain (e.g. company.video23.com)',
-      validate: (v) => (v.includes('.') ? undefined : 'Enter a valid domain'),
+      validate: (v) => (v?.includes('.') ? undefined : 'Enter a valid domain'),
     })
 
     if (p.isCancel(domain)) {

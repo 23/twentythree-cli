@@ -181,7 +181,7 @@ export abstract class AuthenticatedCommand<T extends typeof Command> extends Bas
    */
   protected async fetchVideoToken(videoId: string | number): Promise<string> {
     const { data, error } = await this.apiClient.GET('/photo/list', {
-      params: { query: { photo_id: Number(videoId), include_unpublished_p: 1 } },
+      params: { query: { photo_id: Number(videoId), include_unpublished_p: '1' } },
     })
     if (error) {
       this.error(`Could not look up video ${videoId}: ${error}`, { exit: 1 })

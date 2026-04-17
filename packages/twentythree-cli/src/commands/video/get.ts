@@ -42,7 +42,7 @@ export default class VideoGet extends AuthenticatedCommand<typeof VideoGet> {
     this.printWorkspaceHeader()
 
     const { data, error } = await this.apiClient.GET('/photo/list', {
-      params: { query: { photo_id: Number(args.id), include_unpublished_p: 1 } },
+      params: { query: { photo_id: Number(args.id), include_unpublished_p: '1' } },
     })
 
     if (error) {

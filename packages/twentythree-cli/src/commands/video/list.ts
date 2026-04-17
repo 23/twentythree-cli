@@ -54,7 +54,7 @@ export default class VideoList extends AuthenticatedCommand<typeof VideoList> {
           query: {
             p: page,
             size,
-            include_unpublished_p: parseBoolParam(flags['include-unpublished'], flags['include-unpublished-p']) ? 1 : undefined,
+            include_unpublished_p: parseBoolParam(flags['include-unpublished'], flags['include-unpublished-p']) ? '1' : undefined,
           },
         },
       })

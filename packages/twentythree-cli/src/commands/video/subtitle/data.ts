@@ -49,10 +49,13 @@ export default class VideoSubtitleData extends AuthenticatedCommand<typeof Video
 
     this.printWorkspaceHeader()
 
+    const token = await this.fetchVideoToken(args.id)
+
     const { data, error } = await this.apiClient.GET('/photo/subtitle/data', {
       params: {
         query: {
           photo_id: Number(args.id),
+          token,
           locale: flags['subtitle-id'],
           subtitle_format: flags.format,
           type: flags.type,

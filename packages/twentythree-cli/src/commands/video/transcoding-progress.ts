@@ -41,7 +41,7 @@ export default class VideoTranscodingProgress extends AuthenticatedCommand<typeo
     this.printWorkspaceHeader()
 
     const { data, error } = await this.apiClient.GET('/photo/get-transcoding-progress', {
-      params: { query: { photo_id: args.id } },
+      params: { query: { photo_id: Number(args.id) } },
     })
 
     if (error) {

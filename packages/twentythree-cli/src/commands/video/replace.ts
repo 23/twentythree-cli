@@ -92,7 +92,7 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
     // Step 1: Get replace token (not upload token — T-03-10, Pitfall 1)
     const { data: tokenData, error: tokenError } = await this.apiClient.GET('/photo/get-replace-token', {
       params: {
-        query: { photo_id: args.id },
+        query: { photo_id: Number(args.id) },
       },
     })
 

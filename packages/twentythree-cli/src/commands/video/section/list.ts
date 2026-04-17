@@ -39,7 +39,7 @@ export default class VideoSectionList extends AuthenticatedCommand<typeof VideoS
     const token = await this.fetchVideoToken(args.id)
 
     const { data, error } = await this.apiClient.GET('/photo/section/list', {
-      params: { query: { photo_id: args.id, token } },
+      params: { query: { photo_id: Number(args.id), token } },
     })
 
     if (error) {
