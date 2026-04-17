@@ -219,7 +219,7 @@ describe('BaseCommand', () => {
     const cmd = await initCommand(Cmd, [])
 
     expect(mockCreateApiClient).toHaveBeenCalledWith({
-      baseUrl: 'https://company.video23.com/',
+      baseUrl: 'https://company.video23.com/api/2/',
       token: 'tok_abc123',
     })
     expect(cmd.getApiClientForTest()).toBeDefined()
