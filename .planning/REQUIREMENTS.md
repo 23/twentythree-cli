@@ -10,8 +10,8 @@
 
 ### Bug Fixes (BUG)
 
-- [ ] **BUG-01**: `parseBoolParam is not defined` error on `twentythree video list` is fixed
-- [ ] **BUG-02**: All commands using the same undefined-reference pattern are audited and fixed before release
+- [x] **BUG-01**: `parseBoolParam is not defined` error on `twentythree video list` is fixed
+- [x] **BUG-02**: All commands using the same undefined-reference pattern are audited and fixed before release
 
 ### Tab Completion (COMPLETE)
 
