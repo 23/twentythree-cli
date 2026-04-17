@@ -14,6 +14,16 @@ twentythree video list
 
 See the [Getting Started guide](packages/twentythree-cli/docs/guides/getting-started.md) for full setup instructions.
 
+## Tab Completion
+
+Enable tab completion for bash or zsh -- run once, then use `<TAB>` to discover commands and flags.
+
+```sh
+twentythree autocomplete
+```
+
+Follow the on-screen instructions to add the eval line to your shell RC file (`~/.zshrc` or `~/.bashrc`), then restart your terminal.
+
 ## Commands
 
 TwentyThree CLI provides 244 commands across 24 topics.

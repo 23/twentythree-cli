@@ -35,7 +35,21 @@ twentythree workspace list
 twentythree workspace use company.video23.com
 ```
 
-## Step 3: Run your first command
+## Step 3: Enable tab completion (optional)
+
+Run this once to set up `<TAB>` completion for all commands and flags:
+
+```bash
+twentythree autocomplete
+```
+
+The command detects your shell (bash or zsh), builds the completion cache, and shows the eval line to paste into your RC file. After sourcing your RC file or restarting your terminal, try:
+
+```bash
+twentythree video <TAB>
+```
+
+## Step 4: Run your first command
 
 List the videos in your active workspace.
 
@@ -64,3 +78,5 @@ Run `twentythree <topic> --help` for help on any topic. For example:
 twentythree video --help
 twentythree auth --help
 ```
+
+Use `<TAB>` after any command to discover subcommands and flags.
