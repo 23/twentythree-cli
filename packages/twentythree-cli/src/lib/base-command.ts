@@ -81,6 +81,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       process.exit(0)
     }
 
+    // NOTE: Intentional double-parse — init() parses here to resolve --workspace early,
+    // and each subcommand's run() calls this.parse(SubcommandClass) again.
+    // This is safe in this codebase because no flags have parse-time side effects
+    // (no dynamic defaults, no prompting in flag definitions). The --agent raw argv
+    // workaround above exists precisely because flags haven't been parsed at init() time
+    // before this call. If any flag ever gains a side-effecting default or parse hook,
+    // revisit by storing parsed flags on `this` during init() and reusing them in run().
     const { flags } = await this.parse({
       flags: this.ctor.flags,
       baseFlags: (super.ctor as typeof BaseCommand).baseFlags,
