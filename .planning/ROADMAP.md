@@ -3,7 +3,8 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1–8 + 6.1 (shipped 2026-04-16)
-- 🔄 **v1.1 Repository Polish & Release** — Phases 9–13 (in progress)
+- ✅ **v1.1 Repository Polish & Release** — Phases 9–13 (shipped 2026-04-17)
+- 🚧 **v1.2 Burnin & Quality of Life** — Phases 14–16 (in progress)
 
 ## Phases
 
@@ -24,13 +25,24 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### v1.1 Repository Polish & Release
+<details>
+<summary>✅ v1.1 Repository Polish & Release (Phases 9–13) — SHIPPED 2026-04-17</summary>
 
 - [x] **Phase 9: Endpoint Coverage Audit** — Audit all 235 OpenAPI endpoints against command files; classify and fill any confirmed gaps (completed 2026-04-16)
 - [x] **Phase 10: Package Hygiene** — Wire prepack script, fill missing package.json fields, update files array (completed 2026-04-16)
 - [x] **Phase 11: Documentation** — Generate command reference with oclif; write getting-started and api-spec-upgrade guides (completed 2026-04-16)
 - [x] **Phase 12: READMEs & CHANGELOG** — Write root README, npm package README, and CHANGELOG (completed 2026-04-17)
 - [x] **Phase 13: npm Publish** — Version, publish to npm, verify installation, wire GitHub Actions CI (completed 2026-04-17)
+
+Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
+
+</details>
+
+### v1.2 Burnin & Quality of Life
+
+- [ ] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence
+- [ ] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh
+- [ ] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input
 
 ## Phase Details
 
@@ -72,7 +84,6 @@ Plans:
 Plans:
 - [x] 11-01-PLAN.md — Generate command reference with oclif readme + handwritten topic index
 - [x] 11-02-PLAN.md — Write getting-started and api-spec-upgrade guides
-**UI hint**: no
 
 ### Phase 12: READMEs & CHANGELOG
 **Goal**: Anyone arriving at the repo root or npm page knows how to install, authenticate, and start using the CLI within two minutes
@@ -100,6 +111,48 @@ Plans:
 - [x] 13-01-PLAN.md — Create release workflow + bump version to 1.0.0
 - [x] 13-02-PLAN.md — Set npm token, push tag, verify publish
 
+### Phase 14: Bug Audit & Fix
+**Goal**: Every command in the CLI runs without undefined-reference errors and the specific `parseBoolParam is not defined` crash on `video list` is eliminated
+**Depends on**: Nothing (first v1.2 phase)
+**Requirements**: BUG-01, BUG-02
+**Success Criteria** (what must be TRUE):
+  1. `twentythree video list` executes without a `ReferenceError: parseBoolParam is not defined` error
+  2. All 219 command files are audited for the same undefined-reference pattern; every occurrence is fixed
+  3. The vitest test suite passes with no new failures after all fixes are applied
+**Plans**: TBD
+
+Plans:
+- [ ] 14-01: Diagnose root cause of `parseBoolParam is not defined` and fix `video list`
+- [ ] 14-02: Audit all 219 command files for the same pattern and fix every occurrence
+
+### Phase 15: Tab Completion
+**Goal**: Users can enable tab completion once and then use `<TAB>` to discover subcommands and flags for every `twentythree` command
+**Depends on**: Phase 14
+**Requirements**: COMPLETE-01, COMPLETE-02, COMPLETE-03
+**Success Criteria** (what must be TRUE):
+  1. User can run a single setup command (e.g. `twentythree autocomplete`) to install completion scripts for their bash or zsh shell
+  2. After sourcing the completion script, `twentythree video <TAB>` lists available subcommands (`list`, `get`, `upload`, etc.)
+  3. After sourcing the completion script, `twentythree video list --<TAB>` lists available flags for that command
+**Plans**: TBD
+
+Plans:
+- [ ] 15-01: Add `@oclif/plugin-autocomplete` dependency and register it in oclif config
+- [ ] 15-02: Verify completion works in bash and zsh; document setup in README and getting-started guide
+
+### Phase 16: Interactive Prompts
+**Goal**: Users are never dropped into a raw oclif error when they forget a required flag — instead the CLI asks them for the missing value interactively
+**Depends on**: Phase 14
+**Requirements**: PROMPT-01, PROMPT-02
+**Success Criteria** (what must be TRUE):
+  1. Running any command that requires a flag (e.g. `twentythree video get`) without providing it triggers a `@clack/prompts` text input instead of an oclif parse error
+  2. The interactive prompt matches the styling of the existing auth and workspace setup flows (uses `@clack/prompts`)
+  3. Providing the value at the prompt completes the command successfully as if the flag had been passed on the command line
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: Implement missing-required-flag interception in BaseCommand using `@clack/prompts`
+- [ ] 16-02: Test the prompt flow across a representative sample of required-flag commands
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -113,8 +166,11 @@ Plans:
 | 6.1. API Spec Workflow (INSERTED) | v1.0 | 1/1 | Complete | 2026-04-15 |
 | 7. Analytics & Audience | v1.0 | 4/4 | Complete | 2026-04-16 |
 | 8. Platform & Polish | v1.0 | 10/10 | Complete | 2026-04-16 |
-| 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete   | 2026-04-16 |
-| 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
-| 11. Documentation | v1.1 | 2/2 | Complete    | 2026-04-16 |
-| 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete    | 2026-04-17 |
-| 13. npm Publish | v1.1 | 2/2 | Complete    | 2026-04-17 |
+| 9. Endpoint Coverage Audit | v1.1 | 3/3 | Complete | 2026-04-16 |
+| 10. Package Hygiene | v1.1 | 1/1 | Complete | 2026-04-16 |
+| 11. Documentation | v1.1 | 2/2 | Complete | 2026-04-16 |
+| 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
+| 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
+| 14. Bug Audit & Fix | v1.2 | 0/2 | Not started | - |
+| 15. Tab Completion | v1.2 | 0/2 | Not started | - |
+| 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |

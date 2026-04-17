@@ -30,7 +30,6 @@
 
 - Browser OAuth flow (`twentythree auth login --scope read|write|admin`)
 - AI skills package — installable agent skills wrapping the CLI
-- OIDC trusted publishing for GitHub Actions (defer from v1.1)
 
 ---
 
@@ -47,10 +46,10 @@
 
 | Requirement | Phase | Plan |
 |-------------|-------|------|
-| BUG-01 | — | — |
-| BUG-02 | — | — |
-| COMPLETE-01 | — | — |
-| COMPLETE-02 | — | — |
-| COMPLETE-03 | — | — |
-| PROMPT-01 | — | — |
-| PROMPT-02 | — | — |
+| BUG-01 | Phase 14 | 14-01 |
+| BUG-02 | Phase 14 | 14-02 |
+| COMPLETE-01 | Phase 15 | 15-01 |
+| COMPLETE-02 | Phase 15 | 15-02 |
+| COMPLETE-03 | Phase 15 | 15-02 |
+| PROMPT-01 | Phase 16 | 16-01 |
+| PROMPT-02 | Phase 16 | 16-01 |
