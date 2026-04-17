@@ -21,8 +21,8 @@
 
 ### Interactive Prompts (PROMPT)
 
-- [ ] **PROMPT-01**: When a required flag is omitted, the CLI prompts for the value interactively instead of showing an oclif error
-- [ ] **PROMPT-02**: Interactive prompts use `@clack/prompts` for consistent UX with existing auth and workspace setup flows
+- [x] **PROMPT-01**: When a required flag is omitted, the CLI prompts for the value interactively instead of showing an oclif error
+- [x] **PROMPT-02**: Interactive prompts use `@clack/prompts` for consistent UX with existing auth and workspace setup flows
 
 ---
 

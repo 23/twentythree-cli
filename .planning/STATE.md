@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Burnin & Quality of Life
 status: verifying
-stopped_at: Phase 16 context gathered
-last_updated: "2026-04-17T13:35:02.600Z"
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-04-17T13:52:20.750Z"
 last_activity: 2026-04-17
 progress:
   total_phases: 8
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
   percent: 100
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-17)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 15 — tab-completion
+**Current focus:** Phase 16 — interactive-prompts
 
 ## Current Position
 
-Phase: 16
-Plan: Not started
+Phase: 16 (interactive-prompts) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-17
 
@@ -55,6 +55,9 @@ Recent decisions affecting current work:
 - [Phase 14-bug-audit-fix]: Patch version 1.0.1 for BUG-01/BUG-02 fixes — all corrections backward-compatible, no new API surface
 - [Phase 15-tab-completion]: Used this.config.runCommand for autocomplete cache build — plugin is ESM-only; avoids direct subpath import
 - [Phase 15-tab-completion]: Added tmp/ to root .gitignore — oclif build tooling generates packages/twentythree-cli/tmp/ with artifacts that should not be tracked
+- [Phase 16]: Use constructor.name check for FailedFlagValidationError since class is not exported from oclif/core public API
+- [Phase 16]: Namespace import (import * as p) for @clack/prompts to enable both select() and new prompt functions
+- [Phase 16]: Re-dispatch via this.config.runCommand to preserve existing argv (workspace, json flags)
 
 ### Pending Todos
 
@@ -66,6 +69,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-17T13:35:02.594Z
-Stopped at: Phase 16 context gathered
-Resume file: .planning/phases/16-interactive-prompts/16-CONTEXT.md
+Last session: 2026-04-17T13:52:20.748Z
+Stopped at: Completed 16-01-PLAN.md
+Resume file: None

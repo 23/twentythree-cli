@@ -42,7 +42,7 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 
 - [x] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence (completed 2026-04-17)
 - [x] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh (completed 2026-04-17)
-- [ ] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input
+- [x] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input (completed 2026-04-17)
 
 ## Phase Details
 
@@ -150,7 +150,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 16-01-PLAN.md — TDD: tests + catch() override in BaseCommand for interactive missing-flag prompts
+- [x] 16-01-PLAN.md — TDD: tests + catch() override in BaseCommand for interactive missing-flag prompts
 
 ## Progress
 
@@ -172,4 +172,4 @@ Plans:
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 16. Interactive Prompts | v1.2 | 0/1 | Not started | - |
+| 16. Interactive Prompts | v1.2 | 1/1 | Complete   | 2026-04-17 |
