@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { detectShell } from '../detect-shell.js'
+import { detectShell } from '../../../lib/detect-shell.js'
 
 vi.mock('@clack/prompts', () => ({
   intro: vi.fn(),

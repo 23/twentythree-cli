@@ -1,6 +1,6 @@
 import { Command } from '@oclif/core'
 import * as p from '@clack/prompts'
-import { detectShell } from './detect-shell.js'
+import { detectShell } from '../../lib/detect-shell.js'
 
 export default class Autocomplete extends Command {
   static description = 'Set up tab completion for your shell'
