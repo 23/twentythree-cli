@@ -13,6 +13,12 @@ const {
   mockCreateApiClient,
   mockLog,
   mockError,
+  mockPIntro,
+  mockPText,
+  mockPIsCancel,
+  mockPCancel,
+  mockPOutro,
+  mockRunCommand,
 } = vi.hoisted(() => {
   const mockGetWorkspaces = vi.fn()
   const mockGetActiveWorkspace = vi.fn()
@@ -26,6 +32,12 @@ const {
     err.oclif = opts
     throw err
   })
+  const mockPIntro = vi.fn()
+  const mockPText = vi.fn()
+  const mockPIsCancel = vi.fn(() => false)
+  const mockPCancel = vi.fn()
+  const mockPOutro = vi.fn()
+  const mockRunCommand = vi.fn().mockResolvedValue(undefined)
   return {
     mockGetWorkspaces,
     mockGetActiveWorkspace,
@@ -35,6 +47,12 @@ const {
     mockCreateApiClient,
     mockLog,
     mockError,
+    mockPIntro,
+    mockPText,
+    mockPIsCancel,
+    mockPCancel,
+    mockPOutro,
+    mockRunCommand,
   }
 })
 
@@ -63,6 +81,11 @@ vi.mock('chalk', () => ({
 // Mock @clack/prompts to avoid interactive prompts in tests
 vi.mock('@clack/prompts', () => ({
   select: vi.fn(),
+  intro: mockPIntro,
+  text: mockPText,
+  isCancel: mockPIsCancel,
+  cancel: mockPCancel,
+  outro: mockPOutro,
 }))
 
 import { BaseCommand, AuthenticatedCommand } from '../base-command.js'
@@ -127,6 +150,7 @@ function makeOclifConfig() {
     userAgent: 'twentythree-cli/test',
     scopedEnvVar: () => undefined,
     runHook: vi.fn().mockResolvedValue({ successes: [], failures: [] }),
+    runCommand: mockRunCommand,
     theme: {},
   } as never
 }
@@ -262,5 +286,116 @@ describe('AuthenticatedCommand', () => {
 
     // init() should complete without throwing
     expect(cmd.getActiveWorkspaceForTest().bearer_token).toBe('tok_abc123')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Helpers for catch() tests
+// ---------------------------------------------------------------------------
+
+function makeFailedFlagError(
+  flagNames: string[],
+  flagDefs: Record<string, { description?: string; summary?: string }> = {},
+) {
+  const reasons = flagNames.map(n => `Missing required flag ${n}`)
+  const message = `The following error${flagNames.length > 1 ? 's' : ''} occurred:\n  ${reasons.join('\n  ')}\nSee more help with --help`
+
+  class FailedFlagValidationError extends Error {
+    parse: { input: { flags: Record<string, { description?: string; summary?: string }> } }
+    constructor(msg: string) {
+      super(msg)
+      this.name = 'FailedFlagValidationError'
+      this.parse = { input: { flags: flagDefs } }
+    }
+  }
+
+  return new FailedFlagValidationError(message)
+}
+
+describe('BaseCommand.catch() — interactive prompt for missing required flag', () => {
+  let originalIsTTY: boolean | undefined
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockEnsureFreshToken.mockResolvedValue(null)
+    mockRunCommand.mockResolvedValue(undefined)
+    originalIsTTY = process.stdin.isTTY
+    Object.defineProperty(process.stdin, 'isTTY', { value: true, writable: true, configurable: true })
+  })
+
+  afterEach(() => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: originalIsTTY, writable: true, configurable: true })
+  })
+
+  it('re-throws when process.stdin.isTTY is false (non-TTY guard)', async () => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: false, writable: true, configurable: true })
+    const Cmd = makeBaseCommandClass()
+    const cmd = new Cmd([], makeOclifConfig())
+    const err = makeFailedFlagError(['name'], { name: { description: 'Your name' } })
+
+    await expect((cmd as any).catch(err)).rejects.toThrow()
+    expect(mockPIntro).not.toHaveBeenCalled()
+    expect(mockPText).not.toHaveBeenCalled()
+  })
+
+  it('re-throws for non-FailedFlagValidationError errors', async () => {
+    const Cmd = makeBaseCommandClass()
+    const cmd = new Cmd([], makeOclifConfig())
+    const err = new Error('Some other error')
+
+    await expect((cmd as any).catch(err)).rejects.toThrow('Some other error')
+    expect(mockPIntro).not.toHaveBeenCalled()
+  })
+
+  it('prompts for a single missing flag and re-runs command', async () => {
+    mockPText.mockResolvedValue('Alice')
+    mockPIsCancel.mockReturnValue(false)
+
+    const Cmd = makeBaseCommandClass()
+    const cmd = new Cmd([], makeOclifConfig())
+    const err = makeFailedFlagError(['name'], { name: { description: 'Your name' } })
+
+    await (cmd as any).catch(err)
+
+    expect(mockPIntro).toHaveBeenCalledWith('Missing required input')
+    expect(mockPText).toHaveBeenCalledWith({ message: 'Your name' })
+    expect(mockPOutro).toHaveBeenCalledWith('Running command...')
+    expect(mockRunCommand).toHaveBeenCalledWith('test:command', ['--name', 'Alice'])
+  })
+
+  it('prompts for all missing flags in one pass (multi-flag case)', async () => {
+    mockPText.mockResolvedValueOnce('https://example.com').mockResolvedValueOnce('video.uploaded')
+    mockPIsCancel.mockReturnValue(false)
+
+    const Cmd = makeBaseCommandClass()
+    const cmd = new Cmd([], makeOclifConfig())
+    const err = makeFailedFlagError(
+      ['target-url', 'event'],
+      { 'target-url': { description: 'URL to receive webhook POST requests' }, event: { description: 'Event type to subscribe to' } },
+    )
+
+    await (cmd as any).catch(err)
+
+    expect(mockPText).toHaveBeenCalledTimes(2)
+    expect(mockPText).toHaveBeenCalledWith({ message: 'URL to receive webhook POST requests' })
+    expect(mockPText).toHaveBeenCalledWith({ message: 'Event type to subscribe to' })
+    expect(mockRunCommand).toHaveBeenCalledWith('test:command', ['--target-url', 'https://example.com', '--event', 'video.uploaded'])
+  })
+
+  it('calls process.exit(0) on cancel (p.isCancel returns true)', async () => {
+    mockPText.mockResolvedValue(Symbol('clack:cancel'))
+    mockPIsCancel.mockReturnValue(true)
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('process.exit') })
+
+    const Cmd = makeBaseCommandClass()
+    const cmd = new Cmd([], makeOclifConfig())
+    const err = makeFailedFlagError(['name'], { name: { description: 'Your name' } })
+
+    await expect((cmd as any).catch(err)).rejects.toThrow('process.exit')
+    expect(mockPCancel).toHaveBeenCalledWith('Cancelled')
+    expect(exitSpy).toHaveBeenCalledWith(0)
+    expect(mockRunCommand).not.toHaveBeenCalled()
+
+    exitSpy.mockRestore()
   })
 })
