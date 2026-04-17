@@ -48,7 +48,7 @@ TwentyThree CLI provides 244 commands across 24 topics.
 
 ## Terminology
 
-The TwentyThree API uses legacy object names. The CLI maps them to modern terms:
+The TwentyThree API and CLI use different names for some objects:
 
 | API Term | CLI Term |
 |----------|----------|
