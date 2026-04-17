@@ -2,7 +2,7 @@ import { Args, Flags } from '@oclif/core'
 import { stat } from 'node:fs/promises'
 import chalk from 'chalk'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatBytes, EXIT_ERROR } from '../../lib/output.js'
+import { formatJsonOutput, formatBytes, EXIT_ERROR, formatApiError } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 import { uploadChunked } from '../../upload/chunked-upload.js'
 import { DEFAULT_CHUNK_SIZE, DEFAULT_CONCURRENCY } from '../../upload/types.js'
@@ -97,7 +97,7 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
     })
 
     if (tokenError) {
-      this.error(applyCliTerms(String(tokenError)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(tokenError)), { exit: EXIT_ERROR })
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
