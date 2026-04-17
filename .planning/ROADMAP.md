@@ -41,7 +41,7 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 ### v1.2 Burnin & Quality of Life
 
 - [x] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence (completed 2026-04-17)
-- [ ] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh
+- [x] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh (completed 2026-04-17)
 - [ ] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input
 
 ## Phase Details
@@ -137,7 +137,7 @@ Plans:
 
 Plans:
 - [x] 15-01-PLAN.md — Register @oclif/plugin-autocomplete and implement guided setup command with @clack/prompts
-- [ ] 15-02-PLAN.md — Update docs (README + getting-started), bump to 1.0.2, publish to npm
+- [x] 15-02-PLAN.md — Update docs (README + getting-started), bump to 1.0.2, publish to npm
 
 ### Phase 16: Interactive Prompts
 **Goal**: Users are never dropped into a raw oclif error when they forget a required flag — instead the CLI asks them for the missing value interactively
@@ -172,5 +172,5 @@ Plans:
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 15. Tab Completion | v1.2 | 1/2 | In Progress|  |
+| 15. Tab Completion | v1.2 | 2/2 | Complete   | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 0/2 | Not started | - |
