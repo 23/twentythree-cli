@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Repository Polish & Release
 status: executing
-stopped_at: Phase 13 context gathered
-last_updated: "2026-04-17T07:29:06.682Z"
-last_activity: 2026-04-17 -- Phase 13 planning complete
+stopped_at: Completed 13-npm-publish-01-PLAN.md
+last_updated: "2026-04-17T07:34:56.933Z"
+last_activity: 2026-04-17
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-16)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 12 — readmes-changelog
+**Current focus:** Phase 13 — npm-publish
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
+Phase: 13 (npm-publish) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-04-17 -- Phase 13 planning complete
+Last activity: 2026-04-17
 
 Progress: [          ] 0%
 
@@ -59,6 +59,9 @@ Recent decisions affecting current work:
 - [Phase 11-documentation]: oclif readme --multi --nested-topics-depth 2 generates 156 files (not 49) — correct behavior, all sub-commands get individual pages
 - [Phase 11-documentation]: getting-started uses space-separated commands (twentythree video list) per topicSeparator config
 - [Phase 11-documentation]: api-spec-upgrade.md written as standalone readable prose — does not reference CLAUDE.md per D-09
+- [Phase 13-npm-publish]: NODE_AUTH_TOKEN scoped to publish step only (not job-level) per T-13-01 threat mitigation
+- [Phase 13-npm-publish]: registry-url must be set in setup-node for NODE_AUTH_TOKEN to work — without it ENEEDAUTH in CI
+- [Phase 13-npm-publish]: Version directly edited in package.json (not npm version command) to avoid GSD commit flow conflicts; developer creates v1.0.0 tag in Plan 02
 
 ### Pending Todos
 
@@ -71,6 +74,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T07:13:03.248Z
-Stopped at: Phase 13 context gathered
-Resume file: .planning/phases/13-npm-publish/13-CONTEXT.md
+Last session: 2026-04-17T07:34:56.931Z
+Stopped at: Completed 13-npm-publish-01-PLAN.md
+Resume file: None

@@ -97,7 +97,7 @@ Plans:
   3. GitHub Actions workflow exists that publishes on git tag push
 **Plans**: 2 plans
 Plans:
-- [ ] 13-01-PLAN.md — Create release workflow + bump version to 1.0.0
+- [x] 13-01-PLAN.md — Create release workflow + bump version to 1.0.0
 - [ ] 13-02-PLAN.md — Set npm token, push tag, verify publish
 
 ## Progress
@@ -117,4 +117,4 @@ Plans:
 | 10. Package Hygiene | v1.1 | 1/1 | Complete    | 2026-04-16 |
 | 11. Documentation | v1.1 | 2/2 | Complete    | 2026-04-16 |
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete    | 2026-04-17 |
-| 13. npm Publish | v1.1 | 0/2 | Not started | - |
+| 13. npm Publish | v1.1 | 1/2 | In Progress|  |

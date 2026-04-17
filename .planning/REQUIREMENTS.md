@@ -21,9 +21,9 @@
 
 ### npm Publish (PUBLISH)
 
-- [ ] **PUBLISH-01**: Package published to npm as `twentythree-cli` at version `1.0.0` with `--access public`
+- [x] **PUBLISH-01**: Package published to npm as `twentythree-cli` at version `1.0.0` with `--access public`
 - [ ] **PUBLISH-02**: `npm install -g twentythree-cli` and `twentythree --version` verified on a clean environment after publish
-- [ ] **PUBLISH-03**: GitHub Actions workflow publishes the package on git tag push
+- [x] **PUBLISH-03**: GitHub Actions workflow publishes the package on git tag push
 
 ### Docs Reference (DOCS)
 
