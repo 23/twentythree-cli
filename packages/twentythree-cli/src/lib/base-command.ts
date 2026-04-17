@@ -1,6 +1,6 @@
 import { Command, Flags, Interfaces } from '@oclif/core'
 import chalk from 'chalk'
-import { select } from '@clack/prompts'
+import * as p from '@clack/prompts'
 import {
   getWorkspaces,
   getActiveWorkspace,
@@ -106,7 +106,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         this.error(`No workspace matching '${workspaceFlagValue}' found — run \`twentythree workspace list\` to see available workspaces`, { exit: 1 })
       } else if (Array.isArray(result)) {
         // Ambiguous match — prompt user to select
-        const chosen = await select({
+        const chosen = await p.select({
           message: `Multiple workspaces match '${workspaceFlagValue}'. Select one:`,
           options: result.map((w) => ({
             value: w.domain,
@@ -152,6 +152,49 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       baseUrl: this.apiBaseUrl,
       token: this.activeWorkspace.bearer_token || undefined,
     })
+  }
+
+  public async catch(err: Error & { parse?: { input?: { flags?: Record<string, { description?: string; summary?: string }> } } }): Promise<void> {
+    // Non-TTY guard (D-03): CI, pipes, agent mode — re-throw unchanged
+    if (!process.stdin.isTTY) {
+      return super.catch(err)
+    }
+
+    // Only intercept FailedFlagValidationError — the class is not exported from
+    // @oclif/core's public API, so use constructor.name instead of instanceof.
+    if (err.constructor.name !== 'FailedFlagValidationError') {
+      return super.catch(err)
+    }
+
+    // Extract all missing flag names from error message.
+    // Verified format (oclif/core@4.10.5 lib/parser/validate.js):
+    //   "The following error(s) occurred:\n  Missing required flag {name}\n..."
+    const flagNames = [...err.message.matchAll(/Missing required flag ([^\n]+)/g)].map(m => m[1])
+    if (flagNames.length === 0) {
+      return super.catch(err)
+    }
+
+    // Flag definitions (description, summary) live on the error's parse property
+    const inputFlags = (err as any).parse?.input?.flags ?? {}
+
+    p.intro('Missing required input')
+    const extraArgv: string[] = []
+    for (const flagName of flagNames) {
+      const flagDef = inputFlags[flagName]
+      const label = flagDef?.description ?? flagDef?.summary ?? flagName
+      const value = await p.text({ message: label })
+      if (p.isCancel(value)) {
+        p.cancel('Cancelled')
+        process.exit(0)
+      }
+      extraArgv.push(`--${flagName}`, value as string)
+    }
+    p.outro('Running command...')
+
+    // Re-invoke with original argv + collected values.
+    // this.argv preserves flags the user DID provide (e.g. --workspace, --json).
+    const newArgv = [...(this.argv ?? []), ...extraArgv]
+    await this.config.runCommand(this.id!, newArgv)
   }
 
   /**
