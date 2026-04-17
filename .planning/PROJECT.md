@@ -28,10 +28,10 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - ✓ Automatic token refresh while CLI is running to prevent expiry (with file lock for concurrency) — v1.0
 - ✓ Commands scoped to the active workspace; user can switch workspace or override default — v1.0
 - ✓ Full API coverage — 235 endpoints across 22 resource groups, hand-authored commands using generated OpenAPI types — v1.0
+- ✓ Bug audit & fix — `parseBoolParam is not defined` on `video list` fixed; 15 TypeScript errors swept and resolved; `twentythree-cli@1.0.1` published to npm — Validated in Phase 14
 
 ### Active
 
-- [ ] Bug audit & fix — `parseBoolParam is not defined` on `video list`; cross-command sweep for similar reference errors
 - [ ] Tab completion — oclif autocomplete plugin for subcommands and flags in bash/zsh
 - [ ] Prompt on missing required flags — interactive prompt instead of error when required flag is omitted
 
@@ -103,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 — Milestone v1.2 started (burnin & quality of life)*
+*Last updated: 2026-04-17 — Phase 14 complete (bug audit & fix; 1.0.1 published)*
