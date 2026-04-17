@@ -186,7 +186,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     for (const flagName of flagNames) {
       const flagDef = inputFlags[flagName]
       const label = flagDef?.description ?? flagDef?.summary ?? flagName
-      const value = await p.text({ message: label })
+      const value = await p.text({
+        message: label,
+        validate: (v) => v.trim().length === 0 ? 'Value is required' : undefined,
+      })
       if (p.isCancel(value)) {
         p.cancel('Cancelled')
         process.exit(0)

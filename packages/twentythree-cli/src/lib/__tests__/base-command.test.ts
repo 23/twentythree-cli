@@ -358,7 +358,7 @@ describe('BaseCommand.catch() — interactive prompt for missing required flag',
     await (cmd as any).catch(err)
 
     expect(mockPIntro).toHaveBeenCalledWith('Missing required input')
-    expect(mockPText).toHaveBeenCalledWith({ message: 'Your name' })
+    expect(mockPText).toHaveBeenCalledWith(expect.objectContaining({ message: 'Your name' }))
     expect(mockPOutro).toHaveBeenCalledWith('Running command...')
     expect(mockRunCommand).toHaveBeenCalledWith('test:command', ['--name', 'Alice'])
   })
@@ -377,8 +377,8 @@ describe('BaseCommand.catch() — interactive prompt for missing required flag',
     await (cmd as any).catch(err)
 
     expect(mockPText).toHaveBeenCalledTimes(2)
-    expect(mockPText).toHaveBeenCalledWith({ message: 'URL to receive webhook POST requests' })
-    expect(mockPText).toHaveBeenCalledWith({ message: 'Event type to subscribe to' })
+    expect(mockPText).toHaveBeenCalledWith(expect.objectContaining({ message: 'URL to receive webhook POST requests' }))
+    expect(mockPText).toHaveBeenCalledWith(expect.objectContaining({ message: 'Event type to subscribe to' }))
     expect(mockRunCommand).toHaveBeenCalledWith('test:command', ['--target-url', 'https://example.com', '--event', 'video.uploaded'])
   })
 
