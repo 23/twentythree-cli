@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { detectShell } from '../detect-shell.js'
 
 vi.mock('@clack/prompts', () => ({
   intro: vi.fn(),
@@ -46,39 +47,19 @@ describe('autocomplete', () => {
 
   describe('shell detection', () => {
     it('detects zsh from $SHELL env var', () => {
-      process.env.SHELL = '/bin/zsh'
-      const rawShell = process.env.SHELL ?? ''
-      const detected = rawShell.endsWith('zsh') ? 'zsh'
-        : rawShell.endsWith('bash') ? 'bash'
-        : null
-      expect(detected).toBe('zsh')
+      expect(detectShell('/bin/zsh')).toBe('zsh')
     })
 
     it('detects bash from $SHELL env var', () => {
-      process.env.SHELL = '/usr/local/bin/bash'
-      const rawShell = process.env.SHELL ?? ''
-      const detected = rawShell.endsWith('zsh') ? 'zsh'
-        : rawShell.endsWith('bash') ? 'bash'
-        : null
-      expect(detected).toBe('bash')
+      expect(detectShell('/usr/local/bin/bash')).toBe('bash')
     })
 
     it('returns null for unrecognized shell', () => {
-      process.env.SHELL = '/usr/local/bin/fish'
-      const rawShell = process.env.SHELL ?? ''
-      const detected = rawShell.endsWith('zsh') ? 'zsh'
-        : rawShell.endsWith('bash') ? 'bash'
-        : null
-      expect(detected).toBeNull()
+      expect(detectShell('/usr/local/bin/fish')).toBeNull()
     })
 
     it('returns null when $SHELL is unset', () => {
-      delete process.env.SHELL
-      const rawShell = process.env.SHELL ?? ''
-      const detected = rawShell.endsWith('zsh') ? 'zsh'
-        : rawShell.endsWith('bash') ? 'bash'
-        : null
-      expect(detected).toBeNull()
+      expect(detectShell('')).toBeNull()
     })
   })
 })

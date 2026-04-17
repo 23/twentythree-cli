@@ -1,5 +1,6 @@
 import { Command } from '@oclif/core'
 import * as p from '@clack/prompts'
+import { detectShell } from './detect-shell.js'
 
 export default class Autocomplete extends Command {
   static description = 'Set up tab completion for your shell'
@@ -19,10 +20,7 @@ export default class Autocomplete extends Command {
     p.intro('Tab completion setup')
 
     // Shell detection via $SHELL env var
-    const rawShell = process.env.SHELL ?? ''
-    const detectedShell = rawShell.endsWith('zsh') ? 'zsh'
-      : rawShell.endsWith('bash') ? 'bash'
-      : null
+    const detectedShell = detectShell(process.env.SHELL ?? '')
 
     let shell: string
 
