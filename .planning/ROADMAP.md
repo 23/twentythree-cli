@@ -151,7 +151,14 @@ Plans:
   2. Each reference file documents at minimum the list, get, create, update, and delete commands (where they exist) with flag names and a usage example
   3. `skills/workflows/` contains 2–3 files; each workflow file shows a multi-step agent automation sequence (e.g. upload-and-publish, webinar-lifecycle)
   4. `validate-skills` script exits 0 against all 22 reference files (valid frontmatter, all groups present)
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [ ] 19-01-PLAN.md — 7 CRUD reference files (action, audience, collector, comment, poll, spot, tag)
+- [ ] 19-02-PLAN.md — 8 platform-mgmt reference files (app, openupload, player, presentation, protection, session, setting, site)
+- [ ] 19-03-PLAN.md — 4 complex reference files (analytics, category, thumbnail, user)
+- [ ] 19-04-PLAN.md — video.md (25 commands: video + section + subtitle subtopics; terminology notes)
+- [ ] 19-05-PLAN.md — webinar.md (40+ commands across 9 subtopics) + webhook.md (5 commands)
+- [ ] 19-06-PLAN.md — workflows/upload-and-publish.md + workflows/webinar-lifecycle.md (SKILL-03)
 **UI hint**: no
 
 ### Phase 20: Runtime Installer
