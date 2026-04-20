@@ -1,8 +1,8 @@
-import { Command } from '@oclif/core'
+import { BaseCommand } from '../../lib/base-command.js'
 import * as p from '@clack/prompts'
 import { detectShell } from '../../lib/detect-shell.js'
 
-export default class Autocomplete extends Command {
+export default class Autocomplete extends BaseCommand<typeof Autocomplete> {
   static description = 'Set up tab completion for your shell'
 
   static agentMetadata = {
@@ -13,6 +13,15 @@ export default class Autocomplete extends Command {
   }
 
   static examples = ['<%= config.bin %> autocomplete']
+
+  // Autocomplete runs before any workspace is configured, so we intentionally
+  // skip BaseCommand.init() (which would call this.error() when no workspace
+  // is set). We still inherit BaseCommand.catch() for interactive missing-flag
+  // prompting (PROMPT-01) — that is the whole reason for extending BaseCommand
+  // here instead of bare Command.
+  public async init(): Promise<void> {
+    // intentionally empty — do not call super.init()
+  }
 
   public async run(): Promise<void> {
     await this.parse(Autocomplete)
