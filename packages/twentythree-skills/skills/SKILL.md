@@ -1,18 +1,211 @@
 ---
 name: twentythree
 description: |
-  TwentyThree CLI skills for AI agents.
-  Commands for managing videos, categories, webinars, and all TwentyThree resources.
+  Full TwentyThree video platform CLI. Use when the user asks to upload or manage
+  videos, run webinars, query analytics, manage audiences, configure players,
+  create categories, manage tags, spots, thumbnails, webhooks, collectors, polls,
+  presentations, or any TwentyThree platform operation. Covers 235+ API commands
+  across 22 resource groups plus meta commands (auth, workspace, autocomplete, doctor).
+  Every command supports --json for machine-readable output and --agent for
+  self-describing metadata (api_endpoint, auth_scope, output_shape, side_effects).
 triggers:
+  - upload video
+  - manage videos
+  - webinar
+  - live event
+  - analytics
   - twentythree
   - video platform
-  - webinar management
+  - TwentyThree CLI
 invocable: true
-argument-hint: "<command> [flags]"
+argument-hint: "<topic> <verb> [flags]"
+allowed-tools: Bash(twentythree *)
+compatibility: Requires twentythree-cli installed globally (npm install -g twentythree-cli). Node.js >=22.
 ---
 
 # TwentyThree CLI
 
-> Skills content is a work in progress. This package will contain AI agent skills covering all TwentyThree CLI commands when complete.
+> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 235+ commands across 22 resource groups.
+>
+> Always use `--json` in agentic contexts for structured output. Always run `twentythree <command> --agent` before calling an unfamiliar command to discover its flags, API endpoint, auth scope, and side effects.
 
-See [twentythree-cli](https://www.npmjs.com/package/twentythree-cli) for the CLI itself.
+## Prerequisites: Authentication
+
+Before any command, configure credentials once per workspace:
+
+```bash
+twentythree auth credentials
+```
+
+Prompts interactively for:
+- **Domain** — your workspace domain (e.g. `company.video.twentythree.com`)
+- **Bearer token** — copy from `Settings → API` inside your TwentyThree workspace admin
+
+Credentials are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) — never in plaintext files.
+
+Verify auth is working:
+
+```bash
+twentythree auth status
+```
+
+### Multi-Workspace
+
+The CLI supports multiple workspaces simultaneously:
+
+```bash
+twentythree workspace list                   # Show all configured workspaces
+twentythree workspace use <domain>           # Set the active workspace
+twentythree <command> --workspace <domain>   # One-off override for a single call
+```
+
+## Command Syntax
+
+```
+twentythree <topic> <verb> [flags]
+```
+
+Global flags available on every command:
+
+| Flag | Purpose |
+|------|---------|
+| `--json` | Machine-readable JSON output — always use in agentic contexts |
+| `--agent` | Return machine-readable command metadata (no API call made) |
+| `--workspace <domain>` | Target a specific workspace for this call only |
+
+## Self-Discovery: The `--agent` Flag
+
+Before calling any command you haven't used recently, introspect it:
+
+```bash
+twentythree video upload --agent
+```
+
+Returns JSON:
+
+```json
+{
+  "command": "video:upload",
+  "description": "Upload a video file",
+  "flags": [
+    { "name": "title", "type": "option", "required": true, "description": "..." },
+    { "name": "category-id", "type": "option", "required": false, "description": "..." }
+  ],
+  "examples": ["twentythree video upload ./file.mp4 --title \"Demo\""],
+  "api_endpoint": "POST /photo/redeem-upload-token",
+  "auth_scope": "write",
+  "output_shape": { "type": "key-value" },
+  "side_effects": "creates"
+}
+```
+
+Key fields returned by `--agent`:
+
+- **`api_endpoint`** — the underlying REST endpoint (note terminology mapping below)
+- **`auth_scope`** — one of `anonymous`, `none`, `read`, `write`, `admin`, `super`
+- **`output_shape`** — `{ type: "table", columns: [...] }`, `{ type: "key-value" }`, or `{ type: "none" }`
+- **`side_effects`** — `none`, `creates`, `updates`, or `destructive`
+- **`flags`** — the complete flag list with types, defaults, and required-ness
+
+Always check `auth_scope` and `side_effects` before write/admin operations.
+
+## Key Invariants
+
+- **Use `--json` in agentic contexts.** Human-formatted tables are the default; agents should always request JSON.
+- **File uploads use chunked upload automatically.** Never construct multipart requests directly — `twentythree video upload <file>` handles chunking under the hood.
+- **Terminology mapping** — the CLI uses product-domain names while the API uses legacy names:
+  - CLI `video` ↔ API `photo`
+  - CLI `category` ↔ API `album`
+  - CLI `webinar` ↔ API `live`
+  - The `api_endpoint` field in `--agent` output shows the actual API path.
+- **After upload or create, the CLI prints the new resource ID and its admin URL.** Use the ID for follow-up updates (e.g. setting thumbnail, publishing).
+- **On persistent errors, run `twentythree doctor`** to diagnose auth, connectivity, and dependency issues.
+
+## Resource Index
+
+All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
+
+| Topic | Representative verbs | Use for |
+|-------|---------------------|---------|
+| `video` | `upload`, `list`, `get`, `update`, `delete`, `replace`, `frame`, `transcoding-progress` | Video file management, upload, metadata, thumbnails |
+| `webinar` | `create`, `list`, `get`, `update`, `delete`, `repeat`, `highlights`, `clips`, `metrics`, `log` + attachment/mail/queued-video/recording/room/section/series/speaker/transcription subtopics | Live events, scheduling, recordings, attendee comms |
+| `analytics` | `conversions`, `live`, `usage`, `video` subtopics (many verbs each) | Reporting, viewer data, playback metrics, conversion tracking |
+| `audience` | `list`, `create`, `get`, `update`, `delete` + segment ops | Audience segmentation and targeting |
+| `category` | `list`, `create`, `get`, `update`, `delete` | Content organization (API: albums) |
+| `action` | `list`, `create`, `get`, `update`, `delete` + subtypes | Interactive overlays, CTAs inside videos |
+| `collector` | `list`, `create`, `delete` | Lead capture forms |
+| `comment` | `list`, `create`, `get`, `update`, `delete` | Video comments moderation |
+| `player` | `list`, `create`, `get`, `update`, `delete` | Player configuration and theming |
+| `poll` | `list`, `create`, `get`, `update`, `delete` | In-video polls |
+| `spot` | `list`, `create`, `get`, `update`, `delete` | Hotspot annotations on videos |
+| `tag` | `list`, `create` | Content tagging |
+| `thumbnail` | `list`, `create`, `get`, `update`, `delete` | Video thumbnail management |
+| `webhook` | `list`, `create`, `get`, `update`, `delete` | Event webhooks |
+| `app` | `list`, `thumbnail`, `create`, `get`, `update`, `delete` | App/integration management |
+| `presentation` | `list` + page/setting subtopics | Presentation content |
+| `protection` | `list`, `create`, `delete` | Access protection |
+| `session` | `list`, `get` | Viewer session data |
+| `setting` | `get` | Workspace settings |
+| `site` | `list`, `search` | Site-level operations |
+| `openupload` | `list`, `create`, `delete` | Open upload tokens |
+| `user` | `list`, `create`, `get`, `update`, `delete` | User management |
+
+## Meta Commands
+
+These are not in the 22 resource groups — they are CLI-local utilities:
+
+| Topic | Commands | Purpose |
+|-------|----------|---------|
+| `auth` | `credentials`, `status` | Configure and verify bearer-token auth |
+| `workspace` | `list`, `use` | Multi-workspace selection |
+| `autocomplete` | `bash`, `zsh` | Shell completion (`twentythree autocomplete bash | source`) |
+| `doctor` | (top-level: `twentythree doctor`) | Diagnose auth, connectivity, dependency issues |
+
+## Common Workflows
+
+### Upload and Publish a Video
+
+```bash
+# 1. Upload (chunked upload is automatic)
+twentythree video upload ./video.mp4 --title "Product Demo" --json
+#    => prints { "id": "<video-id>", "admin_url": "..." }
+
+# 2. Assign to a category (API: album)
+twentythree video update <video-id> --category-id <cat-id> --json
+
+# 3. Set a thumbnail at second 5
+twentythree thumbnail create --video-id <video-id> --time 5 --json
+
+# 4. Publish
+twentythree video update <video-id> --published 1 --json
+```
+
+### Webinar Setup
+
+```bash
+# 1. Create the webinar (API: live)
+twentythree webinar create --title "Q2 Kickoff" --scheduled-at "2026-05-01T14:00:00Z" --json
+#    => prints { "id": "<webinar-id>", "admin_url": "..." }
+
+# 2. Fetch room URL and stream key
+twentythree webinar get <webinar-id> --json
+
+# 3. Start an associated session when the event begins
+twentythree session list --webinar-id <webinar-id> --json
+```
+
+## Diagnostics
+
+```bash
+twentythree doctor        # Check auth, connectivity, Node version, keychain access
+twentythree --version     # Print CLI version
+twentythree <cmd> --help  # Human-readable help for any command
+twentythree <cmd> --agent # Machine-readable metadata for any command (preferred for agents)
+```
+
+If a command fails unexpectedly, in order:
+1. `twentythree auth status` — confirm credentials are present and the workspace matches
+2. `twentythree <cmd> --agent` — confirm required flags and auth scope
+3. `twentythree doctor` — catch environmental issues
+
+See [twentythree-cli on npm](https://www.npmjs.com/package/twentythree-cli) for installation, and the GitHub repo for docs and issue reporting.
