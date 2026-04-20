@@ -54,7 +54,7 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 <details open>
 <summary>🔲 v1.3 TwentyThree Agent Skill (Phases 18–20) — ACTIVE</summary>
 
-- [ ] **Phase 18: Package Foundation** — Monorepo package scaffold, turbo no-build config, validate-skills script, root SKILL.md
+- [x] **Phase 18: Package Foundation** — Monorepo package scaffold, turbo no-build config, validate-skills script, root SKILL.md (completed 2026-04-20)
 - [ ] **Phase 19: Skill Content** — 22 hand-authored resource reference files and 2–3 agent workflow files
 - [ ] **Phase 20: Runtime Installer** — `npx twentythree-skills add` with runtime detection, --project flag, and idempotent file copy
 
@@ -188,6 +188,6 @@ Plans:
 | 15. Tab Completion | v1.2 | 2/2 | Complete | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete | 2026-04-17 |
 | 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
-| 18. Package Foundation | v1.3 | 2/2 | Complete   | 2026-04-20 |
+| 18. Package Foundation | v1.3 | 2/2 | Complete    | 2026-04-20 |
 | 19. Skill Content | v1.3 | 0/? | Not started | - |
 | 20. Runtime Installer | v1.3 | 0/? | Not started | - |
