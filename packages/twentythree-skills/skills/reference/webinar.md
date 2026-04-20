@@ -928,3 +928,444 @@ twentythree webinar recording split 12345 --json
 ```
 
 ---
+
+## Subtopic: webinar room
+
+Room commands control the live broadcast room (stream key, room URL, connection info). `webinar room connect` is the command agents use to retrieve the stream key and room URL before going live.
+
+### webinar room connect
+
+**Auth scope:** read  **Side effects:** updates  **Output:** key-value
+
+Returns stream key and room URL. These credentials enable the broadcaster to start streaming into the webinar.
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Get room connection info (stream key + room URL)
+twentythree webinar room connect <id> --json
+
+# Example with a real ID
+twentythree webinar room connect 12345 --json
+```
+
+---
+
+### webinar room info
+
+**Auth scope:** read  **Side effects:** none  **Output:** key-value
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Get room information for a webinar
+twentythree webinar room info <id> --json
+
+# Example with a real ID
+twentythree webinar room info 12345 --json
+```
+
+---
+
+### webinar room send-recording
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Send a recording from the webinar room
+twentythree webinar room send-recording <id> --json
+
+# Example with a real ID
+twentythree webinar room send-recording 12345 --json
+```
+
+---
+
+### webinar room themes
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Description)
+
+No additional flags.
+
+```bash
+# List available room themes
+twentythree webinar room themes --json
+
+# Use the ID value when configuring room appearance
+twentythree webinar room themes --json
+```
+
+---
+
+## Subtopic: webinar section
+
+Sections are agenda items (time-stamped chapter markers) displayed to viewers. Unlike `video section`, webinar sections can be scheduled relative to the webinar start time.
+
+### webinar section list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Title, Start Time, Description)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--token` | no | — | Webinar token (auto-looked up if omitted) |
+
+```bash
+# List agenda sections for a webinar
+twentythree webinar section list <id> --json
+
+# Example with a real ID
+twentythree webinar section list 12345 --json
+```
+
+---
+
+### webinar section add
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--title` | no | — | Section title |
+| `--description` | no | — | Section description |
+| `--start-time` | no | — | Start time in seconds |
+
+```bash
+# Add an intro section at time 0
+twentythree webinar section add <id> --title "Introduction" --start-time 0 --json
+
+# Add a Q&A section at 60 minutes
+twentythree webinar section add <id> --title "Q&A" --start-time 3600 --description "Audience questions" --json
+```
+
+---
+
+### webinar section update
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--title` | no | — | New section title |
+| `--description` | no | — | New section description |
+| `--start-time` | no | — | New start time in seconds |
+
+```bash
+# Update a section title
+twentythree webinar section update <id> <section-id> --title "Updated Title" --json
+
+# Update start time and description
+twentythree webinar section update <id> <section-id> --start-time 1800 --description "Updated description" --json
+```
+
+---
+
+### webinar section remove
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+No additional flags — pass webinar ID and section ID as positional arguments.
+
+```bash
+# Remove a section from a webinar
+twentythree webinar section remove <id> <section-id> --json
+
+# Example with real IDs
+twentythree webinar section remove 12345 99 --json
+```
+
+---
+
+## Subtopic: webinar attachment
+
+Attachments are files (PDFs, slides, links) made available to webinar viewers.
+
+### webinar attachment list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Filename, Size, Hidden)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--token` | no | — | Webinar token (auto-looked up if omitted) |
+| `--include-hidden` | no | false | Include hidden attachments |
+
+```bash
+# List attachments for a webinar
+twentythree webinar attachment list <id> --json
+
+# Include hidden attachments
+twentythree webinar attachment list <id> --include-hidden --json
+```
+
+---
+
+### webinar attachment upload
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+Chunked upload is automatic.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--chunk-size` | no | 5242880 | Chunk size in bytes (default: 5 MB) |
+| `--concurrency` | no | 5 | Number of chunks to upload in parallel |
+| `--hidden` | no | false | Upload attachment as hidden |
+
+```bash
+# Upload slides as a downloadable attachment
+twentythree webinar attachment upload <id> ./slides.pdf --json
+
+# Upload a handout as hidden (not visible to viewers until unhidden)
+twentythree webinar attachment upload <id> ./handout.pdf --hidden --json
+```
+
+---
+
+### webinar attachment set-hidden
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--filename` | no | — | Filename of the attachment |
+| `--hidden` | yes | — | Set hidden (`--hidden`) or visible (`--no-hidden`) |
+
+```bash
+# Hide an attachment from viewers
+twentythree webinar attachment set-hidden <id> --filename slides.pdf --hidden --json
+
+# Make a hidden attachment visible
+twentythree webinar attachment set-hidden <id> --filename slides.pdf --no-hidden --json
+```
+
+---
+
+### webinar attachment delete
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--filename` | no | — | Filename of the attachment to delete |
+
+```bash
+# Delete an attachment from a webinar
+twentythree webinar attachment delete <id> --filename slides.pdf --json
+
+# Delete another attachment
+twentythree webinar attachment delete <id> --filename handout.pdf --json
+```
+
+---
+
+## Subtopic: webinar queued-video
+
+Queued videos are pre-recorded clips played during a live webinar (simulated-live / interstitial content).
+
+### webinar queued-video add
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--video-id` | no | — | Video ID to queue |
+
+```bash
+# Add a pre-recorded intro video to the queue
+twentythree webinar queued-video add <id> --video-id <video-id> --json
+
+# Example with real IDs
+twentythree webinar queued-video add 12345 --video-id 67890 --json
+```
+
+---
+
+### webinar queued-video remove
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--video-id` | no | — | Video ID to remove from queue |
+
+```bash
+# Remove a video from the webinar queue
+twentythree webinar queued-video remove <id> --video-id <video-id> --json
+
+# Example with real IDs
+twentythree webinar queued-video remove 12345 --video-id 67890 --json
+```
+
+---
+
+## Subtopic: webinar transcription
+
+Transcription commands manage speech-to-text transcripts generated from webinar recordings. Transcripts feed into closed captions and AI-generated summaries.
+
+### webinar transcription list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Language, Status)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--token` | no | — | Webinar token (auto-looked up if not provided) |
+
+```bash
+# List transcriptions for a webinar
+twentythree webinar transcription list <id> --json
+
+# Example with a real ID
+twentythree webinar transcription list 12345 --json
+```
+
+---
+
+### webinar transcription connect
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--presenter-token` | no | — | Presenter token |
+
+```bash
+# Connect a transcription to a webinar
+twentythree webinar transcription connect <id> --json
+
+# Connect with a presenter token
+twentythree webinar transcription connect <id> --presenter-token abc123 --json
+```
+
+---
+
+### webinar transcription locales
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Locale, Name)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--token` | no | — | Webinar token (auto-looked up if not provided) |
+
+```bash
+# List available transcription locales
+twentythree webinar transcription locales <id> --json
+
+# Example with a real ID
+twentythree webinar transcription locales 12345 --json
+```
+
+---
+
+### webinar transcription transcriptionlist
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Webinar ID, Language, Status)
+
+Lists all transcriptions in the workspace (not scoped to a single webinar).
+
+No additional flags.
+
+```bash
+# List all transcriptions in the workspace
+twentythree webinar transcription transcriptionlist --json
+
+# Use to audit transcription status across all webinars
+twentythree webinar transcription transcriptionlist --json
+```
+
+---
+
+## Common Patterns
+
+### Create and publish a webinar
+
+```bash
+# 1. Create a scheduled webinar
+twentythree webinar create --title "Q2 Town Hall" --live-date "2026-05-15T16:00:00Z" --json
+#    => { "data": { "id": "<webinar-id>", "admin_url": "..." } }
+
+# 2. Publish it (make visible to registrants)
+twentythree webinar update <webinar-id> --publish --json
+```
+
+### Go-live sequence
+
+```bash
+# 1. Get room connection info (stream key + room URL)
+twentythree webinar room connect <id> --json
+#    => Returns stream key and room URL for your streaming software
+
+# 2. Start recording once you go live
+twentythree webinar recording start <id> --json
+```
+
+### Session archive after broadcast
+
+```bash
+# 1. Stop recording when session ends
+twentythree webinar recording stop <id> --json
+
+# 2. Wait for processing, then check clips availability
+twentythree webinar recording status <id> --json
+twentythree webinar clips <id> --json
+
+# 3. Mark webinar as previous (archived)
+twentythree webinar update <id> --status previous --json
+```
+
+### Add a speaker and agenda section
+
+```bash
+# Add a speaker
+twentythree webinar speaker add <id> --name "Jane Doe" --email jane@example.com --title "CTO" --json
+
+# Add agenda sections
+twentythree webinar section add <id> --title "Introduction" --start-time 0 --json
+twentythree webinar section add <id> --title "Demo" --start-time 600 --json
+twentythree webinar section add <id> --title "Q&A" --start-time 3600 --json
+```
+
+### Attach slides as a downloadable
+
+```bash
+# Upload slides PDF as an attachment
+twentythree webinar attachment upload <id> ./slides.pdf --json
+
+# Verify the attachment is visible
+twentythree webinar attachment list <id> --json
+```
+
+### Schedule a repeat occurrence
+
+```bash
+# Schedule next week's repeat
+twentythree webinar repeat <id> --date "2026-05-22T16:00:00Z" --json
+#    => { "data": { "id": "<new-webinar-id>", "admin_url": "..." } }
+```
+
+### Filter webinar list by status
+
+```bash
+# List live webinars
+twentythree webinar list --status live --json
+
+# List all previous webinars including private
+twentythree webinar list --status previous --include-private --json
+```
+
+---
+
+## Terminology Notes
+
+CLI `webinar` = API `live`. The `api_endpoint` field in `--agent` output uses the API name:
+
+- `twentythree webinar create` → `POST /live/create`
+- `twentythree webinar list` → `GET /live/list`
+- `twentythree webinar update` → `POST /live/update`
+- `twentythree webinar delete` → `POST /live/delete`
+- `twentythree webinar recording start` → `POST /live/recording/start`
+- `twentythree webinar room connect` → `GET /live/webinar/connect`
+
+When reading the raw OpenAPI spec, `live` refers to a webinar. The `live session` endpoint family (`/live/webinar/*`) backs the `webinar room` concept — note that `webinar room connect` uses `/live/webinar/connect`.
+When commenting on a webinar via the `comment` topic, pass `--object-type live`.
+
