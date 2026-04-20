@@ -6,7 +6,7 @@ description: Upload a video file, set metadata, and publish it on TwentyThree.
 # Workflow: Upload and Publish a Video
 
 > Complete sequence for uploading a video file, setting metadata, and making it publicly visible.
-> All commands use `--json` — capture IDs from the `data.id` field of each response.
+> All commands use `--json` — capture IDs from the `data.photo_id` field of upload responses and `data.id` for other responses.
 
 > See [`reference/video.md`](../reference/video.md) for exhaustive flag details and [`reference/category.md`](../reference/category.md) for category selection.
 
@@ -39,10 +39,11 @@ On failure:
 twentythree video upload ./video.mp4 --title "Product Demo" --category-id <category_id> --json
 ```
 
-Expected output shape: `{ data: { id, admin_url } }`
+Expected output shape: `{ ok: true, data: { photo_id, tree_id, token } }`
 Capture:
-- `data.id` as `video_id`
-- `data.admin_url` as `admin_url` (surface this to the user — always print ID + admin URL after upload)
+- `data.photo_id` as `video_id`
+- Construct admin URL as: `https://<domain>/manage/video/<data.photo_id>`
+  (surface this to the user — the CLI prints it on stdout but it is not in the JSON data object)
 
 On failure:
 - Network error or `401` → run `twentythree auth status` and `twentythree doctor`
@@ -140,6 +141,6 @@ On failure:
   twentythree video upload ./video.mp4 --title "Demo" --publish --json
   ```
   This is valid but skips the optional metadata, frame, and transcoding-check steps.
-- The `data.admin_url` from Step 2 opens the video's admin edit page — surface this to the user so they can review or make manual edits.
+- The admin URL from Step 2 opens the video's admin edit page — surface this to the user so they can review or make manual edits. Construct it as `https://<domain>/manage/video/<data.photo_id>` (it is printed on stdout by the CLI but is not included in the JSON data object).
 - `--category-id` accepts a comma-separated list of IDs to assign to multiple categories simultaneously.
 - After a successful publish, use `twentythree video get <video_id> --json` to confirm the `published` field is `true` before reporting success to the user.
