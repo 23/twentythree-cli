@@ -8,11 +8,15 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current State: v1.2 Shipped
+## Current Milestone: v1.3 TwentyThree Agent Skill
 
-**Shipped:** v1.2 Burnin & Quality of Life on 2026-04-20. All 3 burnin goals delivered: runtime crash fixed, tab completion live, interactive prompts on missing flags.
+**Goal:** Ship a standalone `twentythree-skills` npm package with hand-authored markdown skill definitions for all 22 CLI topics, plus a runtime installer that places files in the right location for Claude Code, Claude.ai, OpenAI Assistants, and Codex.
 
-**Next milestone:** To be planned with `/gsd-new-milestone`.
+**Target features:**
+- Package scaffold — `packages/twentythree-skills` in monorepo, published as `twentythree-skills` on npm, depends on `twentythree-cli`
+- Skill definitions — hand-authored markdown files for all 22 CLI resource groups, informed by existing `agentMetadata`
+- Runtime installer — `npx twentythree-skills add` detects runtime and installs into the right location per runtime
+- Auth integration — skills document the existing keychain-based auth flow; no new credential handling needed
 
 ## Requirements
 
@@ -32,7 +36,7 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 
 ### Active
 
-_(none — next milestone not yet planned)_
+- [ ] `twentythree-skills` package — hand-authored markdown skill definitions for all 22 CLI resource groups, installable into Claude Code, Claude.ai, OpenAI Assistants, and Codex
 
 ### Deferred (post-v1.1)
 
