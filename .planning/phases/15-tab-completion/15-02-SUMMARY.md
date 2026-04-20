@@ -3,6 +3,7 @@ phase: 15-tab-completion
 plan: "02"
 subsystem: docs-versioning
 tags: [documentation, tab-completion, version-bump, changelog, npm-publish]
+requirements_completed: [COMPLETE-01, COMPLETE-02, COMPLETE-03]
 dependency_graph:
   requires: [15-01]
   provides: [tab-completion-docs, version-1.0.2]
