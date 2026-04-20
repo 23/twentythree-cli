@@ -170,7 +170,9 @@ Plans:
   2. Running `npx twentythree-skills add --project` in a directory installs into `.claude/skills/twentythree/` relative to cwd rather than the global location
   3. Re-running the installer a second time completes without error and produces the same output (idempotent)
   4. On a machine where no supported runtime directory is detected, the command prints a clear message naming the directories it checked and exits 0
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 20-01-PLAN.md — Implement bin/add.js runtime installer (detect runtimes, copy skills tree, --project flag, idempotent) + smoke-test verification
 **UI hint**: no
 
 ## Progress
@@ -197,4 +199,4 @@ Plans:
 | 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
 | 18. Package Foundation | v1.3 | 2/2 | Complete    | 2026-04-20 |
 | 19. Skill Content | v1.3 | 6/6 | Complete    | 2026-04-20 |
-| 20. Runtime Installer | v1.3 | 0/? | Not started | - |
+| 20. Runtime Installer | v1.3 | 0/1 | Not started | - |
