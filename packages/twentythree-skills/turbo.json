@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": [],
+      "inputs": ["skills/**/*.md"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": [],
+      "inputs": ["skills/**/*.md", "scripts/validate-skills.mjs"]
+    }
+  }
+}

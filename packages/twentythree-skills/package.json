@@ -3,8 +3,35 @@
   "version": "0.1.0",
   "description": "AI agent skills for the TwentyThree CLI",
   "license": "MIT",
+  "author": "TwentyThree",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/23/twentythree-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/23/twentythree-cli/issues"
+  },
+  "homepage": "https://github.com/23/twentythree-cli#readme",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "bin": {
+    "twentythree-skills": "./bin/add.js"
+  },
   "files": [
-    "SKILL.md"
+    "/bin",
+    "/skills",
+    "/README.md"
   ],
-  "keywords": ["ai", "skills", "twentythree", "cli"]
+  "scripts": {
+    "test": "node scripts/validate-skills.mjs"
+  },
+  "keywords": [
+    "ai",
+    "skills",
+    "twentythree",
+    "cli",
+    "agent"
+  ]
 }
