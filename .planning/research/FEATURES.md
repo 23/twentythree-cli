@@ -1,372 +1,290 @@
-# Features Research: v1.1 Repository Polish & Release
+# Feature Landscape: twentythree-skills Agent Skill Package
 
-**Domain:** CLI npm publishing, developer-facing README, command reference generation, endpoint coverage audit
-**Researched:** 2026-04-16
-**Milestone:** v1.1 Repository Polish & Release
-**Confidence:** HIGH (verified against official sources, real CLI README comparisons, oclif docs, npm docs, and live codebase analysis)
+**Domain:** Agent skill packages for CLI-wrapped APIs; multi-runtime AI agent integration
+**Researched:** 2026-04-20
+**Milestone:** twentythree-skills — separate npm package shipping hand-authored skill files
+**Confidence:** HIGH — based on official agentskills.io spec, Anthropic Claude Code docs, Basecamp skills repo inspection, OpenAI Codex skills docs, and live codebase analysis
 
 ---
 
-## README (Table Stakes vs Differentiators)
+## Background: What the Agent Skills Ecosystem Actually Is
 
-Research basis: direct inspection of gh CLI (github.com/cli/cli), Stripe CLI (github.com/stripe/stripe-cli), fly.io flyctl (github.com/superfly/flyctl), Vercel CLI, and Netlify CLI READMEs.
+The Agent Skills open standard (agentskills.io) originated as a Claude feature, was published as an open standard by Anthropic in late 2025, and was subsequently adopted by OpenAI Codex, Gemini CLI, GitHub Copilot, VS Code, Cursor, Roo Code, and 25+ other agent runtimes. The core format is a `SKILL.md` file with YAML frontmatter in a named directory. Every compliant runtime reads the same file — one skill source works across all platforms.
+
+The Basecamp skills package (`basecamp/skills`) is the clearest prior art for a CLI-backed skill package: their SKILL.md covers 155+ API endpoints across 15+ resource groups from a single file, with `--agent` output mode, `--json` mode, and OAuth token pre-configuration as established patterns.
+
+---
+
+## Skill File Format: What a SKILL.md Must Contain
+
+### Minimum Viable Frontmatter (agentskills.io spec)
+
+```yaml
+---
+name: twentythree           # required; max 64 chars; lowercase letters, numbers, hyphens only
+description: |              # required; max 1024 chars; describes what the skill does AND when to use it
+  Full TwentyThree CLI integration — upload videos, manage categories, run webinars,
+  query analytics, manage audiences, configure spots and players. Use when the user
+  asks about video hosting, content management, viewer analytics, or TwentyThree
+  platform operations.
+---
+```
+
+### Claude Code Extensions (non-standard but additive)
+
+Claude Code extends the base spec with additional frontmatter fields that do not break other runtimes (they are simply ignored). For twentythree-skills, relevant Claude Code extensions include:
+
+```yaml
+compatibility: Requires Node.js >=22 and twentythree-cli installed globally (npm install -g twentythree-cli)
+allowed-tools: Bash(twentythree *)
+```
+
+The `allowed-tools` field pre-approves `twentythree *` bash commands so Claude Code does not interrupt the agent for permission on each CLI call. This is the correct pattern for CLI-backed skills.
+
+### Body Content: What Actually Goes Inside the SKILL.md
+
+Based on Basecamp's production SKILL.md and Anthropic's best practices, the body should contain:
+
+1. **Auth setup section** — how to configure credentials before using any other command
+2. **Command syntax quick-reference** — `twentythree <resource> <verb> [flags]`
+3. **Output format guidance** — `--json` for machine-readable, `--agent` for metadata, default for humans
+4. **Resource group index** — one line per group pointing to reference files for detail
+5. **Invariants and decision rules** — "always use `--json` in agentic contexts", "check auth status before bulk operations"
+6. **Common workflows** — 3-5 concrete multi-step patterns (upload video → assign category → set thumbnail)
+
+---
+
+## Feature Categories
 
 ### Table Stakes
 
-Features present in all five reference CLIs. Missing any of these makes the package feel untrustworthy or incomplete.
+Features every agent skill package for a CLI must have. Missing any of these makes the package feel broken or untrustworthy.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| One-line description | First thing any user reads; GitHub renders it as repo description | Low | Already in package.json: "Terminal access to every TwentyThree API endpoint" — use verbatim |
-| Badges row (npm version + license) | Instant trust signal; shows the package is published and live | Low | Add after first publish: `[![npm version](https://img.shields.io/npm/v/twentythree-cli.svg)](https://www.npmjs.com/package/twentythree-cli)` + MIT badge |
-| Install command in a fenced code block | Friction-zero entry point; must be copy-paste-ready | Low | `npm install -g twentythree-cli` — exact, tested, the first line of action |
-| Prerequisites / requirements | Users need to know Node version before installing | Low | Node >=22.0.0 (from engines field); macOS/Linux/Windows supported via @napi-rs/keyring |
-| Quickstart (auth + first real command) | Without this, user guesses; gh, stripe, fly, and netlify all include a "getting started" flow | Low-Med | 5 steps: install → `twentythree auth credentials` → enter domain + token → select workspace → `twentythree video list` |
-| Command group overview table | 219 commands is unreadable inline; a table of 22 topic groups with one-line descriptions is the right README granularity | Low | Generated from oclif.manifest.json; NOT a full command listing inline |
-| Link to full command reference | README is the entry point, not the destination; stripe and gh both link out to external docs | Low | "Full command reference: docs/commands/" |
-| License section | Standard; reinforces package.json MIT value | Low | Single line |
-
-Pattern from gh CLI: short description → badges → installation (multi-platform) → link to documentation → contributing → comparison note. No inline command listing.
-
-Pattern from Stripe CLI: description → installation (multi-platform, including no-package-manager option) → usage section → commands (links only, not inline) → documentation link → telemetry disclosure → feedback → contributing → license.
-
-Pattern from Netlify CLI: logo + badges → TOC → installation → usage (brief syntax) → documentation link → commands link → contributing → development → license.
-
-Pattern from flyctl: 1-paragraph intro → installation → getting started (3-step auth + first command) → app settings → releases → contributing. Short and focused.
-
-**Key signal from all five:** none of them inline all their commands in the README body. All link out to a dedicated docs site or reference page.
+| Single `SKILL.md` entrypoint per skill | All runtimes discover skills via a named directory + `SKILL.md`; without this, the package does not load in any runtime | Low | Mandatory per agentskills.io spec; `name` must match directory name |
+| Auth setup instructions | Every command fails without credentials; agents cannot self-configure without documented steps | Low | Document `twentythree auth credentials` (domain + bearer token) and `twentythree workspace use` — agents must run these once before any API call |
+| `--json` flag guidance | Agents need structured output, not human-formatted tables; the CLI already supports `--json` globally | Low | One line: "Always append `--json` in agentic contexts for machine-parseable output" |
+| Command syntax overview | Without this, the agent guesses command structure and hallucinates flags | Low | `twentythree <resource> <verb> [--flags]`; list the 22 resource groups |
+| Error signal guidance | Agents need to know which errors are recoverable (retry) vs fatal (auth, missing resource) | Low | Document exit codes; "auth errors require re-running auth credentials"; "404 on resource ID means the resource does not exist" |
+| Package metadata (name, description, version) | Skills are distributed via npm; npm consumers expect proper package.json | Low | `name: "@twentythree/skills"` or `"twentythree-skills"`; semver aligned with CLI version |
+| Installation instructions | Agents and users need to know how to install and where files land | Low | `npx skills add twentythree/skills` or `npm install -g twentythree-skills` |
 
 ### Differentiators
 
-Not universally present, but present in the best-in-class reference CLIs:
+Features not universally present in skill packages, but high-value for twentythree-skills given the existing CLI capabilities.
 
-| Feature | Value Proposition | Complexity | Present In |
-|---------|-------------------|------------|------------|
-| Terminal recording (GIF or SVG) | Stripe CLI README includes an animated GIF showing `stripe listen`; makes the tool feel alive immediately | Med | Stripe |
-| Auth scope orientation table | TwentyThree has 5 scopes (anonymous, none, read, write, admin); first-time users need this to understand why some commands error without a token | Low | Unique to this project |
-| `twentythree doctor` callout | "Not working? Run `twentythree doctor`" — already built; costs one line to surface; real support value | Low | Unique to this project |
-| `--agent` flag callout | Positions CLI for AI agent integrations; 1 paragraph in a "For AI agents" subsection | Low | Unique to this project (agentMetadata on all 219 commands) |
-| "What can I build?" prose paragraph | 219 commands is disorienting; 3-4 sentences on primary use cases (upload videos, manage categories, run webinars) grounds users | Low | Common in larger CLIs |
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| `--agent` flag documentation | The CLI already outputs `agentMetadata` (api_endpoint, auth_scope, output_shape, side_effects) on every command with `--agent`; documenting this gives agents a self-discovery mechanism no other CLI skill package has | Low | "Run `twentythree <command> --agent` to get machine-readable metadata for that command before calling it" |
+| Reference files per resource group | 219 commands cannot fit in one SKILL.md body without exceeding the 500-line target; splitting into `references/video.md`, `references/analytics.md`, etc. enables progressive disclosure — agents load only what they need | Med | 22 reference files, one per resource group; linked from main SKILL.md |
+| Workflow skill files | Hand-authored multi-step workflows for common patterns (upload-and-publish, webinar-create-and-go-live, audience-export-analytics) give agents a higher-level API than raw commands | Med | 5-10 files in `workflows/` subdirectory |
+| Auth scope table | The CLI has 5 auth scopes (anonymous, none, read, write, admin, super); documenting which resource groups require which scope prevents agents from attempting write operations with read-only tokens | Low | 22 rows × 6 scope columns; link to in reference files |
+| Chunked upload guidance | The CLI always uses chunked upload for file uploads (never multipart); this is a non-obvious invariant that agents will get wrong without explicit documentation | Low | One invariant block: "File uploads use chunked protocol automatically — never construct multipart requests directly" |
+| `twentythree doctor` guidance | The doctor command is already built; pointing agents to it on error reduces blind retry loops | Low | "On persistent errors, run `twentythree doctor` to diagnose auth, network, and dependency issues" |
+| Multi-workspace guidance | The CLI supports multiple authenticated workspaces; agents working in multi-workspace environments need to know about `--workspace` flag and `twentythree workspace list` | Low | One section; the `--workspace <domain>` flag pattern |
 
 ### Anti-Features
 
+Features to explicitly NOT build in v1 of twentythree-skills.
+
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| Exhaustive command listing inline | 219 commands × flags = thousands of lines; stripe, gh, netlify all link out | Table of 22 topic groups + link to docs/commands/ |
-| Homebrew / binary install instructions | Not shipped in v1 | npm global install only; one sentence noting other distributions are not yet available |
-| OAuth login instructions | Not built yet (deferred post-v1.1) | Document credential auth only; one sentence noting OAuth is planned |
-| CONTRIBUTING.md content inline | Wastes prime above-the-fold real estate | Link to docs/CONTRIBUTING.md |
-| Security disclaimer wall about tokens | Kills onboarding momentum | One sentence: "Tokens stored in OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service)" |
+| One SKILL.md with all 219 commands inlined | 219 commands × flags × descriptions = 3,000+ lines; exceeds 500-line target; kills context budget; agents load the whole thing even when they only need video commands | Split into main SKILL.md (overview + auth + index) + 22 reference files (one per resource group) loaded on demand |
+| Embedding full flag descriptions for every command | The CLI already has `--help` output and `--agent` metadata; duplicating flag descriptions in skill files creates drift when the CLI changes | Reference the `--help` output pattern; use `--agent` for machine-readable metadata |
+| OpenAI function calling JSON schemas alongside SKILL.md | OpenAI Codex uses the same SKILL.md format as Claude Code — there is no separate JSON schema format needed; Codex adopted the agentskills.io standard | Single SKILL.md works across all runtimes including OpenAI Codex |
+| Runtime-specific skill variants | Maintaining one file per runtime (claude-skill.md, codex-skill.md) creates N maintenance surfaces; the whole point of agentskills.io is one source | One SKILL.md; use `compatibility` field for environment requirements |
+| MCP server alongside skills | MCP is a different integration pattern (tool registration via JSON-RPC); building both for v1 is scope creep; skills are simpler to ship and immediately portable | Ship skills first; MCP is a separate subsequent milestone |
+| Automated skill generation from swagger | Auto-generated skill content is verbose, repetitive, and context-wasteful; the Basecamp model proves hand-authored skills outperform generated ones for agent usability | Hand-author the skill files; use the existing `--agent` metadata flag for per-command detail |
+| Versioned skill files per CLI version | v1 of the skills package should track the CLI; separate versioned files create combinatorial maintenance | Align skills package semver with CLI semver; update in place |
 
 ---
 
-## npm Publish Checklist
+## Skill File Format: Runtime Compatibility
 
-Research basis: npm official docs, GitHub Actions provenance docs, npm trusted publishing announcement (GA July 2025), real-world npm publish guides.
+### The agentskills.io Standard (CONFIRMED HIGH CONFIDENCE)
 
-### Table Stakes
+The Agent Skills format is a genuine open standard with 35+ adopters as of April 2026. The base format is:
 
-| Task | Why Required | Complexity | Notes |
-|------|--------------|------------|-------|
-| `npm login` (or `npm adduser`) | Prerequisite for any publish; requires npm account with verified email | Low | One-time setup |
-| `package.json files` field | Whitelist approach controls tarball contents unambiguously | Low | Already present in package.json: `["dist", "bin", "oclif.manifest.json"]` — correct, no changes needed |
-| `npm pack --dry-run` before first publish | Verify tarball contents before making package public; catch accidental inclusion of secrets, planning files, source TypeScript, or swagger spec | Low | Run and inspect output; confirm: no `.planning/`, no `src/`, no `specs/`, no `*.sh` |
-| `oclif manifest` before publish | Must be fresh so installed CLI has a current command list | Low | Already wired as `postbuild` script; running `npm run build` triggers it automatically |
-| First publish: `npm publish --access public` | Unscoped packages can default to restricted on first publish; `--access public` is explicit and safe | Low | `twentythree-cli` is unscoped so this is the correct flag |
-| `npm version` + git tag before publish | Creates a versioned git tag; releases without tags cannot be git-bisected | Low | `npm version 1.0.0` — creates tag `v1.0.0` automatically |
-| Install verification on clean environment | Confirms end-to-end install before declaring victory | Med | `npm install -g twentythree-cli` on Docker or fresh machine; test `twentythree --version`, `twentythree --help`, `twentythree doctor` |
+- A named directory (e.g. `twentythree/`)
+- A `SKILL.md` file with YAML frontmatter (`name`, `description` required)
+- Optional: `scripts/`, `references/`, `assets/` subdirectories
 
-### Missing `package.json` Fields (package.json currently lacks these)
+The `name` field must match the parent directory name. Both `name` and `description` are loaded into agent context at startup. The body of `SKILL.md` is only loaded when the skill is activated.
 
-These are not in the current package.json and must be added before publish:
+### Claude Code
 
-| Field | Required? | Current Value | Recommended Value |
-|-------|-----------|---------------|-------------------|
-| `repository` | Strong recommendation; npm renders it on the package page | absent | `{ "type": "git", "url": "git+https://github.com/[org]/twentythree-cli.git" }` |
-| `bugs` | npm renders as "Report a bug" link | absent | `{ "url": "https://github.com/[org]/twentythree-cli/issues" }` |
-| `homepage` | npm renders as "Homepage" link | absent | GitHub repo URL |
-| `keywords` | npm search discoverability | absent | `["cli", "video", "twentythree", "api", "media"]` |
-| `author` | Displayed on npm package page | absent | Name + email |
+- Skills live at `~/.claude/skills/<skill-name>/SKILL.md` (personal) or `.claude/skills/<skill-name>/SKILL.md` (project)
+- Additional frontmatter: `disable-model-invocation`, `allowed-tools`, `context`, `when_to_use`, `paths`
+- `allowed-tools: Bash(twentythree *)` pre-approves all `twentythree` CLI invocations without per-call permission prompts
+- Supports `$ARGUMENTS` placeholder for slash-command invocation: `/twentythree list-videos`
+- The `!`command`` syntax in skill body executes shell commands and injects output before the skill content reaches the agent — useful for injecting `twentythree workspace list` output at skill activation time
 
-The `engines` field is already present: `"node": ">=22.0.0"` — correct, no change needed.
+### OpenAI Codex
 
-The `files` field is already present and correct — it excludes `src/`, `specs/`, `.planning/`, all config files by default.
+- Codex uses the same agentskills.io SKILL.md format as Claude Code (confirmed via developers.openai.com/codex/skills)
+- Skills directory: `~/.codex/skills/` or `.codex/skills/` in project
+- Optional `agents/openai.yaml` file in skill directory for OpenAI-specific metadata (not required)
+- Codex activates skills via `/skillname` or automatically based on description matching
+- The OpenAI function calling JSON schema format is NOT needed for Codex skills — Codex reads SKILL.md directly
 
-### Differentiators
+### Other Runtimes (Cursor, GitHub Copilot, Gemini CLI, Roo Code, etc.)
 
-| Task | Value Proposition | Complexity | Notes |
-|------|-------------------|------------|-------|
-| `prepack` lifecycle script | Ensures fresh build + manifest in every tarball without manual coordination | Low | `"prepack": "npm run build"` — `postbuild` already runs `oclif manifest`, so chain is: prepack → build → oclif manifest |
-| `npm publish --provenance` via GitHub Actions | Links published package to CI workflow via Sigstore; verifiable supply chain | Med | Requires GitHub Actions workflow with `id-token: write` permission + `NPM_CONFIG_PROVENANCE: true` env var. npm Trusted Publishing went GA July 2025. Overkill for first manual publish. Defer to v1.2 |
-| `.npmignore` | Not needed; `files` whitelist is already present and takes precedence. Do NOT add `.npmignore` — the two mechanisms interact poorly and `.npmignore` silently overrides `.gitignore` but not `files` | N/A | Explicit: do not add this file |
+All 35+ runtimes in the agentskills.io ecosystem read the same `SKILL.md` format. The single source file is sufficient. Runtime-specific behavior (like Claude Code's `allowed-tools`) is additive and ignored by runtimes that don't support that field.
 
-### Anti-Features
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| Publishing `src/` TypeScript source | Bloats package 3-4x; consumers get the CLI, not a library | `files` whitelist already handles this |
-| Publishing `specs/` swagger JSON | ~500 KB file consumers don't need; dev-time artifact only | `files` whitelist already excludes it |
-| Publishing `.planning/` | Internal artifacts | `files` whitelist already excludes it |
-| Using `.npmignore` alongside `files` field | Confusing interaction; `files` whitelist is unambiguous and already present | Remove if one exists; use `files` only |
-| Publishing before install verification | If install fails post-publish, public package is broken | `npm pack` + local test first |
-| Skipping `npm version` + git tag | Releases become untrackable | Always version before publish |
+Distribution note: The `npx skills add owner/repo` installation pattern used by Basecamp copies skill directories to the runtime-appropriate location. Publishing `twentythree-skills` as an npm package with skill directories at the root allows the same pattern.
 
 ---
 
-## CLI Reference Docs
+## Auth Handling Pattern
 
-Research basis: oclif docs (github.com/oclif/oclif/docs/readme.md), gh CLI manual structure, Netlify CLI (cli.netlify.com), Stripe CLI (docs.stripe.com/cli), fly.io docs structure.
+### The Correct Pattern: Document, Don't Inject
 
-### Table Stakes
+Based on Basecamp's SKILL.md and Anthropic best practices, the correct approach for a CLI-backed skill is:
 
-| Format | What It Produces | Complexity | Notes |
-|--------|-----------------|------------|-------|
-| `oclif readme --multi --output-dir docs/commands` | One `.md` file per topic group (22 files for this CLI) from `oclif.manifest.json` | Low — one command | Reads `description`, `examples`, `flags` statics from each command class. Zero hand-writing. Already buildable from existing command files. |
-| `oclif readme` (standard, no `--multi`) | Replaces `<!-- commands -->` block in README.md with full command listing | Low | For README inline reference. Requires `<!-- usage -->`, `<!-- commands -->`, `<!-- toc -->` placeholder tags in README.md. |
-| `docs/CONTRIBUTING.md` | Contribution guide: clone, build, test, command authoring conventions | Low | Formalizes what's in CLAUDE.md for external contributors |
-| `docs/API-SPEC-UPGRADE.md` | How to update the OpenAPI spec and regenerate types | Low | Steps already in CLAUDE.md; formalize for external contributors |
-| `CHANGELOG.md` (repo root) | What changed per release; npmjs.com package page renders it | Low | Hand-written for v1.0.0; automate later with `commit-and-tag-version` |
+**Auth is pre-configured by the user before the skill is used.** The skill documents the setup steps; it does not attempt to inject credentials, bypass auth, or assume credentials are available.
 
-### How oclif readme --multi Works
+The auth section in SKILL.md should contain:
 
-This is the most consequential tooling decision for docs generation. Confidence: HIGH (verified against oclif source).
+```markdown
+## Authentication
 
-- Reads `oclif.manifest.json` (generated by `postbuild: oclif manifest` — already wired)
-- Reads these statics from each command class: `description`, `examples`, `flags`, `aliases`
-- In `--multi` mode: generates one `.md` file per topic group into `--output-dir`
-- The 22 topic groups for this CLI: action, analytics, app, audience, auth, category, collector, comment, openupload, player, poll, presentation, protection, session, setting, site, spot, tag, thumbnail, video, webhook (+ doctor)
+Run once before using any command:
 
-Key flags:
-- `--multi` — one file per topic group (22 files for this CLI)
-- `--output-dir=docs/commands` — where topic files land (default: `docs/`)
-- `--aliases` — include command aliases
-- `--source-links` — adds links back to TypeScript source files
-- `--dry-run` — preview without writing
-- `--nested-topics-depth` — for deeply nested topic hierarchies (video/subtitle, video/section, etc.)
-
-**Note:** `agentMetadata` static is not read by `oclif readme` — it reads standard oclif statics only. Since `description`, `examples`, and `flags` are fully populated on all 219 commands, generated output will be complete.
-
-Recommended script addition to package.json:
-```json
-"readme": "oclif readme --multi --output-dir docs/commands"
+```bash
+twentythree auth credentials
 ```
 
-Regeneration workflow per release:
-1. `npm run build` — triggers `oclif manifest` via postbuild
-2. `npm run readme` — regenerates docs/commands/*.md
-3. Commit `docs/commands/` alongside spec and type changes
+You will be prompted for:
+- **Domain**: your TwentyThree workspace domain (e.g. `mycompany.video.twentythree.com`)
+- **Bearer token**: found at Settings → API in your TwentyThree workspace
 
-### Differentiators
+Verify auth is working:
+```bash
+twentythree auth status
+```
 
-| Format | Value Proposition | Complexity | Notes |
-|--------|-------------------|------------|-------|
-| `docs/AUTH.md` | The multi-workspace auth model is non-obvious; standalone explainer covering token storage, workspace switching, token refresh, and auth scopes reduces onboarding friction | Low-Med | Covers: `auth credentials` flow, keychain rationale, `workspace switch`, auto-refresh behavior, auth scope table |
-| `docs/AGENT.md` | Documents `--agent` flag and agentMetadata format for AI agent integrators | Low | What `--agent` outputs, the agentMetadata schema, how agents consume breadcrumbs; forward-positions the planned skills package |
-| Automated README regeneration in CI | Ensures docs/commands/ never drifts from commands in main | Low | GitHub Actions job: build + readme + fail if diff exists |
+Credentials are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service).
+```
 
-### Anti-Features
+### What NOT to Do
 
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| Hand-writing all 22 topic pages | Thousands of lines; breaks on every spec update | `oclif readme --multi` reads from oclif.manifest.json |
-| Separate docs website (Docusaurus, VitePress, GitBook) | Overkill for v1.1; adds hosting, deployment, maintenance overhead | GitHub renders Markdown natively; docs/ folder in repo is sufficient for developer audience |
-| Versioned docs per CLI version | Premature; CLI is at v0.1.0/v1.0.0 initial publish | Single docs/ folder; update in place at each release |
-| Duplicating README content in docs/ files | Creates two sources of truth that drift | README = entry point + quickstart. docs/ = deep reference. Enforce this boundary. |
+- Do NOT embed or reference bearer tokens in skill files
+- Do NOT attempt to call the TwentyThree API directly from the skill (MCP pattern); the skill wraps the CLI, which handles auth
+- Do NOT assume credentials are present; always document the setup step
+- Do NOT use environment variables for tokens in skill files (the CLI uses the OS keychain, not env vars)
 
 ---
 
-## Endpoint Coverage Audit
+## Granularity: One File Per Resource Group vs. One Giant File
 
-Research basis: live codebase analysis. All 219 command files were inventoried and cross-referenced against the swagger spec. No external tooling required.
+### Recommendation: Main SKILL.md + 22 Reference Files
 
-### Key Finding: Built-in Audit Capability
+**Rationale:**
 
-Every command file already declares `api_endpoint` in `static agentMetadata`:
-
-```typescript
-static agentMetadata = {
-  api_endpoint: 'POST /action/add',
-  auth_scope: 'write' as const,
-  ...
-}
-```
-
-This means the audit is a grep + diff, not a parsing challenge. The data is already in the codebase.
-
-### Current Coverage State (as of 2026-04-16)
-
-| Metric | Value |
-|--------|-------|
-| Swagger spec endpoints | 235 |
-| Command files | 226 (219 with api_endpoint + 7 without: doctor, index files, etc.) |
-| Unique api_endpoint values declared | 215 |
-| Swagger endpoints not covered by any command | 25 |
-| Command endpoints not in swagger | 5 |
-
-**25 swagger endpoints with no matching command:**
-
-All are `GET /analytics/data/...` timeseries and totals sub-endpoints, plus a cluster of `GET /photo/...` token endpoints:
+The agentskills.io spec and Anthropic best practices both recommend keeping `SKILL.md` under 500 lines. The Basecamp SKILL.md covers 155+ endpoints in one file; it works because their commands are fewer and simpler. For twentythree-skills with 219 commands across 22 resource groups, the correct architecture is:
 
 ```
-GET /analytics/data/live/weekday/timeseries
-GET /analytics/data/live/weekday/totals
-GET /analytics/data/usage/devices/timeseries
-GET /analytics/data/usage/devices/totals
-GET /analytics/data/usage/domains/totals
-GET /analytics/data/usage/locations/totals
-GET /analytics/data/usage/sourceids/totals
-GET /analytics/data/usage/sources/totals
-GET /analytics/data/usage/spots/timeseries
-GET /analytics/data/usage/spots/totals
-GET /analytics/data/usage/traffic/timeseries
-GET /analytics/data/usage/traffic/totals
-GET /analytics/data/videos/performance/timeseries
-GET /analytics/data/videos/performance/totals
-GET /analytics/data/videos/published/timeseries
-GET /analytics/data/videos/published/totals
-GET /analytics/data/videos/weekday/timeseries
-GET /analytics/data/videos/weekday/totals
-GET /photo/frame
-GET /photo/get-replace-token
-GET /photo/get-update-token
-GET /photo/get-upload-token
-POST /photo/delete-upload-token
-POST /photo/subtitle/archive/get-progress
-POST /photo/update-upload-token
+twentythree/
+├── SKILL.md                    # Auth setup, syntax overview, resource index, invariants (~200 lines)
+├── references/
+│   ├── video.md                # All video commands with flags and examples
+│   ├── analytics.md            # Analytics commands
+│   ├── webinar.md              # Webinar commands
+│   ├── audience.md             # Audience commands
+│   ├── category.md             # Category commands
+│   ├── spot.md                 # Spot commands
+│   ├── player.md               # Player commands
+│   ├── thumbnail.md            # Thumbnail commands
+│   ├── tag.md                  # Tag commands
+│   ├── comment.md              # Comment commands
+│   ├── presentation.md         # Presentation commands
+│   ├── poll.md                 # Poll commands
+│   ├── action.md               # Action commands
+│   ├── app.md                  # App commands
+│   ├── collector.md            # Collector commands
+│   ├── protection.md           # Protection commands
+│   ├── session.md              # Session commands
+│   ├── setting.md              # Setting commands
+│   ├── site.md                 # Site search commands
+│   ├── openupload.md           # Open upload commands
+│   ├── user.md                 # User management commands
+│   └── webhook.md              # Webhook commands
+└── workflows/
+    ├── upload-and-publish.md   # Video upload → category → thumbnail → publish
+    ├── webinar-lifecycle.md    # Create → schedule → go-live → archive
+    ├── audience-export.md      # List → filter → analytics
+    └── bulk-management.md      # Multi-video category/tag operations
 ```
 
-**5 command endpoints not matching swagger paths:**
+This pattern matches Anthropic's "domain-specific organization" pattern (see BigQuery skill example in best practices docs) and ensures agents load only the context relevant to their current task.
 
-```
-GET /user/tokens         — utility command used internally by auth flow, not a standalone endpoint
-POST /live/recording/split — may use different swagger path or be undocumented
-POST /photo/frame        — note: GET /photo/frame is in swagger; this is POST vs GET discrepancy
-interactive              — local utility command, no API endpoint
-local                    — local utility command, no API endpoint
-```
+**How agents navigate this:**
 
-### Table Stakes Audit Approach
+1. Agent activates twentythree skill (loads SKILL.md — ~200 lines)
+2. User asks about video upload → agent reads `references/video.md` (load on demand)
+3. User asks about analytics → agent reads `references/analytics.md` (load on demand)
+4. Neither `webinar.md` nor `audience.md` consume context tokens in this session
 
-The fastest credible audit is a custom Node.js script that already has 90% of its logic implied by the data shape.
+**One-skill-per-resource-group alternative (rejected):**
 
-| Step | Approach | Complexity | Notes |
-|------|----------|------------|-------|
-| Extract spec endpoints | `JSON.parse(swaggerFile).paths` → iterate methods → emit `METHOD /path` | Low | 10 lines of Node |
-| Extract command endpoints | `grep -r "api_endpoint:" src/commands` → parse `METHOD /path` values | Low | 10 lines shell or Node |
-| Diff the two sets | `Set` operations or `comm` on sorted files | Low | Already done manually above |
-| Classify gaps as intentional vs missing | Manual review per gap; analytics sub-endpoints are likely intentional (consolidated); token endpoints need decision | Low-Med | 25 gaps; most are analytics timeseries/totals that may be covered by a single consolidated command |
-| Fill confirmed gaps | Add new command files for confirmed missing endpoints | Med | Depends on gap count after classification |
-
-No external tools (specmatic, swagger-coverage-cli, openapi-diff) are needed. Those tools solve "did my server implement this spec?" not "did my CLI wrap this endpoint?" — a different problem domain.
-
-### Differentiator: Automated Gap Check in CI
-
-After the initial audit, a lightweight CI step can catch future regressions:
-
-```json
-"audit": "node scripts/audit-coverage.js"
-```
-
-The script would:
-1. Read swagger paths → Set A
-2. Grep command files for api_endpoint values → Set B  
-3. Report `A minus B` (missing) and `B minus A` (phantom)
-4. Exit 1 if A minus B is non-empty
-
-Complexity: Low. No new dependencies. Uses existing swagger JSON and existing agentMetadata pattern.
-
-### Anti-Features
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| External coverage tooling (swagger-coverage-cli, specmatic) | These tools measure API test coverage, not CLI command coverage; wrong problem domain | Custom 30-line Node script reading agentMetadata |
-| Manual review of all 219 commands | Defeats the purpose of the agentMetadata pattern | Grep-based extraction |
-| Skipping the audit and publishing | 25 uncovered endpoints may be intentional OR gaps; publishing without verifying is a promise broken before it's kept | Run audit, classify gaps, fill confirmed ones |
+Installing 22 separate skill files (`video`, `analytics`, `webinar`, etc.) would load 22 `name`+`description` pairs into context at startup. The description character budget is 1,536 chars per skill, and total budget is ~8,000 chars by default. 22 skills × ~80 chars each = ~1,760 chars consumed just by descriptions. More importantly, agents would need to know which sub-skill to activate before knowing what the user wants. The single `twentythree` skill with reference files is strictly better.
 
 ---
 
 ## Feature Dependency Map
 
 ```
-oclif manifest (postbuild, already wired)
-  └── oclif readme --multi → docs/commands/ (22 topic .md files, zero hand-writing)
-        └── README.md command overview section links to docs/commands/
+twentythree auth credentials (CLI, already built)
+  └── SKILL.md auth section documents this setup step
+        └── references/*.md document post-auth resource commands
+              └── workflows/*.md document multi-command patterns
 
-package.json fields (repository, keywords, bugs, homepage, author)
-  └── npm pack --dry-run (verify tarball contents)
-        └── install verification (npm install -g locally via npm pack)
-              └── npm publish --access public (first public release)
-                    └── npm version badge added to README.md
-                          └── install verification on clean environment (Docker or fresh machine)
+twentythree <command> --agent (CLI, already built)
+  └── SKILL.md documents this self-discovery pattern
+        └── agents can introspect any command before calling it
 
-Endpoint audit
-  └── grep api_endpoint across src/commands
-        └── diff against swagger paths
-              └── classify 25 gaps (intentional consolidated vs truly missing)
-                    └── fill confirmed gaps (new command files)
-                          └── re-run audit → 0 uncovered endpoints confirmed before publish
+twentythree-skills npm package
+  └── SKILL.md + references/ + workflows/
+        └── npx skills add twentythree/skills installs to runtime-appropriate location
+              └── Works in: Claude Code, OpenAI Codex, Gemini CLI, Cursor, GitHub Copilot, 30+ others
 ```
 
 ---
 
-## MVP Priority Order for v1.1
+## MVP Recommendation for v1 of twentythree-skills
 
-**Phase 1 — Endpoint audit (1-2 hours):**
-1. Run `grep -r "api_endpoint:" src/commands --include="*.ts"` → extract all covered endpoints
-2. Extract swagger paths from `specs/twentythree-api-swagger.json`
-3. Diff: 25 swagger paths currently uncovered (see list above)
-4. Classify each: analytics timeseries/totals (likely intentional consolidation) vs token endpoints vs true gaps
-5. Write commands for confirmed gaps; update `oclif.manifest.json` via `npm run build`
+**Build immediately (unblock agent usability):**
 
-**Phase 2 — Package hygiene (30 min):**
-6. Add `repository`, `bugs`, `homepage`, `keywords`, `author` to package.json
-7. Add `prepack` script: `"prepack": "npm run build"`
-8. Add `readme` script: `"readme": "oclif readme --multi --output-dir docs/commands"`
+1. `twentythree/SKILL.md` — auth setup, syntax overview, 22-group resource index, key invariants, `--json` and `--agent` flag guidance
+2. `twentythree/references/video.md` — the most-used resource group; proves the pattern
+3. `twentythree/references/analytics.md` — high-value for agents (reporting workflows)
+4. `twentythree/references/webinar.md` — complex enough to justify reference file
+5. `twentythree/references/audience.md` — audience operations are common in agent workflows
 
-**Phase 3 — Generate docs (15 min):**
-9. `npm run build` (fresh manifest after any gap-filling)
-10. `npm run readme` (generates docs/commands/*.md — 22 files, zero hand-writing)
+**Defer but include in v1 complete:**
 
-**Phase 4 — Write README.md (2-3 hours):**
-11. Description, badges (placeholder until published), prerequisites
-12. Install command
-13. Quickstart: 5-step auth + first command
-14. Command group overview table (22 rows)
-15. Link to docs/commands/
-16. `twentythree doctor` troubleshooting callout
-17. License
+6. Remaining 18 reference files — fill out systematically; content is mechanical once pattern is established
+7. 3-4 workflow files — upload-and-publish, webinar-lifecycle at minimum
 
-**Phase 5 — Write docs/ (1-2 hours):**
-18. `docs/CONTRIBUTING.md`
-19. `docs/API-SPEC-UPGRADE.md`
-20. `CHANGELOG.md` at repo root
+**Defer post-v1:**
 
-**Phase 6 — Publish (1 hour):**
-21. `npm pack --dry-run` — verify tarball
-22. `npm version 1.0.0`
-23. `npm publish --access public`
-24. Update README badges with real npm version badge
-25. Install verification on clean environment
-26. `git push --tags`
-
-**Defer post-v1.1:**
-- Terminal GIF recording: good-to-have; blocks on availability of recording environment
-- `docs/AUTH.md` and `docs/AGENT.md`: write after skills package research (v1.2)
-- Provenance publishing (`--provenance`): requires CI workflow; v1.2
+- Workflow skill files beyond core patterns
+- `npx skills add` CLI tooling (install script)
+- Auto-generation tooling for reference files from `--agent` output
+- MCP server as an alternative integration
 
 ---
 
 ## Sources
 
-- gh CLI README structure (installation, documentation, contributing, comparison): https://github.com/cli/cli/blob/trunk/README.md
-- Stripe CLI README structure (animated GIF, most-used commands, documentation link): https://github.com/stripe/stripe-cli/blob/master/README.md
-- flyctl README structure (install, getting started 3 steps, contributing): https://github.com/superfly/flyctl/blob/master/README.md
-- Netlify CLI README structure (badges, TOC, installation, usage, commands link): https://github.com/netlify/netlify-cli/blob/main/README.md
-- Vercel CLI README structure (deploy, documentation, contributing): https://github.com/vercel/vercel/blob/main/README.md
-- oclif readme command (--multi, --output-dir, markers): https://github.com/oclif/oclif/blob/main/docs/readme.md
-- npm package.json fields (name, version, repository, keywords, engines): https://docs.npmjs.com/cli/v11/configuring-npm/package-json/
-- npm publish --access public for unscoped packages: https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/
-- npm files field vs .npmignore: https://docs.npmjs.com/cli/v9/commands/npm-publish/
-- npm provenance (--provenance, id-token: write, NPM_CONFIG_PROVENANCE): https://docs.npmjs.com/generating-provenance-statements/
-- npm Trusted Publishing GA (July 2025): https://github.blog/changelog/2025-07-31-npm-trusted-publishing-with-oidc-is-generally-available/
-- Live codebase analysis: grep api_endpoint across 219 command files vs 235 swagger endpoints
+- agentskills.io specification (format, frontmatter fields, directory structure): https://agentskills.io/specification
+- agentskills.io overview (adoption, 35+ runtimes): https://agentskills.io/home
+- Claude Code skills documentation (full frontmatter reference, lifecycle, allowed-tools, context:fork): https://code.claude.com/docs/en/skills
+- Anthropic skill authoring best practices (conciseness, progressive disclosure, auth patterns): https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
+- OpenAI Codex skills (same SKILL.md format, skills directory): https://developers.openai.com/codex/skills
+- Basecamp skills repository (production example of CLI-backed skill package): https://github.com/basecamp/skills
+- Basecamp SKILL.md content (auth handling, command coverage, output modes): fetched directly from raw.githubusercontent.com/basecamp/skills/main/skills/basecamp/SKILL.md
+- Mikhail Shilkov analysis of Claude Code skills internals: https://mikhail.io/2025/10/claude-code-skills/
+- Calibre Labs analysis of CLI + skills pattern: https://blog.calibrelabs.ai/p/the-new-software-cli-skills-and-vertical
+- twentythree-cli base-command.ts (AgentMetadata interface, --agent flag implementation): packages/twentythree-cli/src/lib/base-command.ts

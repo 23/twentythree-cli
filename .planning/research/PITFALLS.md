@@ -1,348 +1,238 @@
-# Pitfalls Research: v1.1 Repository Polish & Release
+# Pitfalls Research: twentythree-skills Agent Skills Package
 
-**Domain:** TypeScript/Node.js CLI — TwentyThree video platform API client
-**Researched:** 2026-04-16
-**Overall Confidence:** HIGH (verified against installed package.json, manifest, spec, official oclif docs, npm docs, GitHub issue tracker)
+**Domain:** Agent skills package alongside an existing TypeScript/Node.js CLI monorepo
+**Researched:** 2026-04-20
+**Overall Confidence:** HIGH — verified against official Anthropic skill authoring docs, Claude Code skills docs, OpenAI Codex skills docs, npm publish docs, and community research on the Agent Skills standard
 
 ---
 
-## npm Publish Pitfalls
+## Summary Table
 
-### Critical: No `prepack` Script — Stale Manifest Ships
+| Pitfall | Risk | Prevention | Phase |
+|---------|------|------------|-------|
+| Skill file too verbose — context budget wasted | Agent ignores or truncates key instructions | Keep SKILL.md body under 500 lines; move detail to referenced sub-files | Content authoring |
+| Vague or missing `description` — skill never triggers automatically | Agent never self-selects the skill for relevant tasks | Front-load the exact triggers: "Use when the user asks about videos, webinars, or TwentyThree CLI commands" | Content authoring |
+| Nested references (skill links to file that links to file) | Agent uses `head -100` and gets partial content, misses critical guidance | Keep all references exactly one level deep from SKILL.md | Content authoring |
+| Skill documents commands that changed or disappeared | Agent produces wrong flags and stale examples | Run `agentMetadata --agent` output as ground truth; automate skill regeneration from manifest | Version drift |
+| Auth flow buried or absent in skill | Agent attempts commands without running `auth credentials` first, fails with 401 | Make `twentythree auth credentials` the first step in every skill workflow section | Content authoring |
+| Skill assumes OS keychain is already populated | Agent-run environments (CI, containers) have no keychain; skill gives no guidance | Document both interactive auth and non-interactive env var fallback in skill | Content authoring |
+| Skill documents CLI terminology, not API terminology | API-aware users or agents pass `photo`/`album`/`live`; all commands fail | Include explicit terminology mapping table in skill | Content authoring |
+| Skill hardcodes `--json` output shape and it changes | Agent parses stale JSON shape; silent wrong results | Document the `{ ok, data, summary, breadcrumbs }` shape with a note to verify with `--json` at runtime | Content authoring |
+| Runtime-specific installation path assumed universally | Skill installs to `~/.claude/skills/` and breaks on Codex, Cursor, Copilot | Installer must detect runtime and copy/symlink to the correct path per runtime | Installer |
+| `npx twentythree-skills add` runs different versions on each invocation | Skill file content drifts across machines in a team | Pin the installer version in team documentation; installer should print version it ran | Installer |
+| Installer silently overwrites user-customized skill files | Team members lose local modifications | Detect existing files, print diff, require `--force` to overwrite | Installer |
+| Installer assumes write permission to `~/.claude/skills/` | Managed enterprise installs with restricted home dirs fail silently | Check target dir access before writing; print actionable error with fallback path | Installer |
+| Hallucinated `npx` package name in skill content | Agent executes non-existent or squatted npm package | Never reference `npx` commands in skill content unless the package is the CLI itself; use direct `twentythree` command names only | Content authoring |
+| `twentythree-skills` vs `twentythree-cli` version skew | Skill documents flags from CLI v1.1; user has CLI v1.0 installed | Skill should state minimum CLI version requirement in frontmatter or at the top of SKILL.md | Version drift |
+| Skill content enters context window once and stays — instructions written as one-time steps are forgotten | Agent follows workflow step 1 but ignores steps 2–5 | Write standing instructions, not one-time walkthroughs; use "always do X" phrasing | Content authoring |
+| `agentMetadata` flag on 219 commands is the source of truth but not used to generate skills | Skills become manually authored and immediately diverge | Automate skill generation from `--agent` output; manually authored sections should be additive, not duplicative | Version drift |
+| Monorepo: `workspace:*` protocol published as-is if pnpm not used for publish | `twentythree-skills` with `workspace:*` dep on `twentythree-cli` would be unresolvable for npm consumers | `twentythree-skills` must have zero workspace dependencies on `twentythree-cli`; the relationship is conceptual only | Monorepo publish |
+| Monorepo: both packages publish from `pnpm publish --filter` but `prepack` missing from skills package | Stale or missing files ship for skills package | Add `prepack` script to `twentythree-skills/package.json` even if it is just `cp` of generated content | Monorepo publish |
+| Monorepo: `files` whitelist in skills package doesn't include all skill sub-files | Skill references a `reference/` or `scripts/` sub-file that isn't in the published tarball | Enumerate skill sub-directories in `files` field; verify with `npm pack --dry-run` | Monorepo publish |
+| `twentythree-skills` name may be taken on npm registry | Publish fails with `403 Forbidden` | Run `npm view twentythree-skills` before any publish prep; fallback is `@twentythree/skills` | Monorepo publish |
+| Skills package version number diverges from CLI version number | Consumers can't tell if skill version matches CLI version | Use a clear versioning policy: either lockstep with CLI or use independent semver with a `peerDependencies` entry documenting CLI compatibility range | Monorepo publish |
+| Claude Code truncates `description` at 1,536 characters in skill listing | Trigger keywords beyond the first paragraph are dropped | Put the highest-value trigger phrases in the first 200 characters of `description` | Content authoring |
+| Skill written only for Claude Code; Codex uses `.agents/skills/` not `.claude/skills/` | Codex users get no skill despite installing the package | Installer must place skill in both `~/.claude/skills/` and `~/.agents/skills/` (and other runtime-specific paths) | Installer |
+| Skill file uses Windows-style backslash paths in examples | Skill fails on macOS/Linux where the majority of users are | Always use forward slashes in all paths in skill content | Content authoring |
+| Skill includes time-sensitive information ("as of April 2026, the API supports...") | Content is wrong within months and undermines agent trust | Use the "old patterns" pattern: current behavior in main body, deprecated behavior in a collapsed `<details>` block | Content authoring |
+| Monorepo CI publishes skills package before CLI package | If skills pkg is published first and references CLI v1.2.0 which isn't yet on npm, install instructions are broken | Publish CLI first, skills second; automate with Changesets publish order or explicit CI step ordering | Monorepo publish |
 
-**What goes wrong:** `pnpm publish` fires lifecycle hooks in this order: `prepublishOnly` → `prepack` → tarball → `postpack`. The current `package.json` has a `postbuild` script (runs after `npm run build`) but no `prepack`. `pnpm publish` never invokes `postbuild`. Whatever manifest is on disk at publish time is what ships — which may be from hours or days ago.
+---
 
-**Why it matters here:** `oclif.manifest.json` is oclif's command index. A stale manifest means installed users get wrong `--help` output, missing commands in tab completion, or stale flag descriptions. Without a manifest, oclif falls back to dynamic filesystem scanning, which is slower and unreliable in global installs.
+## Critical Pitfalls (Rewrites or Major Issues)
+
+### 1. Auth Flow Absent from Skill
+
+**What goes wrong:** Skills document what commands to run but don't mention that `twentythree auth credentials` is a prerequisite. An agent attempts `twentythree video list` and gets a cryptic 401 or "no credentials found" error. The agent retries, invents flags, and produces noise — none of which fixes the underlying missing auth.
+
+**Why it happens:** Skill authors assume the user is already set up. Agents don't assume anything — they follow the skill exactly. If auth isn't in the skill, the agent doesn't know it's needed.
+
+**Consequences:** Every agent workflow fails until a human intervenes. The skill is effectively unusable in automated contexts.
+
+**Prevention:** The first section of every skill workflow must be:
+```markdown
+## Prerequisites
+Run `twentythree auth credentials` once to store your API token before any command.
+The CLI stores credentials in the OS keychain — no plaintext files.
+```
+
+**Detection:** Test the skill from scratch with a fresh agent session that has no prior CLI auth.
+
+---
+
+### 2. Skill File Becomes the Source of Truth (Not the CLI)
+
+**What goes wrong:** Skill content is authored manually against the v1.0 CLI. CLI adds flags, renames parameters, or changes output shapes. Skill still says the old thing. Agents use the skill's stale guidance. When they fail, they retry with variations of wrong flags rather than reading `--help`.
+
+**Why it happens:** There is no automated pipeline from CLI changes to skill updates. Skills are documentation, and documentation drifts.
+
+**Consequences:** Skill becomes a liability rather than an asset — it actively misleads agents. 219 commands means 219 places to drift.
+
+**Prevention:** Treat `agentMetadata` (the `--agent` flag output already on all 219 commands) as the canonical machine-readable source. Build a code generation step that produces skill reference sections from `agentMetadata` output. Manually authored narrative content (auth setup, common patterns) lives separately and changes rarely.
+
+**Detection:** Version comparison: `twentythree-skills` version vs `twentythree-cli` version. If they've diverged more than one minor, regenerate.
+
+---
+
+### 3. Installer Overwrites User Customizations
+
+**What goes wrong:** User modifies the installed skill file to add project-specific context or adjust instructions. A later `npx twentythree-skills add` run overwrites the customized file silently.
+
+**Why it happens:** Simple installers use `cp` or `fs.writeFileSync` without checking whether a file already exists or differs from the canonical version.
+
+**Consequences:** Team members stop using the installer. Skill files diverge across machines. Support burden increases.
 
 **Prevention:**
-```json
-"prepack": "tsdown --config-loader unrun && oclif manifest"
-```
-`prepack` fires for both `pnpm publish` and `npm pack` (dry-run verification). This is the oclif-recommended pattern.
-
-**Detection:** `npm pack --dry-run` — verify `oclif.manifest.json` appears in the file list and command count matches expectations:
-```bash
-python3 -c "import sys,json; d=json.load(open('oclif.manifest.json')); print(len(d['commands']), 'commands')"
-```
+1. Hash the canonical skill content and compare to the installed file
+2. If they differ (user has modified it), print a diff and require `--force` to overwrite
+3. Offer `--merge` as an option to append new content to existing file
+4. Symlink mode (symlinks to a canonical copy in the package) is immune to this problem
 
 ---
 
-### Critical: Version `0.1.0` Claims a Slot Forever
+### 4. `workspace:*` Dependency Leakage
 
-**What goes wrong:** Publishing `0.1.0` claims that version slot on the npm registry permanently. After 24 hours npm's unpublish window closes. If the first publish has a defect (missing dist, wrong bin), you can only fix it by bumping the version — `0.1.0` is gone. The internal v1.0 milestone is done; publishing as `0.1.0` signals beta quality that doesn't match the actual state.
+**What goes wrong:** If `twentythree-skills/package.json` ever lists `twentythree-cli` as a `workspace:*` dependency (even as peerDependencies), pnpm replaces it with the resolved version during publish — but only if `pnpm publish` is used. Any CI step using `npm publish` or manual publish will ship `workspace:*` as a literal string, making the package uninstallable.
+
+**Why it happens:** In pnpm monorepos, sibling packages are easy to cross-reference using workspace protocol. Skills package has no runtime code dependency on CLI, but a developer might add it for type imports or convenience.
+
+**Consequences:** Published package is unresolvable. `npm install twentythree-skills` fails immediately.
+
+**Prevention:** `twentythree-skills` must be a zero-dependency package. No `dependencies`, no `devDependencies` that reference `twentythree-cli`. The relationship is purely conceptual — the skill documents how to use the CLI; it does not import it.
+
+---
+
+## Moderate Pitfalls
+
+### 5. Multi-Runtime Path Mismatch
+
+Different agents use different skill directories:
+
+| Runtime | User-scoped path | Project-scoped path |
+|---------|-----------------|---------------------|
+| Claude Code | `~/.claude/skills/<name>/SKILL.md` | `.claude/skills/<name>/SKILL.md` |
+| OpenAI Codex | `~/.agents/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md` |
+| GitHub Copilot | VS Code extension settings | `.github/skills/<name>/SKILL.md` |
+| Cursor | `~/.cursor/skills/<name>/SKILL.md` | `.cursor/skills/<name>/SKILL.md` |
+
+An installer that only writes to `~/.claude/skills/` silently provides nothing to Codex users. The milestone description lists "Claude Code, Claude.ai, OpenAI Assistants, Codex" as targets — each needs its own write path.
+
+**Prevention:** Installer detects installed runtimes (check for `~/.claude/`, `~/.agents/`, `~/.cursor/` etc.) and writes to each. Print a summary of where files were placed.
+
+---
+
+### 6. Vague Skill Description — Skill Never Self-Activates
+
+The `description` field drives automatic skill loading in Claude Code. If the description says "TwentyThree CLI skills for AI agents" (current state in the existing `SKILL.md`), Claude never loads it unless the user explicitly invokes `/twentythree`. The description must include the trigger phrases users actually say.
 
 **Prevention:**
-1. Decide the public version before touching the registry. `1.0.0` is accurate for the shipped state.
-2. Run `npm pack --dry-run` and install the local tarball to smoke test before registry publish:
-   ```bash
-   npm pack
-   npm install -g ./twentythree-cli-1.0.0.tgz
-   twentythree --version
-   twentythree auth credentials
-   ```
-3. Tag git before publish: `git tag v1.0.0 && git push --tags`.
-4. Use `pnpm publish --dry-run` to validate the publish flow without touching the registry.
-
----
-
-### Critical: Package Name `twentythree-cli` May Be Taken
-
-**What goes wrong:** `npm publish` fails immediately with `403 Forbidden — You do not have permission to publish "twentythree-cli"` if the name is already claimed. No recovery path — the name change propagates to binary name, install instructions, and README.
-
-**Prevention:** Check before any other publish prep:
-```bash
-npm view twentythree-cli
+```yaml
+description: >
+  Commands for the TwentyThree video platform CLI. Use when the user asks to 
+  upload a video, list videos, manage webinars, create thumbnails, work with 
+  categories, manage audience segments, or use the twentythree CLI. Covers all 
+  219 API commands across video, webinar, analytics, category, audience, 
+  action, comment, player, poll, tag, spot, app, and more.
 ```
-404 means available. If taken, the fallback is a scoped package: `@twentythree/cli`.
 
 ---
 
-### Moderate: `.npmignore` Added — Breaks `files` Whitelist Semantics
+### 7. Skill Content Lifecycle After Context Compaction
 
-**What goes wrong:** The current package uses `files: ["/bin", "/dist", "/oclif.manifest.json"]` as a whitelist. This is correct. If anyone adds a `.npmignore` at the package level, npm switches from whitelist mode to exclusion mode — it starts with everything in the directory and applies `.npmignore` as a filter. If `.npmignore` doesn't explicitly exclude `src/`, the 254 TypeScript source files ship in the tarball. If it accidentally excludes `dist/`, the package is broken.
+When Claude Code compacts a conversation, it re-attaches skill content up to 5,000 tokens per skill (25,000 total budget across all skills). If a long session has many skills loaded, the twentythree skill may be dropped entirely after compaction. Instructions written as "one-time setup" stop applying.
 
-**Prevention:** Do not add `.npmignore`. The `files` whitelist is complete. Verify with `npm pack --dry-run` — if `src/**/*.ts` appears in the output, the `files` field has been bypassed.
-
----
-
-### Moderate: `@napi-rs/keyring` Native Binary Silent Failure on Consumer Install
-
-**What goes wrong:** `@napi-rs/keyring` ships prebuilt platform binaries as `optionalDependencies` (12 platform targets: darwin-arm64, darwin-x64, linux-x64-gnu, linux-x64-musl, win32-x64-msvc, etc. — confirmed from installed `node_modules/@napi-rs/keyring/package.json`). Clean `npm install -g` resolves the correct binary automatically.
-
-The risk is a confirmed npm bug (npm/cli#4828): if a lockfile generated on one architecture is used on a different architecture (e.g., CI on macOS, then running on Linux), npm silently skips installing the optional platform binary. The CLI installs without error but crashes at first `auth` use with `Cannot find module '.../keyring.darwin-arm64.node'`.
-
-**Consequences:** `twentythree auth credentials` crashes with a raw Node `MODULE_NOT_FOUND` error — not actionable for users.
-
-**Prevention:**
-1. Install verification CI must use a fresh `npm install -g` with no pre-existing lock file.
-2. Test on minimum: `ubuntu-latest` (linux-x64-gnu) and `macos-latest` (darwin-arm64). These cover the two dominant consumer platforms.
-3. Add a graceful error wrapper in the auth command: catch load failure from keyring and print a human-readable message rather than a raw module error.
+**Prevention:** Write every instruction as a standing rule, not a one-time step. "Always run `--json` when the output will be piped." Not "In step 1, run `--json`."
 
 ---
 
-### Minor: `bin/run.cmd` Permissions and Path
+### 8. Publish Order Dependency
 
-**What goes wrong:** Windows consumers need `bin/run.cmd`. The file exists and is in the `files` whitelist (`/bin`). The only risks are: (a) accidental edit that breaks the `%~dp0\run.js` reference, (b) the bin script is not executable on macOS/Linux (though `chmod` is set correctly — `bin/run.js` is `-rwxr-xr-x`). npm preserves the executable bit when packing.
+`twentythree-cli@1.2.0` and `twentythree-skills@1.2.0` ship together. If skills publishes first, any install instruction or peerDependency pointing to `twentythree-cli@1.2.0` fails because the CLI isn't yet on the registry.
 
-**Prevention:** Do not edit `bin/run.cmd`. Confirm with `npm pack --dry-run` that both `bin/run.js` and `bin/run.cmd` appear in the listed files.
-
----
-
-### Minor: pnpm Monorepo + `oclif pack tarballs` Incompatibility
-
-**What goes wrong:** `oclif pack tarballs` (for standalone tarball distribution) expects `npm-shrinkwrap.json`. pnpm uses `pnpm-lock.yaml` and never generates it. The command fails with `ENOENT: no such file or directory, stat '.../npm-shrinkwrap.json'`. This issue was filed in 2023 (oclif/oclif#1170) and closed as "not planned" in 2024.
-
-**Why it matters:** This project uses npm global install only — `oclif pack tarballs` is the wrong tool. The risk is a contributor running it by mistake.
-
-**Prevention:** Use `pnpm publish --filter twentythree-cli` only. Document in dev setup notes that `oclif pack` is unsupported in this monorepo.
+**Prevention:** CI pipeline publishes `twentythree-cli` first, waits for registry availability, then publishes `twentythree-skills`. Or use Changesets, which respects dependency graph order automatically.
 
 ---
 
-## Endpoint Audit Pitfalls
+### 9. Agent Assumes Interactive Terminal
 
-### Critical: Three Different Numbers — File Count, Manifest Count, Spec Count
+Skills may document interactive commands (workspace picker prompts, auth setup wizard) that don't work in non-interactive agent environments. Agents can't respond to `@clack/prompts` interactive selects.
 
-**Current state:**
-- ~254 `.ts` files in `src/commands/` (includes topic index stubs and helper files)
-- 226 commands in `oclif.manifest.json` (what oclif actually registered)
-- 235 operations in `specs/twentythree-api-swagger.json`
-- 219 command files have `static agentMetadata` with `api_endpoint`
+**Prevention:** For every interactive command in the skill, document the non-interactive flags equivalent:
+```markdown
+# Interactive (human users)
+twentythree workspace select
 
-An audit that compares raw file counts to spec operation counts produces noise, not signal. The 9-command gap (235 spec - 226 manifest) needs decomposition: some manifest entries are non-API commands (auth, doctor, workspace management); some spec operations are collapsed into one command; some spec operations may be genuinely unimplemented.
-
-**Prevention:** Use `operationId` as the canonical matching key. Every spec operation has a unique `operationId`. Build the audit script to:
-1. Extract all `operationId` values from the swagger JSON
-2. Extract all `api_endpoint` values from `static agentMetadata` in command files
-3. Report exact diff as "spec ops with no matching command" and "commands with no matching spec op"
-
-Maintain an `EXCLUDED_OPERATIONS` constant for intentional omissions (super-admin endpoints, topic-only index files, non-API commands like doctor/workspace/auth) with a comment explaining each exclusion.
-
----
-
-### Critical: Terminology Mismatch Breaks Naïve Path Matching
-
-**What goes wrong:** The spec uses legacy API names (`/photo/*`, `/album/*`, `/live/*`). The CLI uses modern terminology (`video`, `category`, `webinar`). An audit script that compares spec paths to command file paths will show zero matches for the 29 `/photo/*` paths, 4 `/album/*` paths, and 74 `/live/*` paths — a false negative rate of ~46% (107/235 endpoints).
-
-**Why this project is specifically affected:** The `agentMetadata.api_endpoint` field already uses the legacy API path (`'GET /photo/list'`), not the CLI command name (`video list`). This is the correct field to match against the spec — but the audit script must parse `api_endpoint` from source files, not infer it from file paths.
-
-**Prevention:** The audit script must grep `api_endpoint:` from command source files (not infer from file paths). The pattern `api_endpoint: 'METHOD /path'` in `agentMetadata` is the canonical link between CLI command and spec operation. Any path-based comparison will fail.
-
----
-
-### Moderate: HTTP Method Collapsing — False Coverage Gaps
-
-**What goes wrong:** Some API paths have multiple HTTP methods in the spec. The CLI may collapse both into a single command (e.g., a command using `GET /photo/list` for both list and get-by-id). An operationId-based audit flags the unused method's operationId as a coverage gap, even though the collapse is intentional.
-
-**Example already present:** `video get` and `video list` both map to `GET /photo/list` (both show `api_endpoint: 'GET /photo/list'` in their agentMetadata). An audit comparing operationIds from both commands to spec operationIds will find the same spec op referenced twice — not two distinct ops covered.
-
-**Prevention:** The `EXCLUDED_OPERATIONS` list must document every intentional collapse with rationale. The audit script should print these as "intentionally excluded" rather than silently ignoring them.
-
----
-
-### Moderate: Topic Index Files Are Not API Commands
-
-**What goes wrong:** 9 `index.ts` files in the commands tree (e.g., `video/index.ts`, `webinar/index.ts`, `category/index.ts`) are topic-level help dispatchers — they print "Run X --help for available commands" and have no `agentMetadata`. An audit that counts "command files with no agentMetadata" will flag all 9 as missing coverage.
-
-**Prevention:** The audit script must distinguish topic index files (no `agentMetadata`, no `api_endpoint`) from leaf command files (have `agentMetadata`). Topic index files are structural scaffolding, not API operations, and should be excluded from coverage analysis by file pattern (`**/index.ts`).
-
----
-
-### Minor: Deprecated Operations Not Filtered
-
-**What goes wrong:** The current spec has 0 operations marked `deprecated: true` (verified). If future spec updates add deprecated operations, a naive audit will flag them as "missing coverage." Building commands for deprecated endpoints is wasteful.
-
-**Prevention:** Add a `deprecated` filter to the audit script now:
-```python
-if op.get('deprecated', False):
-    continue  # skip deprecated operations
+# Non-interactive (agent / CI)
+twentythree workspace select --workspace <domain>
 ```
-This is a no-op for v1.1 but prevents false positives in future audit runs.
 
 ---
 
-### Minor: `agentMetadata.api_endpoint` Format Inconsistency
+## Minor Pitfalls
 
-**What goes wrong:** The `api_endpoint` field is a free-form string (`'GET /photo/list'`). If any command was authored with a slightly different format — extra space, lowercase method, different path casing — the audit script's string matching will produce a false negative.
+### 10. Missing `files` Whitelist for Skill Sub-Directories
 
-**Prevention:** The audit script should normalize both sides before comparison: uppercase method, strip leading/trailing whitespace, strip the `/api/2` prefix if present. A validation pass that checks all `api_endpoint` values match the pattern `^(GET|POST|PUT|PATCH|DELETE) /\S+$` will catch formatting issues before the audit comparison runs.
+If the skills package grows to include `reference/`, `examples/`, or `scripts/` sub-directories (per the progressive disclosure pattern), they must be explicitly listed in `package.json`'s `files` field. The current `files: ["SKILL.md"]` would exclude them.
 
----
-
-## README Pitfalls
-
-### Critical: No README at Package or Repo Root
-
-**Current state:** There is no `README.md` in `packages/twentythree-cli/` and no `README.md` at the repo root. npm shows "No README" on the package page — this is the first impression for every potential user.
-
-**What goes wrong:** npm's package page is blank. `npm view twentythree-cli` returns no description beyond the `package.json` description field. Potential adopters see no install instructions, no auth flow, no examples — and bounce.
-
-**Prevention:** The README must exist at the package root (or repo root with a symlink/copy at the package level) before `npm publish`. Minimum viable README sections in priority order:
-1. One-line description + what it does
-2. `npm install -g twentythree-cli` — the single install command
-3. Auth setup: `twentythree auth credentials` — the first command a user runs
-4. One realistic example command that shows value immediately
-5. Link to full command reference
+**Prevention:** Add `"files": ["SKILL.md", "reference/", "examples/", "scripts/"]` and verify with `npm pack --dry-run`.
 
 ---
 
-### Critical: Auth Flow Not Explained in First Screen
+### 11. Version Number Mismatch Between CLI and Skills
 
-**What goes wrong:** This CLI requires `twentythree auth credentials` before any other command works. Every other command fails with an authentication error until this step is done. If the README does not make this explicit and first, users hit an error on their second command, assume the CLI is broken, and leave.
+If CLI is `v1.2.0` and skills is `v0.1.0`, consumers can't tell if the skill content matches their CLI version. If the skill documents a flag added in CLI v1.1 and the user has CLI v0.9 installed, the agent will fail on that flag with no clear error.
 
-**Prevention:** The README must present auth setup as step 1, not buried in a "Configuration" section. The quickstart flow must be:
+**Prevention:** State the minimum CLI version at the top of SKILL.md:
+```markdown
+> Requires twentythree-cli >= 1.0.0. Check your version with `twentythree --version`.
 ```
-npm install -g twentythree-cli
-twentythree auth credentials    # required first step
-twentythree video list          # now this works
-```
-Do not show `video list` before `auth credentials` in any example sequence.
+Use lockstep versioning or explicit `peerDependencies` in `package.json`.
 
 ---
 
-### Moderate: Missing Node Version Requirement
+### 12. Skill References `npx twentythree-skills add` in Content
 
-**What goes wrong:** The CLI requires Node.js >= 22 (enforced in `bin/run.js` before oclif loads). A user on Node 18 or 20 will install successfully but get a clear error on first run. If the README does not state the Node requirement prominently, support issues follow.
+If the skill file itself contains instructions like "install skills by running `npx twentythree-skills add`", this creates a circular reference (skill tells you how to install the skill). Worse, if the npm package name is slightly different, agents may hallucinate variations of the command and attempt to `npm install` non-existent packages.
 
-**Prevention:** State Node 22+ in the Requirements/Prerequisites section and in the `engines` badge if badges are used. The error message from `bin/run.js` is already good (`"twentythree requires Node.js 22 or later"`), but users should not have to discover this post-install.
-
----
-
-### Moderate: Terminology Mismatch Confuses API-Familiar Users
-
-**What goes wrong:** Users who know the TwentyThree API use `photo`, `album`, and `live` as object names. The CLI uses `video`, `category`, and `webinar`. A user searching the README for "photo" or "album" finds nothing and assumes the command doesn't exist.
-
-**Prevention:** Include a terminology mapping table or callout in the README:
-```
-API term → CLI command
-photo    → video
-album    → category
-live     → webinar
-```
-This prevents confused support questions from existing TwentyThree API users.
+**Prevention:** Keep installer instructions in the README, not in SKILL.md content. Skill content should only reference `twentythree` CLI commands.
 
 ---
 
-### Moderate: Credential Storage Location Not Documented
+### 13. Skill Tests Missing for Multiple Model Sizes
 
-**What goes wrong:** Users ask "where are my tokens stored?" and "how do I revoke access?" The README should answer both. Without this, security-conscious users in organizations don't feel safe installing.
+Skills behave differently under Claude Haiku (economical, less reasoning), Claude Sonnet (balanced), and Claude Opus (powerful). A skill that works well under Opus may silently under-deliver under Haiku because it assumed more reasoning capability.
 
-**Prevention:** One sentence in the auth section: "Credentials are stored in your OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) — never in plaintext files." Include `twentythree auth logout` (if implemented) or note how to remove credentials manually.
-
----
-
-### Minor: No `--json` Flag Documented
-
-**What goes wrong:** Every command supports `--json` output for scripting and piping. This is a major differentiator for CLI tools used in automation. If it is not in the README, adoption in pipelines and scripts is lower.
-
-**Prevention:** One section showing the `--json` flag with example output. Show the JSON shape — `{ ok, data, summary, breadcrumbs }`. This demonstrates the tool is pipeline-ready, not just interactive.
+**Prevention:** Test the skill against at least Haiku and Sonnet. The twentythree CLI skill should probably include more explicit step-by-step guidance than skills for simpler tools, because the 219-command surface area needs more scaffolding for lighter models.
 
 ---
 
-### Minor: `oclif readme` Placeholders Missing
+## Phase-Specific Warnings
 
-**What goes wrong:** `oclif readme` generates the command reference section by replacing HTML comment tags in the README. If the README does not contain `<!-- usage -->` and `<!-- commands -->` tags, `oclif readme` silently does nothing — no error, no output — and the command reference is never inserted.
-
-**Prevention:** Write these tags into the README before running `oclif readme` the first time. They are invisible in rendered Markdown and must be placed at the exact position where generated content should appear.
-
----
-
-## Documentation Drift
-
-### Critical: `oclif readme` Run Once and Never Again
-
-**What goes wrong:** `oclif readme` inserts a generated command reference into the README at `<!-- commands -->`. Every time a flag is added, a command is changed, or a description is updated, the README goes out of sync. With 219 commands, this divergence is invisible until a user notices wrong flag names or missing commands and files an issue.
-
-**Why it happens fast:** Adding a single flag to one command, changing a description, or adding one new command makes the README stale. There is no automatic check.
-
-**Prevention:**
-1. Wire `oclif readme` into the `prepack` script so it runs on every publish:
-   ```json
-   "prepack": "tsdown --config-loader unrun && oclif manifest && oclif readme"
-   ```
-2. Add a CI check: run `oclif readme --dry-run`, diff against committed README, fail CI if non-empty diff. This makes stale docs a build failure, not a human oversight.
-3. For the multi-page `docs/` tree: `oclif readme --multi --nested-topics-depth 2 --output-dir docs` in the same prepack step.
-
----
-
-### Moderate: `docs/` Reference Goes Stale After Every Release
-
-**What goes wrong:** If `docs/` is generated once for v1.1 and then committed, future commits that change command flags, add commands, or alter descriptions leave `docs/` stale. Users reading the docs get wrong information about flags that no longer exist or miss new options.
-
-**Why it is worse than README drift:** The main README has the `<!-- commands -->` autogeneration hook. Docs pages written by hand (contributing, dev setup, API upgrade guide) have no hook — they must be manually maintained. The command reference pages generated by `oclif readme --multi` can be re-generated, but the hand-authored pages cannot.
-
-**Prevention:**
-1. Separate generated docs from hand-authored docs. Keep generated pages regenerable from the manifest on every `prepack`. Keep hand-authored pages (contributing, API upgrade guide) as the only manually maintained files.
-2. Add a note at the top of each generated page: "This file is auto-generated. Do not edit manually — run `oclif readme --multi --output-dir docs` to regenerate."
-3. The CI diff check (see above) catches generated page drift automatically.
-
----
-
-### Moderate: API Upgrade Guide Goes Stale After Spec Changes
-
-**What goes wrong:** The `docs/api-spec-upgrade-guide.md` (or equivalent) documents the `pnpm update-api-spec` workflow. If the spec update script path changes, the script gains new behavior, or new steps are needed, the guide silently gives wrong instructions. API-aware users following the guide run commands that no longer match the workflow.
-
-**Prevention:** The upgrade guide is hand-authored — it cannot be auto-generated. Treat it as a living document that must be updated alongside any changes to `update-api-spec.sh` or the `pnpm update-api-spec` workflow. Add a "Last verified: [date]" header so staleness is visible.
-
----
-
-### Minor: `oclif readme --multi` Flat Directory Without `--nested-topics-depth`
-
-**What goes wrong:** With 219 commands across topics including nested ones (`video section`, `video subtitle`, `webinar poll`, `webinar room`, `webinar speakers`, `analytics video`, `analytics conversions`), `oclif readme --multi` without `--nested-topics-depth 2` produces a flat directory of ~40 files. Related commands are not co-located. Navigation is poor.
-
-**Prevention:** Always run with `--nested-topics-depth 2`:
-```bash
-oclif readme --multi --nested-topics-depth 2 --output-dir docs/commands
-```
-Also generate a hand-authored `docs/commands/README.md` index — oclif does not create one automatically.
-
----
-
-### Minor: Version Number in Docs Gets Stale
-
-**What goes wrong:** Any docs page that hardcodes "v1.0.0" or "version 1.0.0" in install instructions becomes stale after the first patch release. Users copy-paste `npm install -g twentythree-cli@1.0.0` instead of `npm install -g twentythree-cli`.
-
-**Prevention:** Never hardcode a version number in install instructions. Use `npm install -g twentythree-cli` (no version pin) everywhere in docs. The `<%= config.version %>` oclif template variable is available in command `examples` but not in README prose — just use unpinned install commands.
-
----
-
-## Prevention Strategies by Phase
-
-| Phase | Pitfall | Prevention |
-|-------|---------|------------|
-| npm publish — pre-flight | Package name `twentythree-cli` unavailable | `npm view twentythree-cli` — first action before any prep |
-| npm publish — pre-flight | Wrong public version (`0.1.0` vs `1.0.0`) | Decide version; consider `1.0.0` to match internal milestone |
-| npm publish — prep | No `prepack` script; stale dist and manifest ship | Add `prepack: "tsdown --config-loader unrun && oclif manifest"` |
-| npm publish — verify | `.npmignore` breaks `files` whitelist | Never add `.npmignore`; run `npm pack --dry-run` to verify |
-| npm publish — verify | `src/` or `.planning/` leaked into tarball | `npm pack --dry-run` — inspect full file list |
-| npm publish — verify | Missing README on npm package page | Create `README.md` at package root before publish |
-| Install verification | Native keyring binary missing on Linux | Fresh `npm install -g` on `ubuntu-latest`; no lock file reuse |
-| Install verification | `bin/run.cmd` missing or broken on Windows | Confirm `/bin` in `files` field; `npm pack --dry-run` |
-| Endpoint audit | Counting files instead of matching operationIds | Audit script matches on `agentMetadata.api_endpoint` strings |
-| Endpoint audit | Legacy `/photo/`/`/album/`/`/live/` paths not matched | Parse `api_endpoint` from source; never infer from file path |
-| Endpoint audit | Topic index files (`index.ts`) flagged as missing coverage | Exclude `**/index.ts` from leaf command analysis |
-| Endpoint audit | HTTP method collapse causes false gaps | `EXCLUDED_OPERATIONS` list with rationale for each entry |
-| Endpoint audit | Deprecated endpoints flagged as missing | Add `deprecated: true` filter in audit script |
-| README authoring | Auth flow not shown first | `auth credentials` is step 1 in every quickstart sequence |
-| README authoring | Node 22+ requirement not stated | Add to Prerequisites; add badge if using shields.io |
-| README authoring | `<!-- usage -->` and `<!-- commands -->` tags missing | Insert tags before first `oclif readme` run |
-| README authoring | Terminology mismatch (photo/album/live) | Add terminology mapping table |
-| Docs generation | `oclif readme` not wired to prepack | Add `oclif readme` to `prepack` after `oclif manifest` |
-| Docs generation | CI does not catch stale docs | `oclif readme --dry-run` + diff check in CI |
-| Docs generation | Flat `docs/` without topic hierarchy | `--multi --nested-topics-depth 2` always |
-| Docs drift | Hand-authored guides go stale after script changes | "Last verified" header on upgrade guide; update alongside script |
-| Docs drift | Version numbers hardcoded in docs | Use unpinned `npm install -g twentythree-cli` in all docs |
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|----------------|------------|
+| Skill content authoring | Writing verbose, encyclopedic content instead of lean trigger-based content | Keep SKILL.md body under 500 lines; use progressive disclosure with sub-files |
+| Auth section | Assuming agent knows to run auth first | Explicit prerequisite section in every skill workflow |
+| Keychain documentation | Assuming OS keychain works in CI/container | Document env var fallback path; note which environments are supported |
+| Installer implementation | Writing to only Claude Code's path | Runtime detection loop covering all supported agents |
+| Installer implementation | Silent overwrite of modified files | Hash comparison + `--force` requirement |
+| Skills package publish | Adding `workspace:*` dependency on CLI | Zero-dependency package — skills package has no runtime imports |
+| Skills package publish | Publishing before CLI is on registry | CLI publishes first; automate with Changesets |
+| Version drift management | Manual skill content authored against current CLI only | Automate skill reference sections from `agentMetadata` output; manual narrative is small surface area |
+| Multi-runtime compatibility | Assuming all runtimes use same frontmatter fields | SKILL.md standard covers name/description; Claude Code extras (`disable-model-invocation`, `context: fork`) are additive and ignored by other runtimes |
+| Terminology in skill | Using CLI-friendly names only (video, webinar) | Document API-to-CLI name mapping for users who know the raw TwentyThree API |
 
 ---
 
 ## Sources
 
-- oclif release documentation: https://oclif.io/docs/releasing/
-- oclif readme command reference: https://github.com/oclif/oclif/blob/main/docs/readme.md
-- npm lifecycle scripts (prepack order): https://docs.npmjs.com/cli/v11/using-npm/scripts/
-- npm pack dry-run guide: https://stevefenton.co.uk/blog/2024/01/testing-npm-publish/
-- npm publish files field semantics: https://docs.npmjs.com/cli/v8/commands/npm-publish/
-- NAPI-RS release/distribution (platform optionalDependencies): https://napi.rs/docs/deep-dive/release
-- npm platform-specific optional dependency lockfile bug (npm/cli#4828): https://github.com/napi-rs/napi-rs/issues/2569
-- oclif pnpm workspace issue, closed not-planned 2024: https://github.com/oclif/oclif/issues/1170
-- @napi-rs/keyring optionalDependencies: confirmed from installed node_modules/@napi-rs/keyring/package.json (12 platform targets)
-- OpenAPI deprecated operation field: https://swagger.io/specification/
+- Anthropic skill authoring best practices (verified, official): https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
+- Claude Code skills docs (extend with skills, frontmatter reference): https://code.claude.com/docs/en/skills
+- OpenAI Codex skills — install paths and format: https://developers.openai.com/codex/skills
+- Agent Skills open standard overview: https://inference.sh/blog/skills/agent-skills-overview
+- Vercel skills installer CLI (idempotency, symlink/copy modes): https://github.com/vercel-labs/skills
+- Aikido Security — hallucinated npx commands in agent skills: https://www.aikido.dev/blog/agent-skills-spreading-hallucinated-npx-commands
+- pnpm workspace:* protocol and publish behavior: https://pnpm.io/workspaces
+- npm EACCES permissions errors: https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally/
+- Multi-platform skill compatibility (Claude Code, Codex, Cursor, Copilot): https://dev.to/nathanielc85523/skillmd-goes-multi-ecosystem-how-the-agent-skills-standard-jumped-from-anthropic-to-openai-and-3oeg
+- Writing a good CLAUDE.md (HumanLayer): https://www.humanlayer.dev/blog/writing-a-good-claude-md
+- npm global install permission issues (2026): https://github.com/nodejs/node/issues/57548

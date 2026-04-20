@@ -1,352 +1,421 @@
-# Architecture Research: v1.1 Repository Polish & Release
+# Architecture: twentythree-skills Package
 
-**Domain:** CLI documentation pipeline, endpoint coverage audit, and npm publish for a 219-command oclif v4 TypeScript CLI in a pnpm monorepo
-**Project:** twentythree-cli v1.1 — Repository Polish & Release
-**Researched:** 2026-04-16
-**Overall confidence:** HIGH — all findings derived from the live codebase, oclif official docs, and npm official docs
+**Milestone:** Add packages/twentythree-skills to the existing pnpm monorepo
+**Researched:** 2026-04-20
+**Overall confidence:** HIGH — findings drawn from live codebase, official runtime docs (Claude Code, Codex, Copilot), and ecosystem patterns
 
 ---
 
-## Component Map (new vs modified)
+## Package Structure
 
-### New Components
+### Directory Tree
 
-| Component | Type | Location | Notes |
-|-----------|------|----------|-------|
-| `scripts/audit-endpoints.mjs` | New script | `packages/twentythree-cli/scripts/` | Plain JS (no build step); reads manifest + spec |
-| `scripts/generate-docs.mjs` | New script | `packages/twentythree-cli/scripts/` | Plain JS; reads manifest, writes docs/ |
-| `docs/` | New directory | `packages/twentythree-cli/docs/` | Package-scoped; included in npm files |
-| `docs/README.md` | New file | `packages/twentythree-cli/docs/` | Auto-generated topic index |
-| `docs/commands/*.md` | New files (24) | `packages/twentythree-cli/docs/commands/` | Auto-generated, one per topic |
-| `docs/guides/` | New directory | `packages/twentythree-cli/docs/guides/` | Hand-authored |
-| `docs/guides/getting-started.md` | New file | `packages/twentythree-cli/docs/guides/` | Install + auth + first commands |
-| `docs/guides/api-spec-upgrade.md` | New file | `packages/twentythree-cli/docs/guides/` | Formalizes the CLAUDE.md workflow |
-| `docs/guides/contributing.md` | New file | `packages/twentythree-cli/docs/guides/` | Dev setup, build, test, PR |
-| `docs/endpoint-coverage.md` | New file | `packages/twentythree-cli/docs/` | Auto-generated audit output |
-| `/README.md` | New file | Repo root | GitHub discovery surface |
-| `.github/workflows/publish.yml` | New file | `.github/workflows/` | CI publish pipeline |
+```
+packages/twentythree-skills/
+├── package.json                  # npm manifest, bin wiring, files whitelist
+├── SKILL.md                      # Top-level index skill (already exists, needs content)
+├── skills/                       # One subdirectory per domain area
+│   ├── videos/
+│   │   └── SKILL.md              # Deep instructions for video commands
+│   ├── categories/
+│   │   └── SKILL.md
+│   ├── webinars/
+│   │   └── SKILL.md
+│   ├── analytics/
+│   │   └── SKILL.md
+│   ├── auth/
+│   │   └── SKILL.md
+│   ├── ... (one per topic area)
+│   └── references/               # Shared reference material (optional)
+│       └── api-terms.md          # CLI→API term mapping (video=photo, category=album, etc.)
+└── bin/
+    └── add.js                    # Installer — #!/usr/bin/env node, plain JS, no build step
+```
+
+**Why one skill per topic, not one monolithic SKILL.md:** Runtimes have description length limits (Claude Code: no documented limit, but Codex recommends concise descriptions; Copilot caps description at 1024 characters). More importantly, agents perform better with fine-grained skills that describe narrow contexts — "video upload and management" vs "all 219 TwentyThree commands." The top-level `SKILL.md` serves as the entry point; topic skills provide depth.
+
+**Why `skills/` subdirectory, not flat structure:** All three target runtimes scan for `SKILL.md` files recursively. Grouping under `skills/` gives the installer a single source path to copy from and keeps the package root clean.
+
+---
+
+## Skill File Format
+
+All three target runtimes (Claude Code, OpenAI Codex, GitHub Copilot) share the same SKILL.md format:
+
+```markdown
+---
+name: twentythree-videos
+description: |
+  Upload, list, update, delete, and manage videos in TwentyThree.
+  Use for: uploading video files, retrieving video metadata, updating titles/descriptions,
+  managing video sections, subtitles, and thumbnails.
+triggers:
+  - upload video
+  - video list
+  - video management
+invocable: true
+argument-hint: "<command> [flags]"
+---
+
+# TwentyThree Video Commands
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `twentythree video upload <file>` | Upload a video file (chunked) |
+| `twentythree video list` | List all videos |
+| `twentythree video get <id>` | Get video details |
+...
+
+## Key Flags
+
+...
+## Examples
+
+...
+```
+
+**Fields used by all three runtimes:** `name` (required, must match directory name, lowercase-hyphenated), `description` (required, drives implicit activation). All other frontmatter fields (`triggers`, `invocable`, `argument-hint`) are Claude Code/Codex extensions — Copilot ignores unknown fields gracefully.
+
+---
+
+## Installer Design: `bin/add.js`
+
+### Wiring in package.json
+
+```json
+{
+  "bin": {
+    "twentythree-skills": "./bin/add.js"
+  }
+}
+```
+
+Usage: `npx twentythree-skills add` or `npx twentythree-skills add --global`
+
+The installer is a plain `.js` file (no TypeScript, no build step). It is the only executable artifact in the package. Keep it under 200 lines.
+
+### What the Installer Does
+
+```
+1. Parse flags: --global (default: false), --target <runtime> (default: auto-detect)
+2. Detect which runtimes are present (see detection strategy below)
+3. Prompt user if multiple runtimes detected (use @clack/prompts — already a dep of twentythree-cli
+   but twentythree-skills should NOT import from twentythree-cli; use a lightweight alternative
+   or a simple readline prompt since the installer is tiny)
+4. Resolve target directory
+5. Copy skills/ tree into target/twentythree/ (creates twentythree/ subdirectory to namespace)
+6. Print confirmation: "Installed to ~/.claude/skills/twentythree/"
+```
+
+### Runtime Detection Strategy
+
+Detection is directory-based, not environment-variable-based. The installer runs in the user's terminal, not inside the agent, so `CLAUDECODE=1` is not set during `npx twentythree-skills add`. Directory existence is the reliable signal.
+
+```
+Detect Claude Code:
+  ~/.claude/skills/    →  global install target: ~/.claude/skills/twentythree/
+  ./.claude/skills/    →  project install target: .claude/skills/twentythree/
+
+Detect Codex CLI:
+  ~/.codex/            →  global: ~/.codex/skills/twentythree/
+  ~/.agents/skills/    →  check for .codex/ dir as confirmation
+  ./.agents/skills/    →  project: .agents/skills/twentythree/
+
+Detect GitHub Copilot:
+  ~/.github/copilot/   →  check if gh CLI is installed: `which gh` + `gh extension list | grep copilot`
+  global: ~/.github/skills/twentythree/ (or ~/.copilot/skills/twentythree/)
+  project: .github/skills/twentythree/
+
+Detect Cursor:
+  ~/.cursor/           →  global: ~/.cursor/skills/twentythree/
+  ./.cursor/skills/    →  project: .cursor/skills/twentythree/
+```
+
+**Priority when multiple detected:** Prompt the user to choose, or pass `--target claude-code|codex|copilot|cursor`. Default behavior without `--target`: install to all detected runtimes.
+
+**Fallback:** If no runtimes detected, print a help message listing supported runtimes and their install paths. Do not error silently.
+
+### Target Directories (complete reference)
+
+| Runtime | Global Path | Project Path |
+|---------|------------|--------------|
+| Claude Code | `~/.claude/skills/twentythree/` | `.claude/skills/twentythree/` |
+| OpenAI Codex | `~/.codex/skills/twentythree/` | `.agents/skills/twentythree/` |
+| GitHub Copilot | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
+| Cursor | `~/.cursor/skills/twentythree/` | `.cursor/skills/twentythree/` |
+
+Use a `twentythree/` subdirectory in all cases to namespace the skills and avoid collisions with other packages.
+
+### Installer Code Pattern
+
+```javascript
+#!/usr/bin/env node
+// bin/add.js — skills installer, plain JS, no transpilation needed
+
+import { existsSync, mkdirSync, cpSync } from 'node:fs'
+import { resolve, join } from 'node:path'
+import { homedir } from 'node:os'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const skillsSource = resolve(__dirname, '../skills')
+const home = homedir()
+
+// Detection + copy logic here
+// No external dependencies — use only node: built-ins
+```
+
+**No external dependencies in the installer.** The installer runs as `npx twentythree-skills add` — users may not have the package installed, so no `node_modules` are guaranteed. Use only Node.js built-ins (`node:fs`, `node:path`, `node:os`, `node:readline` for prompts).
+
+---
+
+## Static vs Generated Skill Files
+
+**Recommendation: static (hand-authored) markdown, not generated.**
+
+### Why Static
+
+1. **Quality over coverage.** A generated skill that lists all 219 commands is a command reference manual, not an agent skill. Good skill files explain *when* to use a command group, show realistic workflows, and describe edge cases. This requires authorial judgment — it cannot be generated from `static description` strings and flag lists.
+
+2. **The `agentMetadata` on each command is too sparse.** `{ api_endpoint, auth_scope, output_shape, side_effects }` tells an agent about side effects and output shape but says nothing about when to prefer `video list` over `video get`, how pagination works, or how the upload flow differs from the replace flow. That context is authorial.
+
+3. **Generated skill files go stale in a different way.** A generated file from today's manifest will be accurate today but diverge from the CLI as commands are added/removed. A hand-authored file is intentionally curated and is updated when its content would meaningfully change — not on every build.
+
+4. **The audit-endpoints script already covers coverage tracking.** Command completeness is validated by `scripts/audit-endpoints.mjs` in the CLI package. The skills package does not need to replicate this.
+
+### What "Static" Looks Like in Practice
+
+- One SKILL.md per topic directory (videos, categories, webinars, etc.)
+- The top-level SKILL.md is the entry-point description
+- `references/api-terms.md` documents the CLI→API terminology mapping (video=photo, category=album, etc.) — this IS generated once and rarely changes
+- When a new command topic is added to twentythree-cli, a corresponding skill directory is added to twentythree-skills in the same PR
+
+### The One Generated Artifact
+
+`references/api-terms.md` — the CLI-to-API term mapping — is appropriate to generate from the codebase's `term-map.ts`. This is factual, enumerable, and changes with API updates. Generate it as part of the skills package's `build` script (see below).
+
+---
+
+## Turborepo Integration
+
+### The Problem
+
+The standard turbo `build` task has `"dependsOn": ["^build"]`, meaning every package waits for its dependencies to build. `twentythree-skills` has no TypeScript to compile — its primary artifact is the `skills/` markdown tree.
+
+### Solution: Declare a `build` Task with Empty Outputs
+
+Add a `package.json` `build` script that only generates the one generated artifact:
+
+```json
+// packages/twentythree-skills/package.json
+"scripts": {
+  "build": "node scripts/generate-references.mjs",
+  "test": "node scripts/validate-skills.mjs"
+}
+```
+
+```json
+// packages/twentythree-skills/turbo.json (package-level override)
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": [],
+      "inputs": ["skills/**/*.md", "scripts/**/*.mjs"],
+      "outputs": ["skills/references/api-terms.md"]
+    }
+  }
+}
+```
+
+`"dependsOn": []` — the skills package does not depend on `twentythree-cli`'s build. The installer reads static files from the package itself; it does not import anything from the CLI's compiled output.
+
+**Why not `"dependsOn": ["^build"]`:** The skills package doesn't import from twentythree-cli (see Integration Points below). Having it depend on the CLI build would force sequential execution with no benefit.
+
+**If generate-references is skipped initially:** Set `"build": "echo 'no build step'"` and declare `"outputs": []`. Turbo handles empty-output packages gracefully — it caches the task as complete immediately. This is the correct pattern for a package whose "build" is a no-op.
+
+### Full turbo.json Root Impact
+
+No changes needed to the root `turbo.json`. The package-level override (`packages/twentythree-skills/turbo.json`) handles the exception cleanly. Turborepo merges package-level configs with root config using `"extends": ["//"]`.
+
+---
+
+## Monorepo Dependency Graph
+
+```
+twentythree-skills
+  │
+  ├── does NOT import twentythree-cli (runtime or dev dependency)
+  │
+  └── peerDependency: twentythree-cli (optional, for documentation purposes only)
+      "To use these skills, install twentythree-cli: npm install -g twentythree-cli"
+```
+
+**`twentythree-skills` does NOT import from `twentythree-cli`.** This is the most important architectural decision. The skills are markdown files that describe the CLI's behavior — they do not need to execute code from the CLI. Adding `twentythree-cli` as a dependency would:
+- Create a circular-ish coupling (skills → cli → skills is the conceptual loop)
+- Force users who install skills to also install the full CLI as a transitive dep of the skills package
+- Create a build ordering constraint in turbo that isn't needed
+
+If the `generate-references.mjs` script needs to read the CLI's `term-map.ts` to generate `api-terms.md`, it reads the file by path within the monorepo — it does not `import()` from the compiled CLI package. This is a script reading source files, not a runtime dependency.
+
+### package.json for twentythree-skills
+
+```json
+{
+  "name": "twentythree-skills",
+  "version": "0.1.0",
+  "description": "AI agent skills for the TwentyThree CLI",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "twentythree-skills": "./bin/add.js"
+  },
+  "files": [
+    "/bin",
+    "/skills",
+    "/SKILL.md"
+  ],
+  "scripts": {
+    "build": "node scripts/generate-references.mjs",
+    "test": "node scripts/validate-skills.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": ["ai", "skills", "twentythree", "cli", "agent"]
+}
+```
+
+`"type": "module"` — the installer and scripts use ESM (`import`). The installer runs standalone via `npx`, so ESM is safe (no CJS-interop issues — these are not oclif commands loaded by a CJS host). This is the inverse of the CLI package which is `"type": "commonjs"` due to oclif's CJS loading model.
+
+---
+
+## Publish Strategy
+
+### Linked Versioning via Changesets
+
+The `.changeset/config.json` already has `"linked": [["twentythree-cli", "twentythree-skills"]]`. This means both packages share version bumps — when you run `changeset version`, both packages receive the same new version number.
+
+**This is the correct strategy.** Skill files describe a specific version of the CLI's behavior. Keeping versions in sync makes the relationship explicit: `twentythree-skills@1.2.0` documents `twentythree-cli@1.2.0`. Users can match package versions to confirm compatibility.
+
+### What "Linked" Means in Practice
+
+- `changeset add` creates a changeset that bumps both packages
+- `changeset version` increments both to the same new version
+- `pnpm publish --filter twentythree-cli --filter twentythree-skills` publishes both in a single CI step
+- Neither package needs its own independent release cadence
+
+### Publish Script (root package.json addition)
+
+```json
+"publish-all": "pnpm publish --filter twentythree-cli --filter twentythree-skills --no-git-checks"
+```
+
+### When to Publish Independently
+
+If the skill content needs a correction independent of a CLI release (e.g., a wrong command example), publish `twentythree-skills` alone with a patch bump. The `linked` config allows independent bumps — it just prevents one package from having a higher major/minor than the other.
+
+---
+
+## Integration Points
+
+### Does twentythree-skills need to import anything from twentythree-cli?
+
+No. The skill files are markdown. The installer copies files. Neither needs to execute CLI code.
+
+The only integration is **one-way documentation**: the skill files describe CLI commands by name, flag syntax, and behavior. This is maintained manually, the same way any documentation is maintained.
+
+### What Changes When a New Command is Added to twentythree-cli
+
+1. The command is added to `packages/twentythree-cli/src/commands/<topic>/`
+2. If it's a new topic: add `packages/twentythree-skills/skills/<topic>/SKILL.md`
+3. If it's a command in an existing topic: update the relevant skill file
+4. Both changes go in the same PR
+
+This is a content maintenance workflow, not a code generation workflow. The audit-endpoints script in the CLI package guards against missing command implementations; the skills package has no equivalent gate (content quality cannot be automated).
+
+---
+
+## New vs Modified Files Summary
+
+### New Files
+
+| File | Type | Notes |
+|------|------|-------|
+| `packages/twentythree-skills/bin/add.js` | New — installer | Plain ESM JS, node: built-ins only, no deps |
+| `packages/twentythree-skills/skills/videos/SKILL.md` | New — skill content | One per topic |
+| `packages/twentythree-skills/skills/categories/SKILL.md` | New — skill content | |
+| `packages/twentythree-skills/skills/webinars/SKILL.md` | New — skill content | |
+| `packages/twentythree-skills/skills/analytics/SKILL.md` | New — skill content | |
+| `packages/twentythree-skills/skills/auth/SKILL.md` | New — skill content | |
+| `packages/twentythree-skills/skills/references/api-terms.md` | New — generated | From term-map.ts |
+| `packages/twentythree-skills/scripts/generate-references.mjs` | New — build script | Reads term-map.ts, writes api-terms.md |
+| `packages/twentythree-skills/scripts/validate-skills.mjs` | New — test script | Checks all SKILL.md have valid frontmatter |
+| `packages/twentythree-skills/turbo.json` | New — turbo override | `dependsOn: []`, declares outputs |
 
 ### Modified Files
 
 | File | Change |
 |------|--------|
-| `packages/twentythree-cli/package.json` | Add `audit`, `docs` scripts; add `/docs` to `files` array; add `repository`, `homepage`, `keywords` fields; add `publishConfig.provenance: true` |
-| `packages/twentythree-cli/README.md` | New file (does not currently exist); install-focused for npm page |
-| Root `package.json` | Add `"audit"` and `"docs"` convenience workspace scripts |
+| `packages/twentythree-skills/package.json` | Add `bin`, `files`, `scripts`, `type: module`, `engines` |
+| `packages/twentythree-skills/SKILL.md` | Replace placeholder content with real top-level skill |
+
+### No Changes Needed
+
+| File | Reason |
+|------|--------|
+| Root `turbo.json` | Package-level override handles the exception |
+| Root `package.json` | Already has `pnpm workspace` setup; add `publish-all` script optionally |
+| `.changeset/config.json` | Already has correct `linked` configuration |
+| `pnpm-workspace.yaml` | Already includes `packages/*` |
 
 ---
 
-## Endpoint Audit Script Design
-
-### Location
-
-`packages/twentythree-cli/scripts/audit-endpoints.mjs`
-
-Write as plain `.mjs`, not TypeScript. The script reads two JSON files and does set operations — TypeScript adds no value here, and plain JS avoids a build step or `tsx` dependency.
-
-### Inputs
-
-1. `packages/twentythree-cli/specs/twentythree-api-swagger.json` — 235 paths
-2. `packages/twentythree-cli/oclif.manifest.json` — 226 entries (219 real commands + 7 topic indexes)
-
-**Critical:** `oclif.manifest.json` is generated by `postbuild: oclif manifest`. The script must run after `pnpm build`. Add a guard: check that the manifest file exists and is newer than `dist/` before proceeding.
-
-### Comparison Logic
-
-The `agentMetadata.api_endpoint` field in every command already stores the raw spec path in legacy format (e.g. `GET /photo/list`). The OpenAPI spec also uses legacy paths (`/photo/`, `/album/`, `/live/`). **No translation layer is needed** — the comparison is a direct string match.
-
-Commands that don't call the API declare `api_endpoint: 'local'` (auth:status, workspace:use, workspace:list). Filter these out before computing coverage.
+## Build Order
 
 ```
-spec_endpoints   = { "METHOD /path" for each method+path in spec.paths }
-command_endpoints = { cmd.agentMetadata.api_endpoint for cmd in manifest
-                      where agentMetadata exists AND api_endpoint !== 'local' }
+1. Generate references (if implemented):
+   node packages/twentythree-skills/scripts/generate-references.mjs
+   Reads: packages/twentythree-cli/src/lib/term-map.ts
+   Writes: packages/twentythree-skills/skills/references/api-terms.md
 
-covered   = intersection(spec_endpoints, command_endpoints)
-uncovered = spec_endpoints - command_endpoints      ← gaps to fill
-phantom   = command_endpoints - spec_endpoints      ← bugs (stale endpoint refs)
-duplicates = endpoints with 2+ covering commands    ← expected for some (video:list / video:get)
+2. Validate skill files:
+   node packages/twentythree-skills/scripts/validate-skills.mjs
+   Reads: packages/twentythree-skills/skills/**/*.md
+   Fails: if any SKILL.md missing name/description frontmatter
+
+3. Publish:
+   pnpm publish --filter twentythree-skills --no-git-checks
 ```
 
-### Output
-
-- Print a human-readable report to stdout (totals + lists)
-- Write machine-readable output to `docs/endpoint-coverage.md`
-- **Exit code 1 if uncovered > 0 OR phantom > 0** — enables use as a CI gate
-- Phantom endpoints are higher priority than uncovered: a phantom means a command is calling a deleted or renamed endpoint
-
-### Known Current State (from live codebase)
-
-- 235 spec endpoints
-- 210 matched by `api_endpoint` values
-- 25 uncovered (all in analytics timeseries/totals sub-paths)
-- 5 duplicates (expected — e.g. `GET /photo/list` covered by both `video list` and `video get`)
-- 3 `api_endpoint: 'local'` (correct, filtered out)
-
-### Adding to Scripts
-
-```json
-// packages/twentythree-cli/package.json
-"audit": "node scripts/audit-endpoints.mjs"
-
-// Root package.json
-"audit": "pnpm --filter twentythree-cli exec node scripts/audit-endpoints.mjs"
-```
-
----
-
-## npm Publish Integration
-
-### oclif pack vs npm publish
-
-**Use plain `npm publish`**, not `oclif pack`.
-
-`oclif pack` creates platform-specific standalone tarballs (with bundled Node.js binary) for users who don't have Node.js installed. This project's target audience is developers with Node.js already installed. `npm publish` is the correct distribution method for a developer tool. `oclif pack` is appropriate for end-user desktop CLIs (e.g. Heroku CLI, Salesforce CLI) — not for this use case.
-
-**Confidence: HIGH** — confirmed on oclif.io/docs/releasing: "use `npm publish` like any other npm project." Oclif automatically includes `run.cmd` for Windows, which already exists at `packages/twentythree-cli/bin/run.cmd`.
-
-### package.json Fields Needed
-
-The current `packages/twentythree-cli/package.json` already has the required functional fields (`name`, `version`, `bin`, `main`, `files`, `engines`, `oclif`). These fields need to be added before first publish:
-
-```json
-{
-  "description": "Terminal access to every TwentyThree API endpoint",
-  "keywords": ["twentythree", "video", "cli", "api"],
-  "author": "TwentyThree",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YOUR-ORG/twentythree-cli.git"
-  },
-  "homepage": "https://github.com/YOUR-ORG/twentythree-cli#readme",
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
-}
-```
-
-The `publishConfig.provenance: true` opts into npm provenance attestation automatically (no flag needed on the CLI command). This links the published package to the exact GitHub commit it was built from via Sigstore — a supply-chain security best practice that npm now surfaces in the package registry UI.
-
-### files Field
-
-The existing `files` array is correct for function but should include `/docs` for offline reference:
-
-```json
-"files": [
-  "/bin",
-  "/dist",
-  "/oclif.manifest.json",
-  "/docs",
-  "/README.md"
-]
-```
-
-**Do not add an `.npmignore` file.** The `files` whitelist in `package.json` is the safer pattern in a monorepo: it explicitly declares what ships rather than trying to exclude everything else. An `.npmignore` in a pnpm monorepo package can interact unexpectedly with pnpm's hoisting and `pnpm deploy` behavior.
-
-### Monorepo-Specific Concerns
-
-- Publish runs from `packages/twentythree-cli/`, not the repo root. `pnpm publish --filter twentythree-cli` handles this.
-- The root `package.json` has `"private": true` — it will never accidentally be published.
-- The turbo `build` task outputs `dist/**`. Ensure `pnpm build` runs before publish (turbo caches the output, so a fresh build is not always re-executed — add `--force` or check cache freshness in CI).
-- `oclif.manifest.json` is in `.gitignore` (correct — it's generated). It must be generated at build time and included in the published package via the `files` array. The `postbuild: oclif manifest` already handles this.
-
-### npm Provenance
-
-npm trusted publishing via OIDC is generally available as of July 2025. It replaces long-lived `NPM_TOKEN` secrets with short-lived OIDC tokens. For first publish, plain `NPM_TOKEN` with `--provenance` is fine. For ongoing releases, trusted publishing is the preferred pattern.
-
-**Minimum GitHub Actions workflow for publish:**
-
-```yaml
-name: Publish
-on:
-  push:
-    tags: ['v*']
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write   # required for provenance attestation
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: 'https://registry.npmjs.org'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build                          # turbo build
-      - run: pnpm audit                          # exit 1 if coverage gaps
-      - run: pnpm docs                           # regenerate docs from fresh manifest
-      - run: pnpm publish --filter twentythree-cli --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-```
-
-`id-token: write` is required for provenance attestation. `--no-git-checks` is needed in pnpm publish because the working tree has generated files (`docs/`, `oclif.manifest.json`) that aren't committed.
-
-### Version Bump Workflow
-
-```bash
-# From packages/twentythree-cli/
-npm version patch   # or minor / major — bumps package.json + creates git tag
-git push --follow-tags
-# → triggers publish workflow
-```
-
-Alternatively, `@changesets/cli` is already in the root dev dependencies. Changesets is appropriate if multiple packages in the monorepo need coordinated version bumps. For a single-package monorepo like this, plain `npm version` is simpler.
-
----
-
-## README & Docs Placement
-
-### Two READMEs, Different Audiences
-
-| File | Audience | Content |
-|------|----------|---------|
-| `/README.md` (repo root) | GitHub visitors, contributors | Full: what it is, install, quickstart, feature overview, links to docs/ |
-| `packages/twentythree-cli/README.md` | npm page visitors | Focused: install one-liner, auth setup, one example command, link to GitHub for full docs |
-
-GitHub renders the root README as the repository homepage. npm renders the package README on the package page. They are different discovery surfaces with different user intent.
-
-The package README must exist because npm will render it on the package page — if it's absent, npm shows nothing. Keep it short (under 100 lines): install command, auth setup, two example commands, and a "Full documentation" link to the GitHub repo. npm visitors who want more will follow the link.
-
-### docs/ Placement
-
-Place inside the package, not at the repo root:
-
-```
-packages/twentythree-cli/
-└── docs/
-    ├── README.md                      Auto-generated topic index
-    ├── commands/                      Auto-generated (one file per topic)
-    │   ├── action.md
-    │   ├── analytics.md
-    │   ├── auth.md
-    │   └── ... (24 files total)
-    ├── guides/
-    │   ├── getting-started.md         Hand-authored
-    │   ├── api-spec-upgrade.md        Hand-authored (formalizes CLAUDE.md workflow)
-    │   └── contributing.md            Hand-authored
-    └── endpoint-coverage.md           Auto-generated by audit script
-```
-
-**Why one file per topic, not one per command:** 219 individual files would be unnavigable. Topic-level files (24 files) match how users browse: "video commands," not "video:list specifically."
-
-**Why docs/ inside the package:** The docs are specific to the CLI package. A root-level `docs/` implies cross-package scope. Keeping it inside `packages/twentythree-cli/docs/` keeps the package self-contained.
-
-### Command Reference Generation
-
-**Source of truth: `oclif.manifest.json`**, not TypeScript source files.
-
-The manifest is generated at build time, already contains `agentMetadata` for all 219 real commands, and includes all flag metadata needed for a reference (type, required, description, char, hidden). Parsing TypeScript source with regex or AST re-implements what the manifest already provides.
-
-Filter real commands by presence of `agentMetadata` — the 7 topic index entries lack it.
-
-```
-Build → dist/ + oclif.manifest.json
-         ↓
-scripts/generate-docs.mjs
-         ↓
-docs/commands/*.md (24 files) + docs/README.md
-```
-
-**Prefer plain `.mjs`** for both scripts. No `tsx` dependency, no build step, directly executable by Node.js 22.
-
----
-
-## Suggested Build Order
-
-Dependencies are strict — each step requires the previous to be complete.
-
-```
-Step 1: Write audit script
-  Location: packages/twentythree-cli/scripts/audit-endpoints.mjs
-  Reads: manifest + spec (both already exist)
-  Run immediately: pnpm audit → get the actual gap report
-  No dependencies; can run against current codebase
-
-Step 2: Fill coverage gaps found by audit
-  Currently: 25 uncovered analytics endpoints
-  Add missing command files, rebuild, rerun audit until exit 0
-  Critical: docs must reflect complete coverage — don't generate docs until gaps are filled
-
-Step 3: Write generate-docs script
-  Location: packages/twentythree-cli/scripts/generate-docs.mjs
-  Run: pnpm build && pnpm docs
-  Output: docs/commands/*.md (24 files) + docs/README.md
-
-Step 4: Write hand-authored docs
-  docs/guides/getting-started.md
-  docs/guides/api-spec-upgrade.md  (formalize the CLAUDE.md workflow)
-  docs/guides/contributing.md
-
-Step 5: Write README files
-  packages/twentythree-cli/README.md  (install + quickstart, ~100 lines)
-  /README.md  (full repo README, links to docs/)
-
-Step 6: Update package.json
-  Add repository, homepage, keywords, publishConfig.provenance
-  Add /docs to files array
-  Add audit + docs scripts
-
-Step 7: npm publish readiness check
-  pnpm build && pnpm audit && pnpm docs (all must succeed)
-  npm pack --dry-run (verify what gets published)
-  npm publish (first publish)
-
-Step 8 (optional, post-first-publish): GitHub Actions publish workflow
-  .github/workflows/publish.yml
-  Tag-triggered, with provenance attestation
-```
-
-**Critical path:** audit script → fill gaps → generate-docs → READMEs → package.json fields → publish.
-
-The audit result drives everything else. Do not skip to docs or README until the audit shows exit 0.
-
----
-
-## Integration Points Summary
-
-| New Component | Reads From | Writes To | Depends On |
-|---------------|-----------|----------|-----------|
-| `scripts/audit-endpoints.mjs` | `oclif.manifest.json`, `specs/*.json` | `docs/endpoint-coverage.md`, stdout | `pnpm build` must run first |
-| `scripts/generate-docs.mjs` | `oclif.manifest.json` | `docs/commands/*.md`, `docs/README.md` | `pnpm build` must run first; gaps filled |
-| `/README.md` | — | — | Hand-authored once |
-| `packages/twentythree-cli/README.md` | — | — | Hand-authored once |
-| `docs/guides/*.md` | — | — | Hand-authored; no generation dependency |
-| `.github/workflows/publish.yml` | — | npm registry | All prior steps complete |
+The CLI build (`pnpm build --filter twentythree-cli`) is NOT a prerequisite for the skills build. They are independent in the turbo graph.
 
 ---
 
 ## Anti-Patterns to Avoid
 
-### Using oclif pack Instead of npm publish
-oclif pack bundles a Node.js binary for users without Node installed. The target audience (developers) already has Node. Use `npm publish`.
+**Don't generate skill files from agentMetadata at install time.** The metadata provides api_endpoint, auth_scope, output_shape, and side_effects. A SKILL.md that just lists these fields is less useful than the `twentythree --help` output the agent can already see. Skill files add workflow context, not command enumeration.
 
-### Adding .npmignore in a pnpm Monorepo
-An `.npmignore` file in `packages/twentythree-cli/` creates a blocklist that is hard to maintain and can interact with `pnpm deploy` unexpectedly. The `files` whitelist in `package.json` is the correct approach — declare what ships, exclude everything else implicitly.
+**Don't add twentythree-cli as a runtime dependency of twentythree-skills.** `npx twentythree-skills add` would pull in the entire CLI (oclif, openapi-fetch, keyring, etc.) just to copy markdown files. The installer uses only node: built-ins.
 
-### Publishing Without Running the Audit
-If the audit script fails (exit code 1), publish should not proceed. Wire `pnpm audit` as a required step before publish in CI. A published package with broken `api_endpoint` references is harder to fix than a delayed release.
+**Don't use a single SKILL.md at the package root as the only skill file.** The current placeholder SKILL.md is a stub. It must be split into per-topic files to be useful — agents work better with scoped, activatable skills than with a single file covering 219 commands.
 
-### Generating Docs Before Filling Gaps
-Running `pnpm docs` before the audit passes means the generated `endpoint-coverage.md` will document incomplete coverage. Fix gaps first; generate docs second.
+**Don't put skill files in `dist/`.** There is no dist/ directory for this package. The `files` whitelist in package.json ships `/skills` and `/bin` directly from source.
 
-### Committing oclif.manifest.json
-The manifest is in `.gitignore` (correct). It must be generated fresh at build time and included in the published npm package via the `files` array. Do not add it to git — it changes on every build and creates noisy diffs.
+**Don't make the installer depend on the user having twentythree-cli installed.** The installer copies files — it does not verify CLI installation. Print a note ("Requires twentythree-cli: npm install -g twentythree-cli") but don't block the install.
 
 ---
 
 ## Sources
 
-- oclif releasing docs: https://oclif.io/docs/releasing/ (confirmed: use `npm publish` for Node.js-present audiences)
-- oclif pack docs: https://github.com/oclif/oclif/blob/main/docs/pack.md (confirmed: pack is for bundled-Node distributes)
-- npm provenance / trusted publishing: https://philna.sh/blog/2026/01/28/trusted-publishing-npm/
-- npm trusted publishing GA: https://github.blog/changelog/2025-07-31-npm-trusted-publishing-with-oidc-is-generally-available/
-- npm provenance statements: https://docs.npmjs.com/generating-provenance-statements/
-- files vs .npmignore in pnpm monorepos: https://github.com/pnpm/pnpm/issues/5119
-- Live codebase: `packages/twentythree-cli/package.json`, `oclif.manifest.json`, `bin/run.js`, `turbo.json`
+- Claude Code skills directory structure: https://code.claude.com/docs/en/skills
+- Codex skills directory and SKILL.md format: https://developers.openai.com/codex/skills
+- GitHub Copilot skills paths: https://code.visualstudio.com/docs/copilot/customization/agent-skills
+- skills-npm pattern (npm package ships skills/ directory): https://github.com/antfu/skills-npm
+- skills.sh runtime detection (directory-based): https://github.com/vercel-labs/skills
+- Turborepo package-level turbo.json override: https://turborepo.dev/docs/reference/configuration
+- Turborepo no-build task pattern: https://turborepo.dev/docs/core-concepts/internal-packages
+- Live codebase: packages/twentythree-skills/package.json, .changeset/config.json, turbo.json
