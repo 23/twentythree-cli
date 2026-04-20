@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@oclif/test": "^4.0.0",
+    "@types/node": "^22.0.0",
     "@types/proper-lockfile": "^4.1.4",
     "oclif": "^4.23.0",
     "openapi-typescript": "^7.13.0",
