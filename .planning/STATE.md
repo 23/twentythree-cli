@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
-status: executing
-stopped_at: Completed 21-01-PLAN.md
-last_updated: "2026-04-20T22:05:31.689Z"
+status: verifying
+stopped_at: Completed 21-02-PLAN.md
+last_updated: "2026-04-20T22:08:53.370Z"
 last_activity: 2026-04-20
 progress:
   total_phases: 10
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-20)
 
 Phase: 21 (skills-npm-publish) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-20
 
 Progress: [__________] 0%
@@ -93,6 +93,7 @@ Recent decisions affecting current work:
 - [Phase 21-skills-npm-publish]: publishConfig.access: public added to skills package.json — required for npm public registry publish without explicit flag
 - [Phase 21-skills-npm-publish]: skills-v* tag prefix for skills releases — keeps CLI and skills publish trains independent with if: guards
 - [Phase 21-skills-npm-publish]: Dry-run step uses npm publish --dry-run (not pnpm) — more reliable for verifying NPM_TOKEN scope before real publish
+- [Phase 21-skills-npm-publish]: NPM_TOKEN scope verified by user dry-run before skills-v1.0.0 tag push
 
 ### Pending Todos
 
@@ -104,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-20T22:05:31.687Z
-Stopped at: Completed 21-01-PLAN.md
+Last session: 2026-04-20T22:08:53.368Z
+Stopped at: Completed 21-02-PLAN.md
 Resume file: None
