@@ -8,11 +8,17 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current State: v1.3 Shipped
+## Current Milestone: v1.4 Prepare Skill for Release on npm
+
+**Goal:** Publish the `twentythree-skills` package to npm so it's installable via `npm install -g twentythree-skills` and runnable via `npx twentythree-skills add`.
+
+**Target features:**
+- Publish `twentythree-skills` to npm (package is complete, not yet published)
+- SKILL.md resource index hyperlinks (improve agent discoverability for link-following runtimes)
+
+## Previous State: v1.3 Shipped
 
 v1.3 shipped 2026-04-20. The `twentythree-skills` npm package is complete: 22 hand-authored reference files, 2 workflow files, and a runtime installer (`npx twentythree-skills add`) that detects Claude Code, Codex, Copilot, and Cursor via directory presence and installs 25 skill files idempotently.
-
-**Next milestone:** Not yet planned. Candidates: publish `twentythree-skills` to npm, SKILL.md hyperlinks to reference files, browser OAuth flow.
 
 ## Requirements
 
@@ -31,10 +37,10 @@ v1.3 shipped 2026-04-20. The `twentythree-skills` npm package is complete: 22 ha
 - ✓ TypeScript build clean — zero `tsc --noEmit` errors via `@types/node` + DOM lib; autocomplete extends `BaseCommand` for full PROMPT-01 coverage — Validated in Phase 17 — v1.2
 - ✓ `twentythree-skills` package — `packages/twentythree-skills` published as standalone ESM npm package; 22 reference files + 2 workflow files + `npx twentythree-skills add` runtime installer for Claude Code, Codex, Copilot, Cursor — v1.3
 
-### Active
+### Active (v1.4)
 
-- [ ] Publish `twentythree-skills` to npm — package is complete but not yet published; `bin/add.js` needs a real npm package to be runnable via `npx`
-- [ ] SKILL.md resource index hyperlinks — plain-text topic names in index; agents must infer `reference/video.md` path; adding `[video](reference/video.md)` links improves discoverability for link-following runtimes
+- [ ] **NPM-01**: Publish `twentythree-skills` to npm — package is complete but not yet published; `bin/add.js` needs a real npm package to be runnable via `npx`
+- [ ] **SKILL-03**: SKILL.md resource index hyperlinks — plain-text topic names in index; agents must infer `reference/video.md` path; adding `[video](reference/video.md)` links improves discoverability for link-following runtimes
 
 ### Deferred (post-v1.3)
 
@@ -111,4 +117,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-20 — v1.3 complete (twentythree-skills package: 22 reference files, 2 workflows, runtime installer for 4 agent runtimes; 9/9 requirements satisfied)*
+*Last updated: 2026-04-20 — v1.4 started (publish twentythree-skills to npm; SKILL.md hyperlinks)*
