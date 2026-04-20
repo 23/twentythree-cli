@@ -43,6 +43,7 @@ const RUNTIMES = [
 function walkDir(dir) {
   const files = []
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isSymbolicLink()) continue
     const full = join(dir, entry.name)
     if (entry.isDirectory()) {
       files.push(...walkDir(full))
@@ -67,9 +68,19 @@ function installTo(destRoot, label) {
     const rel = relative(skillsSource, absFile)
     const destFile = join(destRoot, rel)
     mkdirSync(dirname(destFile), { recursive: true })
-    cpSync(absFile, destFile)
-    console.log(`  ✓ ${rel}`)
+    try {
+      cpSync(absFile, destFile, { dereference: false })
+      console.log(`  ✓ ${rel}`)
+    } catch (err) {
+      console.error(`  ✗ Error installing ${rel}: ${err.message}`)
+      process.exitCode = 1
+    }
   }
+}
+
+if (!existsSync(skillsSource)) {
+  console.error('Skills source directory not found. The package may be corrupted.')
+  process.exit(1)
 }
 
 const detected = RUNTIMES.filter(r => existsSync(r.detect))
