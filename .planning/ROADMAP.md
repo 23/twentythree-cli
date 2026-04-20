@@ -158,7 +158,7 @@ Plans:
 - [x] 19-03-PLAN.md — 4 complex reference files (analytics, category, thumbnail, user)
 - [x] 19-04-PLAN.md — video.md (25 commands: video + section + subtitle subtopics; terminology notes)
 - [x] 19-05-PLAN.md — webinar.md (40+ commands across 9 subtopics) + webhook.md (5 commands)
-- [ ] 19-06-PLAN.md — workflows/upload-and-publish.md + workflows/webinar-lifecycle.md (SKILL-03)
+- [x] 19-06-PLAN.md — workflows/upload-and-publish.md + workflows/webinar-lifecycle.md (SKILL-03)
 **UI hint**: no
 
 ### Phase 20: Runtime Installer
@@ -196,5 +196,5 @@ Plans:
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete | 2026-04-17 |
 | 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
 | 18. Package Foundation | v1.3 | 2/2 | Complete    | 2026-04-20 |
-| 19. Skill Content | v1.3 | 5/6 | In Progress|  |
+| 19. Skill Content | v1.3 | 6/6 | Complete   | 2026-04-20 |
 | 20. Runtime Installer | v1.3 | 0/? | Not started | - |
