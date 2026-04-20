@@ -28,13 +28,14 @@
 
 ## Traceability
 
-| REQ-ID   | Phase | Plan |
-|----------|-------|------|
-| NPM-01   | TBD   | TBD  |
-| NPM-02   | TBD   | TBD  |
-| NPM-03   | TBD   | TBD  |
-| NPM-04   | TBD   | TBD  |
-| SKILL-03 | TBD   | TBD  |
+| REQ-ID   | Phase    | Plan |
+|----------|----------|------|
+| NPM-01   | Phase 21 | TBD  |
+| NPM-02   | Phase 21 | TBD  |
+| NPM-03   | Phase 21 | TBD  |
+| NPM-04   | Phase 21 | TBD  |
+| SKILL-03 | Phase 22 | TBD  |
 
 ---
 *Created: 2026-04-20 — v1.4 milestone*
+*Updated: 2026-04-20 — traceability filled after roadmap creation*

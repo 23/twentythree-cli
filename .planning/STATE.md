@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
-status: planning
+status: in_progress
 stopped_at: —
 last_updated: "2026-04-20T00:00:00.000Z"
 last_activity: 2026-04-20
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-20)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Milestone v1.4 — defining requirements
+**Current focus:** Milestone v1.4 — Phase 21: Skills npm Publish
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 21 (Skills npm Publish)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-20 — Milestone v1.4 started
+Status: Not started
+Last activity: 2026-04-20 — Roadmap created for v1.4
 
 Progress: [__________] 0%
 
@@ -41,6 +41,7 @@ Progress: [__________] 0%
 - v1.1 ended at Phase 13 (npm-publish)
 - v1.2 starts at Phase 14, ends at Phase 17 (Phase 17 added 2026-04-20 for tech debt closure)
 - v1.3 starts at Phase 18, ends at Phase 20 (roadmap created 2026-04-20)
+- v1.4 starts at Phase 21, ends at Phase 22 (roadmap created 2026-04-20)
 
 ### Decisions
 
@@ -84,6 +85,11 @@ Recent decisions affecting current work:
 - [Phase 19]: Workflow files cross-reference reference files for flag detail — workflow shows minimum viable command; reference shows exhaustive options
 - [Phase 20]: Codex project path uses .agents/ (not .codex/) per D-05 — deliberate, matches locked decision
 - [Phase 20]: bin/add.js uses walkDir + cpSync with node: prefix built-ins only — zero external dependencies per D-06
+- [v1.4 roadmap]: Tag strategy — `skills-v*` prefix for skills-only releases; existing `v*` job guarded with `!startsWith(github.ref, 'refs/tags/skills-v')` to prevent double-publish
+- [v1.4 roadmap]: Use `pnpm publish --no-git-checks --provenance` for skills — matches existing CLI publish pattern; provenance adds Sigstore attestation at zero cost
+- [v1.4 roadmap]: NPM_TOKEN scope must be verified with dry-run before first real publish — Granular Access Tokens may be scoped to twentythree-cli only
+- [v1.4 roadmap]: Bare `npx twentythree-skills` invocation (no subcommand) should work — `add` argument is currently a no-op; simplify or add explicit argv routing before publish
+- [v1.4 roadmap]: Phase 22 (SKILL.md hyperlinks) is independent of Phase 21 but should land in same 1.0.0 publish for clean release
 
 ### Pending Todos
 
@@ -91,10 +97,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None.
+- NPM_TOKEN scope: verify with `npm publish --dry-run` from `packages/twentythree-skills` before pushing first `skills-v*` tag; token may be scoped to twentythree-cli only and require a new secret or token upgrade
 
 ## Session Continuity
 
-Last session: 2026-04-20T14:04:05.519Z
-Stopped at: Completed 20-01-PLAN.md
+Last session: 2026-04-20T00:00:00.000Z
+Stopped at: Roadmap created for v1.4
 Resume file: None

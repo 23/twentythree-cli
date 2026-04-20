@@ -6,6 +6,7 @@
 - ✅ **v1.1 Repository Polish & Release** — Phases 9–13 (shipped 2026-04-17)
 - ✅ **v1.2 Burnin & Quality of Life** — Phases 14–17 (shipped 2026-04-20)
 - ✅ **v1.3 TwentyThree Agent Skill** — Phases 18–20 (shipped 2026-04-20)
+- **v1.4 Prepare Skill for Release on npm** — Phases 21–22 (in progress)
 
 ## Phases
 
@@ -61,6 +62,11 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 
 </details>
+
+### v1.4 Prepare Skill for Release on npm
+
+- [ ] **Phase 21: Skills npm Publish** — Wire `release.yml` for skills publish, add `publishConfig`, expand keywords, fix bare-npx invocation, verify with dry-run
+- [ ] **Phase 22: SKILL.md Hyperlinks** — Upgrade all 22 plain-text resource index entries to markdown hyperlinks
 
 ## Phase Details
 
@@ -177,6 +183,29 @@ Plans:
 - [x] 20-01-PLAN.md — Implement bin/add.js runtime installer (detect runtimes, copy skills tree, --project flag, idempotent) + smoke-test verification
 **UI hint**: no
 
+### Phase 21: Skills npm Publish
+**Goal**: `twentythree-skills` is live on npm at version 1.0.0 and any developer can install or invoke it via npx without cloning the repo
+**Depends on**: Phase 20 (installer must be complete before the package is published)
+**Requirements**: NPM-01, NPM-02, NPM-03, NPM-04
+**Success Criteria** (what must be TRUE):
+  1. `npm view twentythree-skills` returns package metadata at version `1.0.0` with `claude`, `claude-code`, `copilot`, `cursor`, and `codex` in the keywords array
+  2. `npx twentythree-skills` (bare invocation, no subcommand) runs the installer without error on a clean machine
+  3. Pushing a `skills-v*` tag triggers the `publish-skills` job in `release.yml` and publishes the package; pushing a `v*` tag does not trigger the skills publish job
+  4. A dry-run CI step (`npm publish --dry-run`) verifies the `NPM_TOKEN` has publish access for `twentythree-skills` before the real publish step executes
+**Plans**: TBD
+**UI hint**: no
+
+### Phase 22: SKILL.md Hyperlinks
+**Goal**: Every resource group entry in `skills/SKILL.md` is a clickable markdown hyperlink so link-following AI runtimes can navigate directly to the reference file
+**Depends on**: Nothing (independent of Phase 21; can land before or with the 1.0.0 publish)
+**Requirements**: SKILL-03
+**Success Criteria** (what must be TRUE):
+  1. All 22 resource group rows in the `skills/SKILL.md` index use `` [`topic`](reference/topic.md) `` hyperlink format — no plain-text topic names remain
+  2. Each link resolves to an existing file under `skills/reference/` when opened from the package root
+  3. The `validate-skills` script still exits 0 after the SKILL.md edit (no frontmatter or structure regressions)
+**Plans**: TBD
+**UI hint**: no
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -199,6 +228,8 @@ Plans:
 | 15. Tab Completion | v1.2 | 2/2 | Complete | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete | 2026-04-17 |
 | 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
-| 18. Package Foundation | v1.3 | 2/2 | Complete    | 2026-04-20 |
-| 19. Skill Content | v1.3 | 6/6 | Complete    | 2026-04-20 |
-| 20. Runtime Installer | v1.3 | 1/1 | Complete    | 2026-04-20 |
+| 18. Package Foundation | v1.3 | 2/2 | Complete | 2026-04-20 |
+| 19. Skill Content | v1.3 | 6/6 | Complete | 2026-04-20 |
+| 20. Runtime Installer | v1.3 | 1/1 | Complete | 2026-04-20 |
+| 21. Skills npm Publish | v1.4 | 0/? | Not started | - |
+| 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
