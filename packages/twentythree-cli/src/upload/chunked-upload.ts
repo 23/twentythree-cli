@@ -106,7 +106,13 @@ export async function uploadChunked(params: ChunkedUploadParams): Promise<Chunke
   async function uploadFn(chunk: ChunkDescriptor): Promise<ChunkUploadResponse> {
     try {
       const sliceBuffer = await readSlice(filePath, chunk.start, chunk.end)
-      const blob = new Blob([sliceBuffer])
+      // Extract a proper ArrayBuffer slice — Buffer.buffer may be SharedArrayBuffer
+      // which is not assignable to BlobPart under the DOM lib types.
+      const arrayBuffer = sliceBuffer.buffer.slice(
+        sliceBuffer.byteOffset,
+        sliceBuffer.byteOffset + sliceBuffer.byteLength,
+      ) as ArrayBuffer
+      const blob = new Blob([arrayBuffer])
 
       const formData = new FormData()
       formData.append(tokenFieldName, uploadToken)
