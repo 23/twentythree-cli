@@ -17,7 +17,7 @@
 ### Skill Content (SKILL)
 
 - [x] **SKILL-01**: Root `SKILL.md` (~200 lines) includes: auth setup section documenting `twentythree auth credentials` as a prerequisite, command syntax overview, full resource index linking to all 22 reference files, `--agent` flag documentation, and `allowed-tools: Bash(twentythree *)` declaration
-- [ ] **SKILL-02**: 22 hand-authored reference files (one per resource group: video, category, webinar, analytics, audience, action, collector, comment, player, poll, tag, spot, thumbnail, webhook, app, presentation, protection, session, openupload, site, setting, user) — each documents key commands with flags and usage examples
+- [x] **SKILL-02**: 22 hand-authored reference files (one per resource group: video, category, webinar, analytics, audience, action, collector, comment, player, poll, tag, spot, thumbnail, webhook, app, presentation, protection, session, openupload, site, setting, user) — each documents key commands with flags and usage examples
 - [ ] **SKILL-03**: 2–3 workflow files covering high-value agent automation patterns (e.g. upload-and-publish flow, webinar-lifecycle flow)
 
 ### Runtime Installer (INSTALL)
