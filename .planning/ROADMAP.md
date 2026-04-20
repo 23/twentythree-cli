@@ -192,7 +192,10 @@ Plans:
   2. `npx twentythree-skills` (bare invocation, no subcommand) runs the installer without error on a clean machine
   3. Pushing a `skills-v*` tag triggers the `publish-skills` job in `release.yml` and publishes the package; pushing a `v*` tag does not trigger the skills publish job
   4. A dry-run CI step (`npm publish --dry-run`) verifies the `NPM_TOKEN` has publish access for `twentythree-skills` before the real publish step executes
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 21-01-PLAN.md — Package.json publish config (version 1.0.0, publishConfig, keywords) + release.yml publish-skills job + README canonical invocation
+- [ ] 21-02-PLAN.md — Human verification checkpoint: review config, verify NPM_TOKEN scope with local dry-run
 **UI hint**: no
 
 ### Phase 22: SKILL.md Hyperlinks
@@ -231,5 +234,5 @@ Plans:
 | 18. Package Foundation | v1.3 | 2/2 | Complete | 2026-04-20 |
 | 19. Skill Content | v1.3 | 6/6 | Complete | 2026-04-20 |
 | 20. Runtime Installer | v1.3 | 1/1 | Complete | 2026-04-20 |
-| 21. Skills npm Publish | v1.4 | 0/? | Not started | - |
+| 21. Skills npm Publish | v1.4 | 0/2 | Not started | - |
 | 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
