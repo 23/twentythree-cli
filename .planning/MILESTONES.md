@@ -1,5 +1,22 @@
 # Milestones
 
+## v1.2 Burnin & Quality of Life (Shipped: 2026-04-20)
+
+**Phases completed:** 4 phases (14–17), 6 plans
+**Timeline:** 2026-04-17 → 2026-04-20 (3 days)
+**Commits:** 69
+
+**Key accomplishments:**
+
+- Fixed `parseBoolParam is not defined` crash on `video list`; audited all 219 commands for the same pattern, fixing all 15 occurrences; published as npm@1.0.1
+- Wired `@oclif/plugin-autocomplete` for bash/zsh tab completion with guided `@clack/prompts` setup wizard; published as npm@1.0.2
+- Implemented `BaseCommand.catch()` to intercept missing required flags and replace raw oclif errors with interactive `@clack/prompts` prompts
+- TypeScript build zeroed to zero errors (`@types/node` + DOM lib); autocomplete command wired into `BaseCommand` inheritance for full PROMPT-01 coverage
+
+**Archive:** `.planning/milestones/v1.2-ROADMAP.md`, `.planning/milestones/v1.2-REQUIREMENTS.md`
+
+---
+
 ## v1.0 MVP (Shipped: 2026-04-16)
 
 **Phases completed:** 9 phases (1–8 + 6.1), 41 plans

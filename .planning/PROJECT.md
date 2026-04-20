@@ -8,14 +8,11 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current Milestone: v1.2 Burnin & Quality of Life
+## Current State: v1.2 Shipped
 
-**Goal:** Fix real-world bugs found during burnin, add tab completion, and replace missing-flag errors with interactive prompts.
+**Shipped:** v1.2 Burnin & Quality of Life on 2026-04-20. All 3 burnin goals delivered: runtime crash fixed, tab completion live, interactive prompts on missing flags.
 
-**Target features:**
-- Bug audit & fix — `parseBoolParam is not defined` on `video list` and cross-command sweep to find/fix similar reference errors
-- Tab completion — oclif autocomplete plugin wired up for subcommands and flags in bash/zsh
-- Prompt on missing required flags — interactive prompt via @clack/prompts instead of error when required flag is omitted
+**Next milestone:** To be planned with `/gsd-new-milestone`.
 
 ## Requirements
 
@@ -30,10 +27,12 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 - ✓ Full API coverage — 235 endpoints across 22 resource groups, hand-authored commands using generated OpenAPI types — v1.0
 - ✓ Bug audit & fix — `parseBoolParam is not defined` on `video list` fixed; 15 TypeScript errors swept and resolved; `twentythree-cli@1.0.1` published to npm — Validated in Phase 14
 - ✓ Prompt on missing required flags — `BaseCommand.catch()` intercepts `FailedFlagValidationError` in TTY mode; prompts sequentially via `@clack/prompts`; re-dispatches with collected argv; non-TTY gets original oclif error unchanged — Validated in Phase 16
+- ✓ Tab completion — `@oclif/plugin-autocomplete` wired for bash/zsh; guided setup via `twentythree autocomplete`; `twentythree video <TAB>` lists subcommands, `--<TAB>` lists flags — Validated in Phase 15 — v1.2
+- ✓ TypeScript build clean — zero `tsc --noEmit` errors via `@types/node` + DOM lib; autocomplete extends `BaseCommand` for full PROMPT-01 coverage — Validated in Phase 17 — v1.2
 
 ### Active
 
-- [ ] Tab completion — oclif autocomplete plugin for subcommands and flags in bash/zsh
+_(none — next milestone not yet planned)_
 
 ### Deferred (post-v1.1)
 
@@ -50,7 +49,7 @@ A developer can authenticate, select a workspace, and call any TwentyThree API e
 
 ## Context
 
-- **Shipped:** v1.0 MVP on 2026-04-16. ~61,000 TypeScript LOC, 219 command files, 9 phases, 41 plans, 225 commits over 3 days.
+- **Shipped:** v1.2 on 2026-04-20. v1.0 MVP shipped 2026-04-16 (~61,000 TS LOC, 219 commands); v1.1 published to npm as 1.0.0 on 2026-04-17; v1.2 burnin fixes published as 1.0.2 on 2026-04-17.
 - **Tech stack:** oclif v4, tsdown (CJS), openapi-typescript, openapi-fetch, @napi-rs/keyring, conf, @clack/prompts, chalk 4, ora 5, cli-table3, vitest
 - **API reference**: OpenAPI spec stored locally at `packages/twentythree-cli/specs/twentythree-api-swagger.json`; regenerate types with `pnpm update-api-spec`
 - **Auth model**: Bearer token via `Authorization: Bearer <token>`. Domain-only mode enables anonymous endpoint access. `/api/2/user/tokens?cross_sites_p=1` returns cross-site workspace tokens.
@@ -103,4 +102,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 — Phase 16 complete (interactive prompts for missing required flags)*
+*Last updated: 2026-04-20 — v1.2 milestone complete (bug fixes, tab completion, interactive prompts, tsc-clean)*
