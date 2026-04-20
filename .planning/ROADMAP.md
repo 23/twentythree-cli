@@ -163,6 +163,9 @@ Plans:
   3. `15-02-SUMMARY.md` frontmatter contains `requirements_completed: [COMPLETE-01, COMPLETE-02, COMPLETE-03]`
 **Plans**: 1 plan
 
+Plans:
+- [ ] 17-01-PLAN.md — Close v1.2 tech debt (add @types/node, autocomplete extends BaseCommand, 15-02 SUMMARY frontmatter)
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
