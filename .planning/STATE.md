@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: TwentyThree Agent Skill
 status: planning
-stopped_at: Defining requirements
+stopped_at: Roadmap created — ready to plan Phase 18
 last_updated: "2026-04-20T10:00:00.000Z"
 last_activity: 2026-04-20
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,19 +18,19 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-17)
+See: .planning/PROJECT.md (updated 2026-04-20)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** v1.3 — TwentyThree Agent Skill — defining requirements
+**Current focus:** v1.3 — TwentyThree Agent Skill — roadmap created, ready to plan Phase 18
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 18 — Package Foundation (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-20 — Milestone v1.3 started
+Status: Roadmap complete, awaiting phase planning
+Last activity: 2026-04-20 — v1.3 roadmap created (Phases 18–20)
 
-Progress: [██████████] 100%
+Progress: [__________] 0%
 
 ## Accumulated Context
 
@@ -40,6 +40,7 @@ Progress: [██████████] 100%
 - v1.1 starts at Phase 9 (continuing numbering from v1.0)
 - v1.1 ended at Phase 13 (npm-publish)
 - v1.2 starts at Phase 14, ends at Phase 17 (Phase 17 added 2026-04-20 for tech debt closure)
+- v1.3 starts at Phase 18, ends at Phase 20 (roadmap created 2026-04-20)
 
 ### Decisions
 
@@ -60,6 +61,10 @@ Recent decisions affecting current work:
 - [Phase 16]: Re-dispatch via this.config.runCommand to preserve existing argv (workspace, json flags)
 - [Phase 17-tech-debt-cleanup]: Add DOM lib + @types/node to tsconfig.base.json — both needed for Node 22 CLI with built-in fetch/FormData/Blob
 - [Phase 17-tech-debt-cleanup]: Override init() empty in Autocomplete to bypass workspace resolution while inheriting BaseCommand.catch() for PROMPT-01
+- [v1.3 roadmap]: twentythree-skills must NOT have workspace:* in dependencies — breaks npm install for standalone npx users
+- [v1.3 roadmap]: Runtime detection is directory-based (~/.claude/, ~/.codex/, ~/.agents/, ~/.github/) — no runtime-specific APIs needed
+- [v1.3 roadmap]: No TypeScript compilation in twentythree-skills — static markdown + small ESM bin script only
+- [v1.3 roadmap]: Phases 18 and 19 are independent — can proceed in parallel; Phase 20 depends on Phase 18 scaffold
 
 ### Pending Todos
 
@@ -71,6 +76,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T07:37:19.549Z
-Stopped at: Completed 17-tech-debt-cleanup/17-01-PLAN.md
+Last session: 2026-04-20
+Stopped at: v1.3 roadmap created (Phases 18–20)
 Resume file: None

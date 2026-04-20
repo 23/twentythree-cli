@@ -5,6 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 1–8 + 6.1 (shipped 2026-04-16)
 - ✅ **v1.1 Repository Polish & Release** — Phases 9–13 (shipped 2026-04-17)
 - ✅ **v1.2 Burnin & Quality of Life** — Phases 14–17 (shipped 2026-04-20)
+- 🔲 **v1.3 TwentyThree Agent Skill** — Phases 18–20 (active)
 
 ## Phases
 
@@ -47,6 +48,15 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] Phase 17: v1.2 Tech Debt Cleanup (1/1 plan) — completed 2026-04-20
 
 Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
+
+</details>
+
+<details open>
+<summary>🔲 v1.3 TwentyThree Agent Skill (Phases 18–20) — ACTIVE</summary>
+
+- [ ] **Phase 18: Package Foundation** — Monorepo package scaffold, turbo no-build config, validate-skills script, root SKILL.md
+- [ ] **Phase 19: Skill Content** — 22 hand-authored resource reference files and 2–3 agent workflow files
+- [ ] **Phase 20: Runtime Installer** — `npx twentythree-skills add` with runtime detection, --project flag, and idempotent file copy
 
 </details>
 
@@ -117,6 +127,42 @@ Plans:
 - [x] 13-01-PLAN.md — Create release workflow + bump version to 1.0.0
 - [x] 13-02-PLAN.md — Set npm token, push tag, verify publish
 
+### Phase 18: Package Foundation
+**Goal**: The `twentythree-skills` package exists in the monorepo as a publishable npm package with CI validation and a root SKILL.md that an agent can use immediately
+**Depends on**: Nothing (first v1.3 phase; no dependency on prior phases)
+**Requirements**: PKG-01, PKG-02, PKG-03, SKILL-01
+**Success Criteria** (what must be TRUE):
+  1. `packages/twentythree-skills/package.json` exists with `type: "module"`, a `bin` entry pointing at the add script, and a `files` whitelist that excludes dev artifacts
+  2. `turbo.json` in the package marks it as no-build so `pnpm build` does not attempt to compile it
+  3. Running `node scripts/validate-skills.js` from the package root exits 0 when all 22 resource files are present with valid frontmatter, and exits non-zero with a descriptive error otherwise
+  4. `skills/SKILL.md` exists and contains auth setup, command syntax, a resource index linking all 22 groups, `--agent` flag docs, and the `allowed-tools: Bash(twentythree *)` declaration
+**Plans**: TBD
+**UI hint**: no
+
+### Phase 19: Skill Content
+**Goal**: A developer or agent consulting `twentythree-skills` can find complete, accurate documentation for every CLI resource group and copy ready-made workflow patterns
+**Depends on**: Nothing (can proceed in parallel with Phase 18; needs only the file locations from PKG-01 scaffold)
+**Requirements**: SKILL-02, SKILL-03
+**Success Criteria** (what must be TRUE):
+  1. `skills/reference/` contains exactly 22 files — one for each resource group (video, category, webinar, analytics, audience, action, collector, comment, player, poll, tag, spot, thumbnail, webhook, app, presentation, protection, session, openupload, site, setting, user)
+  2. Each reference file documents at minimum the list, get, create, update, and delete commands (where they exist) with flag names and a usage example
+  3. `skills/workflows/` contains 2–3 files; each workflow file shows a multi-step agent automation sequence (e.g. upload-and-publish, webinar-lifecycle)
+  4. `validate-skills` script exits 0 against all 22 reference files (valid frontmatter, all groups present)
+**Plans**: TBD
+**UI hint**: no
+
+### Phase 20: Runtime Installer
+**Goal**: Any developer can run `npx twentythree-skills add` and have skill files installed into the correct location for their agent runtime without manual file management
+**Depends on**: Phase 18 (needs scaffold and file layout from PKG-01/PKG-02)
+**Requirements**: INSTALL-01, INSTALL-02, INSTALL-03
+**Success Criteria** (what must be TRUE):
+  1. Running `npx twentythree-skills add` on a machine with `~/.claude/` present copies skill files into `~/.claude/skills/twentythree/` and prints each destination path
+  2. Running `npx twentythree-skills add --project` in a directory installs into `.claude/skills/twentythree/` relative to cwd rather than the global location
+  3. Re-running the installer a second time completes without error and produces the same output (idempotent)
+  4. On a machine where no supported runtime directory is detected, the command prints a clear message naming the directories it checked and exits 0
+**Plans**: TBD
+**UI hint**: no
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -135,7 +181,10 @@ Plans:
 | 11. Documentation | v1.1 | 2/2 | Complete | 2026-04-16 |
 | 12. READMEs & CHANGELOG | v1.1 | 2/2 | Complete | 2026-04-17 |
 | 13. npm Publish | v1.1 | 2/2 | Complete | 2026-04-17 |
-| 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
-| 16. Interactive Prompts | v1.2 | 1/1 | Complete    | 2026-04-17 |
-| 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete   | 2026-04-20 |
+| 14. Bug Audit & Fix | v1.2 | 2/2 | Complete | 2026-04-17 |
+| 15. Tab Completion | v1.2 | 2/2 | Complete | 2026-04-17 |
+| 16. Interactive Prompts | v1.2 | 1/1 | Complete | 2026-04-17 |
+| 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
+| 18. Package Foundation | v1.3 | 0/? | Not started | - |
+| 19. Skill Content | v1.3 | 0/? | Not started | - |
+| 20. Runtime Installer | v1.3 | 0/? | Not started | - |

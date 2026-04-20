@@ -49,12 +49,12 @@
 
 | Requirement | Phase | Plan |
 |-------------|-------|------|
-| PKG-01 | TBD | TBD |
-| PKG-02 | TBD | TBD |
-| PKG-03 | TBD | TBD |
-| SKILL-01 | TBD | TBD |
-| SKILL-02 | TBD | TBD |
-| SKILL-03 | TBD | TBD |
-| INSTALL-01 | TBD | TBD |
-| INSTALL-02 | TBD | TBD |
-| INSTALL-03 | TBD | TBD |
+| PKG-01 | Phase 18 | TBD |
+| PKG-02 | Phase 18 | TBD |
+| PKG-03 | Phase 18 | TBD |
+| SKILL-01 | Phase 18 | TBD |
+| SKILL-02 | Phase 19 | TBD |
+| SKILL-03 | Phase 19 | TBD |
+| INSTALL-01 | Phase 20 | TBD |
+| INSTALL-02 | Phase 20 | TBD |
+| INSTALL-03 | Phase 20 | TBD |
