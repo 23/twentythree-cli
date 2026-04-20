@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
-status: in_progress
-stopped_at: —
-last_updated: "2026-04-20T00:00:00.000Z"
-last_activity: 2026-04-20
+status: Not started
+stopped_at: Phase 21 context gathered
+last_updated: "2026-04-20T21:32:08.028Z"
+last_activity: 2026-04-20 — Roadmap created for v1.4
 progress:
-  total_phases: 2
+  total_phases: 10
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -101,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-20T00:00:00.000Z
-Stopped at: Roadmap created for v1.4
-Resume file: None
+Last session: 2026-04-20T21:32:08.023Z
+Stopped at: Phase 21 context gathered
+Resume file: .planning/phases/21-skills-npm-publish/21-CONTEXT.md
