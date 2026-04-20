@@ -22,9 +22,9 @@
 
 ### Runtime Installer (INSTALL)
 
-- [ ] **INSTALL-01**: `npx twentythree-skills add` detects Claude Code (`~/.claude/`), Codex, and Copilot runtimes via directory presence check and installs skill files into the correct location for each detected runtime
-- [ ] **INSTALL-02**: Installer supports `--project` flag to install into the current working directory's runtime-specific skills folder (e.g. `.claude/skills/`) instead of the global location
-- [ ] **INSTALL-03**: Installer is idempotent — safe to re-run without corruption; prints a confirmation listing every file written and its destination path
+- [x] **INSTALL-01**: `npx twentythree-skills add` detects Claude Code (`~/.claude/`), Codex, and Copilot runtimes via directory presence check and installs skill files into the correct location for each detected runtime
+- [x] **INSTALL-02**: Installer supports `--project` flag to install into the current working directory's runtime-specific skills folder (e.g. `.claude/skills/`) instead of the global location
+- [x] **INSTALL-03**: Installer is idempotent — safe to re-run without corruption; prints a confirmation listing every file written and its destination path
 
 ---
 

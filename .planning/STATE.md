@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 19-06-PLAN.md
-last_updated: "2026-04-20T13:57:46.978Z"
-last_activity: 2026-04-20 -- Phase 20 planning complete
+status: verifying
+stopped_at: Completed 20-01-PLAN.md
+last_updated: "2026-04-20T14:04:05.521Z"
+last_activity: 2026-04-20
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
-  percent: 89
+  completed_plans: 9
+  percent: 100
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-20)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 19 — skill-content
+**Current focus:** Phase 20 — runtime-installer
 
 ## Current Position
 
-Phase: 20
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-04-20 -- Phase 20 planning complete
+Phase: 20 (runtime-installer) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-04-20
 
 Progress: [__________] 0%
 
@@ -82,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 19]: SKILL-02 Gate 2 satisfied: pnpm --filter twentythree-skills test exits 0 with all 22 reference files present
 - [Phase 19]: Workflow commands sourced verbatim from reference files (webinar section add not create) — ensures accuracy matches live CLI
 - [Phase 19]: Workflow files cross-reference reference files for flag detail — workflow shows minimum viable command; reference shows exhaustive options
+- [Phase 20]: Codex project path uses .agents/ (not .codex/) per D-05 — deliberate, matches locked decision
+- [Phase 20]: bin/add.js uses walkDir + cpSync with node: prefix built-ins only — zero external dependencies per D-06
 
 ### Pending Todos
 
@@ -93,6 +95,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T13:19:55.070Z
-Stopped at: Completed 19-06-PLAN.md
+Last session: 2026-04-20T14:04:05.519Z
+Stopped at: Completed 20-01-PLAN.md
 Resume file: None
