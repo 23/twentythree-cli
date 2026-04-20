@@ -27,7 +27,7 @@ Flags:
 | Flag | Required | Description |
 |------|----------|-------------|
 | `--object-id` | no | Filter by object ID |
-| `--object-type` | no | Filter by object type (photo, album) |
+| `--object-type` | no | Filter by object type (photo, album, live) |
 | `--comment-type` | no | Filter by comment type (comment, question, chat) |
 | `--search` | no | Search comments by content |
 | `--order` | no | Sort order for results |
