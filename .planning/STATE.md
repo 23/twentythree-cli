@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Burnin & Quality of Life
-status: verifying
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-04-17T14:07:25.338Z"
-last_activity: 2026-04-17
+status: in_progress
+stopped_at: Phase 17 added — ready to plan
+last_updated: "2026-04-20T00:00:00.000Z"
+last_activity: 2026-04-20
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 3
   total_plans: 5
   completed_plans: 5
-  percent: 100
+  percent: 94
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-17)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 16 — interactive-prompts
+**Current focus:** Phase 17 — v1.2 tech debt cleanup
 
 ## Current Position
 
-Phase: 16
+Phase: 17
 Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-04-17
+Status: Phase created — ready to plan
+Last activity: 2026-04-20
 
 Progress: [██████████] 100%
 
@@ -39,7 +39,7 @@ Progress: [██████████] 100%
 - Phase 6.1 inserted after Phase 6 in v1.0: Download and store swagger file; prescribe api-change workflow
 - v1.1 starts at Phase 9 (continuing numbering from v1.0)
 - v1.1 ended at Phase 13 (npm-publish)
-- v1.2 starts at Phase 14, ends at Phase 16
+- v1.2 starts at Phase 14, ends at Phase 17 (Phase 17 added 2026-04-20 for tech debt closure)
 
 ### Decisions
 
@@ -69,6 +69,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-17T13:52:20.748Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-04-20T00:00:00.000Z
+Stopped at: Phase 17 created via gap closure — ready to plan
 Resume file: None
