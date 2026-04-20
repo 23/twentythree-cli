@@ -516,9 +516,11 @@ twentythree video subtitle set-primary <id> --subtitle-id fr_FR --json
 
 ### video subtitle archive
 
-**Auth scope:** write  **Side effects:** creates  **Output:** key-value
+**Auth scope:** write (both paths)  **Side effects:** creates (without --progress) | none (with --progress)  **Output:** key-value
 
 Triggers or checks workspace-wide subtitle archive transcription. Without `--progress`, starts transcription. With `--progress`, reports current transcription status.
+
+> Note: `--progress` only reads status and has read-only semantics, but both paths require write scope because the command maps to POST endpoints.
 
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
