@@ -769,17 +769,19 @@ twentythree --version # Verify CLI version
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `bin/add.js` stub in Phase 18 exit 0 or exit 1?**
    - What we know: Phase 18 is a stub — Phase 20 implements the logic
    - What's unclear: If a user tries `npx twentythree-skills add` after Phase 18 ships, exit 1 with a message is better UX than a silent exit 0 that does nothing
    - Recommendation: exit 1 with `"Installer not yet available — check back with twentythree-skills >= 1.2.0"` or similar
+   - **RESOLVED:** exit 1 with descriptive message — implemented in Plan 01, Task 1
 
 2. **Does validate-skills.mjs need to run as part of CI now (Phase 18) or only after Phase 19?**
    - What we know: PKG-03 says the script runs as part of CI; Phase 19 creates the 22 reference files
    - What's unclear: If the script strictly enforces all 22 files, CI fails until Phase 19 is merged
    - Recommendation: Implement the two-gate approach — validate frontmatter strictly; validate reference files only if `skills/reference/` directory exists (absent = warning, not error)
+   - **RESOLVED:** Two-gate approach implemented in Plan 01, Task 2 — strict frontmatter check + soft reference/ directory check
 
 ---
 
