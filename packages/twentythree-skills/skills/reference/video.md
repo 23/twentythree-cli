@@ -384,8 +384,8 @@ twentythree video subtitle upload <id> ./captions.vtt --locale fr_FR --type clos
 | `--default` | no | — | Set this subtitle track as the default |
 
 ```bash
-# Publish a draft subtitle track
-twentythree video subtitle update <id> --subtitle-id en_US --draft false --json
+# Publish a draft subtitle track (remove draft status)
+twentythree video subtitle update <id> --subtitle-id en_US --no-draft --json
 
 # Change subtitle type and set as default
 twentythree video subtitle update <id> --subtitle-id en_US --type closedcaptions --default --json
@@ -602,7 +602,7 @@ twentythree video section generate <id> --json
 twentythree video subtitle upload <id> ./en-subtitles.srt --locale en_US --json
 
 # Publish the track (if created as draft)
-twentythree video subtitle update <id> --subtitle-id en_US --draft false --json
+twentythree video subtitle update <id> --subtitle-id en_US --no-draft --json
 
 # Set as primary language
 twentythree video subtitle set-primary <id> --subtitle-id en_US --json
