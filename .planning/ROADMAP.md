@@ -43,7 +43,7 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence (completed 2026-04-17)
 - [x] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh (completed 2026-04-17)
 - [x] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input (completed 2026-04-17)
-- [ ] **Phase 17: v1.2 Tech Debt Cleanup** — Fix tsc-clean (add @types/node), extend autocomplete from BaseCommand, fill Phase 15 SUMMARY frontmatter
+- [x] **Phase 17: v1.2 Tech Debt Cleanup** — Fix tsc-clean (add @types/node), extend autocomplete from BaseCommand, fill Phase 15 SUMMARY frontmatter (completed 2026-04-20)
 
 ## Phase Details
 
@@ -164,7 +164,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 17-01-PLAN.md — Close v1.2 tech debt (add @types/node, autocomplete extends BaseCommand, 15-02 SUMMARY frontmatter)
+- [x] 17-01-PLAN.md — Close v1.2 tech debt (add @types/node, autocomplete extends BaseCommand, 15-02 SUMMARY frontmatter)
 
 ## Progress
 
@@ -187,4 +187,4 @@ Plans:
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete    | 2026-04-17 |
-| 17. v1.2 Tech Debt Cleanup | v1.2 | 0/1 | Not started | - |
+| 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete   | 2026-04-20 |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Burnin & Quality of Life
-status: in_progress
-stopped_at: Phase 17 added — ready to plan
-last_updated: "2026-04-20T00:00:00.000Z"
+status: verifying
+stopped_at: Completed 17-tech-debt-cleanup/17-01-PLAN.md
+last_updated: "2026-04-20T07:37:19.551Z"
 last_activity: 2026-04-20
 progress:
-  total_phases: 9
+  total_phases: 8
   completed_phases: 3
   total_plans: 5
   completed_plans: 5
-  percent: 94
+  percent: 100
 ---
 
 # Project State
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-17)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 17 — v1.2 tech debt cleanup
+**Current focus:** Phase 17 — v1.2 Tech Debt Cleanup
 
 ## Current Position
 
-Phase: 17
-Plan: Not started
-Status: Phase created — ready to plan
+Phase: 17 (v1.2 Tech Debt Cleanup) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
 Last activity: 2026-04-20
 
 Progress: [██████████] 100%
@@ -58,6 +58,8 @@ Recent decisions affecting current work:
 - [Phase 16]: Use constructor.name check for FailedFlagValidationError since class is not exported from oclif/core public API
 - [Phase 16]: Namespace import (import * as p) for @clack/prompts to enable both select() and new prompt functions
 - [Phase 16]: Re-dispatch via this.config.runCommand to preserve existing argv (workspace, json flags)
+- [Phase 17-tech-debt-cleanup]: Add DOM lib + @types/node to tsconfig.base.json — both needed for Node 22 CLI with built-in fetch/FormData/Blob
+- [Phase 17-tech-debt-cleanup]: Override init() empty in Autocomplete to bypass workspace resolution while inheriting BaseCommand.catch() for PROMPT-01
 
 ### Pending Todos
 
@@ -69,6 +71,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T00:00:00.000Z
-Stopped at: Phase 17 created via gap closure — ready to plan
+Last session: 2026-04-20T07:37:19.549Z
+Stopped at: Completed 17-tech-debt-cleanup/17-01-PLAN.md
 Resume file: None
