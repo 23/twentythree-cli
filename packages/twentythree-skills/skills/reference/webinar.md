@@ -1,0 +1,930 @@
+---
+name: webinar
+description: Create and manage live webinars (linked to API /live/*) — configure sessions, speakers, agenda, attachments, recordings, transcriptions, mail, and series.
+---
+
+# TwentyThree Webinar Commands
+
+> Webinars are live broadcast events. Every example uses `--json` for machine-readable output.
+> CLI `webinar` maps to API `live` — see Terminology Notes at the bottom of this file.
+
+> **There is no `webinar get` command.** To retrieve details for a specific webinar,
+> use `twentythree webinar list --search "<title>" --json` or filter by status/ID client-side.
+> The API does not expose a single-record GET; list + filter is the canonical pattern.
+
+## Prerequisites
+
+Auth scope varies: **read** (list, metrics, clips, highlights, log, list-formats, recording status, most subtopic list commands), **write** (create, update, delete, repeat, upload-image, recording start/stop/split, speaker/series/mail/section/attachment/queued-video/transcription writes).
+Run `twentythree auth credentials` if not already configured.
+Verify: `twentythree auth status --json`
+
+> For any flag not listed here, run `twentythree webinar <cmd> --agent` to get the complete flag list, types, and defaults.
+
+## Commands
+
+### webinar create
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value (id + admin_url)
+
+After create, the CLI prints the new webinar ID and its admin URL. Capture `data.id` and `data.admin_url` from the `--json` response.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--title` | yes | — | Title for the new webinar |
+| `--description` | no | — | Description for the webinar |
+| `--status` | no | — | Webinar status: `upcoming`, `live`, or `previous` |
+| `--live-date` | no | — | Schedule date/time (ISO 8601) |
+| `--draft` | no | false | Set as draft |
+| `--publish` | no | false | Publish the webinar |
+
+```bash
+# Create a basic upcoming webinar
+twentythree webinar create --title "Q2 Town Hall" --json
+#    => { "data": { "id": "<webinar-id>", "admin_url": "..." } }
+
+# Create and schedule with a live date
+twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:00:00Z" --description "Our biggest product release yet" --json
+```
+
+---
+
+### webinar list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Title, Status, Date, Private)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--limit` | no | 20 | Maximum number of webinars to return |
+| `--all` | no | false | Fetch all webinars across all pages (overrides --limit) |
+| `--include-private` | no | false | Include private webinars in results |
+| `--status` | no | — | Filter by status: `upcoming`, `live`, or `previous` |
+| `--search` | no | — | Search webinars by keyword |
+
+```bash
+# List upcoming webinars
+twentythree webinar list --status upcoming --json
+
+# Search for a webinar by title and include private
+twentythree webinar list --search "Q2 Town Hall" --include-private --json
+```
+
+---
+
+### webinar update
+
+**Auth scope:** write  **Side effects:** updates  **Output:** key-value
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--title` | no | — | New title for the webinar |
+| `--description` | no | — | New description for the webinar |
+| `--status` | no | — | Webinar status: `upcoming`, `live`, or `previous` |
+| `--live-date` | no | — | Schedule date/time (ISO 8601) |
+| `--draft` | no | — | Set as draft |
+| `--publish` | no | — | Publish or unpublish the webinar |
+
+```bash
+# Update title and description
+twentythree webinar update <id> --title "New Title" --description "Updated description" --json
+
+# Publish a draft webinar
+twentythree webinar update <id> --publish --json
+```
+
+---
+
+### webinar delete
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+> **Warning: This action is destructive and cannot be undone.** The webinar and all associated data (recordings, speakers, mail, analytics) are permanently deleted from the workspace.
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Delete a webinar (destructive — cannot be undone)
+twentythree webinar delete <id> --json
+
+# Example with a real ID
+twentythree webinar delete 12345 --json
+```
+
+---
+
+### webinar repeat
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value (id + admin_url)
+
+Duplicates a webinar and schedules the copy at a new date/time. After repeat, the CLI prints the new webinar ID and its admin URL.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--date` | yes | — | Schedule date/time for the new webinar (ISO 8601) |
+
+```bash
+# Schedule a repeat of a webinar
+twentythree webinar repeat <id> --date "2026-06-01T16:00:00Z" --json
+#    => { "data": { "id": "<new-webinar-id>", "admin_url": "..." } }
+
+# Schedule a weekly repeat
+twentythree webinar repeat <id> --date "2026-05-22T16:00:00Z" --json
+```
+
+---
+
+### webinar metrics
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Metric, Value)
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Get metrics for a webinar
+twentythree webinar metrics <id> --json
+
+# Example with a real ID
+twentythree webinar metrics 12345 --json
+```
+
+---
+
+### webinar clips
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Video ID, Title, Duration, Type, Published, Views)
+
+Clips become available after `webinar recording stop` — allow time for recording processing before calling this command.
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# List clips from a recorded webinar
+twentythree webinar clips <id> --json
+
+# Example with a real ID
+twentythree webinar clips 12345 --json
+```
+
+---
+
+### webinar highlights
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Type, Start, End, Absolute Start)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--video-id` | no | — | Scope to a specific recording by video ID |
+
+```bash
+# List all highlights for a webinar
+twentythree webinar highlights <id> --json
+
+# Scope highlights to a specific recording clip
+twentythree webinar highlights <id> --video-id <video-id> --json
+```
+
+---
+
+### webinar log
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Event, Start, End)
+
+Returns the event log (chat/questions/registrations timeline) for a webinar.
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Retrieve the event log
+twentythree webinar log <id> --json
+
+# Example with a real ID
+twentythree webinar log 12345 --json
+```
+
+---
+
+### webinar list-formats
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Key, Name)
+
+No additional flags.
+
+```bash
+# List available webinar formats
+twentythree webinar list-formats --json
+
+# Use the Key value when creating or updating webinar format settings
+twentythree webinar list-formats --json
+```
+
+---
+
+### webinar upload-image
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+> **Chunked upload is automatic.** `twentythree webinar upload-image <id> <file>` handles chunking internally.
+> `--chunk-size` (default 5 MB) and `--concurrency` (default 5) are tunables.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--type` | no | thumbnail | Image type: `thumbnail`, `preview`, or `before_webinar` |
+| `--chunk-size` | no | 5242880 | Chunk size in bytes (default: 5 MB) |
+| `--concurrency` | no | 5 | Number of chunks to upload in parallel |
+
+```bash
+# Upload a thumbnail image
+twentythree webinar upload-image <id> ./thumb.jpg --json
+
+# Upload a before-webinar image with custom type
+twentythree webinar upload-image <id> ./before.jpg --type before_webinar --json
+```
+
+---
+
+## Subtopic: webinar speaker
+
+Speakers are presenters attached to a webinar. Commands cover list, add, update, remove, invite, and speaker-specific settings.
+
+### webinar speaker list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Email, Role, Order)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--token` | no | — | Webinar token (auto-looked up if omitted) |
+
+```bash
+# List speakers for a webinar
+twentythree webinar speaker list <id> --json
+
+# Example with a real ID
+twentythree webinar speaker list 12345 --json
+```
+
+---
+
+### webinar speaker add
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--name` | no | — | Speaker name |
+| `--email` | no | — | Speaker email |
+| `--title` | no | — | Speaker title or job title |
+| `--description` | no | — | Speaker bio or description |
+
+```bash
+# Add a speaker with name and email
+twentythree webinar speaker add <id> --name "Jane Doe" --email jane@example.com --json
+
+# Add a speaker with full details
+twentythree webinar speaker add <id> --name "John Smith" --email john@example.com --title "CTO" --description "Engineering lead" --json
+```
+
+---
+
+### webinar speaker add-from-speaker
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+Adds a speaker from the workspace speaker library.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--speaker-id` | no | — | Library speaker ID to add |
+
+```bash
+# Add a speaker from the workspace library by ID
+twentythree webinar speaker add-from-speaker <id> --speaker-id 99 --json
+
+# First list library speakers to find the ID
+twentythree webinar speaker library --json
+```
+
+---
+
+### webinar speaker add-from-user
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+Adds a workspace user as a speaker on a webinar.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--user-id` | no | — | User ID to add as speaker |
+
+```bash
+# Add a workspace user as a speaker
+twentythree webinar speaker add-from-user <id> --user-id 42 --json
+
+# First list workspace users to find the user ID
+twentythree webinar speaker add-from-user <id> --user-id <user-id> --json
+```
+
+---
+
+### webinar speaker update
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--name` | no | — | Speaker name |
+| `--email` | no | — | Speaker email |
+| `--title` | no | — | Speaker title or job title |
+| `--description` | no | — | Speaker bio or description |
+
+```bash
+# Update a speaker's title and email
+twentythree webinar speaker update <id> <speaker-id> --title "CEO" --email ceo@example.com --json
+
+# Update speaker bio
+twentythree webinar speaker update <id> <speaker-id> --description "Updated bio" --json
+```
+
+---
+
+### webinar speaker remove
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+No additional flags — pass webinar ID and speaker ID as positional arguments.
+
+```bash
+# Remove a speaker from a webinar
+twentythree webinar speaker remove <id> <speaker-id> --json
+
+# Example with real IDs
+twentythree webinar speaker remove 12345 9900 --json
+```
+
+---
+
+### webinar speaker set-avatar
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+Uploads an avatar image for a speaker. Chunked upload is automatic.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--chunk-size` | no | 5242880 | Chunk size in bytes (default: 5 MB) |
+| `--concurrency` | no | 5 | Number of chunks to upload in parallel |
+
+```bash
+# Upload an avatar image for a speaker
+twentythree webinar speaker set-avatar <id> <speaker-id> ./avatar.jpg --json
+
+# Upload with custom chunk size
+twentythree webinar speaker set-avatar <id> <speaker-id> ./avatar.png --chunk-size 524288 --json
+```
+
+---
+
+### webinar speaker remove-avatar
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+No additional flags — pass webinar ID and speaker ID as positional arguments.
+
+```bash
+# Remove the avatar image from a speaker
+twentythree webinar speaker remove-avatar <id> <speaker-id> --json
+
+# Example with real IDs
+twentythree webinar speaker remove-avatar 12345 9900 --json
+```
+
+---
+
+### webinar speaker set-order
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--speaker-id` | no | — | Speaker ID |
+| `--order` | no | — | New display order (1-based) |
+
+```bash
+# Set a speaker to appear first
+twentythree webinar speaker set-order <id> --speaker-id <speaker-id> --order 1 --json
+
+# Set a speaker to appear third
+twentythree webinar speaker set-order <id> --speaker-id <speaker-id> --order 3 --json
+```
+
+---
+
+### webinar speaker send-invitation
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+No additional flags — pass webinar ID and speaker ID as positional arguments.
+
+```bash
+# Send an invitation to a speaker
+twentythree webinar speaker send-invitation <id> <speaker-id> --json
+
+# Example with real IDs
+twentythree webinar speaker send-invitation 12345 9900 --json
+```
+
+---
+
+### webinar speaker library
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Email)
+
+No additional flags.
+
+```bash
+# List speakers in the workspace library
+twentythree webinar speaker library --json
+
+# Use to find speaker IDs for add-from-speaker
+twentythree webinar speaker library --json
+```
+
+---
+
+### webinar speaker connection-types
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Type, Label, Description)
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# List available speaker connection types
+twentythree webinar speaker connection-types <id> --json
+
+# Example with a real ID
+twentythree webinar speaker connection-types 12345 --json
+```
+
+---
+
+### webinar speaker request-guest
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+No additional flags — pass webinar ID and speaker ID as positional arguments.
+
+```bash
+# Request a speaker as a guest
+twentythree webinar speaker request-guest <id> <speaker-id> --json
+
+# Example with real IDs
+twentythree webinar speaker request-guest 12345 9900 --json
+```
+
+---
+
+### webinar speaker cancel-guest-request
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+No additional flags — pass webinar ID and speaker ID as positional arguments.
+
+```bash
+# Cancel a guest request for a speaker
+twentythree webinar speaker cancel-guest-request <id> <speaker-id> --json
+
+# Example with real IDs
+twentythree webinar speaker cancel-guest-request 12345 9900 --json
+```
+
+---
+
+## Subtopic: webinar series
+
+A series groups multiple webinars together (e.g. a recurring show). Commands cover list, create, update, delete, and attaching webinars to a series.
+
+### webinar series list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Status, Created)
+
+No additional flags.
+
+```bash
+# List all webinar series
+twentythree webinar series list --json
+
+# Use the ID to reference a series in other commands
+twentythree webinar series list --json
+```
+
+---
+
+### webinar series create
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--name` | no | — | Series name |
+| `--description` | no | — | Series description |
+
+```bash
+# Create a new webinar series
+twentythree webinar series create --name "Weekly Product Updates" --json
+
+# Create with description
+twentythree webinar series create --name "Q2 Webinars" --description "All Q2 sessions" --json
+```
+
+---
+
+### webinar series update
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--name` | no | — | Series name |
+| `--description` | no | — | Series description |
+
+```bash
+# Update the series name
+twentythree webinar series update <series-id> --name "Q2 All-Hands Series" --json
+
+# Update the series description
+twentythree webinar series update <series-id> --description "Quarterly alignment sessions" --json
+```
+
+---
+
+### webinar series delete
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+> **Warning: This action is destructive and cannot be undone.**
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--delete-associations` | no | false | Also delete associated webinars |
+
+```bash
+# Delete a series (keep associated webinars)
+twentythree webinar series delete <series-id> --json
+
+# Delete a series and all associated webinars
+twentythree webinar series delete <series-id> --delete-associations --json
+```
+
+---
+
+### webinar series cancel
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--cancel-associations` | no | false | Also cancel associated webinars |
+
+```bash
+# Cancel a series
+twentythree webinar series cancel <series-id> --json
+
+# Cancel a series and all associated webinars
+twentythree webinar series cancel <series-id> --cancel-associations --json
+```
+
+---
+
+### webinar series metrics
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (Metric, Value)
+
+No additional flags — pass the series ID as a positional argument.
+
+```bash
+# Get metrics for a webinar series
+twentythree webinar series metrics <series-id> --json
+
+# Example with a real series ID
+twentythree webinar series metrics 42 --json
+```
+
+---
+
+### webinar series mapped-objects
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Type, Title)
+
+Lists all webinars (and other objects) mapped to a series.
+
+No additional flags — pass the series ID as a positional argument.
+
+```bash
+# List webinars in a series
+twentythree webinar series mapped-objects <series-id> --json
+
+# Example with a real series ID
+twentythree webinar series mapped-objects 42 --json
+```
+
+---
+
+### webinar series recurrences
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Start Time, Status, Skipped)
+
+No additional flags — pass the series ID as a positional argument.
+
+```bash
+# List scheduled recurrences for a series
+twentythree webinar series recurrences <series-id> --json
+
+# Example with a real series ID
+twentythree webinar series recurrences 42 --json
+```
+
+---
+
+### webinar series apply-recurrence
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--recurrence-id` | no | — | Recurrence ID |
+
+```bash
+# Apply a recurrence to a series
+twentythree webinar series apply-recurrence <series-id> --recurrence-id 7 --json
+
+# Example with real IDs
+twentythree webinar series apply-recurrence 42 --recurrence-id 7 --json
+```
+
+---
+
+### webinar series skip-recurrence
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--recurrence-id` | no | — | Recurrence ID |
+| `--skipped` | no | — | Set skipped (`--skipped`) or unskipped (`--no-skipped`) |
+
+```bash
+# Skip a recurrence
+twentythree webinar series skip-recurrence <series-id> --recurrence-id 7 --skipped --json
+
+# Unskip a recurrence
+twentythree webinar series skip-recurrence <series-id> --recurrence-id 7 --no-skipped --json
+```
+
+---
+
+### webinar series set-ondemand
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--update-associations` | no | false | Also update associated webinars |
+
+```bash
+# Set a series to on-demand
+twentythree webinar series set-ondemand <series-id> --json
+
+# Set a series and associated webinars to on-demand
+twentythree webinar series set-ondemand <series-id> --update-associations --json
+```
+
+---
+
+### webinar series upload-thumbnail
+
+**Auth scope:** write  **Side effects:** creates  **Output:** none
+
+Chunked upload is automatic.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--chunk-size` | no | 5242880 | Chunk size in bytes (default: 5 MB) |
+| `--concurrency` | no | 5 | Number of chunks to upload in parallel |
+
+```bash
+# Upload a thumbnail for a series
+twentythree webinar series upload-thumbnail <series-id> ./thumb.jpg --json
+
+# Upload with custom chunk size
+twentythree webinar series upload-thumbnail <series-id> ./thumbnail.png --chunk-size 10485760 --json
+```
+
+---
+
+## Subtopic: webinar mail
+
+Mail templates and scheduled emails associated with a webinar (invitations, reminders, post-event follow-ups).
+
+### webinar mail list
+
+**Auth scope:** read  **Side effects:** none  **Output:** table (ID, Subject, Status, Send Date)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--series-id` | no | — | Series ID — list mails for a series instead of a webinar |
+
+```bash
+# List emails for a webinar
+twentythree webinar mail list <id> --json
+
+# List emails for a series
+twentythree webinar mail list --series-id <series-id> --json
+```
+
+---
+
+### webinar mail add
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--series-id` | no | — | Series ID — add mail to a series instead of a webinar |
+| `--subject` | no | — | Email subject |
+| `--message` | no | — | Email message body |
+
+```bash
+# Add a reminder email to a webinar
+twentythree webinar mail add <id> --subject "Join us tomorrow!" --message "The webinar starts at 4 PM UTC." --json
+
+# Add an email to a series
+twentythree webinar mail add --series-id <series-id> --subject "Series reminder" --json
+```
+
+---
+
+### webinar mail update
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--webinar-id` | no | — | Webinar ID (mutually exclusive with --series-id) |
+| `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
+| `--subject` | no | — | Email subject |
+| `--message` | no | — | Email message body |
+
+```bash
+# Update the subject of a webinar email
+twentythree webinar mail update <mail-id> --webinar-id <id> --subject "Updated Subject" --json
+
+# Update an email on a series
+twentythree webinar mail update <mail-id> --series-id <series-id> --message "New content" --json
+```
+
+---
+
+### webinar mail remove
+
+**Auth scope:** write  **Side effects:** destructive  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--webinar-id` | no | — | Webinar ID (mutually exclusive with --series-id) |
+| `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
+
+```bash
+# Remove an email from a webinar
+twentythree webinar mail remove <mail-id> --webinar-id <id> --json
+
+# Remove an email from a series
+twentythree webinar mail remove <mail-id> --series-id <series-id> --json
+```
+
+---
+
+### webinar mail send
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--webinar-id` | no | — | Webinar ID (mutually exclusive with --series-id) |
+| `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
+
+```bash
+# Send a webinar email immediately
+twentythree webinar mail send <mail-id> --webinar-id <id> --json
+
+# Send a series email
+twentythree webinar mail send <mail-id> --series-id <series-id> --json
+```
+
+---
+
+### webinar mail test
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--webinar-id` | no | — | Webinar ID (mutually exclusive with --series-id) |
+| `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
+| `--email` | no | — | Recipient email for the test |
+
+```bash
+# Send a test email to yourself
+twentythree webinar mail test <mail-id> --webinar-id <id> --email me@example.com --json
+
+# Test a series email
+twentythree webinar mail test <mail-id> --series-id <series-id> --email me@example.com --json
+```
+
+---
+
+### webinar mail preview
+
+**Auth scope:** read  **Side effects:** none  **Output:** none (raw HTML)
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--webinar-id` | no | — | Webinar ID (mutually exclusive with --series-id) |
+| `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
+
+```bash
+# Preview a webinar email as raw HTML
+twentythree webinar mail preview <mail-id> --webinar-id <id> --json
+
+# Redirect HTML preview to a file
+twentythree webinar mail preview <mail-id> --webinar-id <id> > preview.html
+```
+
+---
+
+## Subtopic: webinar recording
+
+Control server-side recording for a live webinar. Recording must be started while the webinar is live, stopped before clips become available, and can be split mid-session to create a chaptered archive.
+
+### webinar recording start
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Start recording a live webinar
+twentythree webinar recording start <id> --json
+
+# Example with a real ID
+twentythree webinar recording start 12345 --json
+```
+
+---
+
+### webinar recording stop
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Stop recording a webinar
+twentythree webinar recording stop <id> --json
+
+# Example with a real ID
+twentythree webinar recording stop 12345 --json
+```
+
+---
+
+### webinar recording status
+
+**Auth scope:** read  **Side effects:** none  **Output:** key-value
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Check recording status
+twentythree webinar recording status <id> --json
+
+# Poll status after stopping to know when clips are ready
+twentythree webinar recording status 12345 --json
+```
+
+---
+
+### webinar recording split
+
+**Auth scope:** write  **Side effects:** updates  **Output:** none
+
+Splits the current recording into a new segment, creating a chapter boundary in the archive.
+
+No additional flags — pass the webinar ID as a positional argument.
+
+```bash
+# Split the current recording into a new segment
+twentythree webinar recording split <id> --json
+
+# Example with a real ID
+twentythree webinar recording split 12345 --json
+```
+
+---
