@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 19-01-PLAN.md
-last_updated: "2026-04-20T12:38:14.410Z"
+stopped_at: Completed 19-02-PLAN.md
+last_updated: "2026-04-20T12:45:54.438Z"
 last_activity: 2026-04-20
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 8
-  completed_plans: 3
-  percent: 38
+  completed_plans: 4
+  percent: 50
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-20)
 ## Current Position
 
 Phase: 19 (skill-content) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-20
 
@@ -71,6 +71,9 @@ Recent decisions affecting current work:
 - [Phase 18-package-foundation]: allowed-tools: Bash(twentythree *) added to SKILL.md frontmatter — pre-approves all CLI calls for Claude Code agents
 - [Phase 19-01]: All flag data sourced from live twentythree <cmd> --agent output rather than research doc or training data
 - [Phase 19-01]: comment.md Terminology Notes required for --object-type legacy names (photo/album/live)
+- [Phase 19-02]: player embed HTML output exception: document redirect idiom inline with explicit JSON vs redirect guidance
+- [Phase 19-02]: openupload chunked-upload memory rule placed inline with upload-file command section for maximum agent visibility
+- [Phase 19-02]: setting.md single-command topic compensated with 6 bash examples (dry-run, atomic, timezone/locale, branding patterns)
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T12:38:14.407Z
-Stopped at: Completed 19-01-PLAN.md
+Last session: 2026-04-20T12:45:54.436Z
+Stopped at: Completed 19-02-PLAN.md
 Resume file: None
