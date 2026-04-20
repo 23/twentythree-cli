@@ -1,6 +1,6 @@
 {
   "name": "twentythree-skills",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "AI agent skills for the TwentyThree CLI",
   "license": "MIT",
   "author": "TwentyThree",
@@ -27,11 +27,20 @@
   "scripts": {
     "test": "node scripts/validate-skills.mjs"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "ai",
     "skills",
     "twentythree",
     "cli",
-    "agent"
+    "agent",
+    "claude",
+    "claude-code",
+    "copilot",
+    "cursor",
+    "codex",
+    "ai-agent"
   ]
 }

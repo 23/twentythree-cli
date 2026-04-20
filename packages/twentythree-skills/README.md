@@ -5,7 +5,7 @@ AI agent skills for the [TwentyThree CLI](https://github.com/23/twentythree-cli)
 ## Install
 
 ```bash
-npx twentythree-skills add
+npx twentythree-skills
 ```
 
 Detects your agent runtime and copies skill files into the right location automatically. Run again at any time to update — it's idempotent.
@@ -13,7 +13,7 @@ Detects your agent runtime and copies skill files into the right location automa
 **Project-local install:**
 
 ```bash
-npx twentythree-skills add --project
+npx twentythree-skills --project
 ```
 
 Installs into `.claude/skills/`, `.agents/skills/`, `.github/skills/`, or `.cursor/skills/` relative to the current directory.
