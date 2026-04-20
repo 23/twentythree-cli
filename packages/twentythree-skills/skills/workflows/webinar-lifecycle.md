@@ -73,7 +73,7 @@ On failure:
 twentythree webinar upload-image <webinar_id> ./thumb.jpg --type thumbnail --json
 ```
 
-Expected output shape: `{ data: { id, image_url } }`
+Expected output shape: none (upload-image returns no JSON body — success is confirmed by exit code 0)
 Capture: none (image is attached to the webinar automatically)
 On failure:
 - `413 Payload Too Large` → resize image; chunked upload is automatic but workspace size limits still apply
