@@ -4,9 +4,11 @@ on:
   push:
     tags:
       - 'v*'
+      - 'skills-v*'
 
 jobs:
   publish:
+    if: "!startsWith(github.ref, 'refs/tags/skills-v')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +33,40 @@ jobs:
       - name: Publish to npm
         working-directory: packages/twentythree-cli
         run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-skills:
+    if: startsWith(github.ref, 'refs/tags/skills-v')
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate skills package
+        run: pnpm --filter twentythree-skills test --run
+
+      - name: Dry-run publish (verify NPM_TOKEN scope)
+        working-directory: packages/twentythree-skills
+        run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        working-directory: packages/twentythree-skills
+        run: pnpm publish --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
