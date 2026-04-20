@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1–8 + 6.1 (shipped 2026-04-16)
 - ✅ **v1.1 Repository Polish & Release** — Phases 9–13 (shipped 2026-04-17)
-- 🚧 **v1.2 Burnin & Quality of Life** — Phases 14–16 (in progress)
+- 🚧 **v1.2 Burnin & Quality of Life** — Phases 14–17 (in progress)
 
 ## Phases
 
@@ -43,6 +43,7 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] **Phase 14: Bug Audit & Fix** — Diagnose and fix `parseBoolParam is not defined` on `video list`; sweep all 219 command files for the same pattern and fix every occurrence (completed 2026-04-17)
 - [x] **Phase 15: Tab Completion** — Wire `@oclif/plugin-autocomplete` so users can tab-complete subcommands and flags in bash and zsh (completed 2026-04-17)
 - [x] **Phase 16: Interactive Prompts** — Intercept missing-required-flag errors in BaseCommand and replace with `@clack/prompts` interactive input (completed 2026-04-17)
+- [ ] **Phase 17: v1.2 Tech Debt Cleanup** — Fix tsc-clean (add @types/node), extend autocomplete from BaseCommand, fill Phase 15 SUMMARY frontmatter
 
 ## Phase Details
 
@@ -152,6 +153,16 @@ Plans:
 Plans:
 - [x] 16-01-PLAN.md — TDD: tests + catch() override in BaseCommand for interactive missing-flag prompts
 
+### Phase 17: v1.2 Tech Debt Cleanup
+**Goal**: Fully clean TypeScript build and no fragile wiring left from v1.2 audit
+**Depends on**: Phase 16
+**Gap Closure**: Closes tech debt items from v1.2-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. `pnpm --filter twentythree-cli exec tsc --noEmit` exits 0 with zero errors (requires `@types/node`)
+  2. `autocomplete/index.ts` extends `BaseCommand` instead of bare `Command`
+  3. `15-02-SUMMARY.md` frontmatter contains `requirements_completed: [COMPLETE-01, COMPLETE-02, COMPLETE-03]`
+**Plans**: 1 plan
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -173,3 +184,4 @@ Plans:
 | 14. Bug Audit & Fix | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 15. Tab Completion | v1.2 | 2/2 | Complete    | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete    | 2026-04-17 |
+| 17. v1.2 Tech Debt Cleanup | v1.2 | 0/1 | Not started | - |
