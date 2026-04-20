@@ -138,7 +138,7 @@ Plans:
   4. `skills/SKILL.md` exists and contains auth setup, command syntax, a resource index linking all 22 groups, `--agent` flag docs, and the `allowed-tools: Bash(twentythree *)` declaration
 **Plans**: 2 plans
 Plans:
-- [ ] 18-01-PLAN.md — Package scaffold (extend package.json, add turbo.json no-build override, bin/add.js ESM stub, validate-skills.mjs two-gate validator; move placeholder SKILL.md to skills/ via git mv)
+- [x] 18-01-PLAN.md — Package scaffold (extend package.json, add turbo.json no-build override, bin/add.js ESM stub, validate-skills.mjs two-gate validator; move placeholder SKILL.md to skills/ via git mv)
 - [ ] 18-02-PLAN.md — Rewrite skills/SKILL.md with full D-03 content (expanded frontmatter, auth setup, --agent docs, 22-group resource index, meta commands, 2 workflow examples)
 **UI hint**: no
 
@@ -188,6 +188,6 @@ Plans:
 | 15. Tab Completion | v1.2 | 2/2 | Complete | 2026-04-17 |
 | 16. Interactive Prompts | v1.2 | 1/1 | Complete | 2026-04-17 |
 | 17. v1.2 Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-04-20 |
-| 18. Package Foundation | v1.3 | 0/2 | Not started | - |
+| 18. Package Foundation | v1.3 | 1/2 | In Progress|  |
 | 19. Skill Content | v1.3 | 0/? | Not started | - |
 | 20. Runtime Installer | v1.3 | 0/? | Not started | - |

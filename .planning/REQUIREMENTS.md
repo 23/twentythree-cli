@@ -10,9 +10,9 @@
 
 ### Package Scaffold (PKG)
 
-- [ ] **PKG-01**: `packages/twentythree-skills` exists as a standalone npm package in the monorepo with ESM type, `bin` entry wiring `twentythree-skills add`, and `files` whitelist that excludes source/dev artifacts
-- [ ] **PKG-02**: A `turbo.json` override in `packages/twentythree-skills` marks the package as no-build so turborepo does not attempt to compile static skill files
-- [ ] **PKG-03**: A `validate-skills` script checks all skill files for valid SKILL.md frontmatter (`name`, `description`) and that all 22 resource groups have a corresponding reference file — runs as part of CI
+- [x] **PKG-01**: `packages/twentythree-skills` exists as a standalone npm package in the monorepo with ESM type, `bin` entry wiring `twentythree-skills add`, and `files` whitelist that excludes source/dev artifacts
+- [x] **PKG-02**: A `turbo.json` override in `packages/twentythree-skills` marks the package as no-build so turborepo does not attempt to compile static skill files
+- [x] **PKG-03**: A `validate-skills` script checks all skill files for valid SKILL.md frontmatter (`name`, `description`) and that all 22 resource groups have a corresponding reference file — runs as part of CI
 
 ### Skill Content (SKILL)
 

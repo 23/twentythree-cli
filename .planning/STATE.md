@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: v1.3 roadmap created (Phases 18–20)
-last_updated: "2026-04-20T09:36:19.959Z"
-last_activity: 2026-04-20 -- Phase 18 planning complete
+stopped_at: Completed 18-01-PLAN.md
+last_updated: "2026-04-20T10:01:08.933Z"
+last_activity: 2026-04-20
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 2
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-20)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** v1.3 — TwentyThree Agent Skill — roadmap created, ready to plan Phase 18
+**Current focus:** Phase 18 — Package Foundation
 
 ## Current Position
 
-Phase: 18 — Package Foundation (not started)
-Plan: —
+Phase: 18 (Package Foundation) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-04-20 -- Phase 18 planning complete
+Last activity: 2026-04-20
 
 Progress: [__________] 0%
 
@@ -65,6 +65,9 @@ Recent decisions affecting current work:
 - [v1.3 roadmap]: Runtime detection is directory-based (~/.claude/, ~/.codex/, ~/.agents/, ~/.github/) — no runtime-specific APIs needed
 - [v1.3 roadmap]: No TypeScript compilation in twentythree-skills — static markdown + small ESM bin script only
 - [v1.3 roadmap]: Phases 18 and 19 are independent — can proceed in parallel; Phase 20 depends on Phase 18 scaffold
+- [Phase 18-package-foundation]: type=module for twentythree-skills — ESM-only, no CJS needed; static markdown + small bin script
+- [Phase 18-package-foundation]: turbo.json extends:['//'] with dependsOn:[] — skills package excluded from CLI build pipeline
+- [Phase 18-package-foundation]: validate-skills.mjs soft Gate 2 for reference/ — avoids failures in Phase 18/19 intermediate state
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T09:07:56.105Z
-Stopped at: v1.3 roadmap created (Phases 18–20)
+Last session: 2026-04-20T10:01:08.930Z
+Stopped at: Completed 18-01-PLAN.md
 Resume file: None
