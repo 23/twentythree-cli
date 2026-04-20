@@ -100,4 +100,4 @@ for (const runtime of detected) {
 }
 
 console.log('\nDone.')
-process.exit(0)
+process.exit(process.exitCode ?? 0)
