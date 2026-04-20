@@ -1,5 +1,22 @@
 # Milestones
 
+## v1.3 TwentyThree Agent Skill (Shipped: 2026-04-20)
+
+**Phases completed:** 3 phases, 9 plans, 8 tasks
+
+**Key accomplishments:**
+
+- One-liner:
+- One-liner:
+- 8 markdown reference files for platform configuration, access control, viewer integrations, and third-party upload covering app, openupload, player, presentation, protection, session, setting, and site resource groups
+- 1. [Rule 1 - Bug] user delete does not exist in CLI
+- 629-line video.md reference covering 25 commands (8 top-level + 6 section + 11 subtitle), with live --agent flag data, chunked-upload rule, admin_url output note, and terminology notes mapping CLI video to API photo
+- webinar.md
+- Two agent-executable workflow files covering the full upload→publish and create→configure→record→archive sequences, with exact commands sourced from reference/video.md and reference/webinar.md
+- One-liner:
+
+---
+
 ## v1.2 Burnin & Quality of Life (Shipped: 2026-04-20)
 
 **Phases completed:** 4 phases (14–17), 6 plans
