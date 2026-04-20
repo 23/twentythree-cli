@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
-status: Not started
-stopped_at: Phase 21 context gathered
-last_updated: "2026-04-20T21:32:08.028Z"
-last_activity: 2026-04-20 — Roadmap created for v1.4
+status: executing
+stopped_at: Completed 21-01-PLAN.md
+last_updated: "2026-04-20T22:05:31.689Z"
+last_activity: 2026-04-20
 progress:
   total_phases: 10
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 2
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-20)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Milestone v1.4 — Phase 21: Skills npm Publish
+**Current focus:** Phase 21 — skills-npm-publish
 
 ## Current Position
 
-Phase: 21 (Skills npm Publish)
-Plan: —
-Status: Not started
-Last activity: 2026-04-20 — Roadmap created for v1.4
+Phase: 21 (skills-npm-publish) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-04-20
 
 Progress: [__________] 0%
 
@@ -90,6 +90,9 @@ Recent decisions affecting current work:
 - [v1.4 roadmap]: NPM_TOKEN scope must be verified with dry-run before first real publish — Granular Access Tokens may be scoped to twentythree-cli only
 - [v1.4 roadmap]: Bare `npx twentythree-skills` invocation (no subcommand) should work — `add` argument is currently a no-op; simplify or add explicit argv routing before publish
 - [v1.4 roadmap]: Phase 22 (SKILL.md hyperlinks) is independent of Phase 21 but should land in same 1.0.0 publish for clean release
+- [Phase 21-skills-npm-publish]: publishConfig.access: public added to skills package.json — required for npm public registry publish without explicit flag
+- [Phase 21-skills-npm-publish]: skills-v* tag prefix for skills releases — keeps CLI and skills publish trains independent with if: guards
+- [Phase 21-skills-npm-publish]: Dry-run step uses npm publish --dry-run (not pnpm) — more reliable for verifying NPM_TOKEN scope before real publish
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-20T21:32:08.023Z
-Stopped at: Phase 21 context gathered
-Resume file: .planning/phases/21-skills-npm-publish/21-CONTEXT.md
+Last session: 2026-04-20T22:05:31.687Z
+Stopped at: Completed 21-01-PLAN.md
+Resume file: None
