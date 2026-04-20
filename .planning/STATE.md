@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 18-01-PLAN.md
-last_updated: "2026-04-20T10:01:08.933Z"
+status: verifying
+stopped_at: Completed 18-02-PLAN.md
+last_updated: "2026-04-20T10:06:27.772Z"
 last_activity: 2026-04-20
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-20)
 
 Phase: 18 (Package Foundation) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-20
 
 Progress: [__________] 0%
@@ -68,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 18-package-foundation]: type=module for twentythree-skills — ESM-only, no CJS needed; static markdown + small bin script
 - [Phase 18-package-foundation]: turbo.json extends:['//'] with dependsOn:[] — skills package excluded from CLI build pipeline
 - [Phase 18-package-foundation]: validate-skills.mjs soft Gate 2 for reference/ — avoids failures in Phase 18/19 intermediate state
+- [Phase 18-package-foundation]: allowed-tools: Bash(twentythree *) added to SKILL.md frontmatter — pre-approves all CLI calls for Claude Code agents
 
 ### Pending Todos
 
@@ -79,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-20T10:01:08.930Z
-Stopped at: Completed 18-01-PLAN.md
+Last session: 2026-04-20T10:06:27.770Z
+Stopped at: Completed 18-02-PLAN.md
 Resume file: None
