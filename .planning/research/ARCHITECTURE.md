@@ -1,421 +1,277 @@
-# Architecture: twentythree-skills Package
+# Architecture Research
 
-**Milestone:** Add packages/twentythree-skills to the existing pnpm monorepo
+**Domain:** pnpm monorepo — second-package npm publish wiring
 **Researched:** 2026-04-20
-**Overall confidence:** HIGH — findings drawn from live codebase, official runtime docs (Claude Code, Codex, Copilot), and ecosystem patterns
+**Confidence:** HIGH
 
----
+## Standard Architecture
 
-## Package Structure
-
-### Directory Tree
+### System Overview
 
 ```
-packages/twentythree-skills/
-├── package.json                  # npm manifest, bin wiring, files whitelist
-├── SKILL.md                      # Top-level index skill (already exists, needs content)
-├── skills/                       # One subdirectory per domain area
-│   ├── videos/
-│   │   └── SKILL.md              # Deep instructions for video commands
-│   ├── categories/
-│   │   └── SKILL.md
-│   ├── webinars/
-│   │   └── SKILL.md
-│   ├── analytics/
-│   │   └── SKILL.md
-│   ├── auth/
-│   │   └── SKILL.md
-│   ├── ... (one per topic area)
-│   └── references/               # Shared reference material (optional)
-│       └── api-terms.md          # CLI→API term mapping (video=photo, category=album, etc.)
-└── bin/
-    └── add.js                    # Installer — #!/usr/bin/env node, plain JS, no build step
+.github/workflows/release.yml
+          |
+          |  on: push tags 'v*'
+          v
++---------------------------------------------------------+
+|                     publish job                         |
+|                                                         |
+|  checkout -> pnpm install -> test (cli) -> build (cli)  |
+|      -> validate skills (node scripts/validate-skills)  |
+|      -> pnpm publish twentythree-cli                    |
+|      -> pnpm publish twentythree-skills                 |
++---------------------------------------------------------+
+          |
+          |  needs: publish
+          v
++---------------------------------------------------------+
+|                   smoke-test job                        |
+|                                                         |
+|  npm install -g twentythree-cli -> twentythree --version|
+|  npx twentythree-skills add --help                      |
++---------------------------------------------------------+
 ```
 
-**Why one skill per topic, not one monolithic SKILL.md:** Runtimes have description length limits (Claude Code: no documented limit, but Codex recommends concise descriptions; Copilot caps description at 1024 characters). More importantly, agents perform better with fine-grained skills that describe narrow contexts — "video upload and management" vs "all 219 TwentyThree commands." The top-level `SKILL.md` serves as the entry point; topic skills provide depth.
+### Component Responsibilities
 
-**Why `skills/` subdirectory, not flat structure:** All three target runtimes scan for `SKILL.md` files recursively. Grouping under `skills/` gives the installer a single source path to copy from and keeps the package root clean.
+| Component | Responsibility | Notes |
+|-----------|----------------|-------|
+| `release.yml` publish job | Build, test, publish both packages sequentially | Single job ensures atomic release |
+| `release.yml` smoke-test job | Verify installability from live npm registry | Runs after publish; polls for registry propagation |
+| `packages/twentythree-cli/` | CJS CLI, built by tsdown, published with dist/ artifacts | Has a required `pnpm run build` step |
+| `packages/twentythree-skills/` | ESM-only, no build step, static markdown + bin/add.js | pnpm publish copies `files` directly from source |
+| git tag (`v*`) | Publish trigger; single tag governs both packages | Each package publishes at its own version from its own package.json |
 
----
+## Recommended Project Structure
 
-## Skill File Format
+```
+.github/
+  workflows/
+    release.yml              # one workflow, one publish job, two pnpm publish steps
 
-All three target runtimes (Claude Code, OpenAI Codex, GitHub Copilot) share the same SKILL.md format:
-
-```markdown
----
-name: twentythree-videos
-description: |
-  Upload, list, update, delete, and manage videos in TwentyThree.
-  Use for: uploading video files, retrieving video metadata, updating titles/descriptions,
-  managing video sections, subtitles, and thumbnails.
-triggers:
-  - upload video
-  - video list
-  - video management
-invocable: true
-argument-hint: "<command> [flags]"
----
-
-# TwentyThree Video Commands
-
-## Available Commands
-
-| Command | Description |
-|---------|-------------|
-| `twentythree video upload <file>` | Upload a video file (chunked) |
-| `twentythree video list` | List all videos |
-| `twentythree video get <id>` | Get video details |
-...
-
-## Key Flags
-
-...
-## Examples
-
-...
+packages/
+  twentythree-cli/
+    package.json             # version: "1.1.1"
+    dist/                    # built output, published
+  twentythree-skills/
+    package.json             # version: "0.1.0", needs publishConfig.access: "public"
+    bin/
+      add.js                 # ESM bin, #!/usr/bin/env node, node: built-ins only
+    skills/
+      SKILL.md
+      reference/*.md
+      workflows/*.md
+    scripts/
+      validate-skills.mjs    # test script, already exists
 ```
 
-**Fields used by all three runtimes:** `name` (required, must match directory name, lowercase-hyphenated), `description` (required, drives implicit activation). All other frontmatter fields (`triggers`, `invocable`, `argument-hint`) are Claude Code/Codex extensions — Copilot ignores unknown fields gracefully.
+### Structure Rationale
 
----
+- **Single workflow file:** Two sequential `pnpm publish` steps inside one job is correct. A matrix strategy runs both in parallel, which prevents sharing build artifacts and loses ordering guarantees. A separate triggered workflow adds latency and tricky `workflow_run` permission semantics.
+- **No turbo involvement for publish:** turbo.json correctly excludes skills from the global build pipeline (skills has its own package-level turbo.json with empty `dependsOn`). Publishing is a CI step, not a turbo task.
 
-## Installer Design: `bin/add.js`
+## Architectural Patterns
 
-### Wiring in package.json
+### Pattern 1: Sequential pnpm publish in one job
 
+**What:** Add a second `pnpm publish` step in the existing `publish` job, directly after the cli publish step.
+**When to use:** When both packages share a release cadence and a single git tag governs both.
+**Trade-offs:** Simple, atomic, visible. If cli publishes but skills fails, cli is already live — acceptable because skills has no build step and no realistic failure mode beyond bad credentials.
+
+**Example:**
+```yaml
+- name: Publish CLI to npm
+  working-directory: packages/twentythree-cli
+  run: pnpm publish --no-git-checks --access public
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+- name: Validate skills package
+  working-directory: packages/twentythree-skills
+  run: node scripts/validate-skills.mjs
+
+- name: Publish Skills to npm
+  working-directory: packages/twentythree-skills
+  run: pnpm publish --no-git-checks --access public
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+The `--no-git-checks` flag is required in both cases. pnpm publish refuses to run if the git working tree appears dirty or HEAD is not on a tagged commit — GitHub Actions checkout does not always put HEAD on a branch, so `--no-git-checks` bypasses this. The tag-based trigger already guarantees publish intent.
+
+### Pattern 2: Independent versioning (do not sync versions)
+
+**What:** `twentythree-skills` keeps its own version (`0.1.0`) while `twentythree-cli` is at `1.1.1`. Do not force them to match.
+**When to use:** When the two packages have different change rates. Skills is content (markdown files); CLI is code. Their semver signals are semantically different.
+**Trade-offs:** The git tag `v1.2.0` triggers the workflow and publishes cli@1.2.0 and skills@0.1.x — the tag and the skills version do not need to match. Slightly more cognitive overhead, but avoids the false signal of bumping skills to 1.x just because cli is there.
+
+**Recommendation:** Keep independent versioning. Each package reads its own `package.json` version at publish time. No coordination mechanism needed. When skills hits a stable release, bump it to 1.0.0 independently.
+
+Note: The monorepo already has `@changesets/cli` in devDependencies, which supports independent versioning. The root `package.json` does not have a `.changeset/config.json` visible from the current state — if changesets is not actively used, ignore it and manage package.json versions manually.
+
+### Pattern 3: publishConfig.access for unscoped packages
+
+**What:** pnpm publish requires `--access public` on the command line or `publishConfig.access: "public"` in `package.json` for packages not under an npm scope (`@org/name`). `twentythree-skills` is unscoped.
+**When to use:** Any unscoped public package published to npm via pnpm.
+**Trade-offs:** None — this is required.
+
+Add to `packages/twentythree-skills/package.json`:
 ```json
 {
-  "bin": {
-    "twentythree-skills": "./bin/add.js"
+  "publishConfig": {
+    "access": "public"
   }
 }
 ```
 
-Usage: `npx twentythree-skills add` or `npx twentythree-skills add --global`
+The CLI currently passes `--access public` on the command line. Either approach works. Embedding `publishConfig` in `package.json` is self-documenting and removes the flag from the CI step.
 
-The installer is a plain `.js` file (no TypeScript, no build step). It is the only executable artifact in the package. Keep it under 200 lines.
+### Pattern 4: ESM bin script with npx — no shimming required
 
-### What the Installer Does
+**What:** `bin/add.js` uses `#!/usr/bin/env node` and native ESM (`import` statements, `import.meta.url`). When a user runs `npx twentythree-skills add`, npm downloads the package and executes `bin/add.js` via the `bin` field.
+**When to use:** ESM-only packages with a bin entry and no build step.
+**Trade-offs:** Requires Node >=12.17 for native ESM. The package declares `"engines": {"node": ">=22.0.0"}` — no issue.
 
-```
-1. Parse flags: --global (default: false), --target <runtime> (default: auto-detect)
-2. Detect which runtimes are present (see detection strategy below)
-3. Prompt user if multiple runtimes detected (use @clack/prompts — already a dep of twentythree-cli
-   but twentythree-skills should NOT import from twentythree-cli; use a lightweight alternative
-   or a simple readline prompt since the installer is tiny)
-4. Resolve target directory
-5. Copy skills/ tree into target/twentythree/ (creates twentythree/ subdirectory to namespace)
-6. Print confirmation: "Installed to ~/.claude/skills/twentythree/"
-```
+npx caching: npm caches downloaded packages in `~/.npm/_npx/`. First run downloads the latest version; subsequent runs use the cache until the version changes. No special shimming needed.
 
-### Runtime Detection Strategy
+`import.meta.url` in `bin/add.js`: The existing code already uses `fileURLToPath(import.meta.url)` to derive `__dirname`. This is the correct pattern for ESM bin scripts — no changes needed.
 
-Detection is directory-based, not environment-variable-based. The installer runs in the user's terminal, not inside the agent, so `CLAUDECODE=1` is not set during `npx twentythree-skills add`. Directory existence is the reliable signal.
+`"type": "module"` in `package.json`: Already set. This tells Node to treat all `.js` files as ESM. The shebang line plus `type: module` means Node parses `bin/add.js` as ESM without requiring a `.mjs` extension.
+
+## Data Flow
+
+### Publish Flow (CI)
 
 ```
-Detect Claude Code:
-  ~/.claude/skills/    →  global install target: ~/.claude/skills/twentythree/
-  ./.claude/skills/    →  project install target: .claude/skills/twentythree/
-
-Detect Codex CLI:
-  ~/.codex/            →  global: ~/.codex/skills/twentythree/
-  ~/.agents/skills/    →  check for .codex/ dir as confirmation
-  ./.agents/skills/    →  project: .agents/skills/twentythree/
-
-Detect GitHub Copilot:
-  ~/.github/copilot/   →  check if gh CLI is installed: `which gh` + `gh extension list | grep copilot`
-  global: ~/.github/skills/twentythree/ (or ~/.copilot/skills/twentythree/)
-  project: .github/skills/twentythree/
-
-Detect Cursor:
-  ~/.cursor/           →  global: ~/.cursor/skills/twentythree/
-  ./.cursor/skills/    →  project: .cursor/skills/twentythree/
+git push tag v1.2.0
+    |
+    v
+GitHub Actions triggers release.yml (on: push tags: ['v*'])
+    |
+    v
+pnpm install --frozen-lockfile
+    |
+    v
+pnpm --filter twentythree-cli test --run
+    |
+    v
+pnpm --filter twentythree-cli run build   (tsdown -> dist/)
+    |
+    v
+pnpm publish  (cwd: packages/twentythree-cli)
+    reads: packages/twentythree-cli/package.json -> version "1.2.0"
+    publishes: dist/ + package.json
+    |
+    v
+node scripts/validate-skills.mjs  (cwd: packages/twentythree-skills)
+    validates: skills/SKILL.md frontmatter, reference/ file presence
+    |
+    v
+pnpm publish  (cwd: packages/twentythree-skills)
+    reads: packages/twentythree-skills/package.json -> version "0.1.0"
+    publishes: bin/ + skills/ + README.md
+    |
+    v
+smoke-test job: npm install -g twentythree-cli -> twentythree --version
+                npx twentythree-skills add --help (or dry-run)
 ```
 
-**Priority when multiple detected:** Prompt the user to choose, or pass `--target claude-code|codex|copilot|cursor`. Default behavior without `--target`: install to all detected runtimes.
-
-**Fallback:** If no runtimes detected, print a help message listing supported runtimes and their install paths. Do not error silently.
-
-### Target Directories (complete reference)
-
-| Runtime | Global Path | Project Path |
-|---------|------------|--------------|
-| Claude Code | `~/.claude/skills/twentythree/` | `.claude/skills/twentythree/` |
-| OpenAI Codex | `~/.codex/skills/twentythree/` | `.agents/skills/twentythree/` |
-| GitHub Copilot | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
-| Cursor | `~/.cursor/skills/twentythree/` | `.cursor/skills/twentythree/` |
-
-Use a `twentythree/` subdirectory in all cases to namespace the skills and avoid collisions with other packages.
-
-### Installer Code Pattern
-
-```javascript
-#!/usr/bin/env node
-// bin/add.js — skills installer, plain JS, no transpilation needed
-
-import { existsSync, mkdirSync, cpSync } from 'node:fs'
-import { resolve, join } from 'node:path'
-import { homedir } from 'node:os'
-import { fileURLToPath } from 'node:url'
-
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
-const skillsSource = resolve(__dirname, '../skills')
-const home = homedir()
-
-// Detection + copy logic here
-// No external dependencies — use only node: built-ins
-```
-
-**No external dependencies in the installer.** The installer runs as `npx twentythree-skills add` — users may not have the package installed, so no `node_modules` are guaranteed. Use only Node.js built-ins (`node:fs`, `node:path`, `node:os`, `node:readline` for prompts).
-
----
-
-## Static vs Generated Skill Files
-
-**Recommendation: static (hand-authored) markdown, not generated.**
-
-### Why Static
-
-1. **Quality over coverage.** A generated skill that lists all 219 commands is a command reference manual, not an agent skill. Good skill files explain *when* to use a command group, show realistic workflows, and describe edge cases. This requires authorial judgment — it cannot be generated from `static description` strings and flag lists.
-
-2. **The `agentMetadata` on each command is too sparse.** `{ api_endpoint, auth_scope, output_shape, side_effects }` tells an agent about side effects and output shape but says nothing about when to prefer `video list` over `video get`, how pagination works, or how the upload flow differs from the replace flow. That context is authorial.
-
-3. **Generated skill files go stale in a different way.** A generated file from today's manifest will be accurate today but diverge from the CLI as commands are added/removed. A hand-authored file is intentionally curated and is updated when its content would meaningfully change — not on every build.
-
-4. **The audit-endpoints script already covers coverage tracking.** Command completeness is validated by `scripts/audit-endpoints.mjs` in the CLI package. The skills package does not need to replicate this.
-
-### What "Static" Looks Like in Practice
-
-- One SKILL.md per topic directory (videos, categories, webinars, etc.)
-- The top-level SKILL.md is the entry-point description
-- `references/api-terms.md` documents the CLI→API terminology mapping (video=photo, category=album, etc.) — this IS generated once and rarely changes
-- When a new command topic is added to twentythree-cli, a corresponding skill directory is added to twentythree-skills in the same PR
-
-### The One Generated Artifact
-
-`references/api-terms.md` — the CLI-to-API term mapping — is appropriate to generate from the codebase's `term-map.ts`. This is factual, enumerable, and changes with API updates. Generate it as part of the skills package's `build` script (see below).
-
----
-
-## Turborepo Integration
-
-### The Problem
-
-The standard turbo `build` task has `"dependsOn": ["^build"]`, meaning every package waits for its dependencies to build. `twentythree-skills` has no TypeScript to compile — its primary artifact is the `skills/` markdown tree.
-
-### Solution: Declare a `build` Task with Empty Outputs
-
-Add a `package.json` `build` script that only generates the one generated artifact:
-
-```json
-// packages/twentythree-skills/package.json
-"scripts": {
-  "build": "node scripts/generate-references.mjs",
-  "test": "node scripts/validate-skills.mjs"
-}
-```
-
-```json
-// packages/twentythree-skills/turbo.json (package-level override)
-{
-  "$schema": "https://turbo.build/schema.json",
-  "extends": ["//"],
-  "tasks": {
-    "build": {
-      "dependsOn": [],
-      "inputs": ["skills/**/*.md", "scripts/**/*.mjs"],
-      "outputs": ["skills/references/api-terms.md"]
-    }
-  }
-}
-```
-
-`"dependsOn": []` — the skills package does not depend on `twentythree-cli`'s build. The installer reads static files from the package itself; it does not import anything from the CLI's compiled output.
-
-**Why not `"dependsOn": ["^build"]`:** The skills package doesn't import from twentythree-cli (see Integration Points below). Having it depend on the CLI build would force sequential execution with no benefit.
-
-**If generate-references is skipped initially:** Set `"build": "echo 'no build step'"` and declare `"outputs": []`. Turbo handles empty-output packages gracefully — it caches the task as complete immediately. This is the correct pattern for a package whose "build" is a no-op.
-
-### Full turbo.json Root Impact
-
-No changes needed to the root `turbo.json`. The package-level override (`packages/twentythree-skills/turbo.json`) handles the exception cleanly. Turborepo merges package-level configs with root config using `"extends": ["//"]`.
-
----
-
-## Monorepo Dependency Graph
+### npx User Flow
 
 ```
-twentythree-skills
-  │
-  ├── does NOT import twentythree-cli (runtime or dev dependency)
-  │
-  └── peerDependency: twentythree-cli (optional, for documentation purposes only)
-      "To use these skills, install twentythree-cli: npm install -g twentythree-cli"
+npx twentythree-skills add
+    |
+    v
+npm downloads twentythree-skills@latest to ~/.npm/_npx/
+    |
+    v
+executes bin/add.js (ESM, Node 22+)
+    |
+    v
+detects runtimes via directory presence:
+  ~/.claude/           -> Claude Code
+  ~/.codex/            -> Codex
+  .github/copilot/     -> Copilot (project-local)
+  .cursor/             -> Cursor
+    |
+    v
+cpSync(skills/, <runtime-skills-dir>/twentythree/) for each detected runtime
+    |
+    v
+prints: "Installed N skills for [runtime]"
 ```
 
-**`twentythree-skills` does NOT import from `twentythree-cli`.** This is the most important architectural decision. The skills are markdown files that describe the CLI's behavior — they do not need to execute code from the CLI. Adding `twentythree-cli` as a dependency would:
-- Create a circular-ish coupling (skills → cli → skills is the conceptual loop)
-- Force users who install skills to also install the full CLI as a transitive dep of the skills package
-- Create a build ordering constraint in turbo that isn't needed
+## Scaling Considerations
 
-If the `generate-references.mjs` script needs to read the CLI's `term-map.ts` to generate `api-terms.md`, it reads the file by path within the monorepo — it does not `import()` from the compiled CLI package. This is a script reading source files, not a runtime dependency.
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| 2 packages (current) | Single workflow, sequential publish steps — done |
+| 3-5 packages | Still one workflow; add a step per package; consider `pnpm --filter` glob if all share the same treatment |
+| 5+ packages with divergent release cadences | Split into per-package workflows triggered on path changes; activate `changesets` for coordinated versioning |
 
-### package.json for twentythree-skills
+### Scaling Priorities
 
-```json
-{
-  "name": "twentythree-skills",
-  "version": "0.1.0",
-  "description": "AI agent skills for the TwentyThree CLI",
-  "license": "MIT",
-  "type": "module",
-  "bin": {
-    "twentythree-skills": "./bin/add.js"
-  },
-  "files": [
-    "/bin",
-    "/skills",
-    "/SKILL.md"
-  ],
-  "scripts": {
-    "build": "node scripts/generate-references.mjs",
-    "test": "node scripts/validate-skills.mjs"
-  },
-  "engines": {
-    "node": ">=22.0.0"
-  },
-  "keywords": ["ai", "skills", "twentythree", "cli", "agent"]
-}
-```
+1. **First divergence point:** If skills needs its own patch releases independent of CLI releases, add a separate `skills-v*` tag pattern as a second trigger. The two workflows can share the `NPM_TOKEN` secret without conflict.
+2. **If more packages need build steps:** Invoke `turbo run build` in CI instead of `pnpm --filter twentythree-cli run build` — turbo's build pipeline already handles ordering via `dependsOn`.
 
-`"type": "module"` — the installer and scripts use ESM (`import`). The installer runs standalone via `npx`, so ESM is safe (no CJS-interop issues — these are not oclif commands loaded by a CJS host). This is the inverse of the CLI package which is `"type": "commonjs"` due to oclif's CJS loading model.
+## Anti-Patterns
 
----
+### Anti-Pattern 1: Matrix strategy for multi-package publish
 
-## Publish Strategy
+**What people do:** Define a GitHub Actions matrix `[twentythree-cli, twentythree-skills]` so both publish in parallel.
+**Why it's wrong:** Parallel jobs cannot share build artifacts. `twentythree-cli` must be built before publishing; its `dist/` cannot be passed to a parallel job without `actions/upload-artifact` round-trips. For two packages where one has no build step, this adds complexity with no benefit.
+**Do this instead:** Two sequential steps in one job. Simple and unambiguous.
 
-### Linked Versioning via Changesets
+### Anti-Pattern 2: Separate triggered workflow for skills
 
-The `.changeset/config.json` already has `"linked": [["twentythree-cli", "twentythree-skills"]]`. This means both packages share version bumps — when you run `changeset version`, both packages receive the same new version number.
+**What people do:** Create a second workflow file triggered via `workflow_run` after the main release workflow completes.
+**Why it's wrong:** `workflow_run` events add 30-90 seconds of latency, have tricky permission semantics (`secrets` are not automatically inherited), and make debugging harder. The trigger chain is invisible at a glance.
+**Do this instead:** Add a second `pnpm publish` step in the existing `publish` job. Same token, same run, visible in one place.
 
-**This is the correct strategy.** Skill files describe a specific version of the CLI's behavior. Keeping versions in sync makes the relationship explicit: `twentythree-skills@1.2.0` documents `twentythree-cli@1.2.0`. Users can match package versions to confirm compatibility.
+### Anti-Pattern 3: Lockstep versioning
 
-### What "Linked" Means in Practice
+**What people do:** Bump both packages to the same version on every release.
+**Why it's wrong:** Skills and CLI change at different rates. Forcing lockstep creates meaningless version churn on the CLI (a documentation fix to skills should not bump CLI from 1.1.1 to 1.1.2) and misleads users about what changed.
+**Do this instead:** Independent versioning. Each package publishes at its own version. The git tag triggers the workflow; it does not dictate package versions.
 
-- `changeset add` creates a changeset that bumps both packages
-- `changeset version` increments both to the same new version
-- `pnpm publish --filter twentythree-cli --filter twentythree-skills` publishes both in a single CI step
-- Neither package needs its own independent release cadence
+### Anti-Pattern 4: Omitting publishConfig.access for unscoped packages
 
-### Publish Script (root package.json addition)
+**What people do:** Publish without `--access public` or `publishConfig`, expecting npm to infer intent.
+**Why it's wrong:** pnpm's publish command in some versions treats unscoped packages as private by default to avoid accidental leaks. The `--access public` flag or `publishConfig` makes intent unambiguous and prevents CI failures on first publish of a new package.
+**Do this instead:** Add `"publishConfig": {"access": "public"}` to `packages/twentythree-skills/package.json`.
 
-```json
-"publish-all": "pnpm publish --filter twentythree-cli --filter twentythree-skills --no-git-checks"
-```
+### Anti-Pattern 5: Running the skills test inside the CLI test step
 
-### When to Publish Independently
-
-If the skill content needs a correction independent of a CLI release (e.g., a wrong command example), publish `twentythree-skills` alone with a patch bump. The `linked` config allows independent bumps — it just prevents one package from having a higher major/minor than the other.
-
----
+**What people do:** Call `pnpm test` (without `--filter`) in CI, causing both packages to be tested in one undifferentiated step.
+**Why it's wrong:** Not catastrophically wrong, but unclear. The existing workflow correctly scopes with `pnpm --filter twentythree-cli test --run`. Adding a skills test as a separate, named step (`Validate skills package`) makes it visible in the CI log and independently re-runnable.
+**Do this instead:** Named, explicit step for skills validation before the skills publish step.
 
 ## Integration Points
 
-### Does twentythree-skills need to import anything from twentythree-cli?
+### External Services
 
-No. The skill files are markdown. The installer copies files. Neither needs to execute CLI code.
+| Service | Integration Pattern | Notes |
+|---------|---------------------|-------|
+| npm registry | `NODE_AUTH_TOKEN` env var, configured by `actions/setup-node` `registry-url` | Already wired in release.yml; same token and same `registry-url` step covers both publish steps |
+| GitHub Actions | `on: push tags 'v*'` trigger | Tag must be pushed explicitly (`git push origin v1.2.0` or `git push --tags`) |
 
-The only integration is **one-way documentation**: the skill files describe CLI commands by name, flag syntax, and behavior. This is maintained manually, the same way any documentation is maintained.
+### Internal Boundaries
 
-### What Changes When a New Command is Added to twentythree-cli
-
-1. The command is added to `packages/twentythree-cli/src/commands/<topic>/`
-2. If it's a new topic: add `packages/twentythree-skills/skills/<topic>/SKILL.md`
-3. If it's a command in an existing topic: update the relevant skill file
-4. Both changes go in the same PR
-
-This is a content maintenance workflow, not a code generation workflow. The audit-endpoints script in the CLI package guards against missing command implementations; the skills package has no equivalent gate (content quality cannot be automated).
-
----
-
-## New vs Modified Files Summary
-
-### New Files
-
-| File | Type | Notes |
-|------|------|-------|
-| `packages/twentythree-skills/bin/add.js` | New — installer | Plain ESM JS, node: built-ins only, no deps |
-| `packages/twentythree-skills/skills/videos/SKILL.md` | New — skill content | One per topic |
-| `packages/twentythree-skills/skills/categories/SKILL.md` | New — skill content | |
-| `packages/twentythree-skills/skills/webinars/SKILL.md` | New — skill content | |
-| `packages/twentythree-skills/skills/analytics/SKILL.md` | New — skill content | |
-| `packages/twentythree-skills/skills/auth/SKILL.md` | New — skill content | |
-| `packages/twentythree-skills/skills/references/api-terms.md` | New — generated | From term-map.ts |
-| `packages/twentythree-skills/scripts/generate-references.mjs` | New — build script | Reads term-map.ts, writes api-terms.md |
-| `packages/twentythree-skills/scripts/validate-skills.mjs` | New — test script | Checks all SKILL.md have valid frontmatter |
-| `packages/twentythree-skills/turbo.json` | New — turbo override | `dependsOn: []`, declares outputs |
-
-### Modified Files
-
-| File | Change |
-|------|--------|
-| `packages/twentythree-skills/package.json` | Add `bin`, `files`, `scripts`, `type: module`, `engines` |
-| `packages/twentythree-skills/SKILL.md` | Replace placeholder content with real top-level skill |
-
-### No Changes Needed
-
-| File | Reason |
-|------|--------|
-| Root `turbo.json` | Package-level override handles the exception |
-| Root `package.json` | Already has `pnpm workspace` setup; add `publish-all` script optionally |
-| `.changeset/config.json` | Already has correct `linked` configuration |
-| `pnpm-workspace.yaml` | Already includes `packages/*` |
-
----
-
-## Build Order
-
-```
-1. Generate references (if implemented):
-   node packages/twentythree-skills/scripts/generate-references.mjs
-   Reads: packages/twentythree-cli/src/lib/term-map.ts
-   Writes: packages/twentythree-skills/skills/references/api-terms.md
-
-2. Validate skill files:
-   node packages/twentythree-skills/scripts/validate-skills.mjs
-   Reads: packages/twentythree-skills/skills/**/*.md
-   Fails: if any SKILL.md missing name/description frontmatter
-
-3. Publish:
-   pnpm publish --filter twentythree-skills --no-git-checks
-```
-
-The CLI build (`pnpm build --filter twentythree-cli`) is NOT a prerequisite for the skills build. They are independent in the turbo graph.
-
----
-
-## Anti-Patterns to Avoid
-
-**Don't generate skill files from agentMetadata at install time.** The metadata provides api_endpoint, auth_scope, output_shape, and side_effects. A SKILL.md that just lists these fields is less useful than the `twentythree --help` output the agent can already see. Skill files add workflow context, not command enumeration.
-
-**Don't add twentythree-cli as a runtime dependency of twentythree-skills.** `npx twentythree-skills add` would pull in the entire CLI (oclif, openapi-fetch, keyring, etc.) just to copy markdown files. The installer uses only node: built-ins.
-
-**Don't use a single SKILL.md at the package root as the only skill file.** The current placeholder SKILL.md is a stub. It must be split into per-topic files to be useful — agents work better with scoped, activatable skills than with a single file covering 219 commands.
-
-**Don't put skill files in `dist/`.** There is no dist/ directory for this package. The `files` whitelist in package.json ships `/skills` and `/bin` directly from source.
-
-**Don't make the installer depend on the user having twentythree-cli installed.** The installer copies files — it does not verify CLI installation. Print a note ("Requires twentythree-cli: npm install -g twentythree-cli") but don't block the install.
-
----
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| CLI publish step -> Skills publish step | Sequential in same job | No artifact passing needed — skills has no build output |
+| Skills package -> user runtime dirs | `cpSync` at npx runtime | Happens on user machine, not in CI |
+| turbo.json <-> skills package | Skills has its own package-level turbo.json with `dependsOn: []` | Skills is already isolated from CLI build pipeline; no changes needed |
 
 ## Sources
 
-- Claude Code skills directory structure: https://code.claude.com/docs/en/skills
-- Codex skills directory and SKILL.md format: https://developers.openai.com/codex/skills
-- GitHub Copilot skills paths: https://code.visualstudio.com/docs/copilot/customization/agent-skills
-- skills-npm pattern (npm package ships skills/ directory): https://github.com/antfu/skills-npm
-- skills.sh runtime detection (directory-based): https://github.com/vercel-labs/skills
-- Turborepo package-level turbo.json override: https://turborepo.dev/docs/reference/configuration
-- Turborepo no-build task pattern: https://turborepo.dev/docs/core-concepts/internal-packages
-- Live codebase: packages/twentythree-skills/package.json, .changeset/config.json, turbo.json
+- pnpm publish docs (--no-git-checks, --access, --filter): https://pnpm.io/cli/publish
+- GitHub Actions workflow_run permission semantics: https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_run
+- npm publishConfig spec: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#publishconfig
+- Node.js ESM bin script pattern (import.meta.url): https://nodejs.org/api/esm.html#importmetaurl
+- npx caching behavior: https://docs.npmjs.com/cli/v10/commands/npx
+- Live codebase: .github/workflows/release.yml, packages/twentythree-skills/package.json, turbo.json
+
+---
+*Architecture research for: pnpm monorepo second-package npm publish (twentythree-skills)*
+*Researched: 2026-04-20*

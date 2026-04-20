@@ -206,6 +206,136 @@ Skills behave differently under Claude Haiku (economical, less reasoning), Claud
 
 ---
 
+## npm Publish: Second Package in a pnpm Monorepo
+
+This section covers pitfalls specific to the v1.4 milestone: publishing `twentythree-skills` to npm from a monorepo that already publishes `twentythree-cli`.
+
+### P1. CI workflow does not include `twentythree-skills` — it will never be published
+
+**What goes wrong:**
+The current `release.yml` builds, tests, and publishes only `twentythree-cli`. A tag push triggers the workflow but `twentythree-skills` is silently skipped. The package stays at `0.1.0` in the monorepo and never reaches the registry.
+
+**Why it happens:**
+The workflow was written for one package. Nothing auto-discovers new packages. The omission is invisible — the CI run succeeds.
+
+**How to avoid:**
+Add an explicit `pnpm publish` step for `twentythree-skills` after the CLI step:
+```yaml
+- name: Publish twentythree-skills to npm
+  working-directory: packages/twentythree-skills
+  run: pnpm publish --no-git-checks --access public
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+Because `twentythree-skills` has no build step, no `prepack` or build command is needed before this step.
+
+**Warning signs:**
+`npm view twentythree-skills` returns 404 after a release tag push. CI log shows no mention of `twentythree-skills`.
+
+---
+
+### P2. `NPM_TOKEN` may not cover `twentythree-skills`
+
+**What goes wrong:**
+The `NPM_TOKEN` secret works for `twentythree-cli` publishes. Reusing it for `twentythree-skills` fails with `403 Forbidden` if the token is a Granular Access Token scoped to a specific package list that does not include `twentythree-skills`.
+
+**Why it happens:**
+npm Granular Access Tokens can be restricted to specific packages. The first package appeared to validate the token; the second reveals a package-level scope restriction.
+
+**How to avoid:**
+Before the first skills publish, verify token scope:
+```bash
+# In CI, with NODE_AUTH_TOKEN set:
+npm whoami --registry https://registry.npmjs.org
+npm publish --dry-run  # from packages/twentythree-skills
+```
+Use an Automation token (not Granular) for the shared secret, or create a dedicated `NPM_TOKEN_SKILLS` secret scoped to `twentythree-skills`.
+
+**Warning signs:**
+CI publish step for `twentythree-skills` exits with `403 Forbidden`. The prior `twentythree-cli` step succeeded in the same run.
+
+---
+
+### P3. Bin script `add` argument is silently ignored — documentation mismatches behavior
+
+**What goes wrong:**
+The documented invocation is `npx twentythree-skills add`. The `bin` entry maps `twentythree-skills` → `./bin/add.js`. When invoked, `add` lands in `process.argv[2]` and is silently ignored — the installer runs identically whether the user types `npx twentythree-skills`, `npx twentythree-skills add`, or `npx twentythree-skills anything`. This is currently harmless but misleading.
+
+**Why it happens:**
+The bin script does not include subcommand routing. The "add" in documentation refers to intent, not a dispatched command.
+
+**How to avoid:**
+Either simplify the documented invocation to `npx twentythree-skills` (no argument), or add explicit argv routing so unknown subcommands print usage. Simplifying the docs is lower friction and matches reality.
+
+**Warning signs:**
+A user runs `npx twentythree-skills remove` expecting uninstall behavior — the installer runs silently instead.
+
+---
+
+### P4. Tag strategy: one `v*` tag format, two independently-versioned packages
+
+**What goes wrong:**
+Both packages share the tag format `v*` (e.g., `v1.4`). With two packages at different versions (`twentythree-cli@1.1.1` and `twentythree-skills@0.1.0`), a single tag push simultaneously triggers publishing both — including a package with no new changes. A skills-only release has no clean trigger without affecting the CLI version.
+
+**Why it happens:**
+Monorepo tag conventions were established for one package and carried forward. The `changesets` tool is already present and configured with `"linked": ["twentythree-cli", "twentythree-skills"]` — it is set up for coordinated versioning but is not wired into the CI release pipeline.
+
+**How to avoid:**
+For coordinated releases (both packages bump together), the existing approach works. For independent releases, use package-prefixed tags (`cli-v*`, `skills-v*`) with separate CI jobs gated on tag prefix. The simplest short-term fix: wire the existing changesets config into CI using `pnpm changeset publish`, which handles version bumping and tagging per-package automatically.
+
+**Warning signs:**
+Manually editing `package.json` version numbers without changesets. Publishing one package inadvertently republishes the other at an unchanged version.
+
+---
+
+### P5. `npm pack --dry-run` file count is the cheapest publish pre-flight check
+
+**What goes wrong:**
+A new top-level directory (`/templates`, `/config`) is added to the package during development but not added to the `files` array in `package.json`. Local `npx` invocations work because they run from source. The published tarball silently excludes the new directory. Users get a broken install.
+
+**Why it happens:**
+`files` is an allowlist — anything not listed is excluded. Contributors adding directories during development don't think about publish because local behavior is indistinguishable.
+
+**How to avoid:**
+Run `npm pack --dry-run` as a CI step before (or in place of) `npm publish --dry-run` and assert the expected file count:
+```bash
+npm pack --dry-run 2>&1 | grep "total files" | grep -q "28"
+```
+This breaks if files are accidentally added or removed, forcing a deliberate `files` array update.
+
+**Current state:** `npm pack --dry-run` shows 28 files correctly. The `scripts/` directory (contains `validate-skills.mjs`) is correctly excluded. The `turbo.json` is correctly excluded. No issues detected.
+
+**Warning signs:**
+`npm pack --dry-run` file count changes unexpectedly. Installed package fails at runtime with `ENOENT` for a path inside the package.
+
+---
+
+### P6. ESM `"type": "module"` in skills vs CJS `"type": "commonjs"` in CLI — monorepo scripts must use `.mjs`
+
+**What goes wrong:**
+`twentythree-skills` sets `"type": "module"`. Any script or test in the monorepo that uses `require('twentythree-skills')` after a local install will fail with `ERR_REQUIRE_ESM`. New scripts added at the monorepo root default to CJS.
+
+**Why it happens:**
+The monorepo root and `twentythree-cli` are `"type": "commonjs"`. Developers adding scripts may default to `require()` without checking the target package's module type.
+
+**How to avoid:**
+Any new script for `twentythree-skills` must use `.mjs` extension (already done for `validate-skills.mjs` — correct). Any test or CI script that loads skills content must be `.mjs`. Document in the package README that this is an ESM-only package.
+
+**Warning signs:**
+`ERR_REQUIRE_ESM: require() of ES Module` in any monorepo script that references `twentythree-skills`.
+
+---
+
+### P7. `pnpm publish` from the wrong working directory
+
+**What goes wrong:**
+Running `pnpm publish` from the monorepo root on a `private: true` root package produces `npm error This package has been marked as private`. Running it from the wrong package directory publishes the other package at its current (possibly unchanged) version.
+
+**How to avoid:**
+Always set `working-directory: packages/twentythree-skills` explicitly in each CI publish step. For local testing, `cd packages/twentythree-skills && npm pack --dry-run` confirms the correct tarball before any real publish.
+
+---
+
 ## Phase-Specific Warnings
 
 | Phase Topic | Likely Pitfall | Mitigation |
@@ -217,6 +347,9 @@ Skills behave differently under Claude Haiku (economical, less reasoning), Claud
 | Installer implementation | Silent overwrite of modified files | Hash comparison + `--force` requirement |
 | Skills package publish | Adding `workspace:*` dependency on CLI | Zero-dependency package — skills package has no runtime imports |
 | Skills package publish | Publishing before CLI is on registry | CLI publishes first; automate with Changesets |
+| Skills package publish | CI workflow missing skills publish step | Add explicit `working-directory: packages/twentythree-skills` publish step to `release.yml` |
+| Skills package publish | NPM_TOKEN scope too narrow | Verify token covers `twentythree-skills` with `npm publish --dry-run` before first real publish |
+| Skills package publish | `files` array missing new directories | Run `npm pack --dry-run` and assert file count in CI |
 | Version drift management | Manual skill content authored against current CLI only | Automate skill reference sections from `agentMetadata` output; manual narrative is small surface area |
 | Multi-runtime compatibility | Assuming all runtimes use same frontmatter fields | SKILL.md standard covers name/description; Claude Code extras (`disable-model-invocation`, `context: fork`) are additive and ignored by other runtimes |
 | Terminology in skill | Using CLI-friendly names only (video, webinar) | Document API-to-CLI name mapping for users who know the raw TwentyThree API |
@@ -231,8 +364,11 @@ Skills behave differently under Claude Haiku (economical, less reasoning), Claud
 - Agent Skills open standard overview: https://inference.sh/blog/skills/agent-skills-overview
 - Vercel skills installer CLI (idempotency, symlink/copy modes): https://github.com/vercel-labs/skills
 - Aikido Security — hallucinated npx commands in agent skills: https://www.aikido.dev/blog/agent-skills-spreading-hallucinated-npx-commands
-- pnpm workspace:* protocol and publish behavior: https://pnpm.io/workspaces
+- pnpm workspace:* protocol and publish behavior: https://pnpm.io/workspaces (HIGH confidence — official docs, verified via Context7)
+- npm `bin` field shebang requirement: https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin (HIGH confidence — official docs, verified via Context7)
+- npm `files` allowlist behavior: https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files (HIGH confidence — official docs)
 - npm EACCES permissions errors: https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally/
 - Multi-platform skill compatibility (Claude Code, Codex, Cursor, Copilot): https://dev.to/nathanielc85523/skillmd-goes-multi-ecosystem-how-the-agent-skills-standard-jumped-from-anthropic-to-openai-and-3oeg
 - Writing a good CLAUDE.md (HumanLayer): https://www.humanlayer.dev/blog/writing-a-good-claude-md
 - npm global install permission issues (2026): https://github.com/nodejs/node/issues/57548
+- Actual repository state inspected directly: `packages/twentythree-skills/package.json`, `packages/twentythree-skills/bin/add.js`, `.github/workflows/release.yml`, `.changeset/config.json` (HIGH confidence)

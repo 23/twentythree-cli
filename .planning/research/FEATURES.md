@@ -1,290 +1,277 @@
-# Feature Landscape: twentythree-skills Agent Skill Package
+# Feature Research: twentythree-skills npm Publishing + SKILL.md Hyperlinks
 
-**Domain:** Agent skill packages for CLI-wrapped APIs; multi-runtime AI agent integration
+**Domain:** npm package publishing UX; AI agent skill file discoverability
 **Researched:** 2026-04-20
-**Milestone:** twentythree-skills — separate npm package shipping hand-authored skill files
-**Confidence:** HIGH — based on official agentskills.io spec, Anthropic Claude Code docs, Basecamp skills repo inspection, OpenAI Codex skills docs, and live codebase analysis
+**Milestone:** v1.4 — Publish twentythree-skills to npm; add hyperlinks to SKILL.md
+**Confidence:** HIGH — based on official npm docs (Context7), official Claude Code docs (Context7), and codebase analysis
 
 ---
 
-## Background: What the Agent Skills Ecosystem Actually Is
+## Background: What This Milestone Is
 
-The Agent Skills open standard (agentskills.io) originated as a Claude feature, was published as an open standard by Anthropic in late 2025, and was subsequently adopted by OpenAI Codex, Gemini CLI, GitHub Copilot, VS Code, Cursor, Roo Code, and 25+ other agent runtimes. The core format is a `SKILL.md` file with YAML frontmatter in a named directory. Every compliant runtime reads the same file — one skill source works across all platforms.
+Two distinct features ship in v1.4:
 
-The Basecamp skills package (`basecamp/skills`) is the clearest prior art for a CLI-backed skill package: their SKILL.md covers 155+ API endpoints across 15+ resource groups from a single file, with `--agent` output mode, `--json` mode, and OAuth token pre-configuration as established patterns.
+1. **NPM-01 — Publish twentythree-skills to npm.** The package is complete (22 reference files, 2 workflow files, `bin/add.js` installer). It has not been published. Publishing makes `npx twentythree-skills add` work from any machine without a local clone.
 
----
+2. **SKILL-03 — Add hyperlinks to SKILL.md resource index.** The Resource Index table in `skills/SKILL.md` lists 22 topics as plain text. Adding `[video](reference/video.md)` links (or the correct relative format) improves discoverability for AI runtimes that follow markdown links when loading skill context.
 
-## Skill File Format: What a SKILL.md Must Contain
-
-### Minimum Viable Frontmatter (agentskills.io spec)
-
-```yaml
----
-name: twentythree           # required; max 64 chars; lowercase letters, numbers, hyphens only
-description: |              # required; max 1024 chars; describes what the skill does AND when to use it
-  Full TwentyThree CLI integration — upload videos, manage categories, run webinars,
-  query analytics, manage audiences, configure spots and players. Use when the user
-  asks about video hosting, content management, viewer analytics, or TwentyThree
-  platform operations.
----
-```
-
-### Claude Code Extensions (non-standard but additive)
-
-Claude Code extends the base spec with additional frontmatter fields that do not break other runtimes (they are simply ignored). For twentythree-skills, relevant Claude Code extensions include:
-
-```yaml
-compatibility: Requires Node.js >=22 and twentythree-cli installed globally (npm install -g twentythree-cli)
-allowed-tools: Bash(twentythree *)
-```
-
-The `allowed-tools` field pre-approves `twentythree *` bash commands so Claude Code does not interrupt the agent for permission on each CLI call. This is the correct pattern for CLI-backed skills.
-
-### Body Content: What Actually Goes Inside the SKILL.md
-
-Based on Basecamp's production SKILL.md and Anthropic's best practices, the body should contain:
-
-1. **Auth setup section** — how to configure credentials before using any other command
-2. **Command syntax quick-reference** — `twentythree <resource> <verb> [flags]`
-3. **Output format guidance** — `--json` for machine-readable, `--agent` for metadata, default for humans
-4. **Resource group index** — one line per group pointing to reference files for detail
-5. **Invariants and decision rules** — "always use `--json` in agentic contexts", "check auth status before bulk operations"
-6. **Common workflows** — 3-5 concrete multi-step patterns (upload video → assign category → set thumbnail)
+These are independent. Neither blocks the other.
 
 ---
 
-## Feature Categories
+## Feature Landscape
 
-### Table Stakes
-
-Features every agent skill package for a CLI must have. Missing any of these makes the package feel broken or untrustworthy.
+### Table Stakes (Users Expect These)
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Single `SKILL.md` entrypoint per skill | All runtimes discover skills via a named directory + `SKILL.md`; without this, the package does not load in any runtime | Low | Mandatory per agentskills.io spec; `name` must match directory name |
-| Auth setup instructions | Every command fails without credentials; agents cannot self-configure without documented steps | Low | Document `twentythree auth credentials` (domain + bearer token) and `twentythree workspace use` — agents must run these once before any API call |
-| `--json` flag guidance | Agents need structured output, not human-formatted tables; the CLI already supports `--json` globally | Low | One line: "Always append `--json` in agentic contexts for machine-parseable output" |
-| Command syntax overview | Without this, the agent guesses command structure and hallucinates flags | Low | `twentythree <resource> <verb> [--flags]`; list the 22 resource groups |
-| Error signal guidance | Agents need to know which errors are recoverable (retry) vs fatal (auth, missing resource) | Low | Document exit codes; "auth errors require re-running auth credentials"; "404 on resource ID means the resource does not exist" |
-| Package metadata (name, description, version) | Skills are distributed via npm; npm consumers expect proper package.json | Low | `name: "@twentythree/skills"` or `"twentythree-skills"`; semver aligned with CLI version |
-| Installation instructions | Agents and users need to know how to install and where files land | Low | `npx skills add twentythree/skills` or `npm install -g twentythree-skills` |
+| `npx twentythree-skills add` works without local clone | Users follow README instructions; if the command fails because the package isn't on npm, the README is a lie | Low | Requires `npm publish` with correct `files` field and `bin` entry |
+| npm page has a useful README | npmjs.com renders README.md as the package page; developers evaluate packages in 30 seconds from the npm page | Low | README.md is already well-written; it renders on npm page automatically |
+| Correct `files` field in package.json | `npm publish` without `files` sends everything including dev files; `files: ["/bin", "/skills", "/README.md"]` is already set correctly | Low | Already correct in `package.json`; no changes needed |
+| Version aligned to initial release | npm requires a version; `0.1.0` is present; first publish should be `1.0.0` to signal production readiness alongside `twentythree-cli@1.0.2` | Low | Bump to `1.0.0` on first publish |
+| No runtime detected → clear message | When `npx twentythree-skills add` runs on a machine with no supported agent runtime, the user needs to understand why nothing happened | Low | Already handled in `bin/add.js`: prints which dirs were checked + npm URL |
 
-### Differentiators
-
-Features not universally present in skill packages, but high-value for twentythree-skills given the existing CLI capabilities.
+### Differentiators (Competitive Advantage)
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| `--agent` flag documentation | The CLI already outputs `agentMetadata` (api_endpoint, auth_scope, output_shape, side_effects) on every command with `--agent`; documenting this gives agents a self-discovery mechanism no other CLI skill package has | Low | "Run `twentythree <command> --agent` to get machine-readable metadata for that command before calling it" |
-| Reference files per resource group | 219 commands cannot fit in one SKILL.md body without exceeding the 500-line target; splitting into `references/video.md`, `references/analytics.md`, etc. enables progressive disclosure — agents load only what they need | Med | 22 reference files, one per resource group; linked from main SKILL.md |
-| Workflow skill files | Hand-authored multi-step workflows for common patterns (upload-and-publish, webinar-create-and-go-live, audience-export-analytics) give agents a higher-level API than raw commands | Med | 5-10 files in `workflows/` subdirectory |
-| Auth scope table | The CLI has 5 auth scopes (anonymous, none, read, write, admin, super); documenting which resource groups require which scope prevents agents from attempting write operations with read-only tokens | Low | 22 rows × 6 scope columns; link to in reference files |
-| Chunked upload guidance | The CLI always uses chunked upload for file uploads (never multipart); this is a non-obvious invariant that agents will get wrong without explicit documentation | Low | One invariant block: "File uploads use chunked protocol automatically — never construct multipart requests directly" |
-| `twentythree doctor` guidance | The doctor command is already built; pointing agents to it on error reduces blind retry loops | Low | "On persistent errors, run `twentythree doctor` to diagnose auth, network, and dependency issues" |
-| Multi-workspace guidance | The CLI supports multiple authenticated workspaces; agents working in multi-workspace environments need to know about `--workspace` flag and `twentythree workspace list` | Low | One section; the `--workspace <domain>` flag pattern |
+| Idempotent install | Running `npx twentythree-skills add` multiple times is safe — it overwrites files in place; no state machine, no error if already installed | Low | Already implemented via `cpSync` with no existence check needed |
+| `--project` flag for local install | Installs skills into the current working directory's agent config dirs rather than `~`; supports teams adding skills to a repo | Low | Already implemented; document prominently in README |
+| Output shows exactly which files were copied | `✓ SKILL.md`, `✓ reference/video.md` — users can see exactly what landed where | Low | Already implemented; each file prints on copy |
+| SKILL.md hyperlinks to reference files | AI runtimes that follow markdown links (Claude Code, Copilot) can navigate from the index directly to `reference/video.md`; no need to manually construct paths | Low | The specific feature of SKILL-03; covered in depth below |
+| Keywords for AI-specific discoverability | npm search indexes keywords; adding "claude", "claude-code", "copilot", "cursor", "codex", "ai-agent" alongside "twentythree" maximizes findability for developers searching for AI integrations | Low | Current keywords: `["ai", "skills", "twentythree", "cli", "agent"]`; add runtime-specific terms |
 
-### Anti-Features
+### Anti-Features (Commonly Requested, Often Problematic)
 
-Features to explicitly NOT build in v1 of twentythree-skills.
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| One SKILL.md with all 219 commands inlined | 219 commands × flags × descriptions = 3,000+ lines; exceeds 500-line target; kills context budget; agents load the whole thing even when they only need video commands | Split into main SKILL.md (overview + auth + index) + 22 reference files (one per resource group) loaded on demand |
-| Embedding full flag descriptions for every command | The CLI already has `--help` output and `--agent` metadata; duplicating flag descriptions in skill files creates drift when the CLI changes | Reference the `--help` output pattern; use `--agent` for machine-readable metadata |
-| OpenAI function calling JSON schemas alongside SKILL.md | OpenAI Codex uses the same SKILL.md format as Claude Code — there is no separate JSON schema format needed; Codex adopted the agentskills.io standard | Single SKILL.md works across all runtimes including OpenAI Codex |
-| Runtime-specific skill variants | Maintaining one file per runtime (claude-skill.md, codex-skill.md) creates N maintenance surfaces; the whole point of agentskills.io is one source | One SKILL.md; use `compatibility` field for environment requirements |
-| MCP server alongside skills | MCP is a different integration pattern (tool registration via JSON-RPC); building both for v1 is scope creep; skills are simpler to ship and immediately portable | Ship skills first; MCP is a separate subsequent milestone |
-| Automated skill generation from swagger | Auto-generated skill content is verbose, repetitive, and context-wasteful; the Basecamp model proves hand-authored skills outperform generated ones for agent usability | Hand-author the skill files; use the existing `--agent` metadata flag for per-command detail |
-| Versioned skill files per CLI version | v1 of the skills package should track the CLI; separate versioned files create combinatorial maintenance | Align skills package semver with CLI semver; update in place |
+| Feature | Why Avoid | What to Do Instead |
+|---------|-----------|-------------------|
+| Interactive prompts in `npx twentythree-skills add` | Adding a "which runtime do you want?" prompt breaks the auto-detection model; the value is zero-config install | Auto-detect via directory presence; print what was detected; done |
+| Publishing to a scoped package (`@twentythree/skills`) | Scoped packages require npm org setup and add friction to `npx` invocation (`npx @twentythree/skills add` is harder to remember than `npx twentythree-skills add`) | Keep `twentythree-skills` as the unscoped name |
+| Version pinning in install instructions | Telling users `npx twentythree-skills@1.0.0 add` forces them to manually update; npx uses latest by default | `npx twentythree-skills add` without a version pin; latest is correct behavior |
+| Changelog in README | README is the npm page; changelogs belong in CHANGELOG.md or GitHub Releases, not the README | Keep README focused on install + what's included + supported runtimes |
+| `--dry-run` flag for the installer | Would add complexity to a 100-line file with no strong use case; the operation is already safe (copy-only, no destructive writes) | Trust idempotent behavior; no dry-run needed |
 
 ---
 
-## Skill File Format: Runtime Compatibility
+## npm Page Quality: What Makes a Good npm Page
 
-### The agentskills.io Standard (CONFIRMED HIGH CONFIDENCE)
+The npm page for `twentythree-skills` is rendered from `README.md`. Key findings from official npm docs:
 
-The Agent Skills format is a genuine open standard with 35+ adopters as of April 2026. The base format is:
+**What renders well:**
+- Heading hierarchy (`#`, `##`, `###`) — creates a table of contents in some npm views
+- Code blocks with language tags (` ```bash `) — rendered with syntax highlighting
+- Tables — rendered as HTML tables
+- Links to GitHub — npm page shows repository link separately but links in README also work
 
-- A named directory (e.g. `twentythree/`)
-- A `SKILL.md` file with YAML frontmatter (`name`, `description` required)
-- Optional: `scripts/`, `references/`, `assets/` subdirectories
+**What does NOT matter on npm:**
+- npm keywords appear in search results but not visually on the page; they are metadata only
+- The `description` field from `package.json` appears as the one-line subtitle on npmjs.com
+- Badge images (shields.io) render on npm pages but are noise for a small utility package
 
-The `name` field must match the parent directory name. Both `name` and `description` are loaded into agent context at startup. The body of `SKILL.md` is only loaded when the skill is activated.
+**Recommended improvements to `package.json`:**
+```json
+{
+  "keywords": [
+    "ai", "skills", "agent", "twentythree",
+    "cli", "claude", "claude-code", "copilot",
+    "cursor", "codex", "ai-agent", "video-platform"
+  ]
+}
+```
 
-### Claude Code
+The current keywords are correct but miss the runtime-specific terms that developers actually search for.
 
-- Skills live at `~/.claude/skills/<skill-name>/SKILL.md` (personal) or `.claude/skills/<skill-name>/SKILL.md` (project)
-- Additional frontmatter: `disable-model-invocation`, `allowed-tools`, `context`, `when_to_use`, `paths`
-- `allowed-tools: Bash(twentythree *)` pre-approves all `twentythree` CLI invocations without per-call permission prompts
-- Supports `$ARGUMENTS` placeholder for slash-command invocation: `/twentythree list-videos`
-- The `!`command`` syntax in skill body executes shell commands and injects output before the skill content reaches the agent — useful for injecting `twentythree workspace list` output at skill activation time
+**README quality assessment (current state):**
+- Install section: correct and concise
+- "What's included" section: accurate; could link to GitHub for the actual file list
+- Supported runtimes table: exactly what users need; shows detection path and install destination
+- Prerequisites section: correct dependency ordering (install CLI first, then skills)
 
-### OpenAI Codex
-
-- Codex uses the same agentskills.io SKILL.md format as Claude Code (confirmed via developers.openai.com/codex/skills)
-- Skills directory: `~/.codex/skills/` or `.codex/skills/` in project
-- Optional `agents/openai.yaml` file in skill directory for OpenAI-specific metadata (not required)
-- Codex activates skills via `/skillname` or automatically based on description matching
-- The OpenAI function calling JSON schema format is NOT needed for Codex skills — Codex reads SKILL.md directly
-
-### Other Runtimes (Cursor, GitHub Copilot, Gemini CLI, Roo Code, etc.)
-
-All 35+ runtimes in the agentskills.io ecosystem read the same `SKILL.md` format. The single source file is sufficient. Runtime-specific behavior (like Claude Code's `allowed-tools`) is additive and ignored by runtimes that don't support that field.
-
-Distribution note: The `npx skills add owner/repo` installation pattern used by Basecamp copies skill directories to the runtime-appropriate location. Publishing `twentythree-skills` as an npm package with skill directories at the root allows the same pattern.
+No structural changes needed to README. The content is correct. The package just needs to be published.
 
 ---
 
-## Auth Handling Pattern
+## npx UX: Output Messages, Success/Error States
 
-### The Correct Pattern: Document, Don't Inject
+Analysis of `bin/add.js` current output behavior:
 
-Based on Basecamp's SKILL.md and Anthropic best practices, the correct approach for a CLI-backed skill is:
+**Success — runtimes detected:**
+```
+Claude Code (~/.claude/skills/twentythree/)
+  ✓ SKILL.md
+  ✓ reference/video.md
+  ✓ reference/analytics.md
+  ... (22 more)
 
-**Auth is pre-configured by the user before the skill is used.** The skill documents the setup steps; it does not attempt to inject credentials, bypass auth, or assume credentials are available.
+Done.
+```
 
-The auth section in SKILL.md should contain:
+**Success — no runtimes detected:**
+```
+No supported agent runtime detected.
+
+Checked: ~/.claude  ~/.codex  ~/.github/copilot  ~/.cursor
+
+Install manually or see: https://www.npmjs.com/package/twentythree-skills
+```
+
+**Error — package corrupted:**
+```
+Skills source directory not found. The package may be corrupted.
+```
+(exits with code 1)
+
+**Assessment:** Output is good. There is one missing state worth adding:
+
+**Missing: post-install next-step hint.** After successful install, users don't know what to do next. A one-line hint after "Done." would reduce support burden:
+
+```
+Done. Start a new Claude Code session — the twentythree skill is now active.
+```
+
+This is a LOW complexity improvement that has HIGH user value (reduces "did it work?" confusion).
+
+---
+
+## SKILL.md Hyperlinks: Link Format for AI Runtimes
+
+### How Claude Code Loads Reference Files
+
+From official Claude Code documentation (code.claude.com/docs/en/skills, confirmed HIGH confidence):
+
+> "Skills can include supporting files like reference documents or example collections within their directory. These files are **not loaded into context by default**, but can be **referenced from SKILL.md to be loaded when needed**."
+
+> "Skills can bundle supporting files like reference documents, templates, or scripts. Claude can access these bundled files **by their names**, as the **skill directory path is prepended to SKILL.md**."
+
+This is the key mechanism: the skill directory path is prepended to SKILL.md before it is presented to the model. This means:
+- When the skill is installed to `~/.claude/skills/twentythree/`, the SKILL.md is read with that prefix
+- File references in SKILL.md are resolved relative to the skill directory (`~/.claude/skills/twentythree/`)
+- A reference to `reference/video.md` resolves to `~/.claude/skills/twentythree/reference/video.md`
+
+### What "Follow Links" Means for AI Runtimes
+
+Claude Code does NOT automatically load all referenced markdown files into context. The mechanism is:
+
+1. SKILL.md is loaded when the skill is triggered
+2. References to supporting files are listed in SKILL.md (as markdown links or code paths)
+3. Claude reads the file listing and **decides** to load a reference file when it determines the user's request is about that topic
+4. The actual loading is done by Claude reading the file — it is not automatic background preloading
+
+This means the value of hyperlinks is:
+- **Discoverability:** The model can identify which file to read by following the link label
+- **Navigability:** A human editor of SKILL.md can click links in their editor to verify references exist
+- **Correctness signal:** A broken link (file missing) is detectable; a plain text name that doesn't match a file is silent failure
+
+### Link Format: `reference/video.md` vs `./reference/video.md`
+
+From the Claude Code docs and plugin development SKILL.md examples found in the official anthropics/claude-code repository:
+
+**Anthropic's own pattern (from plugin-dev SKILL.md examples):**
+```markdown
+- **`references/patterns.md`** - Common patterns
+- **`references/advanced.md`** - Advanced use cases
+```
+
+This uses backtick-quoted path names with bold formatting — NOT markdown hyperlinks. The path is presented as text, and Claude resolves it relative to the skill directory.
+
+**Also used: markdown hyperlinks with relative paths:**
+```markdown
+[video](reference/video.md)
+[video](./reference/video.md)
+```
+
+Both forms are equivalent for Claude Code's file resolution — the skill directory is prepended either way. The `./` prefix is redundant but not harmful.
+
+**Recommendation: use `[video](reference/video.md)` (without `./`).** Rationale:
+- Matches how the official Anthropic plugin examples format paths in SKILL.md body content
+- Shorter and cleaner in a table context
+- Standard relative markdown link behavior — no `./` needed for same-directory-relative paths
+- Both GitHub and npmjs.com render relative markdown links correctly in their web viewers
+- AI runtimes that parse markdown links extract the path from the `href` attribute, not the display text; both forms produce the same resolved path
+
+**For the Resource Index table in SKILL.md**, the recommended format is:
 
 ```markdown
-## Authentication
-
-Run once before using any command:
-
-```bash
-twentythree auth credentials
+| Topic | Representative verbs | Use for |
+|-------|---------------------|---------|
+| [`video`](reference/video.md) | `upload`, `list`, `get`, `update`, `delete` | Video file management |
+| [`webinar`](reference/webinar.md) | `create`, `list`, `get`, `update` | Live events |
 ```
 
-You will be prompted for:
-- **Domain**: your TwentyThree workspace domain (e.g. `mycompany.video.twentythree.com`)
-- **Bearer token**: found at Settings → API in your TwentyThree workspace
+Using backtick-quoted topic name inside a hyperlink: `` [`video`](reference/video.md) `` gives both code formatting (matches how the topic is used in CLI commands) and clickability. This is the clearest pattern for a reference index.
 
-Verify auth is working:
-```bash
-twentythree auth status
-```
+### Other Runtimes
 
-Credentials are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service).
-```
+- **GitHub Copilot:** Does not have a documented skill format equivalent to SKILL.md. The current install to `~/.github/skills/twentythree/` is speculative; Copilot's actual file loading mechanism differs from Claude Code. Links in SKILL.md have no special meaning for Copilot's current architecture.
+- **Cursor:** Uses `~/.cursor/skills/` but Cursor's skill loading is not as well-documented. Relative markdown links are harmless — Cursor will read SKILL.md as text; links improve human readability.
+- **OpenAI Codex:** Follows agentskills.io format; reference file links in SKILL.md are the documented approach for progressive disclosure.
 
-### What NOT to Do
-
-- Do NOT embed or reference bearer tokens in skill files
-- Do NOT attempt to call the TwentyThree API directly from the skill (MCP pattern); the skill wraps the CLI, which handles auth
-- Do NOT assume credentials are present; always document the setup step
-- Do NOT use environment variables for tokens in skill files (the CLI uses the OS keychain, not env vars)
+**Conclusion:** Adding hyperlinks to the resource index is a HIGH-value, LOW-risk change. It improves Claude Code discoverability (the primary consumer), improves human readability for all runtimes, and has no downside.
 
 ---
 
-## Granularity: One File Per Resource Group vs. One Giant File
-
-### Recommendation: Main SKILL.md + 22 Reference Files
-
-**Rationale:**
-
-The agentskills.io spec and Anthropic best practices both recommend keeping `SKILL.md` under 500 lines. The Basecamp SKILL.md covers 155+ endpoints in one file; it works because their commands are fewer and simpler. For twentythree-skills with 219 commands across 22 resource groups, the correct architecture is:
+## Feature Dependencies
 
 ```
-twentythree/
-├── SKILL.md                    # Auth setup, syntax overview, resource index, invariants (~200 lines)
-├── references/
-│   ├── video.md                # All video commands with flags and examples
-│   ├── analytics.md            # Analytics commands
-│   ├── webinar.md              # Webinar commands
-│   ├── audience.md             # Audience commands
-│   ├── category.md             # Category commands
-│   ├── spot.md                 # Spot commands
-│   ├── player.md               # Player commands
-│   ├── thumbnail.md            # Thumbnail commands
-│   ├── tag.md                  # Tag commands
-│   ├── comment.md              # Comment commands
-│   ├── presentation.md         # Presentation commands
-│   ├── poll.md                 # Poll commands
-│   ├── action.md               # Action commands
-│   ├── app.md                  # App commands
-│   ├── collector.md            # Collector commands
-│   ├── protection.md           # Protection commands
-│   ├── session.md              # Session commands
-│   ├── setting.md              # Setting commands
-│   ├── site.md                 # Site search commands
-│   ├── openupload.md           # Open upload commands
-│   ├── user.md                 # User management commands
-│   └── webhook.md              # Webhook commands
-└── workflows/
-    ├── upload-and-publish.md   # Video upload → category → thumbnail → publish
-    ├── webinar-lifecycle.md    # Create → schedule → go-live → archive
-    ├── audience-export.md      # List → filter → analytics
-    └── bulk-management.md      # Multi-video category/tag operations
-```
+npm publish (NPM-01)
+  └── requires: package.json version = 1.0.0
+  └── requires: bin/add.js works correctly (already verified)
+  └── requires: files field correct (already set)
+  └── enables: npx twentythree-skills add works from any machine
 
-This pattern matches Anthropic's "domain-specific organization" pattern (see BigQuery skill example in best practices docs) and ensures agents load only the context relevant to their current task.
-
-**How agents navigate this:**
-
-1. Agent activates twentythree skill (loads SKILL.md — ~200 lines)
-2. User asks about video upload → agent reads `references/video.md` (load on demand)
-3. User asks about analytics → agent reads `references/analytics.md` (load on demand)
-4. Neither `webinar.md` nor `audience.md` consume context tokens in this session
-
-**One-skill-per-resource-group alternative (rejected):**
-
-Installing 22 separate skill files (`video`, `analytics`, `webinar`, etc.) would load 22 `name`+`description` pairs into context at startup. The description character budget is 1,536 chars per skill, and total budget is ~8,000 chars by default. 22 skills × ~80 chars each = ~1,760 chars consumed just by descriptions. More importantly, agents would need to know which sub-skill to activate before knowing what the user wants. The single `twentythree` skill with reference files is strictly better.
-
----
-
-## Feature Dependency Map
-
-```
-twentythree auth credentials (CLI, already built)
-  └── SKILL.md auth section documents this setup step
-        └── references/*.md document post-auth resource commands
-              └── workflows/*.md document multi-command patterns
-
-twentythree <command> --agent (CLI, already built)
-  └── SKILL.md documents this self-discovery pattern
-        └── agents can introspect any command before calling it
-
-twentythree-skills npm package
-  └── SKILL.md + references/ + workflows/
-        └── npx skills add twentythree/skills installs to runtime-appropriate location
-              └── Works in: Claude Code, OpenAI Codex, Gemini CLI, Cursor, GitHub Copilot, 30+ others
+SKILL.md hyperlinks (SKILL-03)
+  └── requires: reference files exist at reference/*.md (already present in skills/reference/)
+  └── improves: agent discoverability when skill is active
+  └── note: does NOT require npm publish first; can be done independently
 ```
 
 ---
 
-## MVP Recommendation for v1 of twentythree-skills
+## MVP Definition
 
-**Build immediately (unblock agent usability):**
+### Launch With (v1.4)
 
-1. `twentythree/SKILL.md` — auth setup, syntax overview, 22-group resource index, key invariants, `--json` and `--agent` flag guidance
-2. `twentythree/references/video.md` — the most-used resource group; proves the pattern
-3. `twentythree/references/analytics.md` — high-value for agents (reporting workflows)
-4. `twentythree/references/webinar.md` — complex enough to justify reference file
-5. `twentythree/references/audience.md` — audience operations are common in agent workflows
+- [x] **NPM-01:** `npm publish` with version bumped to `1.0.0` — makes `npx twentythree-skills add` work from any machine
+- [x] **SKILL-03:** Replace plain-text topic names in Resource Index table with `` [`topic`](reference/topic.md) `` hyperlinks for all 22 rows
+- [x] **Keywords update:** Add `claude`, `claude-code`, `copilot`, `cursor`, `codex`, `ai-agent` to `package.json` keywords before publish
 
-**Defer but include in v1 complete:**
+### Add After Validation (v1.x)
 
-6. Remaining 18 reference files — fill out systematically; content is mechanical once pattern is established
-7. 3-4 workflow files — upload-and-publish, webinar-lifecycle at minimum
+- [ ] **Post-install next-step hint:** Add "Start a new Claude Code session" message after `Done.` in `bin/add.js`
+- [ ] **Workflow SKILL.md hyperlinks:** After resource index links are proven, add corresponding links to workflow files in the SKILL.md Common Workflows section
 
-**Defer post-v1:**
+### Future Consideration (v2+)
 
-- Workflow skill files beyond core patterns
-- `npx skills add` CLI tooling (install script)
-- Auto-generation tooling for reference files from `--agent` output
-- MCP server as an alternative integration
+- [ ] **npx version check:** Warn if the installed `twentythree-cli` version is significantly behind the skills package version
+- [ ] **GitHub Copilot official format:** If Copilot ships an official skills format, update the installer accordingly
+- [ ] **MCP server:** Separate integration pattern; not a skills package feature
+
+---
+
+## Feature Prioritization Matrix
+
+| Feature | User Value | Implementation Cost | Priority |
+|---------|------------|---------------------|----------|
+| `npm publish` (NPM-01) | HIGH — blocks all npx users | LOW — one command after version bump | P1 |
+| Keywords update | MEDIUM — improves search discoverability | LOW — 5 lines in package.json | P1 (bundle with publish) |
+| SKILL.md hyperlinks (SKILL-03) | MEDIUM — improves Claude Code agent UX | LOW — 22 table rows to update | P1 |
+| Post-install next-step hint | LOW-MEDIUM — reduces user confusion | LOW — one `console.log` line | P2 |
+| Workflow SKILL.md hyperlinks | LOW — agents already follow reference links | LOW — a few more links | P2 |
 
 ---
 
 ## Sources
 
-- agentskills.io specification (format, frontmatter fields, directory structure): https://agentskills.io/specification
-- agentskills.io overview (adoption, 35+ runtimes): https://agentskills.io/home
-- Claude Code skills documentation (full frontmatter reference, lifecycle, allowed-tools, context:fork): https://code.claude.com/docs/en/skills
-- Anthropic skill authoring best practices (conciseness, progressive disclosure, auth patterns): https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- OpenAI Codex skills (same SKILL.md format, skills directory): https://developers.openai.com/codex/skills
-- Basecamp skills repository (production example of CLI-backed skill package): https://github.com/basecamp/skills
-- Basecamp SKILL.md content (auth handling, command coverage, output modes): fetched directly from raw.githubusercontent.com/basecamp/skills/main/skills/basecamp/SKILL.md
-- Mikhail Shilkov analysis of Claude Code skills internals: https://mikhail.io/2025/10/claude-code-skills/
-- Calibre Labs analysis of CLI + skills pattern: https://blog.calibrelabs.ai/p/the-new-software-cli-skills-and-vertical
-- twentythree-cli base-command.ts (AgentMetadata interface, --agent flag implementation): packages/twentythree-cli/src/lib/base-command.ts
+- npm package.json `keywords` and `description` fields (official): https://docs.npmjs.com/cli/v11/configuring-npm/package-json (via Context7 /websites/npmjs)
+- npm README rendering (GitHub Flavored Markdown, rendered on npmjs.com): https://docs.npmjs.com/about-package-readme-files (via Context7 /websites/npmjs)
+- Claude Code skills supporting files (not loaded by default, referenced from SKILL.md): https://code.claude.com/docs/en/skills (via Context7 /websites/code_claude)
+- Claude Code skill directory path prepended to SKILL.md (how file references are resolved): https://code.claude.com/docs/en/claude-directory (via Context7 /websites/code_claude)
+- Anthropic official SKILL.md reference file pattern (backtick-quoted path, bold format): https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/skills/skill-development/SKILL.md (via Context7 /anthropics/claude-code)
+- Claude Code plugin path resolution (`CLAUDE_PLUGIN_ROOT` vs relative paths): https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/skills/command-development/references/plugin-features-reference.md (via Context7 /anthropics/claude-code)
+- Codebase: `packages/twentythree-skills/bin/add.js` (current output behavior, installer logic)
+- Codebase: `packages/twentythree-skills/package.json` (current keywords, files field, version)
+- Codebase: `packages/twentythree-skills/skills/SKILL.md` (current resource index, plain-text topic names)
+
+---
+*Feature research for: twentythree-skills npm publishing + SKILL.md hyperlinks (v1.4)*
+*Researched: 2026-04-20*

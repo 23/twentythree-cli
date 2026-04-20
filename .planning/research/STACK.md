@@ -1,213 +1,264 @@
-# Stack Research: twentythree-skills Package
+# Stack Research
 
-**Project:** twentythree-cli monorepo
-**Milestone:** Adding `packages/twentythree-skills` — AI agent skills package
+**Domain:** npm publishing — standalone ESM skills package from pnpm monorepo
 **Researched:** 2026-04-20
-**Overall confidence:** HIGH — skill format verified against official Claude Code docs and agentskills.io spec; installer pattern verified against npm packages in the space; versions confirmed via npm CLI
-
----
+**Confidence:** HIGH
 
 ## Context
 
-The `twentythree-skills` package is a pure content + installer package. It ships:
-
-1. **22 hand-authored `SKILL.md` files** (one per CLI resource group) following the Agent Skills open standard
-2. **An installer CLI** (`npx twentythree-skills add`) that detects which AI runtimes are installed and places skill files in the correct location for each
-
-The existing CLI (`twentythree-cli`) is unchanged. No new credential handling, no new API clients. This milestone adds a sibling npm package to the monorepo.
+`packages/twentythree-skills` is a complete, no-build ESM package. The task is purely publishing
+configuration — no new runtime code, no new dependencies. The existing `twentythree-cli` publish
+workflow (tag-triggered GitHub Actions, `NODE_AUTH_TOKEN`, `pnpm publish --no-git-checks`) is the
+proven pattern to replicate.
 
 ---
 
-## Skill Format: What to Know Before Picking Dependencies
+## Current package.json State (Already Correct)
 
-The [Agent Skills open standard](https://agentskills.io/specification) (adopted by Claude Code, Codex CLI, and GitHub Copilot as of 2026) defines a single portable format:
+The following fields in `packages/twentythree-skills/package.json` are already correct and need
+no change:
 
-- A skill is a **directory** named after the skill, containing a `SKILL.md` file
-- `SKILL.md` has YAML frontmatter (required: `name`, `description`) followed by markdown instructions
-- The `name` field must match the parent directory name and must be lowercase alphanumeric + hyphens only
-- Supporting files (`scripts/`, `references/`, `assets/`) are optional
-
-**Installation paths per runtime:**
-
-| Runtime | Personal (global) | Project-local |
-|---------|-------------------|---------------|
-| Claude Code | `~/.claude/skills/<skill-name>/SKILL.md` | `.claude/skills/<skill-name>/SKILL.md` |
-| Codex CLI | `~/.agents/skills/<skill-name>/SKILL.md` | `.agents/skills/<skill-name>/SKILL.md` |
-| GitHub Copilot (VS Code) | Via VS Code agent skills settings | `.github/skills/<skill-name>/SKILL.md` |
-| Claude.ai (web) | ZIP upload via Customize > Skills UI | Not applicable — no CLI path |
-
-**Key implication for the installer:** The format is identical across Claude Code and Codex. The installer's job is purely file placement — no format conversion needed for these runtimes. Claude.ai (web) requires a ZIP upload through the browser UI and cannot be automated from a CLI installer; it is out of scope for the `add` command.
+| Field | Current Value | Status |
+|-------|--------------|--------|
+| `name` | `"twentythree-skills"` | Correct |
+| `version` | `"0.1.0"` | Correct — use semver independently from twentythree-cli |
+| `type` | `"module"` | Correct — ESM only, no CJS needed |
+| `bin.twentythree-skills` | `"./bin/add.js"` | Correct — enables `npx twentythree-skills` |
+| `files` | `["/bin", "/skills", "/README.md"]` | Correct — whitelist approach |
+| `engines.node` | `">=22.0.0"` | Correct — matches monorepo constraint |
+| `license` | `"MIT"` | Correct |
 
 ---
 
-## Recommended Stack
+## Recommended Stack Additions
 
-### (a) Installer CLI
+### Core Technologies
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `commander` | `^14.0.3` | CLI argument parsing for the `add` command | Zero runtime dependencies (verified npm). 500M+ weekly downloads — far higher adoption than oclif for simple single-command installers. 25ms startup vs 135ms for oclif — matters for `npx` invocations where startup cost is paid every time. The `twentythree-cli` package already uses oclif for its 219-command surface; the installer only needs one command (`add`) with a few flags. Commander is the correct tool at this scope. |
-| `@clack/prompts` | `^1.2.0` | Interactive confirmation and runtime selection prompts | Already a dependency of `twentythree-cli` — the monorepo can share it. Avoids adding a second prompts library. Provides styled `confirm`, `select`, `multiselect` primitives needed to ask "install globally or project-local?" and "which runtimes?". |
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| `pnpm publish` (existing) | pnpm 9.x | Publish command | Already works for `twentythree-cli`; `--no-git-checks` bypasses monorepo root/tag mismatch; `--access public` required for scoped packages (not needed here but harmless to add) |
+| GitHub Actions (existing) | — | CI publish trigger | `release.yml` already wires `NODE_AUTH_TOKEN → NPM_TOKEN` secret; extend it with a second job for the skills package |
+| npm provenance (`--provenance`) | npm 9.5+ / Node 22 | Signed build attestation | Single flag addition; links the published tarball to the exact GitHub Actions run that produced it; npm registry displays a provenance tab on the package page; requires `id-token: write` permission on the job |
 
-**What the installer does (no extra packages needed):**
+### Supporting Libraries
 
-- Uses `fs` (Node built-in) to copy skill directories into target paths
-- Uses `os.homedir()` (Node built-in) to resolve `~/.claude/` and `~/.agents/` paths
-- Uses `fs.existsSync` to detect which runtimes are installed (check if `~/.claude/` or `~/.codex/` exist)
-- Uses `path.join()` for cross-platform path construction
+No new runtime dependencies needed. The package uses Node built-ins only (`node:fs`, `node:path`, `node:os`, `node:url`).
 
-No file-copy library needed — Node's built-in `fs.cpSync` (Node 16.7+, stable in Node 22) handles recursive directory copy.
+| Library | Version | Purpose | When to Use |
+|---------|---------|---------|-------------|
+| None | — | — | The installer is 103 lines of Node built-ins; adding any dependency would require a lockfile and create install friction for `npx` invocations |
 
-### (b) Skill File Placement (Multi-Runtime Detection)
+### Development Tools
 
-No additional packages needed beyond what Commander and Node built-ins provide. Runtime detection is a directory existence check, not an SDK integration.
+| Tool | Purpose | Notes |
+|------|---------|-------|
+| `scripts/validate-skills.mjs` (existing) | Validates skills file structure before publish | Already wired as `"test"` script in package.json; run in CI before publish step |
+| `.npmignore` (do NOT add) | Exclude files from tarball | Using `files` whitelist is simpler and explicit; `.npmignore` overrides `files` and is easy to misconfigure — avoid |
 
-| Runtime Detection | Method |
-|-------------------|--------|
-| Claude Code present | `fs.existsSync(path.join(os.homedir(), '.claude'))` |
-| Codex CLI present | `fs.existsSync(path.join(os.homedir(), '.codex'))` OR `which codex` via `child_process.execSync` |
+---
 
-Detection logic is ~20 lines of TypeScript using only built-in modules.
+## package.json Changes Required
 
-### (c) Format Conversion (Markdown → JSON schemas for OpenAI)
+### 1. Add `publishConfig`
 
-**No format conversion library is needed.** The Agent Skills format is the same markdown+frontmatter `SKILL.md` structure for both Claude Code and Codex CLI. OpenAI adopted the same open standard in 2026; their `~/.agents/skills/` path reads identical `SKILL.md` files.
+```json
+"publishConfig": {
+  "access": "public",
+  "registry": "https://registry.npmjs.org"
+}
+```
 
-The JSON Schema tool definitions used in the OpenAI Assistants API are a separate concern (for programmatic tool calling, not for installing skills into a coding agent like Codex). The `twentythree-skills` package targets coding agents (Codex CLI, Claude Code), not the Assistants API. No JSON schema generation is needed.
+`access: public` is required for any package published to npm if you want `npm publish` to succeed
+without the `--access public` flag on the CLI. It is also self-documenting intent.
 
-**If JSON tool schema export is added later** (a separate feature, not this milestone): use `js-yaml` (4.1.1) to parse frontmatter and generate JSON output. Do not add it now.
+### 2. Verify `bin` shebang
 
-### (d) Build Tooling
+`bin/add.js` already has `#!/usr/bin/env node` on line 1. This is required for npm to make the
+binary executable on install. No change needed.
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `tsdown` | `^0.21.9` | Compile TypeScript installer to distributable JS | Already the monorepo build tool in `twentythree-cli`. Zero additional config. Shared turbo pipeline via the existing `turbo.json`. |
-| `typescript` | `^5.0.0` | Type checking | Root-level devDependency already present. The `twentythree-skills` package can consume it via workspace. |
+### 3. No `main` or `exports` field needed
 
-**Output format for the installer:** The installer runs via `npx twentythree-skills add`. It must be CJS-compatible (same constraint as `twentythree-cli` — the monorepo ships CJS). Set `"type": "commonjs"` in `packages/twentythree-skills/package.json`, matching the existing package.
+This package has no importable surface — it is a pure binary package. Omitting `main`/`exports`
+is correct. npm does not require them for bin-only packages.
 
-### (e) Testing
+---
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `vitest` | `^4.1.4` | Unit tests for installer logic (path resolution, runtime detection) | Already used in `twentythree-cli`. The monorepo Turbo pipeline already runs `vitest` across packages. No new devDependency at the monorepo root level. |
+## bin Script Pattern
+
+The current `bin` field maps the package name to `./bin/add.js`:
+
+```json
+"bin": {
+  "twentythree-skills": "./bin/add.js"
+}
+```
+
+This means:
+- `npx twentythree-skills` invokes `bin/add.js` directly
+- `npm install -g twentythree-skills` makes `twentythree-skills` available as a global command
+- There is no `add` subcommand in the bin mapping
+
+**Important:** `npx twentythree-skills add` passes `add` as `process.argv[2]` to the script.
+The current script checks for `--project` flag but does not explicitly handle an `add` positional.
+The `add` argument is silently ignored. This is safe but should be clarified in README docs.
+Recommend documenting the correct invocation as `npx twentythree-skills` (bare), or add explicit
+argv handling to accept `add` as a no-op alias for the default behavior.
+
+No bin structure changes needed. The single binary-per-package pattern is correct for this use
+case.
+
+---
+
+## CI Publish Step
+
+### Tag Strategy
+
+Use a separate tag prefix to keep the two packages' release cadences independent:
+
+```
+skills-v0.1.0   →  triggers publish of twentythree-skills@0.1.0
+v1.4.0          →  triggers publish of twentythree-cli@1.4.0 (existing)
+```
+
+The existing `release.yml` triggers on `v*` tags — extend it with a second job that conditions
+on `skills-v*` tags, and add an `if:` guard to the existing CLI publish job.
+
+### Recommended release.yml Extension
+
+Add a second job to `.github/workflows/release.yml`:
+
+```yaml
+publish-skills:
+  if: startsWith(github.ref, 'refs/tags/skills-v')
+  runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    id-token: write   # required for --provenance
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'pnpm'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Validate skills
+      run: pnpm --filter twentythree-skills test --run
+
+    - name: Publish to npm
+      working-directory: packages/twentythree-skills
+      run: pnpm publish --no-git-checks --access public --provenance
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+Key decisions:
+
+- `permissions.id-token: write` — required by npm provenance; tells GitHub to issue an OIDC
+  token so npm can verify the build origin
+- `--provenance` — attaches a Sigstore-signed attestation; zero cost; npm registry shows a
+  Provenance tab linking to the exact workflow run
+- `--no-git-checks` — standard in this monorepo; bypasses npm's check that the git tag matches
+  the package version (it won't, because the tag is `skills-v0.1.0` not `0.1.0`)
+- `working-directory: packages/twentythree-skills` — publish from the package dir, consistent
+  with the existing CLI publish step
+- Validate skills before publish — fail fast, do not publish broken content
+
+### Guard the Existing publish Job
+
+Add an `if:` guard to the existing `publish` job so it only runs on CLI tags:
+
+```yaml
+publish:
+  if: startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/skills-v')
+```
+
+This prevents the CLI publish from triggering when a `skills-v*` tag is pushed.
+
+---
+
+## files Whitelist (Already Correct)
+
+```json
+"files": ["/bin", "/skills", "/README.md"]
+```
+
+This whitelist is correct and complete. npm always includes `package.json`, `LICENSE`, and
+`CHANGELOG.md` regardless of `files`, so those need no explicit listing.
+
+What is correctly excluded (not in `files`):
+- `scripts/validate-skills.mjs` — dev-only validation; not needed by consumers
+- `turbo.json` — monorepo build config; irrelevant to consumers
+- Any `.planning/` artifacts
+
+Verify the tarball contents before pushing the release tag:
+
+```bash
+cd packages/twentythree-skills && pnpm pack --dry-run
+```
+
+---
+
+## Version Strategy
+
+| Package | Version | Strategy |
+|---------|---------|----------|
+| `twentythree-cli` | 1.x.x | CLI commands; follows feature milestones |
+| `twentythree-skills` | 0.x.x | Content package; bump minor for new skill files, patch for content edits; major bump if skills format changes incompatibly |
+
+The two packages version independently. Do not couple their versions.
+
+Initial publish: `0.1.0` (already set) — correct for a first release.
 
 ---
 
 ## Alternatives Considered
 
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| Installer CLI framework | `commander` | `oclif` | oclif is the right choice for 219-command surfaces; it has 30+ dependencies and 135ms startup. For a single `add` command that runs via `npx`, commander's 0 dependencies and 25ms startup wins. Using oclif here would add `@oclif/core` as a dependency of the skills package — creating a version-coupling risk between the two packages in the monorepo. |
-| Installer CLI framework | `commander` | `yargs` | yargs has ~7 dependencies; no advantage over commander for a single command. |
-| File placement | Node `fs.cpSync` (built-in) | `ncp`, `fs-extra`, `cpy` | All of these add dependencies for functionality that Node 22 provides natively. `fs.cpSync` with `{ recursive: true }` is sufficient. |
-| Frontmatter parsing | No library (hand-author only, no parse needed) | `gray-matter` | The installer does not parse SKILL.md files — it copies them as-is. gray-matter would only be needed if the installer validates or transforms frontmatter. Not needed now. |
-| Format conversion | None (same format across runtimes) | `js-yaml` for JSON schema export | No JSON schema export in this milestone. Defer. |
-| Runtime detection | Node `fs.existsSync` + `os.homedir()` | `which` npm package, `execa` | Built-ins are sufficient. No exec needed; directory existence is the right signal. |
-| Prompt UX | `@clack/prompts` (shared dep) | `inquirer` | Already using `@clack/prompts` in the monorepo; adding inquirer would be a redundant prompts library. |
-| Skill validation | None (hand-authored, no CI validator) | `skills-ref` CLI | `skills-ref validate` is useful for community skill packages with untrusted contributors. These skills are hand-authored by the package maintainer and committed to the monorepo — editor and code review catches issues. Add if publishing to a skill registry later. |
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| Separate `skills-v*` tag prefix | Single `v*` tag triggering both publishes | Only if both packages always release together — they won't; skills content updates independently of CLI command changes |
+| `files` whitelist | `.npmignore` | Never for this package — `files` already exists and `.npmignore` would silently override it |
+| `--provenance` flag | No provenance | No reason to skip; zero cost; improves package trust signal on npm registry |
+| `working-directory: packages/twentythree-skills` for publish | `pnpm publish -F twentythree-skills` | Both work; working-directory is consistent with the existing CLI publish step in this repo |
+
+## What NOT to Use
+
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| `.npmignore` | `files` whitelist already exists; `.npmignore` takes precedence over `files` and is easy to misconfigure | `files` field in package.json |
+| Coupling skills version to CLI version | Skills content changes on a different cadence from CLI commands | Independent semver per package |
+| `npm publish` (not `pnpm publish`) | Monorepo uses pnpm; `npm publish` from a pnpm workspace can fail to resolve workspace-protocol dependencies | `pnpm publish --no-git-checks` |
+| Documenting invocation as `npx twentythree-skills add` | `add` is not an explicit subcommand; it is silently ignored by the script | Document as `npx twentythree-skills` or add explicit `add` argv handling |
 
 ---
 
-## Integration Notes
+## Installation (for consumers)
 
-### pnpm Workspace
+```bash
+# Install globally, then run to install skills into detected runtimes
+npm install -g twentythree-skills
+twentythree-skills
 
-`packages/twentythree-skills` is already scaffolded as a workspace package (`packages/*` glob in `pnpm-workspace.yaml`). The Turbo pipeline picks it up automatically. Add `"build"` and `"test"` scripts to match the pattern in `twentythree-cli`.
-
-If `@clack/prompts` is shared, declare it in `packages/twentythree-skills/package.json` as a regular dependency (not `workspace:*`). pnpm will deduplicate the install. Do not reference `twentythree-cli`'s `@clack/prompts` via workspace link — that creates an undeclared peer dependency.
-
-### CJS Compatibility
-
-Set `"type": "commonjs"` in `packages/twentythree-skills/package.json`. This matches the existing CLI package. The installer uses `commander` (CJS-safe), `@clack/prompts` (CJS-safe at v1.x), and Node built-ins. No ESM-only packages.
-
-### Bin Entrypoint
-
-```json
-"bin": {
-  "twentythree-skills": "./bin/run.js"
-}
+# Or run without installing
+npx twentythree-skills
 ```
-
-The `bin/run.js` entrypoint follows the same pattern as `twentythree-cli/bin/run.js`. `tsdown` bundles the installer TypeScript to `dist/index.js`; the bin script requires the dist.
-
-### Skills as Package Files
-
-The 22 `SKILL.md` files live in `packages/twentythree-skills/skills/<resource-group>/SKILL.md`. They are included in the npm package via:
-
-```json
-"files": [
-  "/bin",
-  "/dist",
-  "/skills",
-  "/README.md"
-]
-```
-
-The installer reads skills from its own package directory using `__dirname` (CJS) to locate the bundled `skills/` folder, then copies to the target runtime path.
-
-### No Auth Dependency
-
-The skills package does not depend on `twentythree-cli`, `@napi-rs/keyring`, or `conf`. It is a standalone content + installer package. The skill content references the CLI by name (`twentythree videos list`) but has no runtime dependency on it.
-
-### `npx` Usage
-
-`npx twentythree-skills add` works without global install — npm downloads and runs the package on demand. This is the intended distribution pattern. The `commander` + Node-built-in approach keeps the cold-start time acceptable under npx.
-
----
-
-## New Dependencies Summary
-
-### `packages/twentythree-skills/package.json`
-
-**Runtime dependencies (`dependencies`):**
-
-| Package | Version | Reason |
-|---------|---------|--------|
-| `commander` | `^14.0.3` | CLI argument parsing for installer |
-| `@clack/prompts` | `^1.2.0` | Interactive prompts (runtime selection, install scope) |
-
-**Dev dependencies (`devDependencies`):**
-
-| Package | Version | Reason |
-|---------|---------|--------|
-| `tsdown` | `^0.21.9` | Build TypeScript installer |
-| `typescript` | `^5.0.0` | Type checking (can reference root; or pin explicitly) |
-| `@types/node` | `^22.0.0` | Node built-in types (`fs`, `os`, `path`) |
-| `vitest` | `^4.1.4` | Tests |
-
-**Total new runtime dependencies added to the monorepo: 1** (`commander` — `@clack/prompts` is already present in `twentythree-cli`).
-
----
-
-## What NOT to Add
-
-| Rejected Addition | Why Not |
-|-------------------|---------|
-| `oclif` / `@oclif/core` | Wrong tool for a single-command installer; adds 30+ transitive dependencies; version-coupling risk with the CLI package |
-| `gray-matter` / `js-yaml` | Installer copies files, does not parse them. Not needed now. |
-| `fs-extra`, `cpy`, `ncp` | Node 22 `fs.cpSync` is sufficient for recursive directory copy |
-| `which` (npm package) | `fs.existsSync` on config directories is the right detection signal — cleaner than shelling out to `which` |
-| `execa` / `cross-spawn` | No shell execution needed in the installer |
-| `ora` | Spinners overkill for a file copy operation taking <100ms; `@clack/prompts` spinner is sufficient if any async UX is needed |
-| `chalk` | `@clack/prompts` provides all the styled output needed; chalk alone is redundant |
-| `zod` | Skill frontmatter validation not needed for hand-authored skills in a maintained monorepo |
-| OpenAI SDK / Anthropic SDK | The skills package ships markdown content and an installer; it is not an AI SDK wrapper |
-| `handlebars` / template engine | Skills are static markdown files, not generated from templates |
 
 ---
 
 ## Sources
 
-- Agent Skills open standard specification: https://agentskills.io/specification
-- Claude Code skills documentation (frontmatter fields, directory paths): https://code.claude.com/docs/en/skills
-- Codex CLI skills paths (`~/.agents/skills/`, `.agents/skills/`): https://developers.openai.com/codex/skills
-- VS Code agent skills: https://code.visualstudio.com/docs/copilot/customization/agent-skills
-- Claude.ai skills (ZIP upload, web UI only): https://support.claude.com/en/articles/12512180-use-skills-in-claude
-- commander npm (v14.0.3, zero dependencies confirmed): https://www.npmjs.com/package/commander
-- commander startup time benchmark (25ms vs oclif 135ms): https://www.pkgpulse.com/blog/how-to-build-cli-nodejs-commander-yargs-oclif
-- @clack/prompts npm (v1.2.0 confirmed): https://www.npmjs.com/package/@clack/prompts
-- tsdown npm (v0.21.9 confirmed): https://www.npmjs.com/package/tsdown
-- vitest npm (v4.1.4 confirmed): https://www.npmjs.com/package/vitest
-- Agent Skills open standard cross-runtime adoption (Claude, OpenAI, Google): https://www.mindstudio.ai/blog/agent-skills-open-standard-claude-openai-google
-- skills CLI by Vercel (reference for runtime detection patterns): https://github.com/vercel-labs/skills
+- `packages/twentythree-skills/package.json` — current state verified by reading source — HIGH confidence
+- `packages/twentythree-skills/bin/add.js` — shebang and argv handling verified by reading source — HIGH confidence
+- `.github/workflows/release.yml` — existing CLI publish pattern verified by reading source — HIGH confidence
+- npm provenance docs: https://docs.npmjs.com/generating-provenance-statements — MEDIUM confidence (pattern confirmed from training data; WebSearch unavailable in this session)
+- GitHub Actions `id-token: write` for OIDC provenance — MEDIUM confidence (standard GitHub Actions pattern, confirmed from training data Aug 2025)
+
+---
+*Stack research for: twentythree-skills npm publish*
+*Researched: 2026-04-20*

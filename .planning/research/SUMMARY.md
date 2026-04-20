@@ -1,212 +1,129 @@
-# Research Summary: v1.3 TwentyThree Agent Skill
+# Project Research Summary
 
-**Project:** twentythree-cli — milestone v1.3: twentythree-skills npm package
-**Domain:** Agent skill packages for CLI-wrapped APIs; multi-runtime AI agent integration
+**Project:** twentythree-cli — v1.4 milestone
+**Domain:** npm package publishing (pnpm monorepo second package) + AI agent skill discoverability
 **Researched:** 2026-04-20
 **Confidence:** HIGH
 
----
-
 ## Executive Summary
 
-This milestone adds a sibling npm package (`twentythree-skills`) to the monorepo. The package ships hand-authored SKILL.md files covering all 22 CLI resource groups plus a lightweight installer (`npx twentythree-skills add`) that detects installed AI runtimes and places skill files in the correct location. The existing `twentythree-cli` package is unchanged. The Agent Skills open standard (agentskills.io) is confirmed stable with 35+ runtime adopters — a single SKILL.md file format works across Claude Code, OpenAI Codex, GitHub Copilot, Cursor, and others. No format conversion is needed between runtimes.
+v1.4 ships two independent deliverables: publishing `twentythree-skills` to npm so that `npx twentythree-skills add` works from any machine, and upgrading the resource index in `skills/SKILL.md` to use clickable markdown hyperlinks. Both are low-complexity changes against a package that is functionally complete — the work is configuration and content, not new code. The `bin/add.js` installer, the `files` whitelist, and the `bin` shebang are all already correct. The primary gap is that `release.yml` has never been extended to publish the skills package, and `package.json` is missing `publishConfig.access: "public"` and optimized npm keywords.
 
-The recommended approach is a two-layer structure: one root `twentythree/SKILL.md` (~200 lines: auth setup, command syntax, resource index, invariants) plus 22 per-group reference files loaded on demand. This follows the Basecamp production pattern and Anthropic best practices for progressive disclosure. Hand-authored content outperforms generated content for agent usability; the existing `--agent` flag on all 219 commands provides an authoritative reference for command metadata when content needs updating.
+The recommended approach is a single workflow extension: add one `pnpm publish` step for `twentythree-skills` after the existing CLI step in `release.yml`, use a `skills-v*` tag prefix to allow independent release cadence, add `publishConfig` to the skills `package.json`, bump the version to `1.0.0` to signal production readiness, and update npm keywords to include runtime-specific terms (`claude`, `claude-code`, `copilot`, `cursor`, `codex`). The SKILL.md change is a mechanical find-and-replace across 22 table rows: plain-text topic names become `` [`topic`](reference/topic.md) `` hyperlinks using the format validated against Anthropic's own plugin examples.
 
-The key risk is skill content drifting from the CLI as commands evolve. The mitigation is treating `agentMetadata` (`--agent` flag output) as the canonical machine-readable source for per-command detail, keeping manually authored content limited to auth setup, workflow patterns, and invariants — the parts that change rarely and cannot be generated. The second risk is the installer silently overwriting user-customized skill files; require `--force` for overwrites and hash-compare before copying.
+The key risks are operational, not architectural. The `NPM_TOKEN` secret may be scoped to `twentythree-cli` only — verify with `npm publish --dry-run` before the first real publish. The `add` argument in `npx twentythree-skills add` is silently ignored by the bin script — simplify documented invocation to bare `npx twentythree-skills` or add explicit argv routing. Both issues are detectable before any production publish.
 
----
+## Key Findings
 
-## Stack Additions
+### Recommended Stack
 
-### New Dependencies (packages/twentythree-skills only)
+The skills package requires no new runtime dependencies. Publishing is handled by the existing `pnpm publish --no-git-checks` pattern already proven for `twentythree-cli`. The one addition worth making is `--provenance`, which attaches a Sigstore-signed attestation at zero cost and gives the npm package page a Provenance tab — a meaningful trust signal for a developer-tools package. This requires `id-token: write` permission on the GitHub Actions job.
 
-| Package | Version | Purpose | Why |
-|---------|---------|---------|-----|
-| `commander` | `^14.0.3` | CLI argument parsing for installer `add` command | Zero runtime dependencies; 25ms startup vs 135ms for oclif — matters for `npx` cold starts; correct scope for a single-command installer |
-| `@clack/prompts` | `^1.2.0` | Interactive runtime selection and install scope prompts | Already in monorepo via `twentythree-cli`; pnpm deduplicates; declare as explicit dep, not a workspace reference |
+**Core technologies:**
+- `pnpm publish --no-git-checks --provenance`: publish command — matches existing CLI publish pattern; `--no-git-checks` required in monorepo CI; `--provenance` improves npm registry trust signal
+- GitHub Actions `release.yml` (extended): CI trigger — single workflow, sequential steps; avoids `workflow_run` latency and permission complexity
+- `publishConfig.access: "public"` in `package.json`: unscoped package publish guard — pnpm requires explicit public access declaration; prevents `403 Forbidden` on first publish
 
-**No other new runtime dependencies.** The installer uses Node.js built-ins only: `fs.cpSync` (recursive copy, Node 22+), `os.homedir()`, `path.join()`, `fs.existsSync`. No `fs-extra`, `cpy`, or `execa` needed.
+### Expected Features
 
-**Dev dependencies (twentythree-skills only):** `tsdown ^0.21.9`, `typescript ^5.0.0`, `@types/node ^22.0.0`, `vitest ^4.1.4` — all already present in the monorepo.
+**Must have (table stakes):**
+- `npx twentythree-skills add` resolves from npm registry — the README documents this invocation; if the package is not published, the README is incorrect
+- `publishConfig` and updated `keywords` ship with the first publish — cannot be patched retroactively without a re-publish
+- SKILL.md resource index uses `` [`topic`](reference/topic.md) `` links for all 22 rows — primary deliverable of SKILL-03; improves Claude Code agent discoverability
 
-**Total new runtime deps added to the monorepo: 1** (`commander`).
+**Should have (competitive):**
+- Version bumped to `1.0.0` on first publish — signals production readiness alongside `twentythree-cli@1.x`
+- `--provenance` flag on publish step — zero cost; npm registry Provenance tab improves package trust
+- Post-install next-step hint in `bin/add.js` after `Done.` — reduces "did it work?" confusion for new users
 
-### What NOT to Add
+**Defer (v2+):**
+- npx version check warning if installed CLI is behind skills package version
+- `--merge` flag for installer when user-customized skill files exist
+- Workflow SKILL.md hyperlinks (reference index links are higher value; workflow links are additive)
 
-| Rejected | Reason |
-|----------|--------|
-| `oclif` / `@oclif/core` | 135ms startup + 30 transitive deps for one command; version-coupling risk with CLI package |
-| `gray-matter` / `js-yaml` | Installer copies files, does not parse them |
-| `fs-extra`, `cpy`, `ncp` | Node 22 `fs.cpSync` is sufficient |
-| `ora`, `chalk` | `@clack/prompts` covers all styled output needed |
-| `zod` | Hand-authored skills in a maintained monorepo; editor + code review is the gate |
-| OpenAI SDK / Anthropic SDK | This package ships markdown and an installer, not AI SDK wrappers |
-| Any template engine | Skills are static markdown, not generated from templates |
+### Architecture Approach
 
-### Module Format
+The correct architecture is a single `release.yml` publish job with two sequential `pnpm publish` steps — CLI first, skills second. Matrix jobs would prevent build artifact sharing and lose ordering guarantees. A separate triggered workflow adds `workflow_run` latency and tricky permission semantics. The skills package has no build step, so the second publish step is three lines of YAML. Tag strategy: use `skills-v*` prefix for skills-only releases and guard the existing `v*` job with `!startsWith(github.ref, 'refs/tags/skills-v')` to prevent double-publish.
 
-`"type": "module"` (ESM) for `twentythree-skills`. The installer runs standalone via `npx`, so ESM is safe. This is the inverse of `twentythree-cli` which is `"type": "commonjs"` due to oclif.
+**Major components:**
+1. `.github/workflows/release.yml` — extended with `publish-skills` job gated on `skills-v*` tags; existing `publish` job guarded against skills tags
+2. `packages/twentythree-skills/package.json` — add `publishConfig.access: "public"`, bump version to `1.0.0`, expand `keywords` array
+3. `packages/twentythree-skills/skills/SKILL.md` — update 22 resource index rows from plain text to `` [`topic`](reference/topic.md) `` format
 
----
+### Critical Pitfalls
 
-## Feature Findings
+1. **CI workflow never extended for skills** — the publish step for `twentythree-skills` does not exist in `release.yml`; without it the package is never published regardless of tag pushes; fix by adding an explicit `working-directory: packages/twentythree-skills` publish step
+2. **NPM_TOKEN scope too narrow** — Granular Access Tokens can be restricted to specific packages; the token that works for `twentythree-cli` may 403 on `twentythree-skills`; verify with `npm publish --dry-run` before first real publish
+3. **`add` argument silently ignored** — `npx twentythree-skills add` passes `add` as `process.argv[2]` which the bin script ignores; running `npx twentythree-skills remove` would silently install rather than uninstall; simplify documented invocation to bare `npx twentythree-skills` to match actual behavior
+4. **Publish order dependency** — if skills publishes before CLI on a coordinated release, any `peerDependencies` or install instructions pointing to the new CLI version fail because it is not yet on the registry; always publish CLI first
+5. **Workspace protocol leakage** — if `twentythree-skills/package.json` ever gains a `workspace:*` reference to `twentythree-cli` and the publish is done via `npm publish` instead of `pnpm publish`, the literal string `workspace:*` ships and makes the package uninstallable; the package must remain zero-dependency
 
-### Table Stakes (missing = package feels broken)
+## Implications for Roadmap
 
-| Feature | Notes |
-|---------|-------|
-| Single `twentythree/SKILL.md` entrypoint | Mandatory per agentskills.io spec; `name` must match directory name, lowercase-hyphenated |
-| Auth setup as first section | Every command fails without `twentythree auth credentials`; agents do not assume preconditions |
-| `--json` flag guidance | "Always append `--json` in agentic contexts for machine-parseable output" |
-| Command syntax overview | `twentythree <resource> <verb> [--flags]`; index of all 22 resource groups |
-| Error signal guidance | Which errors are retryable vs fatal; 401 = run auth credentials again |
-| Correct `files` whitelist in package.json | All skill sub-directories must be enumerated; verify with `npm pack --dry-run` |
-| Installer prints where files were placed | Silent installs erode trust |
+Based on research, v1.4 fits cleanly into two phases in dependency order.
 
-### Differentiators (high-value, not universally present)
+### Phase 1: Package Configuration + CI Wiring
+**Rationale:** The npm publish must be wired and verified before the skills content update is relevant to external users. Configuration changes are non-destructive and independently verifiable with `pnpm pack --dry-run`. This is the blocking dependency.
+**Delivers:** `twentythree-skills@1.0.0` published to npm; `npx twentythree-skills add` works from any machine; `release.yml` extended with skills publish job using `skills-v*` tag strategy
+**Addresses:** NPM-01 (table stakes publish), keywords update (bundle with publish), `publishConfig` addition
+**Avoids:** CI workflow omission pitfall (P1), NPM_TOKEN scope pitfall (P2), publish order dependency, `add` argv confusion (P3)
 
-| Feature | Value |
-|---------|-------|
-| `--agent` flag documentation | Self-discovery mechanism; agents run `twentythree <cmd> --agent` to introspect before calling — no other CLI skill package has this |
-| 22 reference files (one per resource group) | Progressive disclosure; agents load only relevant context; 219 commands cannot fit in one SKILL.md under the 500-line target |
-| Auth scope table | Documents which of the 5 auth scopes each resource group requires; prevents write-scope failures |
-| Chunked upload guidance | Non-obvious invariant; agents will construct direct multipart requests without explicit documentation |
-| `twentythree doctor` guidance | Reduces blind retry loops on persistent errors |
-| Multi-workspace guidance | Documents `--workspace <domain>` flag pattern |
-| Non-interactive flag equivalents | For every prompt-based command, document the `--flag` equivalent for CI/agent contexts |
+### Phase 2: SKILL.md Hyperlink Upgrade
+**Rationale:** Independent of publish wiring; can land before or after Phase 1 but benefits from publishing so the updated SKILL.md ships in the `1.0.0` release. 22 mechanical table row edits with no logic changes.
+**Delivers:** All 22 resource index rows using `` [`topic`](reference/topic.md) `` format; improved Claude Code agent discoverability; human-clickable reference links in editors
+**Addresses:** SKILL-03 feature; aligns with Anthropic's own SKILL.md plugin examples pattern
+**Avoids:** Vague skill description pitfall; nested reference depth pitfall (one level deep is already the existing structure)
 
-### Key Design Decision Confirmed: One skill, not 22
+### Phase Ordering Rationale
 
-Install one `twentythree` skill with reference files, not 22 separate sub-skills. 22 descriptions loading at startup consumes ~1,760 chars of context budget before any user query. The single-skill + reference-file pattern lets agents load only relevant context on demand.
+- Phase 1 before Phase 2: the SKILL.md update is more valuable when the package is live on npm; coupling both into the `1.0.0` publish is the cleanest delivery
+- Both phases are low-risk and independently deployable; if Phase 1 is blocked by token verification, Phase 2 can proceed in parallel
+- The `1.0.0` version bump signals both phases are complete and the package is production-ready
 
-### Defer Post-v1
+### Research Flags
 
-- MCP server integration (separate milestone; different pattern)
-- Automated skill generation pipeline from `--agent` output
-- `skills-ref validate` CI gate (for community packages; not needed for a maintained monorepo)
-- JSON tool schema export for OpenAI Assistants API (not needed; Codex CLI uses SKILL.md natively)
+Phases with standard patterns (no additional research needed):
+- **Phase 1:** pnpm monorepo publish is a well-documented pattern; the existing `twentythree-cli` publish workflow is the direct template; the only unknown is token scope (verify locally before tagging)
+- **Phase 2:** markdown link format is confirmed against Anthropic's official plugin examples; no ambiguity in the target format
 
----
-
-## Architecture Decisions
-
-### Package Structure
-
-```
-packages/twentythree-skills/
-├── package.json              # type: module, bin, files whitelist, no workspace:* deps
-├── SKILL.md                  # Top-level skill: auth, syntax, resource index, invariants (~200 lines)
-├── skills/                   # One subdirectory per resource group
-│   ├── videos/SKILL.md
-│   ├── categories/SKILL.md
-│   ├── webinars/SKILL.md
-│   ├── analytics/SKILL.md
-│   ├── auth/SKILL.md
-│   ├── ... (22 total)
-│   └── references/
-│       └── api-terms.md      # CLI-to-API terminology mapping (generated from term-map.ts)
-├── workflows/                # Optional: multi-step workflow files
-│   ├── upload-and-publish.md
-│   └── webinar-lifecycle.md
-├── bin/
-│   └── add.js                # Plain ESM JS; node: built-ins only; no transpilation needed
-├── scripts/
-│   ├── generate-references.mjs   # Reads term-map.ts, writes api-terms.md
-│   └── validate-skills.mjs       # Checks all SKILL.md have valid frontmatter
-└── turbo.json                # Package-level override: dependsOn: [], outputs: [skills/references/api-terms.md]
-```
-
-### Key Structural Choices
-
-**`twentythree-skills` has zero runtime imports from `twentythree-cli`.** The relationship is documentation only. Adding a runtime dependency would pull the full CLI into the installer and create an unnecessary turbo build-ordering constraint.
-
-**Installer is plain ESM JS, no TypeScript, no build step.** Runs via `npx twentythree-skills add`; uses only node: built-ins. Under 200 lines. Commander is the CLI parser.
-
-**Turborepo:** Package-level `turbo.json` with `"dependsOn": []`. The skills build does not depend on the CLI build. Root `turbo.json` is unchanged.
-
-**Versioning:** Already configured — `.changeset/config.json` has `"linked": [["twentythree-cli", "twentythree-skills"]]`. Both packages receive the same version bump.
-
-**Publish order:** CLI publishes first, then skills package. Changesets respects this automatically.
-
-**`files` whitelist in package.json:**
-```json
-"files": ["/bin", "/skills", "/SKILL.md"]
-```
-Verify with `npm pack --dry-run` before first publish.
-
-### What Does NOT Change
-
-Root `turbo.json`, root `package.json`, `pnpm-workspace.yaml`, `.changeset/config.json`, and the `twentythree-cli` package itself are all unchanged.
-
----
-
-## Watch Out For
-
-1. **Auth flow absent from skill** — Every workflow section must begin with `twentythree auth credentials` as an explicit prerequisite. Test from a fresh agent session with no prior CLI auth. Without this, every agent workflow fails with a 401 and the agent retries blindly.
-
-2. **Installer silently overwrites user-customized files** — Hash canonical content against existing installed file; if different, print diff and require `--force`. Do not `cp` blindly.
-
-3. **`workspace:*` dependency leakage** — Never add `twentythree-cli` as a `workspace:*` dependency in the skills package. Any CI step using `npm publish` instead of `pnpm publish` ships the literal string, making the package uninstallable for npm consumers.
-
-4. **Multi-runtime path mismatch** — Installer must write to all detected runtime paths (`~/.claude/skills/`, `~/.agents/skills/`, `~/.cursor/skills/`, `~/.github/skills/`), not just Claude Code. Detection is directory-existence-based, not env-var-based (env vars are not set during `npx` terminal invocations).
-
-5. **Vague `description` field prevents skill self-activation** — Description must contain the exact trigger phrases users say. Front-load the highest-value triggers in the first 200 characters. Claude Code truncates the `description` field at 1,536 characters in skill listings.
-
----
-
-## Scope Clarifications (Research Surprises)
-
-**No format conversion needed between runtimes.** OpenAI Codex adopted the same agentskills.io SKILL.md format as Claude Code. Any plan that assumed separate JSON schemas for OpenAI should be dropped. Claude.ai web is also out of scope for the installer — it requires a ZIP upload through the browser UI.
-
-**The installer bin file needs no TypeScript compile.** Plain ESM JavaScript (`bin/add.js`) eliminates a build step for the package's only executable artifact.
-
-**`twentythree-skills` is already scaffolded as a workspace package.** The pnpm workspace, changeset config, and SKILL.md stub are in place. This milestone is primarily content authoring + installer implementation, not new package scaffolding from scratch.
-
-**One skill is better than 22.** Any plan that assumed one skill per resource group should be revised. A single `twentythree` skill with reference files is strictly better for context budget and agent activation behavior.
-
----
+No phases require `/gsd-research-phase` intervention. All implementation decisions are resolved by this research.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Versions confirmed via npm; agentskills.io spec verified; commander benchmark sourced |
-| Features | HIGH | Official agentskills.io spec, Anthropic best practices, Basecamp production SKILL.md inspected |
-| Architecture | HIGH | Drawn from live codebase + official runtime docs (Claude Code, Codex, Copilot) |
-| Pitfalls | HIGH | Verified against official Anthropic skill authoring docs, npm publish docs, community research |
+| Stack | HIGH | Verified against existing `release.yml`, `package.json`, and `bin/add.js` source; npm provenance docs confirmed from training data |
+| Features | HIGH | Official npm docs and Claude Code skills docs via Context7; codebase analysis of current output behavior |
+| Architecture | HIGH | Verified against live `release.yml`; pnpm publish patterns confirmed from official pnpm docs; ESM bin pattern confirmed from Node.js docs |
+| Pitfalls | HIGH | npm publish docs, Anthropic skill authoring docs, pnpm workspace protocol docs, and direct codebase inspection all HIGH confidence |
 
-**Overall confidence: HIGH**
+**Overall confidence:** HIGH
 
-### Gaps to Address During Execution
+### Gaps to Address
 
-- **Skill content quality is not automatable.** The 22 reference files require authorial judgment. Plan for iterative review against actual agent sessions, not a one-time write.
-- **Codex skills directory is ambiguous.** Sources reference both `~/.codex/skills/` and `~/.agents/skills/`. Confirm the canonical path against the live Codex CLI before the installer ships.
-- **Installer UX for "no runtimes detected" case.** Print runtime-specific install paths as a fallback help message, but exact copy is unresolved. Decide during implementation.
-
----
+- **NPM_TOKEN scope:** Cannot be verified until a dry-run publish is attempted. Verify with `npm publish --dry-run` from `packages/twentythree-skills` before pushing the first `skills-v*` tag. If the token is Granular and package-scoped, a new secret (`NPM_TOKEN_SKILLS`) or token upgrade to Automation type is needed.
+- **`npx twentythree-skills add` invocation:** The `add` argument is currently a no-op. The decision to either simplify the documented invocation to bare `npx twentythree-skills` or add explicit argv routing should be made before publish, since the npm page README is the primary install documentation and it should not document a misleading invocation.
+- **Smoke test for skills publish:** The existing smoke-test job only tests `twentythree-cli`. Adding `npx twentythree-skills` to the smoke-test job would catch registry propagation failures for the skills package on every release.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- agentskills.io specification — format, frontmatter fields, directory structure
-- Claude Code skills documentation — frontmatter reference, lifecycle, allowed-tools
-- Anthropic skill authoring best practices — conciseness, progressive disclosure, auth patterns
-- OpenAI Codex skills docs — same SKILL.md format confirmed, skills directory paths
-- Basecamp skills repository — production example of CLI-backed skill package (155+ endpoints)
-- commander npm (v14.0.3, zero deps confirmed)
-- @clack/prompts npm (v1.2.0), tsdown (v0.21.9), vitest (v4.1.4) — all confirmed
-- Live codebase: packages/twentythree-skills/package.json, .changeset/config.json, turbo.json
+- `packages/twentythree-skills/package.json` — current state of files, version, keywords, bin fields
+- `packages/twentythree-skills/bin/add.js` — shebang, argv handling, output behavior
+- `.github/workflows/release.yml` — existing CLI publish pattern
+- Claude Code skills docs (code.claude.com/docs/en/skills) — how reference files are loaded; skill directory path prepending behavior
+- Anthropic official SKILL.md plugin examples (github.com/anthropics/claude-code) — backtick-quoted path format; validated link format
+- npm `package.json` docs (docs.npmjs.com/cli/v11/configuring-npm/package-json) — files, keywords, publishConfig, bin behavior
+- pnpm publish docs (pnpm.io/cli/publish) — --no-git-checks, --access, working-directory behavior
 
 ### Secondary (MEDIUM confidence)
-- Vercel skills installer CLI — runtime detection patterns, idempotency
-- commander startup benchmark (25ms vs oclif 135ms) — pkgpulse.com
-- agentskills.io cross-runtime adoption (35+ runtimes) — mindstudio.ai
+- npm provenance docs (docs.npmjs.com/generating-provenance-statements) — `--provenance` flag and `id-token: write` requirement; confirmed from training data, WebSearch unavailable
+- GitHub Actions `id-token: write` for OIDC provenance — standard pattern confirmed from training data Aug 2025
+- Agent Skills open standard (inference.sh/blog/skills/agent-skills-overview) — multi-runtime install paths
 
 ### Tertiary (LOW confidence)
-- Codex skills canonical path (`~/.codex/skills/` vs `~/.agents/skills/`) — sources conflict; verify against live Codex CLI before installer ships
+- GitHub Copilot skills format — Copilot does not have a documented skill format equivalent to SKILL.md; installer's `~/.github/skills/` path is speculative; validate if Copilot officially ships a skills spec
 
 ---
-
 *Research completed: 2026-04-20*
 *Ready for roadmap: yes*
