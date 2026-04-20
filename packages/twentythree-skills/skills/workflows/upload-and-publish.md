@@ -58,8 +58,8 @@ On failure:
 twentythree video update <video_id> --description "Launch video for Q2 release" --tags "product q2 launch" --json
 ```
 
-Expected output shape: `{ data: { id, updated_at, ... } }`
-Capture: none (fire-and-forget update)
+Expected output shape: `{ ok: true, data: { photo_id, title, description, ... } }`
+Capture: none (fire-and-forget update — verify with `twentythree video get <video_id> --json` if needed)
 On failure:
 - `403 Forbidden` → confirm auth scope is `write`, not `read`
 - `404 Not Found` → confirm `video_id` is correct and video exists (`twentythree video get <video_id> --json`)
