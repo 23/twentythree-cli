@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Agent Behavioral Guidelines
-status: executing
-stopped_at: Phase 24 plan 01 executed — pending verification
-last_updated: "2026-04-23T22:00:00.000Z"
-last_activity: 2026-04-23 -- Phase 24 plan 01 complete (Gate 3 added to validate-skills.mjs)
+status: complete
+stopped_at: Phase 24 complete — v1.5 milestone done
+last_updated: "2026-04-23T22:15:00.000Z"
+last_activity: 2026-04-23 -- Phase 24 verified, v1.5 milestone complete
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
   completed_plans: 3
-  percent: 83
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 24 — integration-ci-validation
+**Current focus:** v1.5 complete — ready for /gsd-complete-milestone
 
 ## Current Position
 
-Phase: 24 (integration-ci-validation) — EXECUTED, pending verification
-Plan: 1 of 1 complete
-Status: All plans executed — run /gsd-next to verify
-Last activity: 2026-04-23 -- Phase 24 plan 01 complete
+Phase: 24 — COMPLETE
+Plan: 1/1 complete
+Status: Milestone v1.5 complete — all phases done
+Last activity: 2026-04-23 -- Phase 24 verified, v1.5 milestone complete
 
-Progress: [████████__] 83%
+Progress: [██████████] 100%
 
 ## Accumulated Context
 
@@ -103,18 +103,19 @@ Recent decisions affecting current work:
 - [Phase 23-behavioral-guide-authoring]: open_p has no direct CLI flag on webinar create; CR-3 references verified --draft/--publish flags and instructs agents to run --agent
 - [Phase 23-behavioral-guide-authoring]: SKILL.md Behavioral Guide section placed before Resource Index — agents scan top-to-bottom and would miss a link placed after the command table
 - [Phase 23-behavioral-guide-authoring]: Inline reference file notes use forward-reference pattern only — guide.md is single source of truth; no verbatim rule repetition in reference files
+- [Phase 24-integration-ci-validation]: Gate 3 reads npm pack stderr (not stdout) for "total files:" line — npm pack outputs to stderr
+- [Phase 24-integration-ci-validation]: Gate 3 checks packResult.status !== 0 to surface npm crash details; packResult.error only covers spawn failures, not non-zero exits
 
 ### Pending Todos
 
-- Verify `--include-analytics` flag exists on `video list` and/or `webinar list` (run `twentythree video list --agent`, `twentythree webinar list --agent`)
-- Verify exact CLI flag name for `open_p` (run `twentythree webinar create --agent`)
+None — v1.5 milestone complete.
 
 ### Blockers/Concerns
 
-- NPM_TOKEN scope: verify with `npm publish --dry-run` from `packages/twentythree-skills` before pushing first `skills-v*` tag; token may be scoped to twentythree-cli only and require a new secret or token upgrade
+- NPM_TOKEN scope: verify with `npm publish --dry-run` from `packages/twentythree-skills` before pushing first `skills-v1.1.0` tag (v1.5 adds guide.md, warrants a skills patch/minor release)
 
 ## Session Continuity
 
-Last session: 2026-04-23T21:24:38.763Z
-Stopped at: Phase 24 context gathered
-Resume file: .planning/phases/24-integration-ci-validation/24-CONTEXT.md
+Last session: 2026-04-23
+Stopped at: Phase 24 complete — v1.5 milestone done, ready for /gsd-complete-milestone
+Resume file: None

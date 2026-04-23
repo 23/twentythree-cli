@@ -8,14 +8,9 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current Milestone: v1.5 Agent Behavioral Guidelines
+## Current Milestone: v1.5 Complete
 
-**Goal:** Add behavioral and usage guidance to the `twentythree-skills` package so AI agents make better API decisions without needing to be prompted.
-
-**Target features:**
-- New `skills/guide.md` with cross-cutting behavioral rules (object type differentiation, thumbnail strategy, analytics inclusion, filtering/sorting patterns, webinar defaults, timezone handling, admin link construction)
-- Inline reinforcement notes in `video.md`, `webinar.md`, and other reference files where the rules apply
-- `skills/SKILL.md` updated to reference the new guide
+v1.5 shipped 2026-04-23. `skills/guide.md` authored (5 Correctness Rules + 3 Preference Rules, all flag names verified from live `--agent` output), inline `> **Note:**` callouts added to `video.md` and `webinar.md`, `SKILL.md` updated with Behavioral Guide section before the Resource Index table, and `validate-skills.mjs` extended with Gate 3 (pack count == 29, `skills/guide.md` present).
 
 ## Previous State: v1.4 Shipped
 
@@ -38,12 +33,12 @@ v1.4 shipped 2026-04-20. `twentythree-skills` published to npm: `skills-v*` tag 
 - ✓ TypeScript build clean — zero `tsc --noEmit` errors via `@types/node` + DOM lib; autocomplete extends `BaseCommand` for full PROMPT-01 coverage — Validated in Phase 17 — v1.2
 - ✓ `twentythree-skills` package — `packages/twentythree-skills` published as standalone ESM npm package; 22 reference files + 2 workflow files + `npx twentythree-skills add` runtime installer for Claude Code, Codex, Copilot, Cursor — v1.3
 - ✓ `twentythree-skills` published to npm — `skills-v*` tag pipeline, `publishConfig.access: "public"`, dry-run CI gate, bare `npx twentythree-skills` invocation, SKILL.md hyperlinks for all 22 reference files — v1.4
+- ✓ **GUIDE-01**: `skills/guide.md` authored — 5 Correctness Rules + 3 Preference Rules, all flag names verified from live `--agent` output — v1.5
+- ✓ **GUIDE-02**: Inline `> **Note:**` callouts added to `video.md` and `webinar.md` at the point of usage, forward-referencing `guide.md` — v1.5
+- ✓ **GUIDE-03**: `skills/SKILL.md` updated with Behavioral Guide section before Resource Index table — v1.5
+- ✓ **INT-01**: `validate-skills.mjs` Gate 3 asserts npm pack file count == 29 and `skills/guide.md` present in pack listing — v1.5
 
-### Active (v1.5)
-
-- [ ] **GUIDE-01**: New `skills/guide.md` with cross-cutting behavioral rules — object type differentiation, thumbnail strategy, analytics inclusion, filtering/sorting patterns, webinar creation defaults, timezone handling, admin link construction
-- [ ] **GUIDE-02**: Inline behavioral notes added to `video.md`, `webinar.md`, and other reference files where rules apply at point of usage
-- [ ] **GUIDE-03**: `skills/SKILL.md` updated to reference `guide.md` so agents discover it
+### Active
 
 ### Deferred (post-v1.3)
 
@@ -78,7 +73,7 @@ v1.4 shipped 2026-04-20. `twentythree-skills` published to npm: `skills-v*` tag 
 - **URL normalization**: API responses mix absolute and relative URLs. All formatted output resolves relative URLs to full URLs using the active workspace domain.
 - **Chunked upload**: Shared engine in `src/upload/` used by video, webinar attachment, action, and open upload commands. 100MB chunks, 5-way parallelism, resume-on-failure.
 - **Agent support**: All 219 command files declare `static agentMetadata`; `--agent` flag on any command outputs machine-readable metadata for AI agent consumption.
-- **Skills package**: `packages/twentythree-skills` — ESM, no build, Node 22+, no external deps. 25 files: `skills/SKILL.md` + `skills/reference/*.md` (22 files) + `skills/workflows/*.md` (2 files). Installer at `bin/add.js` detects 4 runtimes via dir presence.
+- **Skills package**: `packages/twentythree-skills` — ESM, no build, Node 22+, no external deps. 29 files: `skills/SKILL.md` + `skills/guide.md` + `skills/reference/*.md` (22 files) + `skills/workflows/*.md` (2 files) + `bin/add.js` + `package.json` + `README.md`. Installer at `bin/add.js` detects 4 runtimes via dir presence. Validated by Gate 3 in `validate-skills.mjs`.
 
 ## Constraints
 
@@ -120,4 +115,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-23 — v1.5 started (agent behavioral guidelines for twentythree-skills)*
+*Last updated: 2026-04-23 — v1.5 complete (agent behavioral guidelines shipped: guide.md, inline notes, Gate 3)*
