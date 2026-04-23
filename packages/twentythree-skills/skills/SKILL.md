@@ -187,7 +187,7 @@ twentythree video update <video-id> --category-id <cat-id> --json
 twentythree thumbnail create --video-id <video-id> --time 5 --json
 
 # 4. Publish
-twentythree video update <video-id> --published 1 --json
+twentythree video update <video-id> --publish --json
 ```
 
 ### Webinar Setup
