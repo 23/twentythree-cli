@@ -194,7 +194,7 @@ twentythree video update <video-id> --published 1 --json
 
 ```bash
 # 1. Create the webinar (API: live)
-twentythree webinar create --title "Q2 Kickoff" --scheduled-at "2026-05-01T14:00:00Z" --json
+twentythree webinar create --title "Q2 Kickoff" --live-date "2026-05-01T14:00:00Z" --json
 #    => prints { "id": "<webinar-id>", "admin_url": "..." }
 
 # 2. Fetch room URL and stream key
