@@ -224,7 +224,10 @@ Plans:
   2. `skills/SKILL.md` contains a "Behavioral Guide" section with a link to `guide.md` placed before the Resource Index table so agents encounter it before scanning commands
   3. At least `webinar.md` has a `> **Note:**` callout at the relevant command for the "no webinar get — use webinar list --search" rule, forward-referencing `guide.md` rather than restating the rule inline
   4. Running `node bin/add.js --project` from the package root lists `guide.md` in the copied file output
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 23-01-PLAN.md — Verify flag names and author skills/guide.md with 8 behavioral rules
+- [ ] 23-02-PLAN.md — Update SKILL.md Behavioral Guide section and add inline notes to video.md and webinar.md
 **UI hint**: no
 
 ### Phase 24: Integration & CI Validation
