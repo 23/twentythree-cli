@@ -76,8 +76,11 @@ const packResult = spawnSync('npm', ['pack', '--dry-run'], {
   encoding: 'utf8',
 })
 
-if (packResult.error) {
-  errors.push(`Gate 3: failed to run npm pack --dry-run: ${packResult.error.message}`)
+if (packResult.error || packResult.status !== 0) {
+  const detail = packResult.error
+    ? packResult.error.message
+    : (packResult.stderr || packResult.stdout || '').trim().split('\n').slice(0, 3).join(' | ')
+  errors.push(`Gate 3: npm pack --dry-run failed (exit ${packResult.status ?? 'unknown'}): ${detail}`)
 } else {
   const packOutput = packResult.stderr || ''
 
