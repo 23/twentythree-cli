@@ -2,10 +2,11 @@
 // scripts/validate-skills.mjs
 // Validates twentythree-skills package structure and content.
 //
-// Two-gate validation (see 18-RESEARCH.md "validate-skills.mjs — Design"):
+// Three-gate validation (see 18-RESEARCH.md "validate-skills.mjs — Design"):
 //   Gate 1 (strict): skills/SKILL.md must exist with name + description frontmatter.
 //   Gate 2 (soft):   skills/reference/ — warn if absent (Phase 19 creates it);
 //                    error only if present but missing any of the 22 groups.
+//   Gate 3 (strict): npm pack --dry-run must list exactly 29 files and include skills/guide.md.
 //
 // Exits 0 on success, 1 on any hard failure.
 
