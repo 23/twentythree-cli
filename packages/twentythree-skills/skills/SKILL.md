@@ -178,7 +178,7 @@ These are not in the 22 resource groups — they are CLI-local utilities:
 ```bash
 # 1. Upload (chunked upload is automatic)
 twentythree video upload ./video.mp4 --title "Product Demo" --json
-#    => prints { "id": "<video-id>", "admin_url": "..." }
+#    => prints { "data": { "id": "<video-id>", "admin_url": "..." } }
 
 # 2. Assign to a category (API: album)
 twentythree video update <video-id> --category-id <cat-id> --json
@@ -195,7 +195,7 @@ twentythree video update <video-id> --publish --json
 ```bash
 # 1. Create the webinar (API: live)
 twentythree webinar create --title "Q2 Kickoff" --live-date "2026-05-01T14:00:00Z" --json
-#    => prints { "id": "<webinar-id>", "admin_url": "..." }
+#    => prints { "data": { "id": "<webinar-id>", "admin_url": "..." } }
 
 # 2. Fetch room URL and stream key — use webinar list --search since there is no webinar get
 twentythree webinar list --search "Q2 Kickoff" --json
