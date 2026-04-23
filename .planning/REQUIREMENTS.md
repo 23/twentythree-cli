@@ -5,8 +5,8 @@
 ### Behavioral Guide
 
 - [x] **GUIDE-01**: New `skills/guide.md` with 8 behavioral rules — 4 correctness rules (object type differentiation, webinar creation defaults, timezone handling, admin link construction) + 3 preference rules (thumbnails from listing responses, analytics via listing flags, filtering/sorting on listing endpoints) + 1 implied correctness rule (no `webinar get` command — use `webinar list --search`). Rules must use positive framing and include concrete command examples. Flag names (`open_p`, `--include-analytics`) must be verified via `--agent` output before writing. Located at `skills/guide.md` (not in `reference/` or `workflows/`).
-- [ ] **GUIDE-02**: Inline behavioral notes added to relevant reference files — at minimum `webinar.md` for the "no webinar get" rule; `video.md` and `webinar.md` for rules with direct point-of-use relevance (thumbnails, analytics include, admin links). Format: `> **Note:**` blockquote immediately after the relevant command header. One note per affected command; no verbatim rule repetition — forward-reference `guide.md` instead.
-- [ ] **GUIDE-03**: `skills/SKILL.md` updated to reference `guide.md` — new "Behavioral Guide" section added before the resource index table so agents encounter behavioral orientation before scanning commands.
+- [x] **GUIDE-02**: Inline behavioral notes added to relevant reference files — at minimum `webinar.md` for the "no webinar get" rule; `video.md` and `webinar.md` for rules with direct point-of-use relevance (thumbnails, analytics include, admin links). Format: `> **Note:**` blockquote immediately after the relevant command header. One note per affected command; no verbatim rule repetition — forward-reference `guide.md` instead.
+- [x] **GUIDE-03**: `skills/SKILL.md` updated to reference `guide.md` — new "Behavioral Guide" section added before the resource index table so agents encounter behavioral orientation before scanning commands.
 
 ### Integration
 

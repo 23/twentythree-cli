@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
-status: executing
-stopped_at: Completed 23-01-PLAN.md
-last_updated: "2026-04-23T21:04:18.723Z"
+status: verifying
+stopped_at: Completed 23-02-PLAN.md
+last_updated: "2026-04-23T21:09:42.171Z"
 last_activity: 2026-04-23
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-23)
 
 Phase: 23 (behavioral-guide-authoring) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-23
 
 Progress: [__________] 0%
@@ -101,6 +101,8 @@ Recent decisions affecting current work:
 - [v1.5 roadmap]: Inline reference file notes use > **Note:** blockquote format, forward-reference guide.md rather than restate rules — single source of truth in guide.md
 - [v1.5 roadmap]: npm pack --dry-run file count assertion updates from 28 to 29 when guide.md is added (INT-01)
 - [Phase 23-behavioral-guide-authoring]: open_p has no direct CLI flag on webinar create; CR-3 references verified --draft/--publish flags and instructs agents to run --agent
+- [Phase 23-behavioral-guide-authoring]: SKILL.md Behavioral Guide section placed before Resource Index — agents scan top-to-bottom and would miss a link placed after the command table
+- [Phase 23-behavioral-guide-authoring]: Inline reference file notes use forward-reference pattern only — guide.md is single source of truth; no verbatim rule repetition in reference files
 
 ### Pending Todos
 
@@ -113,6 +115,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-23T21:04:18.721Z
-Stopped at: Completed 23-01-PLAN.md
+Last session: 2026-04-23T21:09:42.169Z
+Stopped at: Completed 23-02-PLAN.md
 Resume file: None
