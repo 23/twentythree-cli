@@ -1,13 +1,13 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: Agent Behavioral Guidelines
+milestone: v1.4
+milestone_name: Prepare Skill for Release on npm
 status: planning
-stopped_at: —
-last_updated: "2026-04-23T00:00:00.000Z"
-last_activity: 2026-04-23
+stopped_at: Phase 23 context gathered
+last_updated: "2026-04-23T20:51:22.617Z"
+last_activity: 2026-04-23 — v1.5 roadmap created (Phases 23–24)
 progress:
-  total_phases: 2
+  total_phases: 12
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -112,6 +112,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-23
-Stopped at: Roadmap created for v1.5 (Phases 23–24)
-Resume file: None
+Last session: 2026-04-23T20:51:22.615Z
+Stopped at: Phase 23 context gathered
+Resume file: .planning/phases/23-behavioral-guide-authoring/23-CONTEXT.md
