@@ -8,17 +8,18 @@ A TypeScript/Node.js CLI (`twentythree`) for the TwentyThree video platform API,
 
 A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
 
-## Current Milestone: v1.4 Prepare Skill for Release on npm
+## Current Milestone: v1.5 Agent Behavioral Guidelines
 
-**Goal:** Publish the `twentythree-skills` package to npm so it's installable via `npm install -g twentythree-skills` and runnable via `npx twentythree-skills add`.
+**Goal:** Add behavioral and usage guidance to the `twentythree-skills` package so AI agents make better API decisions without needing to be prompted.
 
 **Target features:**
-- Publish `twentythree-skills` to npm (package is complete, not yet published)
-- SKILL.md resource index hyperlinks (improve agent discoverability for link-following runtimes)
+- New `skills/guide.md` with cross-cutting behavioral rules (object type differentiation, thumbnail strategy, analytics inclusion, filtering/sorting patterns, webinar defaults, timezone handling, admin link construction)
+- Inline reinforcement notes in `video.md`, `webinar.md`, and other reference files where the rules apply
+- `skills/SKILL.md` updated to reference the new guide
 
-## Previous State: v1.3 Shipped
+## Previous State: v1.4 Shipped
 
-v1.3 shipped 2026-04-20. The `twentythree-skills` npm package is complete: 22 hand-authored reference files, 2 workflow files, and a runtime installer (`npx twentythree-skills add`) that detects Claude Code, Codex, Copilot, and Cursor via directory presence and installs 25 skill files idempotently.
+v1.4 shipped 2026-04-20. `twentythree-skills` published to npm: `skills-v*` tag pipeline, `publishConfig.access: "public"`, dry-run CI gate, bare `npx twentythree-skills` invocation, and SKILL.md hyperlinks for all 22 reference files.
 
 ## Requirements
 
@@ -36,11 +37,13 @@ v1.3 shipped 2026-04-20. The `twentythree-skills` npm package is complete: 22 ha
 - ✓ Tab completion — `@oclif/plugin-autocomplete` wired for bash/zsh; guided setup via `twentythree autocomplete`; `twentythree video <TAB>` lists subcommands, `--<TAB>` lists flags — Validated in Phase 15 — v1.2
 - ✓ TypeScript build clean — zero `tsc --noEmit` errors via `@types/node` + DOM lib; autocomplete extends `BaseCommand` for full PROMPT-01 coverage — Validated in Phase 17 — v1.2
 - ✓ `twentythree-skills` package — `packages/twentythree-skills` published as standalone ESM npm package; 22 reference files + 2 workflow files + `npx twentythree-skills add` runtime installer for Claude Code, Codex, Copilot, Cursor — v1.3
+- ✓ `twentythree-skills` published to npm — `skills-v*` tag pipeline, `publishConfig.access: "public"`, dry-run CI gate, bare `npx twentythree-skills` invocation, SKILL.md hyperlinks for all 22 reference files — v1.4
 
-### Active (v1.4)
+### Active (v1.5)
 
-- [ ] **NPM-01**: Publish `twentythree-skills` to npm — package is complete but not yet published; `bin/add.js` needs a real npm package to be runnable via `npx`
-- [ ] **SKILL-03**: SKILL.md resource index hyperlinks — plain-text topic names in index; agents must infer `reference/video.md` path; adding `[video](reference/video.md)` links improves discoverability for link-following runtimes
+- [ ] **GUIDE-01**: New `skills/guide.md` with cross-cutting behavioral rules — object type differentiation, thumbnail strategy, analytics inclusion, filtering/sorting patterns, webinar creation defaults, timezone handling, admin link construction
+- [ ] **GUIDE-02**: Inline behavioral notes added to `video.md`, `webinar.md`, and other reference files where rules apply at point of usage
+- [ ] **GUIDE-03**: `skills/SKILL.md` updated to reference `guide.md` so agents discover it
 
 ### Deferred (post-v1.3)
 
@@ -117,4 +120,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-20 — v1.4 started (publish twentythree-skills to npm; SKILL.md hyperlinks)*
+*Last updated: 2026-04-23 — v1.5 started (agent behavioral guidelines for twentythree-skills)*

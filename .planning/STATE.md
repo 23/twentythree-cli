@@ -1,34 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Prepare Skill for Release on npm
-status: verifying
-stopped_at: Completed 21-02-PLAN.md
-last_updated: "2026-04-20T22:08:53.370Z"
-last_activity: 2026-04-20
+milestone: v1.5
+milestone_name: Agent Behavioral Guidelines
+status: planning
+stopped_at: —
+last_updated: "2026-04-23T00:00:00.000Z"
+last_activity: 2026-04-23
 progress:
-  total_phases: 10
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-20)
+See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 21 — skills-npm-publish
+**Current focus:** Milestone v1.5 — defining requirements
 
 ## Current Position
 
-Phase: 21 (skills-npm-publish) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
-Last activity: 2026-04-20
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-23 — Milestone v1.5 started
 
 Progress: [__________] 0%
 
