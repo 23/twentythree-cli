@@ -26,6 +26,8 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** write  **Side effects:** creates  **Output:** key-value (id + admin_url)
 
+> **Note:** Set access visibility explicitly when creating webinars — defaults may not match your intent. Pass `--publish` or `--draft` to control visibility. The `--json` response includes `data.admin_url`; read it from the response rather than constructing URLs. See [guide.md](../guide.md) for Webinar Creation Defaults and Admin Link Construction rules.
+
 After create, the CLI prints the new webinar ID and its admin URL. Capture `data.id` and `data.admin_url` from the `--json` response.
 
 | Flag | Required | Default | Description |
@@ -51,6 +53,8 @@ twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:0
 ### webinar list
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (ID, Title, Status, Date, Private)
+
+> **Note:** To retrieve a specific webinar, use `--search "<title>"` and filter client-side — there is no `webinar get` command. See [guide.md](../guide.md).
 
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|

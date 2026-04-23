@@ -27,6 +27,8 @@ Verify: `twentythree auth status --json`
 
 After upload the CLI prints the new video ID and its admin URL. Capture `data.id` and `data.admin_url` from the `--json` response.
 
+> **Note:** The `--json` response includes `data.admin_url` — read it from the response directly. Do not construct admin URLs manually. See [guide.md](../guide.md) for the Admin Link Construction rule.
+
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--title` | no | — | Title for the uploaded video |
@@ -51,6 +53,8 @@ twentythree video upload ./video.mp4 --title "Q2 Keynote" --category-id <cat-id>
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (ID, Title, Duration, Status, Published, Updated)
 
+> **Note:** For analytics and thumbnail data, prefer including them in the listing call rather than making separate command calls. See [guide.md](../guide.md) for Preference Rules.
+
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--limit` | no | — | Maximum number of videos to return (default: all) |
@@ -69,6 +73,8 @@ twentythree video list --limit 20 --include-unpublished --json
 ### video get
 
 **Auth scope:** read  **Side effects:** none  **Output:** key-value
+
+> **Note:** Thumbnail URLs are included in `video list --json` output — prefer the listing response when you already have it. See [guide.md](../guide.md) for the Thumbnails from Listing Response rule.
 
 No additional flags — pass the video ID as a positional argument.
 
