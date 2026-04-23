@@ -238,7 +238,9 @@ Plans:
   1. The `npm pack --dry-run` file count assertion in CI is updated from 28 to 29 and passes without error
   2. A full `npm pack --dry-run` run from `packages/twentythree-skills` lists `skills/guide.md` in its output
   3. `validate-skills` script still exits 0 (no regressions from guide.md addition)
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 24-01-PLAN.md — Add Gate 3 pack file count assertion (EXPECTED_FILE_COUNT = 29, skills/guide.md presence check)
 **UI hint**: no
 
 ## Progress
@@ -269,4 +271,4 @@ Plans:
 | 21. Skills npm Publish | v1.4 | 2/2 | Complete   | 2026-04-20 |
 | 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
 | 23. Behavioral Guide Authoring | v1.5 | 2/2 | Complete   | 2026-04-23 |
-| 24. Integration & CI Validation | v1.5 | 0/? | Not started | - |
+| 24. Integration & CI Validation | v1.5 | 0/1 | Not started | - |
