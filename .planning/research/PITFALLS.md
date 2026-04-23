@@ -1,7 +1,7 @@
 # Pitfalls Research: twentythree-skills Agent Skills Package
 
 **Domain:** Agent skills package alongside an existing TypeScript/Node.js CLI monorepo
-**Researched:** 2026-04-20
+**Researched:** 2026-04-20 (updated 2026-04-23 with behavioral guidance pitfalls)
 **Overall Confidence:** HIGH — verified against official Anthropic skill authoring docs, Claude Code skills docs, OpenAI Codex skills docs, npm publish docs, and community research on the Agent Skills standard
 
 ---
@@ -36,6 +36,11 @@
 | Skill file uses Windows-style backslash paths in examples | Skill fails on macOS/Linux where the majority of users are | Always use forward slashes in all paths in skill content | Content authoring |
 | Skill includes time-sensitive information ("as of April 2026, the API supports...") | Content is wrong within months and undermines agent trust | Use the "old patterns" pattern: current behavior in main body, deprecated behavior in a collapsed `<details>` block | Content authoring |
 | Monorepo CI publishes skills package before CLI package | If skills pkg is published first and references CLI v1.2.0 which isn't yet on npm, install instructions are broken | Publish CLI first, skills second; automate with Changesets publish order or explicit CI step ordering | Monorepo publish |
+| guide.md contradicts reference file examples | Agent follows the example, ignores the guide rule | Audit all reference files against guide rules before finalizing; examples must model guide behavior | Behavioral guidance |
+| SKILL.md not updated to reference guide.md | guide.md is installed but never read | Update SKILL.md body in the same PR that adds guide.md | Behavioral guidance / Integration |
+| guide.md not inside `skills/` source root | bin/add.js silently excludes guide.md from installs | Run `node bin/add.js --project` locally after adding guide.md and verify it appears in output | Behavioral guidance / Integration |
+| guide.md and reference files both state the same rule | Copies drift; agents see conflicting versions | Authority split: guide.md owns policy, reference files forward-reference guide.md | Behavioral guidance |
+| guide.md not linked from SKILL.md body early enough | Agents stop reading SKILL.md once they find the resource index | Link guide.md before the resource index table | Behavioral guidance / Integration |
 
 ---
 
@@ -102,9 +107,43 @@ The CLI stores credentials in the OS keychain — no plaintext files.
 
 ---
 
+### 5. guide.md Contradicts Reference File Examples
+
+**What goes wrong:** guide.md states a behavioral rule (e.g., "always poll transcoding-progress before publishing"), but `reference/video.md` shows a minimal shortcut example that skips the poll (`twentythree video upload ./demo.mp4 --publish --json`). An agent reading both surfaces sees two valid paths and picks the shorter one — the example wins because it is closer to the call site.
+
+**Why it happens:** Behavioral rules are written at the guide level in the abstract. Reference file examples are written to demonstrate the minimum viable invocation. The minimum-viable example often violates a rule without the author noticing because both look correct in isolation.
+
+**Consequences:** guide.md rules are silently ignored whenever a reference file example demonstrates a shortcut that violates them. The author sees no error — both files look fine individually.
+
+**Prevention:**
+- Before finalizing any guide.md rule, audit every code block in all 22 reference files and both workflow files that relates to that behavior.
+- Any example that would violate the rule must either be updated to model the rule, or the rule must explicitly name the shortcut as a valid exception with its conditions stated.
+- Write rules against specific commands or flags, not against prose concepts: "Before calling `video update --publish`, confirm `transcoding-progress` returns `status: complete`" is checkable; "prefer safe sequencing" is not.
+
+**Detection:** After drafting guide.md, extract every imperative rule and grep the reference files for the commands or flags that rule governs. Read every matching example. Any example that bypasses the rule without acknowledging it is a conflict.
+
+---
+
+### 6. SKILL.md Not Updated — guide.md Is Never Discovered
+
+**What goes wrong:** guide.md is added to the `skills/` directory. `bin/add.js` copies it correctly (it uses `walkDir` — recursive copy of all files under `skills/`). But SKILL.md, which is the agent's entry point, does not reference guide.md anywhere. Agents load SKILL.md, navigate to the relevant reference file, and never discover guide.md. It is installed on disk and effectively invisible.
+
+**Why it happens:** Adding a file to the directory is mechanical. Updating the index document that agents read first is a separate manual step that is easy to treat as optional.
+
+**Consequences:** The entire behavioral guidance effort produces zero change in agent behavior. guide.md is present on every installed machine and never read.
+
+**Prevention:**
+- SKILL.md body must include an explicit reference to guide.md. Place it before the resource index table (agents often stop reading once they find a relevant topic row).
+- A one-liner is sufficient: "Before running any command sequence, read `guide.md` for behavioral rules (error recovery, output handling, pre-flight checks)."
+- The SKILL.md update and the guide.md addition must ship in the same PR. Block merge if SKILL.md does not reference guide.md.
+
+**Detection:** After adding guide.md, read SKILL.md and confirm it links to guide.md in the body before the resource index.
+
+---
+
 ## Moderate Pitfalls
 
-### 5. Multi-Runtime Path Mismatch
+### 7. Multi-Runtime Path Mismatch
 
 Different agents use different skill directories:
 
@@ -121,7 +160,7 @@ An installer that only writes to `~/.claude/skills/` silently provides nothing t
 
 ---
 
-### 6. Vague Skill Description — Skill Never Self-Activates
+### 8. Vague Skill Description — Skill Never Self-Activates
 
 The `description` field drives automatic skill loading in Claude Code. If the description says "TwentyThree CLI skills for AI agents" (current state in the existing `SKILL.md`), Claude never loads it unless the user explicitly invokes `/twentythree`. The description must include the trigger phrases users actually say.
 
@@ -137,7 +176,7 @@ description: >
 
 ---
 
-### 7. Skill Content Lifecycle After Context Compaction
+### 9. Skill Content Lifecycle After Context Compaction
 
 When Claude Code compacts a conversation, it re-attaches skill content up to 5,000 tokens per skill (25,000 total budget across all skills). If a long session has many skills loaded, the twentythree skill may be dropped entirely after compaction. Instructions written as "one-time setup" stop applying.
 
@@ -145,7 +184,39 @@ When Claude Code compacts a conversation, it re-attaches skill content up to 5,0
 
 ---
 
-### 8. Publish Order Dependency
+### 10. guide.md Outside `skills/` Source Root — Silent Omission from Installs
+
+**What goes wrong:** guide.md is written and committed to the repo but placed in the package root, a `docs/` directory, or a `skills/draft/` staging area rather than directly inside `skills/`. `bin/add.js` uses `walkDir(skillsSource)` where `skillsSource = join(__dirname, '..', 'skills')`. Only files inside `skills/` are walked and copied. A misplaced guide.md is silently absent from all installed runtimes.
+
+**Why it happens:** The author treats "the file is in the repo" as equivalent to "the file will be installed." The installer's source root is `skills/`, not the package root.
+
+**Consequences:** Users who run `npx twentythree-skills add` get the package without guide.md. No error is reported. The omission is invisible — the install appears to succeed.
+
+**Prevention:**
+- guide.md must live inside `skills/` directly (alongside SKILL.md) or inside a named subdirectory under `skills/` (e.g., `skills/guidance/guide.md`).
+- After placing guide.md, run `node bin/add.js --project` in a scratch directory and check the printed file list. `✓ guide.md` (or `✓ guidance/guide.md`) must appear. If it does not, the file is outside the source root.
+- Add a smoke-test step to CI or the publish checklist: "run `node bin/add.js --project` in a temp dir and grep output for `guide.md`."
+
+**Detection:** `node bin/add.js --project` output should include the file. Absence means the file is in the wrong location.
+
+---
+
+### 11. Duplication Between guide.md and Reference Files Creates Authority Ambiguity
+
+**What goes wrong:** The same rule appears verbatim in guide.md and in callout blocks across multiple reference files. Over time the copies drift — a default changes, an exception is added to one location but not the other. Agents see two versions of the same rule with no signal about which is current. The reference file version usually wins (it is closer to the call site), meaning guide.md is the one that becomes stale and misleads.
+
+**Why it happens:** Copy-paste at authoring time. When both copies are true, the duplication seems harmless. When one copy is updated, the other is forgotten.
+
+**Prevention:**
+- Establish an authority split before writing: guide.md owns behavioral policy (when and why); reference files own call-site facts (flags, defaults, examples). Do not state the same sentence in both.
+- Where duplication cannot be avoided (e.g., "use `--json` in agentic contexts" is essential in both SKILL.md and reference files), make reference file callouts forward-reference guide.md rather than restating the rule: "See `guide.md` §Output Rules." One authoritative location; all other locations point to it.
+- When updating a rule, search all files in `skills/` for the rule text before committing.
+
+**Detection:** Extract every imperative sentence from guide.md. Grep for equivalent text in reference files. Any verbatim or near-verbatim match should become a cross-reference, not a duplicate.
+
+---
+
+### 12. Publish Order Dependency
 
 `twentythree-cli@1.2.0` and `twentythree-skills@1.2.0` ship together. If skills publishes first, any install instruction or peerDependency pointing to `twentythree-cli@1.2.0` fails because the CLI isn't yet on the registry.
 
@@ -153,7 +224,7 @@ When Claude Code compacts a conversation, it re-attaches skill content up to 5,0
 
 ---
 
-### 9. Agent Assumes Interactive Terminal
+### 13. Agent Assumes Interactive Terminal
 
 Skills may document interactive commands (workspace picker prompts, auth setup wizard) that don't work in non-interactive agent environments. Agents can't respond to `@clack/prompts` interactive selects.
 
@@ -168,9 +239,42 @@ twentythree workspace select --workspace <domain>
 
 ---
 
+### 14. guide.md Not Positioned Early in SKILL.md — Agents Stop Reading Before They Reach the Link
+
+**What goes wrong:** SKILL.md is updated to include a link to guide.md, but the link is placed after the resource index table (the 22-row table at line ~130 of the current SKILL.md). Agents often stop reading once they locate the relevant topic row. The guide.md link is present but consistently skipped.
+
+**Why it happens:** The link is added at the end of SKILL.md as an afterthought. Authors assume agents read all of SKILL.md before acting.
+
+**Consequences:** guide.md remains undiscovered despite SKILL.md technically referencing it. The pitfall is harder to catch than missing SKILL.md update entirely, because the reference exists — it is just in the wrong position.
+
+**Prevention:** The guide.md reference must appear in SKILL.md before the Key Invariants section and before the Resource Index table. A good placement: immediately after the "Self-Discovery: The `--agent` Flag" section, as the next section before "Key Invariants." Something like:
+
+```markdown
+## Behavioral Rules
+
+See `guide.md` for standing rules that govern command sequencing, error recovery,
+and output handling in agentic contexts. Read it before executing any multi-step workflow.
+```
+
+---
+
+### 15. guide.md Rules Written at Wrong Granularity
+
+**What goes wrong:** guide.md contains rules so general they add no information ("be careful with destructive operations" — already in reference files with `side_effects: destructive` metadata) or so specific they belong as inline notes ("when calling `video delete`, confirm the ID with `video get` first" — call-site knowledge belonging in `reference/video.md`). Neither type changes agent behavior: the general rules are noise, the specific rules are mis-located.
+
+**Why it happens:** Rule authors write from intuition about what needs emphasis, not from analysis of where in the agent's decision loop the rule should fire.
+
+**Prevention:**
+- guide.md rules belong at the workflow-decision level: cross-cutting rules about sequencing, error recovery strategy, output format, and pre-flight checks that apply across multiple resource groups.
+- Command-specific rules go in the relevant reference file as inline notes.
+- Global rules already in SKILL.md (e.g., "always use `--json` in agentic contexts") should be referenced from guide.md, not restated.
+- Useful filter: if a rule only applies to one command or one resource type, it is not a guide.md rule.
+
+---
+
 ## Minor Pitfalls
 
-### 10. Missing `files` Whitelist for Skill Sub-Directories
+### 16. Missing `files` Whitelist for Skill Sub-Directories
 
 If the skills package grows to include `reference/`, `examples/`, or `scripts/` sub-directories (per the progressive disclosure pattern), they must be explicitly listed in `package.json`'s `files` field. The current `files: ["SKILL.md"]` would exclude them.
 
@@ -178,7 +282,7 @@ If the skills package grows to include `reference/`, `examples/`, or `scripts/` 
 
 ---
 
-### 11. Version Number Mismatch Between CLI and Skills
+### 17. Version Number Mismatch Between CLI and Skills
 
 If CLI is `v1.2.0` and skills is `v0.1.0`, consumers can't tell if the skill content matches their CLI version. If the skill documents a flag added in CLI v1.1 and the user has CLI v0.9 installed, the agent will fail on that flag with no clear error.
 
@@ -190,7 +294,7 @@ Use lockstep versioning or explicit `peerDependencies` in `package.json`.
 
 ---
 
-### 12. Skill References `npx twentythree-skills add` in Content
+### 18. Skill References `npx twentythree-skills add` in Content
 
 If the skill file itself contains instructions like "install skills by running `npx twentythree-skills add`", this creates a circular reference (skill tells you how to install the skill). Worse, if the npm package name is slightly different, agents may hallucinate variations of the command and attempt to `npm install` non-existent packages.
 
@@ -198,7 +302,37 @@ If the skill file itself contains instructions like "install skills by running `
 
 ---
 
-### 13. Skill Tests Missing for Multiple Model Sizes
+### 19. guide.md Frontmatter Missing or Inconsistent With Existing Files
+
+The existing reference files all have YAML frontmatter (`name`, `description`). guide.md added without frontmatter may be skipped by runtimes that index skill files by frontmatter, or may cause parse errors in future tooling that expects frontmatter in all `.md` files under `skills/`.
+
+**Prevention:** Add frontmatter consistent with the existing files:
+```yaml
+---
+name: guide
+description: Behavioral rules for using the TwentyThree CLI in agentic contexts — command sequencing, error recovery, output handling, and pre-flight checks.
+---
+```
+
+---
+
+### 20. Cross-References in guide.md Use Non-Relative Paths
+
+guide.md links to reference files using absolute paths or GitHub URLs. The installed copy of the skills package lives in `~/.claude/skills/twentythree/` (or the equivalent for other runtimes). Absolute paths break on every user's machine. GitHub URLs work but require network access and will drift from the installed version.
+
+**Prevention:** All cross-references in guide.md must use relative paths: `[video commands](reference/video.md)`, not `https://github.com/…/reference/video.md`. The `bin/add.js` installer preserves the directory structure (it uses `relative(skillsSource, absFile)` to reconstruct paths), so relative paths work identically in the installed copy. The existing `workflows/upload-and-publish.md` already demonstrates this pattern: `[`reference/video.md`](../reference/video.md)`.
+
+---
+
+### 21. guide.md Uses API Terminology Instead of CLI Terminology
+
+The existing reference files maintain a strict CLI-domain vocabulary (`video`, `category`, `webinar`) with terminology mapping sections at the bottom. guide.md written by an author closer to the API may slip into API terms (`photo`, `album`, `live`). Agents reading guide.md alongside reference files see inconsistent names and may construct wrong commands.
+
+**Prevention:** guide.md must use CLI-domain terms throughout. Add a one-line anchor at the top: "All terms use CLI names. CLI `video` = API `photo`; CLI `category` = API `album`; CLI `webinar` = API `live`. See `reference/video.md` §Terminology Notes." Before publishing, search the guide.md source for the strings `photo`, `album`, and `live` to catch slips.
+
+---
+
+### 22. Skill Tests Missing for Multiple Model Sizes
 
 Skills behave differently under Claude Haiku (economical, less reasoning), Claude Sonnet (balanced), and Claude Opus (powerful). A skill that works well under Opus may silently under-deliver under Haiku because it assumed more reasoning capability.
 
@@ -308,6 +442,8 @@ This breaks if files are accidentally added or removed, forcing a deliberate `fi
 **Warning signs:**
 `npm pack --dry-run` file count changes unexpectedly. Installed package fails at runtime with `ENOENT` for a path inside the package.
 
+**Note for guide.md addition:** When guide.md is added to `skills/`, the file count will increase by 1 (to 29). Update the assertion accordingly and verify with `npm pack --dry-run` before publishing.
+
 ---
 
 ### P6. ESM `"type": "module"` in skills vs CJS `"type": "commonjs"` in CLI — monorepo scripts must use `.mjs`
@@ -349,10 +485,17 @@ Always set `working-directory: packages/twentythree-skills` explicitly in each C
 | Skills package publish | Publishing before CLI is on registry | CLI publishes first; automate with Changesets |
 | Skills package publish | CI workflow missing skills publish step | Add explicit `working-directory: packages/twentythree-skills` publish step to `release.yml` |
 | Skills package publish | NPM_TOKEN scope too narrow | Verify token covers `twentythree-skills` with `npm publish --dry-run` before first real publish |
-| Skills package publish | `files` array missing new directories | Run `npm pack --dry-run` and assert file count in CI |
+| Skills package publish | `files` array missing new directories | Run `npm pack --dry-run` and assert file count in CI; file count increases by 1 when guide.md is added |
 | Version drift management | Manual skill content authored against current CLI only | Automate skill reference sections from `agentMetadata` output; manual narrative is small surface area |
 | Multi-runtime compatibility | Assuming all runtimes use same frontmatter fields | SKILL.md standard covers name/description; Claude Code extras (`disable-model-invocation`, `context: fork`) are additive and ignored by other runtimes |
 | Terminology in skill | Using CLI-friendly names only (video, webinar) | Document API-to-CLI name mapping for users who know the raw TwentyThree API |
+| Adding guide.md | guide.md contradicts reference file examples | Audit all 22 reference files against each rule before finalizing guide.md |
+| Adding guide.md | SKILL.md not updated | Update SKILL.md in the same PR; link guide.md before the resource index table |
+| Adding guide.md | guide.md placed outside `skills/` source root | Run `node bin/add.js --project` and verify guide.md appears in install output |
+| Adding guide.md | Duplicated rules drift between guide.md and reference files | Authority split: guide owns policy; reference files forward-reference guide.md |
+| Adding guide.md | guide.md rules at wrong granularity | Limit guide.md to cross-cutting workflow-level rules; command-specific rules stay in reference files |
+| Adding guide.md | guide.md uses API terminology | Search for `photo`, `album`, `live` strings before publishing; add terminology anchor at top of guide.md |
+| Adding guide.md | `npm pack --dry-run` file count assertion stale | Update assertion from 28 to 29 (or current count + 1) after adding guide.md |
 
 ---
 
@@ -372,3 +515,8 @@ Always set `working-directory: packages/twentythree-skills` explicitly in each C
 - Writing a good CLAUDE.md (HumanLayer): https://www.humanlayer.dev/blog/writing-a-good-claude-md
 - npm global install permission issues (2026): https://github.com/nodejs/node/issues/57548
 - Actual repository state inspected directly: `packages/twentythree-skills/package.json`, `packages/twentythree-skills/bin/add.js`, `.github/workflows/release.yml`, `.changeset/config.json` (HIGH confidence)
+- Observed package structure: `skills/` directory — 25 files across SKILL.md, 22 reference files, 2 workflow files (HIGH confidence — directly inspected)
+- `bin/add.js` installer logic: `walkDir(skillsSource)` where `skillsSource = join(__dirname, '..', 'skills')` — recursive copy of all files in `skills/`; no name or extension filtering (HIGH confidence — directly read)
+- SKILL.md loading path: agents read SKILL.md as the entry point; files not referenced from a loaded file are not automatically discovered (HIGH confidence — consistent with all runtime documentation)
+- Existing inline note patterns: `reference/video.md` uses callout blocks for chunked upload, terminology, and side effect warnings — establishes the convention that guide.md additions must follow (HIGH confidence — directly read)
+- Cross-reference pattern in existing package: `workflows/upload-and-publish.md` uses relative paths (`../reference/video.md`) — the correct pattern for guide.md (HIGH confidence — directly read)

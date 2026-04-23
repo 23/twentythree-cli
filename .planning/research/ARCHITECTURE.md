@@ -1,277 +1,213 @@
-# Architecture Research
+# Architecture Patterns
 
-**Domain:** pnpm monorepo — second-package npm publish wiring
-**Researched:** 2026-04-20
-**Confidence:** HIGH
+**Project:** twentythree-skills — guide.md integration
+**Researched:** 2026-04-23
 
-## Standard Architecture
+---
 
-### System Overview
-
-```
-.github/workflows/release.yml
-          |
-          |  on: push tags 'v*'
-          v
-+---------------------------------------------------------+
-|                     publish job                         |
-|                                                         |
-|  checkout -> pnpm install -> test (cli) -> build (cli)  |
-|      -> validate skills (node scripts/validate-skills)  |
-|      -> pnpm publish twentythree-cli                    |
-|      -> pnpm publish twentythree-skills                 |
-+---------------------------------------------------------+
-          |
-          |  needs: publish
-          v
-+---------------------------------------------------------+
-|                   smoke-test job                        |
-|                                                         |
-|  npm install -g twentythree-cli -> twentythree --version|
-|  npx twentythree-skills add --help                      |
-+---------------------------------------------------------+
-```
-
-### Component Responsibilities
-
-| Component | Responsibility | Notes |
-|-----------|----------------|-------|
-| `release.yml` publish job | Build, test, publish both packages sequentially | Single job ensures atomic release |
-| `release.yml` smoke-test job | Verify installability from live npm registry | Runs after publish; polls for registry propagation |
-| `packages/twentythree-cli/` | CJS CLI, built by tsdown, published with dist/ artifacts | Has a required `pnpm run build` step |
-| `packages/twentythree-skills/` | ESM-only, no build step, static markdown + bin/add.js | pnpm publish copies `files` directly from source |
-| git tag (`v*`) | Publish trigger; single tag governs both packages | Each package publishes at its own version from its own package.json |
-
-## Recommended Project Structure
+## Current Package Structure
 
 ```
-.github/
-  workflows/
-    release.yml              # one workflow, one publish job, two pnpm publish steps
-
-packages/
-  twentythree-cli/
-    package.json             # version: "1.1.1"
-    dist/                    # built output, published
-  twentythree-skills/
-    package.json             # version: "0.1.0", needs publishConfig.access: "public"
-    bin/
-      add.js                 # ESM bin, #!/usr/bin/env node, node: built-ins only
-    skills/
-      SKILL.md
-      reference/*.md
-      workflows/*.md
-    scripts/
-      validate-skills.mjs    # test script, already exists
+packages/twentythree-skills/
+  bin/
+    add.js                    # installer — walks skills/ recursively, copies everything
+  skills/
+    SKILL.md                  # top-level index for agent runtimes
+    reference/
+      action.md
+      analytics.md
+      app.md
+      audience.md
+      category.md
+      collector.md
+      comment.md
+      openupload.md
+      player.md
+      poll.md
+      presentation.md
+      protection.md
+      session.md
+      setting.md
+      site.md
+      spot.md
+      tag.md
+      thumbnail.md
+      user.md
+      video.md
+      webhook.md
+      webinar.md              # 22 reference files total
+    workflows/
+      upload-and-publish.md
+      webinar-lifecycle.md
 ```
 
-### Structure Rationale
+---
 
-- **Single workflow file:** Two sequential `pnpm publish` steps inside one job is correct. A matrix strategy runs both in parallel, which prevents sharing build artifacts and loses ordering guarantees. A separate triggered workflow adds latency and tricky `workflow_run` permission semantics.
-- **No turbo involvement for publish:** turbo.json correctly excludes skills from the global build pipeline (skills has its own package-level turbo.json with empty `dependsOn`). Publishing is a CI step, not a turbo task.
+## 1. Where guide.md Should Live
 
-## Architectural Patterns
+**Path:** `packages/twentythree-skills/skills/guide.md`
 
-### Pattern 1: Sequential pnpm publish in one job
+Place it directly inside `skills/`, not inside `reference/` or `workflows/`. Rationale:
 
-**What:** Add a second `pnpm publish` step in the existing `publish` job, directly after the cli publish step.
-**When to use:** When both packages share a release cadence and a single git tag governs both.
-**Trade-offs:** Simple, atomic, visible. If cli publishes but skills fails, cli is already live — acceptable because skills has no build step and no realistic failure mode beyond bad credentials.
+- `reference/` files are scoped reference docs for a single resource group. guide.md spans the entire CLI — it does not belong in that directory.
+- `workflows/` files are task-specific step-by-step sequences. guide.md is a behavioral document (how to operate the CLI as an agent), not a workflow.
+- Placing it at the `skills/` root gives it the same visibility level as SKILL.md. Agents reading the skill index can find it immediately without descending into subdirectories.
+- `bin/add.js` uses `walkDir(skillsSource)` which recurses all of `skills/` without restriction — a file at `skills/guide.md` is automatically picked up with zero installer changes.
 
-**Example:**
-```yaml
-- name: Publish CLI to npm
-  working-directory: packages/twentythree-cli
-  run: pnpm publish --no-git-checks --access public
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+---
 
-- name: Validate skills package
-  working-directory: packages/twentythree-skills
-  run: node scripts/validate-skills.mjs
+## 2. bin/add.js Behavior — No Changes Required
 
-- name: Publish Skills to npm
-  working-directory: packages/twentythree-skills
-  run: pnpm publish --no-git-checks --access public
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+`bin/add.js` works as follows (verified against source):
+
+1. `skillsSource = join(__dirname, '..', 'skills')` — the root of the skills tree.
+2. `walkDir(skillsSource)` — recursively enumerates every file in `skills/` and all subdirectories. Skips symlinks. Does not filter by extension or filename.
+3. For each discovered file, it copies it to the destination preserving the relative path under `skills/`. So `skills/guide.md` is installed to `<destRoot>/guide.md`, and `skills/reference/video.md` is installed to `<destRoot>/reference/video.md`.
+
+**Conclusion:** Adding `skills/guide.md` requires zero changes to `bin/add.js`. The installer picks it up on the next run automatically.
+
+---
+
+## 3. How SKILL.md Should Reference guide.md
+
+### Placement: Before the Resource Index
+
+guide.md should be linked from SKILL.md **before** the Resource Index table. The Resource Index is a look-up table; guide.md is behavioral context that shapes how an agent uses everything below it. Agents reading SKILL.md top-to-bottom should encounter the behavioral guide before scanning commands.
+
+Current SKILL.md section order:
+1. Frontmatter
+2. Prerequisites: Authentication
+3. Multi-Workspace
+4. Command Syntax
+5. Self-Discovery: The `--agent` Flag
+6. Key Invariants
+7. Resource Index  ← insert guide.md reference immediately before this
+8. Meta Commands
+9. Common Workflows
+10. Diagnostics
+
+### Section to Insert
+
+Place a new "Behavioral Guide" section between "Key Invariants" and "Resource Index":
+
+```markdown
+## Behavioral Guide
+
+For a complete picture of how to operate this CLI as an agent — including decision trees,
+error recovery, command sequencing, and anti-patterns — see:
+
+- [TwentyThree CLI Agent Guide](guide.md)
+
+The guide complements this index. Reference files below cover command flags; the guide
+covers when and how to chain them.
 ```
 
-The `--no-git-checks` flag is required in both cases. pnpm publish refuses to run if the git working tree appears dirty or HEAD is not on a tagged commit — GitHub Actions checkout does not always put HEAD on a branch, so `--no-git-checks` bypasses this. The tag-based trigger already guarantees publish intent.
+### Why Not After Resource Index
 
-### Pattern 2: Independent versioning (do not sync versions)
+Placing it after the Resource Index risks agents never reaching it — SKILL.md is already long and agents reading it as context may stop after finding the relevant command. The guide is orientation material, not a lookup document.
 
-**What:** `twentythree-skills` keeps its own version (`0.1.0`) while `twentythree-cli` is at `1.1.1`. Do not force them to match.
-**When to use:** When the two packages have different change rates. Skills is content (markdown files); CLI is code. Their semver signals are semantically different.
-**Trade-offs:** The git tag `v1.2.0` triggers the workflow and publishes cli@1.2.0 and skills@0.1.x — the tag and the skills version do not need to match. Slightly more cognitive overhead, but avoids the false signal of bumping skills to 1.x just because cli is there.
+### Why Not at the Very Top
 
-**Recommendation:** Keep independent versioning. Each package reads its own `package.json` version at publish time. No coordination mechanism needed. When skills hits a stable release, bump it to 1.0.0 independently.
+Prerequisites and Authentication are correctly first — an agent cannot do anything without auth. The guide comes after those setup sections but before the reference material that requires it to be interpreted correctly.
 
-Note: The monorepo already has `@changesets/cli` in devDependencies, which supports independent versioning. The root `package.json` does not have a `.changeset/config.json` visible from the current state — if changesets is not actively used, ignore it and manage package.json versions manually.
+---
 
-### Pattern 3: publishConfig.access for unscoped packages
+## 4. Which Reference Files Need Inline Notes
 
-**What:** pnpm publish requires `--access public` on the command line or `publishConfig.access: "public"` in `package.json` for packages not under an npm scope (`@org/name`). `twentythree-skills` is unscoped.
-**When to use:** Any unscoped public package published to npm via pnpm.
-**Trade-offs:** None — this is required.
+All 22 reference file headers were read. The following assessment covers every file.
 
-Add to `packages/twentythree-skills/package.json`:
-```json
-{
-  "publishConfig": {
-    "access": "public"
-  }
-}
+### Existing Coverage Is Strong
+
+Most "agent-trapping" behaviors are already captured inline in the reference files:
+
+| File | Already-present inline callout |
+|------|-------------------------------|
+| `video.md` | Chunked upload automatic; terminology `video` = API `photo` |
+| `webinar.md` | No `webinar get` command (use list + filter); terminology `webinar` = API `live` |
+| `category.md` | No `category get` command; `list` works without auth (anonymous scope) |
+| `spot.md` | No `spot get` — use `spot check` instead |
+| `tag.md` | Tag topic is read-only; create tags via `video update --tags` |
+| `user.md` | ALL commands require admin scope (prominently noted at top) |
+| `openupload.md` | `upload-file` requires token values from workspace admin |
+| `session.md` | Session tokens are for viewer SSO, distinct from CLI auth credentials |
+
+### The Right Model for Inline Notes in Reference Files
+
+Reference files are self-contained lookup docs. They should not duplicate guide.md content — that creates maintenance drift. The only reason to add a note to a reference file is when guide.md contains a decision tree or recovery pattern that directly answers a question a user of that file would have while looking at the command list.
+
+Add a cross-reference note only where guide.md is likely to provide directly relevant decision-tree guidance:
+
+| File | Add cross-reference if guide.md covers... |
+|------|-------------------------------------------|
+| `video.md` | Video lifecycle sequencing (upload → poll transcoding → set metadata → publish) |
+| `webinar.md` | Live-event sequencing (create → publish → room connect → record start → record stop → archive) |
+| `user.md` | Auth-scope diagnostic or admin-token verification patterns |
+| `analytics.md` | The shared flag pattern across video/live/conversions/usage subtopics, or how to pick the right subtopic |
+
+Files where a cross-reference is NOT warranted (complete and self-contained; guide.md adds nothing specific to the command surface):
+
+`action.md`, `app.md`, `audience.md`, `collector.md`, `comment.md`, `openupload.md`, `player.md`, `poll.md`, `presentation.md`, `protection.md`, `session.md`, `setting.md`, `site.md`, `spot.md`, `tag.md`, `thumbnail.md`, `webhook.md`, `category.md`
+
+### Inline Note Format
+
+Use the existing blockquote pattern already established in the reference files. The convention across the files is `> **Note:**` or `> **Warning:**` inside a blockquote for important callouts. Examples in the current files:
+
+- `> **Chunked upload is automatic.**` (video.md, webinar.md, openupload.md)
+- `> **Warning: This action is destructive and cannot be undone.**` (video.md, webinar.md)
+- `> **There is no webinar get command.**` (webinar.md)
+- `> **ALL user commands require admin scope.**` (user.md)
+
+For guide cross-references, use:
+
+```markdown
+> **See also:** [Agent Guide](../guide.md) — decision trees for [topic] sequencing and error recovery.
 ```
 
-The CLI currently passes `--access public` on the command line. Either approach works. Embedding `publishConfig` in `package.json` is self-documenting and removes the flag from the CI step.
+Place the cross-reference note immediately after the opening tagline blockquote at the top of the file (the `> [topic] maps to API [name]` line), before the Prerequisites section. This matches the existing placement of the "no get command" and "read-only" notes in the current files.
 
-### Pattern 4: ESM bin script with npx — no shimming required
+Do NOT use:
+- A new `## Guide` section header — adds structural noise to reference-style docs
+- HTML callout divs — these are plain markdown files with no rendering guarantee
+- Placement at the bottom of the file — it will not be seen before the agent starts using commands
 
-**What:** `bin/add.js` uses `#!/usr/bin/env node` and native ESM (`import` statements, `import.meta.url`). When a user runs `npx twentythree-skills add`, npm downloads the package and executes `bin/add.js` via the `bin` field.
-**When to use:** ESM-only packages with a bin entry and no build step.
-**Trade-offs:** Requires Node >=12.17 for native ESM. The package declares `"engines": {"node": ">=22.0.0"}` — no issue.
+---
 
-npx caching: npm caches downloaded packages in `~/.npm/_npx/`. First run downloads the latest version; subsequent runs use the cache until the version changes. No special shimming needed.
+## 5. Build Order for the Phase
 
-`import.meta.url` in `bin/add.js`: The existing code already uses `fileURLToPath(import.meta.url)` to derive `__dirname`. This is the correct pattern for ESM bin scripts — no changes needed.
+There is no build step — all files are static markdown. Install order is irrelevant because `bin/add.js` processes the whole tree atomically. The authoring order for the phase:
 
-`"type": "module"` in `package.json`: Already set. This tells Node to treat all `.js` files as ESM. The shebang line plus `type: module` means Node parses `bin/add.js` as ESM without requiring a `.mjs` extension.
+1. **Write `skills/guide.md`** — primary deliverable. All other changes depend on knowing its content and scope.
+2. **Update `skills/SKILL.md`** — add the "Behavioral Guide" section linking to `guide.md`. Can only be finalized once guide.md content is known.
+3. **Add inline notes to selected reference files** — maximum 4 files (video, webinar, user, analytics). Write these after guide.md is finalized. Only add a cross-reference if guide.md has a section that directly answers a question the reference file's users would have.
+4. **Smoke-test the installer** — run `node bin/add.js` from the package root to verify guide.md is copied to the expected runtime directories without error.
 
-## Data Flow
+Dependencies:
+- Steps 2, 3 depend on step 1 (guide.md content must exist)
+- Step 4 depends on step 1 (needs the file to be present on disk)
+- Steps 2 and 3 are independent of each other and can be done in either order
 
-### Publish Flow (CI)
+---
 
-```
-git push tag v1.2.0
-    |
-    v
-GitHub Actions triggers release.yml (on: push tags: ['v*'])
-    |
-    v
-pnpm install --frozen-lockfile
-    |
-    v
-pnpm --filter twentythree-cli test --run
-    |
-    v
-pnpm --filter twentythree-cli run build   (tsdown -> dist/)
-    |
-    v
-pnpm publish  (cwd: packages/twentythree-cli)
-    reads: packages/twentythree-cli/package.json -> version "1.2.0"
-    publishes: dist/ + package.json
-    |
-    v
-node scripts/validate-skills.mjs  (cwd: packages/twentythree-skills)
-    validates: skills/SKILL.md frontmatter, reference/ file presence
-    |
-    v
-pnpm publish  (cwd: packages/twentythree-skills)
-    reads: packages/twentythree-skills/package.json -> version "0.1.0"
-    publishes: bin/ + skills/ + README.md
-    |
-    v
-smoke-test job: npm install -g twentythree-cli -> twentythree --version
-                npx twentythree-skills add --help (or dry-run)
-```
+## 6. New vs Modified Files Summary
 
-### npx User Flow
+| Action | File | Notes |
+|--------|------|-------|
+| NEW | `packages/twentythree-skills/skills/guide.md` | Primary deliverable; no installer changes needed |
+| MODIFIED | `packages/twentythree-skills/skills/SKILL.md` | Add "Behavioral Guide" section before Resource Index |
+| CONDITIONALLY MODIFIED | `packages/twentythree-skills/skills/reference/video.md` | Add cross-reference blockquote only if guide.md covers video lifecycle sequencing |
+| CONDITIONALLY MODIFIED | `packages/twentythree-skills/skills/reference/webinar.md` | Add cross-reference blockquote only if guide.md covers live-event sequencing |
+| CONDITIONALLY MODIFIED | `packages/twentythree-skills/skills/reference/user.md` | Add cross-reference blockquote only if guide.md covers auth-scope diagnostics |
+| CONDITIONALLY MODIFIED | `packages/twentythree-skills/skills/reference/analytics.md` | Add cross-reference blockquote only if guide.md covers the reporting model or subtopic selection |
+| NOT MODIFIED | `packages/twentythree-skills/bin/add.js` | Installer already handles new files automatically via recursive walkDir |
+| NOT MODIFIED | 18 remaining reference files | Self-contained; no guide-specific decision trees apply |
+| NOT MODIFIED | `skills/workflows/*.md` | Workflows are task-specific sequences; guide.md is orthogonal |
 
-```
-npx twentythree-skills add
-    |
-    v
-npm downloads twentythree-skills@latest to ~/.npm/_npx/
-    |
-    v
-executes bin/add.js (ESM, Node 22+)
-    |
-    v
-detects runtimes via directory presence:
-  ~/.claude/           -> Claude Code
-  ~/.codex/            -> Codex
-  .github/copilot/     -> Copilot (project-local)
-  .cursor/             -> Cursor
-    |
-    v
-cpSync(skills/, <runtime-skills-dir>/twentythree/) for each detected runtime
-    |
-    v
-prints: "Installed N skills for [runtime]"
-```
-
-## Scaling Considerations
-
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 2 packages (current) | Single workflow, sequential publish steps — done |
-| 3-5 packages | Still one workflow; add a step per package; consider `pnpm --filter` glob if all share the same treatment |
-| 5+ packages with divergent release cadences | Split into per-package workflows triggered on path changes; activate `changesets` for coordinated versioning |
-
-### Scaling Priorities
-
-1. **First divergence point:** If skills needs its own patch releases independent of CLI releases, add a separate `skills-v*` tag pattern as a second trigger. The two workflows can share the `NPM_TOKEN` secret without conflict.
-2. **If more packages need build steps:** Invoke `turbo run build` in CI instead of `pnpm --filter twentythree-cli run build` — turbo's build pipeline already handles ordering via `dependsOn`.
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Matrix strategy for multi-package publish
-
-**What people do:** Define a GitHub Actions matrix `[twentythree-cli, twentythree-skills]` so both publish in parallel.
-**Why it's wrong:** Parallel jobs cannot share build artifacts. `twentythree-cli` must be built before publishing; its `dist/` cannot be passed to a parallel job without `actions/upload-artifact` round-trips. For two packages where one has no build step, this adds complexity with no benefit.
-**Do this instead:** Two sequential steps in one job. Simple and unambiguous.
-
-### Anti-Pattern 2: Separate triggered workflow for skills
-
-**What people do:** Create a second workflow file triggered via `workflow_run` after the main release workflow completes.
-**Why it's wrong:** `workflow_run` events add 30-90 seconds of latency, have tricky permission semantics (`secrets` are not automatically inherited), and make debugging harder. The trigger chain is invisible at a glance.
-**Do this instead:** Add a second `pnpm publish` step in the existing `publish` job. Same token, same run, visible in one place.
-
-### Anti-Pattern 3: Lockstep versioning
-
-**What people do:** Bump both packages to the same version on every release.
-**Why it's wrong:** Skills and CLI change at different rates. Forcing lockstep creates meaningless version churn on the CLI (a documentation fix to skills should not bump CLI from 1.1.1 to 1.1.2) and misleads users about what changed.
-**Do this instead:** Independent versioning. Each package publishes at its own version. The git tag triggers the workflow; it does not dictate package versions.
-
-### Anti-Pattern 4: Omitting publishConfig.access for unscoped packages
-
-**What people do:** Publish without `--access public` or `publishConfig`, expecting npm to infer intent.
-**Why it's wrong:** pnpm's publish command in some versions treats unscoped packages as private by default to avoid accidental leaks. The `--access public` flag or `publishConfig` makes intent unambiguous and prevents CI failures on first publish of a new package.
-**Do this instead:** Add `"publishConfig": {"access": "public"}` to `packages/twentythree-skills/package.json`.
-
-### Anti-Pattern 5: Running the skills test inside the CLI test step
-
-**What people do:** Call `pnpm test` (without `--filter`) in CI, causing both packages to be tested in one undifferentiated step.
-**Why it's wrong:** Not catastrophically wrong, but unclear. The existing workflow correctly scopes with `pnpm --filter twentythree-cli test --run`. Adding a skills test as a separate, named step (`Validate skills package`) makes it visible in the CI log and independently re-runnable.
-**Do this instead:** Named, explicit step for skills validation before the skills publish step.
-
-## Integration Points
-
-### External Services
-
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| npm registry | `NODE_AUTH_TOKEN` env var, configured by `actions/setup-node` `registry-url` | Already wired in release.yml; same token and same `registry-url` step covers both publish steps |
-| GitHub Actions | `on: push tags 'v*'` trigger | Tag must be pushed explicitly (`git push origin v1.2.0` or `git push --tags`) |
-
-### Internal Boundaries
-
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| CLI publish step -> Skills publish step | Sequential in same job | No artifact passing needed — skills has no build output |
-| Skills package -> user runtime dirs | `cpSync` at npx runtime | Happens on user machine, not in CI |
-| turbo.json <-> skills package | Skills has its own package-level turbo.json with `dependsOn: []` | Skills is already isolated from CLI build pipeline; no changes needed |
+---
 
 ## Sources
 
-- pnpm publish docs (--no-git-checks, --access, --filter): https://pnpm.io/cli/publish
-- GitHub Actions workflow_run permission semantics: https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_run
-- npm publishConfig spec: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#publishconfig
-- Node.js ESM bin script pattern (import.meta.url): https://nodejs.org/api/esm.html#importmetaurl
-- npx caching behavior: https://docs.npmjs.com/cli/v10/commands/npx
-- Live codebase: .github/workflows/release.yml, packages/twentythree-skills/package.json, turbo.json
-
----
-*Architecture research for: pnpm monorepo second-package npm publish (twentythree-skills)*
-*Researched: 2026-04-20*
+- `bin/add.js` read directly — recursive `walkDir` with no filename filtering confirms automatic pickup of any new file in `skills/`
+- `SKILL.md` read directly — section ordering and blockquote conventions confirmed
+- `reference/video.md` read directly — existing inline callout patterns and section structure confirmed
+- `reference/webinar.md` read directly — existing inline callout patterns and section structure confirmed
+- All 22 reference file headers read directly — inline note coverage and existing callout conventions assessed per file

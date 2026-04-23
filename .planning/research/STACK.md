@@ -1,264 +1,308 @@
-# Stack Research
+# Stack Research: Behavioral Guide Document for AI Agent Skills
 
-**Domain:** npm publishing — standalone ESM skills package from pnpm monorepo
-**Researched:** 2026-04-20
-**Confidence:** HIGH
-
-## Context
-
-`packages/twentythree-skills` is a complete, no-build ESM package. The task is purely publishing
-configuration — no new runtime code, no new dependencies. The existing `twentythree-cli` publish
-workflow (tag-triggered GitHub Actions, `NODE_AUTH_TOKEN`, `pnpm publish --no-git-checks`) is the
-proven pattern to replicate.
+**Milestone:** v1.5 — Agent Behavioral Guidelines (`guide.md` for `twentythree-skills`)
+**Researched:** 2026-04-23
+**Overall confidence:** HIGH — official Claude Code skills docs read directly; LLM instruction-following research reviewed from published sources
 
 ---
 
-## Current package.json State (Already Correct)
+## Context and Scope
 
-The following fields in `packages/twentythree-skills/package.json` are already correct and need
-no change:
+This research covers ONLY what is needed to write a `skills/guide.md` behavioral guidance document
+and add inline reinforcement notes to existing reference files. The existing `twentythree-skills`
+package (ESM, no build, Node built-ins only, 25 files) requires no new tooling, no new
+dependencies, and no changes to its publish pipeline. All findings here are content and structural
+guidance, not technology additions.
 
-| Field | Current Value | Status |
-|-------|--------------|--------|
-| `name` | `"twentythree-skills"` | Correct |
-| `version` | `"0.1.0"` | Correct — use semver independently from twentythree-cli |
-| `type` | `"module"` | Correct — ESM only, no CJS needed |
-| `bin.twentythree-skills` | `"./bin/add.js"` | Correct — enables `npx twentythree-skills` |
-| `files` | `["/bin", "/skills", "/README.md"]` | Correct — whitelist approach |
-| `engines.node` | `">=22.0.0"` | Correct — matches monorepo constraint |
-| `license` | `"MIT"` | Correct |
-
----
-
-## Recommended Stack Additions
-
-### Core Technologies
-
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| `pnpm publish` (existing) | pnpm 9.x | Publish command | Already works for `twentythree-cli`; `--no-git-checks` bypasses monorepo root/tag mismatch; `--access public` required for scoped packages (not needed here but harmless to add) |
-| GitHub Actions (existing) | — | CI publish trigger | `release.yml` already wires `NODE_AUTH_TOKEN → NPM_TOKEN` secret; extend it with a second job for the skills package |
-| npm provenance (`--provenance`) | npm 9.5+ / Node 22 | Signed build attestation | Single flag addition; links the published tarball to the exact GitHub Actions run that produced it; npm registry displays a provenance tab on the package page; requires `id-token: write` permission on the job |
-
-### Supporting Libraries
-
-No new runtime dependencies needed. The package uses Node built-ins only (`node:fs`, `node:path`, `node:os`, `node:url`).
-
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| None | — | — | The installer is 103 lines of Node built-ins; adding any dependency would require a lockfile and create install friction for `npx` invocations |
-
-### Development Tools
-
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| `scripts/validate-skills.mjs` (existing) | Validates skills file structure before publish | Already wired as `"test"` script in package.json; run in CI before publish step |
-| `.npmignore` (do NOT add) | Exclude files from tarball | Using `files` whitelist is simpler and explicit; `.npmignore` overrides `files` and is easy to misconfigure — avoid |
+**What does NOT change:**
+- Package toolchain (no build step, ESM, Node 22+, no external deps)
+- Installer (`bin/add.js`)
+- YAML frontmatter structure in existing `.md` files
+- How skills are discovered by agents (SKILL.md already wired correctly)
 
 ---
 
-## package.json Changes Required
+## How AI Agents Parse and Apply Skill Content
 
-### 1. Add `publishConfig`
+Understanding the agent runtime is prerequisite to knowing how to write for it.
 
-```json
-"publishConfig": {
-  "access": "public",
-  "registry": "https://registry.npmjs.org"
-}
-```
+### Load model: lazy, description-first
 
-`access: public` is required for any package published to npm if you want `npm publish` to succeed
-without the `--access public` flag on the CLI. It is also self-documenting intent.
+Source: official Claude Code skills docs (code.claude.com/docs/en/skills) — HIGH confidence.
 
-### 2. Verify `bin` shebang
+When a skill package is installed, agents load only the `name` and `description` from YAML
+frontmatter. The full markdown body of each file is loaded only when that file is explicitly
+invoked or referenced. This means:
 
-`bin/add.js` already has `#!/usr/bin/env node` on line 1. This is required for npm to make the
-binary executable on install. No change needed.
+- `skills/SKILL.md` frontmatter description is always in context (the index)
+- Individual reference files (`video.md`, `webinar.md`, etc.) load on demand
+- `guide.md` — once invoked or referenced — enters the conversation and stays for the session
 
-### 3. No `main` or `exports` field needed
+**Implication for guide.md:** The guide's `description` frontmatter must be written to trigger
+automatic loading whenever the agent is doing TwentyThree work (not just when the user asks for
+"a guide"). The body should be compact enough to stay in context once loaded.
 
-This package has no importable surface — it is a pure binary package. Omitting `main`/`exports`
-is correct. npm does not require them for bin-only packages.
+### Persistence after load
 
----
+Once a skill file is loaded into a Claude Code session, its rendered content stays in the
+conversation for the rest of the session. Claude Code does not re-read the file on later turns.
+After auto-compaction, the first 5,000 tokens of each invoked skill are re-attached, sharing a
+combined 25,000-token budget across all invoked skills.
 
-## bin Script Pattern
+**Implication for guide.md:** Write behavioral rules as standing instructions (apply throughout
+the task), not as one-time procedural steps. Keep guide.md under ~400 lines / ~3,000 tokens so
+it comfortably fits within the compaction budget.
 
-The current `bin` field maps the package name to `./bin/add.js`:
+### Description character budget
 
-```json
-"bin": {
-  "twentythree-skills": "./bin/add.js"
-}
-```
-
-This means:
-- `npx twentythree-skills` invokes `bin/add.js` directly
-- `npm install -g twentythree-skills` makes `twentythree-skills` available as a global command
-- There is no `add` subcommand in the bin mapping
-
-**Important:** `npx twentythree-skills add` passes `add` as `process.argv[2]` to the script.
-The current script checks for `--project` flag but does not explicitly handle an `add` positional.
-The `add` argument is silently ignored. This is safe but should be clarified in README docs.
-Recommend documenting the correct invocation as `npx twentythree-skills` (bare), or add explicit
-argv handling to accept `add` as a no-op alias for the default behavior.
-
-No bin structure changes needed. The single binary-per-package pattern is correct for this use
-case.
+All skill descriptions combined are capped at 1,536 characters per skill entry, and the total
+listing uses 1% of the context window (fallback 8,000 characters). Front-load the key use case
+in the `description` field; later text may be truncated.
 
 ---
 
-## CI Publish Step
+## Format Conventions for Behavioral Guidance Docs
 
-### Tag Strategy
+### What the evidence shows
 
-Use a separate tag prefix to keep the two packages' release cadences independent:
+Sources consulted:
+- Claude Code official skills documentation (HIGH confidence)
+- HumanLayer blog "Writing a good CLAUDE.md" (MEDIUM confidence — well-cited, references
+  LLM instruction-following research)
+- Eric Ma "How to teach your coding agent with AGENTS.md" (MEDIUM confidence)
+- Agent Skills open standard reference at agentskills.io (MEDIUM confidence)
+- LLM instruction-following research: "AGENTIF" (arxiv 2505.16944), "The Instruction Gap"
+  (arxiv 2601.03269) (LOW-MEDIUM — academic, not product docs, but directionally consistent)
 
-```
-skills-v0.1.0   →  triggers publish of twentythree-skills@0.1.0
-v1.4.0          →  triggers publish of twentythree-cli@1.4.0 (existing)
-```
+### Rule 1: Fewer rules, applied consistently
 
-The existing `release.yml` triggers on `v*` tags — extend it with a second job that conditions
-on `skills-v*` tags, and add an `if:` guard to the existing CLI publish job.
+Research finding: LLMs can reliably follow ~150-200 individual instructions. Claude Code's own
+system prompt consumes ~50 of that budget. Instruction-following quality degrades uniformly as
+rule count increases — agents do not simply ignore new rules, they begin ignoring all rules.
 
-### Recommended release.yml Extension
+**Implication:** `guide.md` should contain 6-10 high-value behavioral rules, not 30. Each rule
+should be universally applicable to TwentyThree work, not a narrow edge-case fix. Rules that
+only apply in rare situations belong in the relevant reference file as an inline note, not in
+the global guide.
 
-Add a second job to `.github/workflows/release.yml`:
+### Rule 2: Positive framing outperforms negative framing
 
-```yaml
-publish-skills:
-  if: startsWith(github.ref, 'refs/tags/skills-v')
-  runs-on: ubuntu-latest
-  permissions:
-    contents: read
-    id-token: write   # required for --provenance
-  steps:
-    - uses: actions/checkout@v4
+Research finding (HumanLayer/LesswrongAI observation): The positively framed rule ("Always do X")
+shows the highest compliance rate across models. Negatively framed rules ("Never do X", "Don't do
+Y") show lower and more inconsistent adherence.
 
-    - uses: pnpm/action-setup@v4
+**Implication:** Frame rules as positive directives. "Always check `object_type` before calling
+`comment create`" rather than "Don't call `comment create` without checking `object_type`."
+Where a prohibition is necessary (destructive operations), make it a short, explicit sentence
+immediately following the positive instruction.
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-        cache: 'pnpm'
-        registry-url: 'https://registry.npmjs.org'
+### Rule 3: Include concrete examples and command syntax
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+Research finding (AGENTS.md article): Instructions with concrete command examples show better
+compliance than abstract principles. Showing the actual CLI invocation gives the agent a
+behavioral anchor.
 
-    - name: Validate skills
-      run: pnpm --filter twentythree-skills test --run
+**Implication:** Every rule in `guide.md` should include at least one concrete `twentythree`
+command example. For "always use `--json` in agentic contexts," show the flag in the example.
+For "always capture `data.id` after create," show the `--json` response shape.
 
-    - name: Publish to npm
-      working-directory: packages/twentythree-skills
-      run: pnpm publish --no-git-checks --access public --provenance
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-```
+### Rule 4: Explain rationale where it changes behavior
 
-Key decisions:
+Research finding: Providing a brief "why" helps agents contextualize instructions and apply
+them in novel situations. Without rationale, an agent may correctly follow a rule in the
+documented case but fail to generalize.
 
-- `permissions.id-token: write` — required by npm provenance; tells GitHub to issue an OIDC
-  token so npm can verify the build origin
-- `--provenance` — attaches a Sigstore-signed attestation; zero cost; npm registry shows a
-  Provenance tab linking to the exact workflow run
-- `--no-git-checks` — standard in this monorepo; bypasses npm's check that the git tag matches
-  the package version (it won't, because the tag is `skills-v0.1.0` not `0.1.0`)
-- `working-directory: packages/twentythree-skills` — publish from the package dir, consistent
-  with the existing CLI publish step
-- Validate skills before publish — fail fast, do not publish broken content
+**Implication:** Each rule should include one sentence of rationale. Keep it factual, not
+rhetorical. "Because the API uses `photo`, `album`, and `live` as legacy object names, always
+use the CLI term in commands and the API term only when reading `api_endpoint` output."
 
-### Guard the Existing publish Job
+### Rule 5: Use headers for scannability, not just for navigation
 
-Add an `if:` guard to the existing `publish` job so it only runs on CLI tags:
+AI agents read markdown sequentially when a file is loaded into context. Headers serve as
+cognitive anchors that help the agent index the document. Well-structured headers let agents
+skip to the relevant section when applying a rule mid-task.
 
-```yaml
-publish:
-  if: startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/skills-v')
-```
+**Implication:** Use `##` headers for each behavioral category (one rule or one closely related
+cluster). Avoid burying multiple unrelated rules under a single header.
 
-This prevents the CLI publish from triggering when a `skills-v*` tag is pushed.
+### Rule 6: Keep guide.md under 400 lines
+
+Claude Code's own guidance says keep SKILL.md under 500 lines; move detailed reference material
+to separate files. For a pure behavioral guide (no command reference tables), 200-400 lines is
+the right range. Above 400, the file competes with reference files for the compaction budget.
 
 ---
 
-## files Whitelist (Already Correct)
+## Recommended Document Structure for guide.md
 
-```json
-"files": ["/bin", "/skills", "/README.md"]
+```
+---
+name: twentythree-guide
+description: Behavioral rules for TwentyThree CLI agents. Use when calling any
+  twentythree command — covers object type identification, thumbnail strategy,
+  analytics inclusion, filtering patterns, webinar defaults, and admin URL output.
+user-invocable: false
+---
+
+# TwentyThree Agent Behavioral Guide
+
+> [One-sentence scope statement]
+
+## Object Type Identification
+
+[Rule + rationale + example]
+
+## Thumbnail Strategy
+
+[Rule + rationale + example]
+
+## Analytics Inclusion
+
+[Rule + rationale + example]
+
+## Filtering and Sorting Patterns
+
+[Rule + rationale + example]
+
+## Webinar Creation Defaults
+
+[Rule + rationale + example]
+
+## Timezone Handling
+
+[Rule + rationale + example]
+
+## Admin Link Construction
+
+[Rule + rationale + example]
+
+## Destructive Operations
+
+[Rule + rationale — short; cross-reference to SKILL.md's --agent guidance]
 ```
 
-This whitelist is correct and complete. npm always includes `package.json`, `LICENSE`, and
-`CHANGELOG.md` regardless of `files`, so those need no explicit listing.
+### Frontmatter decisions
 
-What is correctly excluded (not in `files`):
-- `scripts/validate-skills.mjs` — dev-only validation; not needed by consumers
-- `turbo.json` — monorepo build config; irrelevant to consumers
-- Any `.planning/` artifacts
+**`user-invocable: false`** — The guide is background knowledge, not a command. Agents should
+load it automatically when TwentyThree work is detected. Hiding it from the `/` slash-command
+menu prevents user confusion ("why would I invoke /twentythree-guide?"). This is the correct
+Claude Code frontmatter for pure reference content. Confirmed in official docs: "`user-invocable:
+false` — Use for background knowledge users shouldn't invoke directly."
 
-Verify the tarball contents before pushing the release tag:
+**No `disable-model-invocation`** — The guide should be auto-loaded by the model when relevant.
+`disable-model-invocation: true` would prevent that; omitting it (default false) allows it.
 
-```bash
-cd packages/twentythree-skills && pnpm pack --dry-run
-```
+**No `allowed-tools`** — The guide imposes no tool grants. It is a knowledge document.
+
+**No `context: fork`** — The guide should run inline with the main conversation, not in an
+isolated subagent.
 
 ---
 
-## Version Strategy
+## Inline Notes in Existing Reference Files
 
-| Package | Version | Strategy |
-|---------|---------|----------|
-| `twentythree-cli` | 1.x.x | CLI commands; follows feature milestones |
-| `twentythree-skills` | 0.x.x | Content package; bump minor for new skill files, patch for content edits; major bump if skills format changes incompatibly |
+### Where inline notes belong
 
-The two packages version independently. Do not couple their versions.
+Inline notes serve a different purpose than guide.md: they reinforce a rule at the exact point
+of usage. An agent consulting `video.md` to learn how to upload a video should encounter the
+thumbnail strategy reminder at the `video upload` command, not only in a separate guide file.
 
-Initial publish: `0.1.0` (already set) — correct for a first release.
+This dual-layer approach (global rule in guide.md + inline reminder at point of use) is more
+reliable than either alone, because:
+1. The guide establishes the rule when the agent starts working
+2. The inline note catches the agent at the moment it is about to make the specific call
 
----
+### Format for inline notes
 
-## Alternatives Considered
+Use a blockquote (`>`) immediately following the command header and auth scope line. This places
+the note visually after the command signature but before the flag table, where agents read next.
 
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|-------------------------|
-| Separate `skills-v*` tag prefix | Single `v*` tag triggering both publishes | Only if both packages always release together — they won't; skills content updates independently of CLI command changes |
-| `files` whitelist | `.npmignore` | Never for this package — `files` already exists and `.npmignore` would silently override it |
-| `--provenance` flag | No provenance | No reason to skip; zero cost; improves package trust signal on npm registry |
-| `working-directory: packages/twentythree-skills` for publish | `pnpm publish -F twentythree-skills` | Both work; working-directory is consistent with the existing CLI publish step in this repo |
+Do not use a numbered list, a separate heading, or a callout box — plain markdown blockquote is
+the lightest-weight formatting that visually separates an advisory note from regular prose.
 
-## What NOT to Use
+**Pattern:**
 
-| Avoid | Why | Use Instead |
-|-------|-----|-------------|
-| `.npmignore` | `files` whitelist already exists; `.npmignore` takes precedence over `files` and is easy to misconfigure | `files` field in package.json |
-| Coupling skills version to CLI version | Skills content changes on a different cadence from CLI commands | Independent semver per package |
-| `npm publish` (not `pnpm publish`) | Monorepo uses pnpm; `npm publish` from a pnpm workspace can fail to resolve workspace-protocol dependencies | `pnpm publish --no-git-checks` |
-| Documenting invocation as `npx twentythree-skills add` | `add` is not an explicit subcommand; it is silently ignored by the script | Document as `npx twentythree-skills` or add explicit `add` argv handling |
+```markdown
+### video upload
 
----
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value (id + admin_url)
 
-## Installation (for consumers)
-
-```bash
-# Install globally, then run to install skills into detected runtimes
-npm install -g twentythree-skills
-twentythree-skills
-
-# Or run without installing
-npx twentythree-skills
+> After upload, always set a thumbnail using `twentythree video frame <id> --time <N>` or
+> `twentythree thumbnail create --video-id <id>`. The default thumbnail is a random frame;
+> set it deliberately before publishing.
 ```
+
+### How many inline notes are appropriate
+
+One note per command maximum. Adding more than one note per command creates visual noise and
+competes for the agent's attention. If a command has multiple behavioral considerations, write
+one consolidated note covering the most important point, and reference the guide for the rest.
+
+Notes belong only in files where the rule applies at the command level. Do not add a note to
+every command in a file — only to the specific commands where the rule is actionable.
+
+---
+
+## What NOT to Add (Tooling)
+
+| Do Not Add | Why |
+|------------|-----|
+| Markdown linter (markdownlint, remark-lint) | Adds dev dependency; overkill for a static skills package; the existing `scripts/validate-skills.mjs` already checks structure |
+| Link checker | No external URLs in guide.md; relative links within the skills dir are stable |
+| Callout boxes (GitHub-flavored `> [!NOTE]`) | GitHub renders these visually, but when loaded into an LLM context as plain text the `[!NOTE]` prefix becomes noise; standard blockquote (`>`) is cleaner |
+| Frontmatter schema validation | Not needed; Claude Code's runtime is forgiving of extra/missing optional fields |
+| Any runtime dependency | The package has zero runtime deps by design; no reason to change that for a markdown content file |
+| Numbered rules (Rule 1, Rule 2, ...) | Numbering implies ordinal priority; behavioral rules are not strictly ordered and numbering creates maintenance friction when rules are added or reordered |
+
+---
+
+## SKILL.md Integration
+
+The existing `skills/SKILL.md` uses a resource-group index table. The guide should be added
+as a top-level entry before the resource table, given it covers cross-cutting behavior.
+
+Recommended placement:
+
+```markdown
+## Behavioral Guide
+
+Before calling TwentyThree commands in an agentic context, consult the
+[behavioral guide](guide.md) for rules on object type identification,
+thumbnail strategy, analytics, filtering patterns, webinar defaults,
+timezone handling, and admin URL output.
+
+## Resource Index
+...
+```
+
+This ensures the guide is discoverable without moving it into the YAML frontmatter's `triggers`
+block, which controls when the SKILL.md itself is loaded (not when the guide is loaded).
+
+---
+
+## Confidence Assessment
+
+| Area | Confidence | Source |
+|------|------------|--------|
+| Agent load model (lazy, description-first) | HIGH | Official Claude Code docs read directly |
+| `user-invocable: false` frontmatter for background knowledge | HIGH | Official Claude Code docs read directly |
+| Rule count limits (~150-200 total across system prompt) | MEDIUM | HumanLayer blog citing research; consistent with arxiv papers |
+| Positive framing improves compliance | MEDIUM | Lesswrong/HumanLayer reporting on safety rule adherence research |
+| Concrete examples improve compliance | MEDIUM | Multiple practitioner sources agree |
+| 5,000-token compaction limit per skill | HIGH | Official Claude Code docs read directly |
+| Blockquote as inline note format | MEDIUM | Derived from existing patterns in video.md/webinar.md; no contradicting evidence |
 
 ---
 
 ## Sources
 
-- `packages/twentythree-skills/package.json` — current state verified by reading source — HIGH confidence
-- `packages/twentythree-skills/bin/add.js` — shebang and argv handling verified by reading source — HIGH confidence
-- `.github/workflows/release.yml` — existing CLI publish pattern verified by reading source — HIGH confidence
-- npm provenance docs: https://docs.npmjs.com/generating-provenance-statements — MEDIUM confidence (pattern confirmed from training data; WebSearch unavailable in this session)
-- GitHub Actions `id-token: write` for OIDC provenance — MEDIUM confidence (standard GitHub Actions pattern, confirmed from training data Aug 2025)
+- Claude Code skills official docs: https://code.claude.com/docs/en/skills (HIGH confidence — read directly)
+- HumanLayer "Writing a good CLAUDE.md": https://www.humanlayer.dev/blog/writing-a-good-claude-md (MEDIUM)
+- Eric Ma "Teaching coding agents with AGENTS.md": https://ericmjl.github.io/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/ (MEDIUM)
+- Agent Skills open standard overview: https://developers.openai.com/codex/skills (MEDIUM)
+- AGENTIF benchmark (instruction following in agentic scenarios): https://arxiv.org/abs/2505.16944 (LOW-MEDIUM — directional)
+- Existing `skills/SKILL.md`, `skills/reference/video.md`, `skills/workflows/upload-and-publish.md` — read directly (HIGH confidence)
 
 ---
-*Stack research for: twentythree-skills npm publish*
-*Researched: 2026-04-20*
+*Stack research for: twentythree-skills v1.5 behavioral guide document*
+*Researched: 2026-04-23*
