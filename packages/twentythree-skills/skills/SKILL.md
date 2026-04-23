@@ -121,6 +121,16 @@ Always check `auth_scope` and `side_effects` before write/admin operations.
 - **After upload or create, the CLI prints the new resource ID and its admin URL.** Use the ID for follow-up updates (e.g. setting thumbnail, publishing).
 - **On persistent errors, run `twentythree doctor`** to diagnose auth, connectivity, and dependency issues.
 
+## Behavioral Guide
+
+Before executing multi-step workflows, read [`guide.md`](guide.md) for cross-cutting rules.
+The guide covers two categories:
+
+- **Correctness Rules** — must-follow rules that prevent API errors (object type differentiation, no `webinar get`, webinar creation defaults, timezone handling, admin link construction)
+- **Preference Rules** — best-practice rules that improve output quality (thumbnails from listing responses, analytics via listing flags, filtering/sorting on listing endpoints)
+
+> See [`guide.md`](guide.md) for the full rule list with examples.
+
 ## Resource Index
 
 All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
