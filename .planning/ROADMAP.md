@@ -226,7 +226,7 @@ Plans:
   4. Running `node bin/add.js --project` from the package root lists `guide.md` in the copied file output
 **Plans**: 2 plans
 Plans:
-- [ ] 23-01-PLAN.md — Verify flag names and author skills/guide.md with 8 behavioral rules
+- [x] 23-01-PLAN.md — Verify flag names and author skills/guide.md with 8 behavioral rules
 - [ ] 23-02-PLAN.md — Update SKILL.md Behavioral Guide section and add inline notes to video.md and webinar.md
 **UI hint**: no
 
@@ -268,5 +268,5 @@ Plans:
 | 20. Runtime Installer | v1.3 | 1/1 | Complete | 2026-04-20 |
 | 21. Skills npm Publish | v1.4 | 2/2 | Complete   | 2026-04-20 |
 | 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
-| 23. Behavioral Guide Authoring | v1.5 | 0/? | Not started | - |
+| 23. Behavioral Guide Authoring | v1.5 | 1/2 | In Progress|  |
 | 24. Integration & CI Validation | v1.5 | 0/? | Not started | - |

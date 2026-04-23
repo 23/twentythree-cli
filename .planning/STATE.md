@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Prepare Skill for Release on npm
 status: executing
-stopped_at: Phase 23 context gathered
-last_updated: "2026-04-23T21:00:36.861Z"
-last_activity: 2026-04-23 -- Phase 23 planning complete
+stopped_at: Completed 23-01-PLAN.md
+last_updated: "2026-04-23T21:04:18.723Z"
+last_activity: 2026-04-23
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 2
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Milestone v1.5 — Agent Behavioral Guidelines (Phases 23–24)
+**Current focus:** Phase 23 — behavioral-guide-authoring
 
 ## Current Position
 
-Phase: Not started
-Plan: —
+Phase: 23 (behavioral-guide-authoring) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-04-23 -- Phase 23 planning complete
+Last activity: 2026-04-23
 
 Progress: [__________] 0%
 
@@ -100,6 +100,7 @@ Recent decisions affecting current work:
 - [v1.5 roadmap]: SKILL.md Behavioral Guide section must appear before Resource Index table — agents stop reading at the table; link placed after line ~130 would be consistently skipped
 - [v1.5 roadmap]: Inline reference file notes use > **Note:** blockquote format, forward-reference guide.md rather than restate rules — single source of truth in guide.md
 - [v1.5 roadmap]: npm pack --dry-run file count assertion updates from 28 to 29 when guide.md is added (INT-01)
+- [Phase 23-behavioral-guide-authoring]: open_p has no direct CLI flag on webinar create; CR-3 references verified --draft/--publish flags and instructs agents to run --agent
 
 ### Pending Todos
 
@@ -112,6 +113,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-23T20:51:22.615Z
-Stopped at: Phase 23 context gathered
-Resume file: .planning/phases/23-behavioral-guide-authoring/23-CONTEXT.md
+Last session: 2026-04-23T21:04:18.721Z
+Stopped at: Completed 23-01-PLAN.md
+Resume file: None
