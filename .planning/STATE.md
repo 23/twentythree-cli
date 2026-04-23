@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Prepare Skill for Release on npm
-status: verifying
-stopped_at: Phase 24 context gathered
-last_updated: "2026-04-23T21:24:38.766Z"
-last_activity: 2026-04-23
+milestone: v1.5
+milestone_name: Agent Behavioral Guidelines
+status: executing
+stopped_at: Phase 24 plan 01 executed — pending verification
+last_updated: "2026-04-23T22:00:00.000Z"
+last_activity: 2026-04-23 -- Phase 24 plan 01 complete (Gate 3 added to validate-skills.mjs)
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_plans: 3
+  completed_plans: 3
+  percent: 83
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Phase 23 — behavioral-guide-authoring
+**Current focus:** Phase 24 — integration-ci-validation
 
 ## Current Position
 
-Phase: 23 (behavioral-guide-authoring) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
-Last activity: 2026-04-23
+Phase: 24 (integration-ci-validation) — EXECUTED, pending verification
+Plan: 1 of 1 complete
+Status: All plans executed — run /gsd-next to verify
+Last activity: 2026-04-23 -- Phase 24 plan 01 complete
 
-Progress: [__________] 0%
+Progress: [████████__] 83%
 
 ## Accumulated Context
 
