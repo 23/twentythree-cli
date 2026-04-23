@@ -7,6 +7,7 @@
 - ✅ **v1.2 Burnin & Quality of Life** — Phases 14–17 (shipped 2026-04-20)
 - ✅ **v1.3 TwentyThree Agent Skill** — Phases 18–20 (shipped 2026-04-20)
 - **v1.4 Prepare Skill for Release on npm** — Phases 21–22 (in progress)
+- **v1.5 Agent Behavioral Guidelines** — Phases 23–24 (planned)
 
 ## Phases
 
@@ -67,6 +68,11 @@ Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 
 - [x] **Phase 21: Skills npm Publish** — Wire `release.yml` for skills publish, add `publishConfig`, expand keywords, fix bare-npx invocation, verify with dry-run (completed 2026-04-20)
 - [ ] **Phase 22: SKILL.md Hyperlinks** — Upgrade all 22 plain-text resource index entries to markdown hyperlinks
+
+### v1.5 Agent Behavioral Guidelines
+
+- [ ] **Phase 23: Behavioral Guide Authoring** — Verify flag names, write `skills/guide.md`, update `skills/SKILL.md`, add inline notes to reference files
+- [ ] **Phase 24: Integration & CI Validation** — Update `npm pack --dry-run` file count assertion, smoke-test installer confirms guide.md is copied
 
 ## Phase Details
 
@@ -209,6 +215,29 @@ Plans:
 **Plans**: TBD
 **UI hint**: no
 
+### Phase 23: Behavioral Guide Authoring
+**Goal**: AI agents reading `twentythree-skills` have access to a verified, cross-cutting behavioral guide that prevents the most common API decision errors before they occur
+**Depends on**: Phase 22 (SKILL.md must be in its final hyperlinked form before adding the Behavioral Guide section)
+**Requirements**: GUIDE-01, GUIDE-02, GUIDE-03
+**Success Criteria** (what must be TRUE):
+  1. `skills/guide.md` exists with verified flag names (`--include-analytics` and `open_p` confirmed via live `--agent` output before writing), covering object type differentiation, thumbnail strategy, analytics inclusion, filtering/sorting patterns, webinar creation defaults, timezone handling, and admin link construction
+  2. `skills/SKILL.md` contains a "Behavioral Guide" section with a link to `guide.md` placed before the Resource Index table so agents encounter it before scanning commands
+  3. At least `webinar.md` has a `> **Note:**` callout at the relevant command for the "no webinar get — use webinar list --search" rule, forward-referencing `guide.md` rather than restating the rule inline
+  4. Running `node bin/add.js --project` from the package root lists `guide.md` in the copied file output
+**Plans**: TBD
+**UI hint**: no
+
+### Phase 24: Integration & CI Validation
+**Goal**: The `twentythree-skills` package CI gate and installer are consistent with the new file count after `guide.md` is added
+**Depends on**: Phase 23 (guide.md must exist before the file count assertion can be updated and verified)
+**Requirements**: INT-01
+**Success Criteria** (what must be TRUE):
+  1. The `npm pack --dry-run` file count assertion in CI is updated from 28 to 29 and passes without error
+  2. A full `npm pack --dry-run` run from `packages/twentythree-skills` lists `skills/guide.md` in its output
+  3. `validate-skills` script still exits 0 (no regressions from guide.md addition)
+**Plans**: TBD
+**UI hint**: no
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -236,3 +265,5 @@ Plans:
 | 20. Runtime Installer | v1.3 | 1/1 | Complete | 2026-04-20 |
 | 21. Skills npm Publish | v1.4 | 2/2 | Complete   | 2026-04-20 |
 | 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
+| 23. Behavioral Guide Authoring | v1.5 | 0/? | Not started | - |
+| 24. Integration & CI Validation | v1.5 | 0/? | Not started | - |

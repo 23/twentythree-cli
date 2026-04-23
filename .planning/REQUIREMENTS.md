@@ -27,12 +27,13 @@
 
 ## Traceability
 
-| REQ-ID   | Phase | Plan |
-|----------|-------|------|
-| GUIDE-01 | TBD   | TBD  |
-| GUIDE-02 | TBD   | TBD  |
-| GUIDE-03 | TBD   | TBD  |
-| INT-01   | TBD   | TBD  |
+| REQ-ID   | Phase    | Plan |
+|----------|----------|------|
+| GUIDE-01 | Phase 23 | TBD  |
+| GUIDE-02 | Phase 23 | TBD  |
+| GUIDE-03 | Phase 23 | TBD  |
+| INT-01   | Phase 24 | TBD  |
 
 ---
 *Created: 2026-04-23 — v1.5 milestone*
+*Updated: 2026-04-23 — phase mappings added (Phases 23–24)*

@@ -7,7 +7,7 @@ stopped_at: —
 last_updated: "2026-04-23T00:00:00.000Z"
 last_activity: 2026-04-23
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-23)
 
 **Core value:** A developer can authenticate, select a workspace, and call any TwentyThree API endpoint from the terminal in under a minute.
-**Current focus:** Milestone v1.5 — defining requirements
+**Current focus:** Milestone v1.5 — Agent Behavioral Guidelines (Phases 23–24)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-23 — Milestone v1.5 started
+Status: Roadmap created — ready to plan Phase 23
+Last activity: 2026-04-23 — v1.5 roadmap created (Phases 23–24)
 
 Progress: [__________] 0%
 
@@ -42,6 +42,7 @@ Progress: [__________] 0%
 - v1.2 starts at Phase 14, ends at Phase 17 (Phase 17 added 2026-04-20 for tech debt closure)
 - v1.3 starts at Phase 18, ends at Phase 20 (roadmap created 2026-04-20)
 - v1.4 starts at Phase 21, ends at Phase 22 (roadmap created 2026-04-20)
+- v1.5 starts at Phase 23, ends at Phase 24 (roadmap created 2026-04-23)
 
 ### Decisions
 
@@ -94,10 +95,16 @@ Recent decisions affecting current work:
 - [Phase 21-skills-npm-publish]: skills-v* tag prefix for skills releases — keeps CLI and skills publish trains independent with if: guards
 - [Phase 21-skills-npm-publish]: Dry-run step uses npm publish --dry-run (not pnpm) — more reliable for verifying NPM_TOKEN scope before real publish
 - [Phase 21-skills-npm-publish]: NPM_TOKEN scope verified by user dry-run before skills-v1.0.0 tag push
+- [v1.5 roadmap]: guide.md lives at skills/ root (not reference/ or workflows/) — bin/add.js walkDir picks it up automatically; same level as SKILL.md
+- [v1.5 roadmap]: Flag names (--include-analytics, open_p) must be verified via live --agent output before writing guide.md — user-stated names are medium confidence only
+- [v1.5 roadmap]: SKILL.md Behavioral Guide section must appear before Resource Index table — agents stop reading at the table; link placed after line ~130 would be consistently skipped
+- [v1.5 roadmap]: Inline reference file notes use > **Note:** blockquote format, forward-reference guide.md rather than restate rules — single source of truth in guide.md
+- [v1.5 roadmap]: npm pack --dry-run file count assertion updates from 28 to 29 when guide.md is added (INT-01)
 
 ### Pending Todos
 
-None yet.
+- Verify `--include-analytics` flag exists on `video list` and/or `webinar list` (run `twentythree video list --agent`, `twentythree webinar list --agent`)
+- Verify exact CLI flag name for `open_p` (run `twentythree webinar create --agent`)
 
 ### Blockers/Concerns
 
@@ -105,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-20T22:08:53.368Z
-Stopped at: Completed 21-02-PLAN.md
+Last session: 2026-04-23
+Stopped at: Roadmap created for v1.5 (Phases 23–24)
 Resume file: None
