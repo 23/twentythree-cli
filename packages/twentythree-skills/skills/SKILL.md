@@ -197,8 +197,10 @@ twentythree video update <video-id> --published 1 --json
 twentythree webinar create --title "Q2 Kickoff" --live-date "2026-05-01T14:00:00Z" --json
 #    => prints { "id": "<webinar-id>", "admin_url": "..." }
 
-# 2. Fetch room URL and stream key
-twentythree webinar get <webinar-id> --json
+# 2. Fetch room URL and stream key — use webinar list --search since there is no webinar get
+twentythree webinar list --search "Q2 Kickoff" --json
+# Then use webinar room connect for the stream key specifically:
+twentythree webinar room connect <webinar-id> --json
 
 # 3. Start an associated session when the event begins
 twentythree session list --webinar-id <webinar-id> --json
