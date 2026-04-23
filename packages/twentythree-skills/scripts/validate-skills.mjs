@@ -12,6 +12,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { spawnSync } from 'node:child_process'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const packageRoot = join(__dirname, '..')
@@ -62,6 +63,38 @@ if (!existsSync(referenceDir)) {
     if (!existsSync(filePath)) {
       errors.push(`Missing reference file: skills/reference/${group}.md`)
     }
+  }
+}
+
+// ─── Gate 3: Pack file count ──────────────────────────────────────────────────
+// Update EXPECTED_FILE_COUNT when adding new files to the package.
+const EXPECTED_FILE_COUNT = 29
+
+const packResult = spawnSync('npm', ['pack', '--dry-run'], {
+  cwd: packageRoot,
+  encoding: 'utf8',
+})
+
+if (packResult.error) {
+  errors.push(`Gate 3: failed to run npm pack --dry-run: ${packResult.error.message}`)
+} else {
+  const packOutput = packResult.stderr || ''
+
+  const countMatch = packOutput.match(/total files:\s*(\d+)/)
+  if (!countMatch) {
+    errors.push(`Gate 3: could not parse file count from npm pack --dry-run output`)
+  } else {
+    const actualCount = Number(countMatch[1])
+    if (actualCount !== EXPECTED_FILE_COUNT) {
+      errors.push(
+        `Gate 3: npm pack file count is ${actualCount}, expected ${EXPECTED_FILE_COUNT}. ` +
+        `Update EXPECTED_FILE_COUNT in validate-skills.mjs when adding or removing package files.`
+      )
+    }
+  }
+
+  if (!packOutput.includes('skills/guide.md')) {
+    errors.push(`Gate 3: skills/guide.md not found in npm pack --dry-run output — file may be missing or excluded from package`)
   }
 }
 
