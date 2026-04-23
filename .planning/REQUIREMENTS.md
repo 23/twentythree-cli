@@ -1,41 +1,38 @@
-# Requirements — v1.4 Prepare Skill for Release on npm
+# Requirements — v1.5 Agent Behavioral Guidelines
 
 ## Milestone Requirements
 
-### npm Publish
+### Behavioral Guide
 
-- [ ] **NPM-01**: User can publish `twentythree-skills` to npm at version 1.0.0 by pushing a `skills-v*` tag — requires `publishConfig.access: "public"` in `packages/twentythree-skills/package.json` and a skills publish step wired into `.github/workflows/release.yml`
-- [ ] **NPM-02**: `packages/twentythree-skills/package.json` includes runtime-specific keywords (`claude`, `claude-code`, `copilot`, `cursor`, `codex`, `ai-agent`) in addition to existing keywords for improved npm discoverability
-- [ ] **NPM-03**: `bin/add.js` handles bare `npx twentythree-skills` invocation without requiring the `add` subcommand; README documents the canonical invocation form
-- [ ] **NPM-04**: CI includes a dry-run step that verifies `NPM_TOKEN` has publish access for `twentythree-skills` before the real publish step executes
+- [ ] **GUIDE-01**: New `skills/guide.md` with 8 behavioral rules — 4 correctness rules (object type differentiation, webinar creation defaults, timezone handling, admin link construction) + 3 preference rules (thumbnails from listing responses, analytics via listing flags, filtering/sorting on listing endpoints) + 1 implied correctness rule (no `webinar get` command — use `webinar list --search`). Rules must use positive framing and include concrete command examples. Flag names (`open_p`, `--include-analytics`) must be verified via `--agent` output before writing. Located at `skills/guide.md` (not in `reference/` or `workflows/`).
+- [ ] **GUIDE-02**: Inline behavioral notes added to relevant reference files — at minimum `webinar.md` for the "no webinar get" rule; `video.md` and `webinar.md` for rules with direct point-of-use relevance (thumbnails, analytics include, admin links). Format: `> **Note:**` blockquote immediately after the relevant command header. One note per affected command; no verbatim rule repetition — forward-reference `guide.md` instead.
+- [ ] **GUIDE-03**: `skills/SKILL.md` updated to reference `guide.md` — new "Behavioral Guide" section added before the resource index table so agents encounter behavioral orientation before scanning commands.
 
-### Skills Discoverability
+### Integration
 
-- [ ] **SKILL-03**: `skills/SKILL.md` resource index upgrades all 22 plain-text topic names to `` [`topic`](reference/topic.md) `` markdown hyperlinks for link-following AI runtimes (Claude Code, Copilot, Cursor)
+- [ ] **INT-01**: `npm pack --dry-run` file count assertion updated from 28 to 29 to account for the new `skills/guide.md` file (bin/add.js requires no changes — walkDir installs all files in `skills/` automatically).
 
 ## Future Requirements
 
-- Additional workflow files — expand as high-value agent automation patterns emerge from usage
-- Installer post-success message with "start a new session" hint for reduced user confusion
-- Skills smoke-test job in CI verifying `npx twentythree-skills` resolves after publish
+- Additional behavioral rules as high-value patterns emerge from real agent usage
+- Webinar series–specific behavioral notes (scheduling, speaker management)
+- Cross-reference notes for `analytics.md` if analytics-include flag guidance warrants dedicated callout
 
 ## Out of Scope
 
-- Browser OAuth (`twentythree auth login`) — deferred to a later milestone
-- Changesets integration — release.yml uses manual `pnpm publish`; changesets is configured but bypassed; left as-is for v1.4
-- Automatic skills install on CLI install — keep the two packages independent
-- `npx twentythree-skills` interactive mode / subcommand routing beyond the existing single-purpose installer
+- CLI code changes — all changes are skills package content only; no CLI command output changes
+- `--object-type` legacy names implied rule — skip for this milestone; already documented inline in `video.md` and `webinar.md` Terminology Notes sections
+- Clip delay after recording stop implied rule — skip for this milestone; too narrow for guide.md, no strong agent failure mode identified
+- Runtime-specific format variants — all runtimes use the same static markdown
 
 ## Traceability
 
-| REQ-ID   | Phase    | Plan |
-|----------|----------|------|
-| NPM-01   | Phase 21 | TBD  |
-| NPM-02   | Phase 21 | TBD  |
-| NPM-03   | Phase 21 | TBD  |
-| NPM-04   | Phase 21 | TBD  |
-| SKILL-03 | Phase 22 | TBD  |
+| REQ-ID   | Phase | Plan |
+|----------|-------|------|
+| GUIDE-01 | TBD   | TBD  |
+| GUIDE-02 | TBD   | TBD  |
+| GUIDE-03 | TBD   | TBD  |
+| INT-01   | TBD   | TBD  |
 
 ---
-*Created: 2026-04-20 — v1.4 milestone*
-*Updated: 2026-04-20 — traceability filled after roadmap creation*
+*Created: 2026-04-23 — v1.5 milestone*
