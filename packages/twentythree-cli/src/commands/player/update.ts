@@ -56,7 +56,7 @@ export default class PlayerUpdate extends AuthenticatedCommand<typeof PlayerUpda
 
     const body: Record<string, unknown> = { player_id: Number(args.id) }
 
-    if (flags.name !== undefined) body.name = flags.name
+    if (flags.name !== undefined) body.player_name = flags.name
     if (flags.description !== undefined) body.description = flags.description
 
     if (flags.data !== undefined) {

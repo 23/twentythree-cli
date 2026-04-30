@@ -34,6 +34,11 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
       description: 'Series description',
       required: false,
     }),
+    'seo-policy': Flags.string({
+      description: 'SEO policy for the series: index, noindex, or empty string to reset',
+      options: ['', 'index', 'noindex'],
+      required: false,
+    }),
   }
 
   static args = {
@@ -55,6 +60,7 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
     const body: Record<string, unknown> = { live_series_id: Number(args.id) }
     if (flags.name !== undefined) body.name = flags.name
     if (flags.description !== undefined) body.description = flags.description
+    if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
 
     const { data, error } = await this.apiClient.POST('/live/series/update', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

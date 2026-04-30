@@ -26454,6 +26454,319 @@
                 }
             }
         },
+        "/player/remove-thumbnail": {
+            "post": {
+                "summary":     "Remove player thumbnail",
+                "description": "Remove the custom thumbnail for a player, reverting it to the default generated thumbnail image.",
+                "tags":        [
+                    "Players"
+                ],
+                "operationId": "playerRemoveThumbnail",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "player_id": {
+                                                    "type":    "number",
+                                                    "example": 7664900
+                                                }
+                                            }
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The thumbnail has been removed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "player_id": {
+                                        "description": "ID of the player to update.",
+                                        "type":        "integer"
+                                    },
+                                    "fields":    {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "player_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/player/set-thumbnail": {
+            "post": {
+                "summary":     "Set player thumbnail",
+                "description": "Upload and set a custom thumbnail image for a player. The image must be supplied as a multipart file upload via the `file` parameter.",
+                "tags":        [
+                    "Players"
+                ],
+                "operationId": "playerSetThumbnail",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "player_id": {
+                                                    "type":    "number",
+                                                    "example": 7664900
+                                                }
+                                            }
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The thumbnail has been updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "player_id": {
+                                        "description": "ID of the player to update.",
+                                        "type":        "integer"
+                                    },
+                                    "file":      {
+                                        "description": "The image file to use as the player thumbnail.",
+                                        "type":        "object"
+                                    },
+                                    "fields":    {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "player_id",
+                                    "file"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/player/update":       {
             "post": {
                 "summary":     "Update player",
@@ -26585,11 +26898,19 @@
                             "schema": {
                                 "type":       "object",
                                 "properties": {
-                                    "player_id": {
+                                    "player_id":   {
                                         "description": "The ID of the player to update.",
                                         "type":        "integer"
                                     },
-                                    "fields":    {
+                                    "player_name": {
+                                        "description": "Update name of player",
+                                        "type":        "string"
+                                    },
+                                    "description": {
+                                        "description": "Update description of player",
+                                        "type":        "string"
+                                    },
+                                    "fields":      {
                                         "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
                                         "type":        "string"
                                     }
@@ -30592,6 +30913,172 @@
                     }
                 ],
                 "deprecated":  false
+            }
+        },
+        "/thumbnail/template/preview-scss": {
+            "post": {
+                "summary":     "Preview SCSS for thumbnail template",
+                "description": "Prerender SCSS into CSS for previewing template thumbnails.",
+                "tags":        [
+                    "Thumbnail Templates"
+                ],
+                "operationId": "thumbnailTemplatePreviewScss",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "admin"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "thumbnail_template_id": {
+                                                    "type":    "number",
+                                                    "example": 7664900
+                                                },
+                                                "scss_template": {
+                                                    "type":    "string",
+                                                    "example": ".title { font-size: 32px; color: {{ brand.primary_color }}; }"
+                                                },
+                                                "css":           {
+                                                    "type":    "string",
+                                                    "example": ".title { font-size: 32px; color: #ff0000; }"
+                                                }
+                                            }
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The thumbnail template was rendered for preview"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "thumbnail_template_id": {
+                                        "description": "ID of the thumbnail template to update.",
+                                        "type":        "integer"
+                                    },
+                                    "scss_template": {
+                                        "description": "SCSS styles for the thumbnail template. Compiled to CSS at render time.",
+                                        "type":        "string"
+                                    },
+                                    "fields":        {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "thumbnail_template_id"
+                                ]
+                            }
+                        }
+                    }
+                }
             }
         },
         "/thumbnail/template/update": {
@@ -35955,6 +36442,15 @@
                                         "description": "A custom canonical URI for the video, overriding the default URL assigned by the workspace.",
                                         "type":        "string"
                                     },
+                                    "seo_policy":          {
+                                        "description": "Control the SEO policy for the video.",
+                                        "type":        "string",
+                                        "enum":        [
+                                            "",
+                                            "index",
+                                            "noindex"
+                                        ]
+                                    },
                                     "mischung_template_p": {
                                         "description": "Whether this video is a video editor template. Set to `true` to mark as a template, `false` to clear.",
                                         "type":        "boolean"
@@ -37402,148 +37898,6 @@
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation400"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation401"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Operation forbidden",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation403"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Object not found",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation404"
-                                }
-                            }
-                        }
-                    },
-                    "406": {
-                        "description": "Not Acceptable",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation406"
-                                }
-                            }
-                        }
-                    },
-                    "412": {
-                        "description": "Precondition Failed",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation412"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Unexpected error",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorInformation500"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security":    [
-                    {
-                        "twentythree_auth": [
-                            "admin"
-                        ]
-                    }
-                ],
-                "deprecated":  false,
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "type":       "object",
-                                "properties": {
-                                    "fields": {
-                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
-                                        "type":        "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/photo/subtitle/archive/transcribe": {
-            "post": {
-                "summary":     "Transcribe video archive",
-                "description": "Queues all eligible videos in the workspace archive for automatic transcription using the workspace's default language. The automatic transcription feature must be enabled. Returns 412 if transcription has already been started, or 404 if the feature is unavailable.",
-                "tags":        [
-                    "Videos: Subtitle Archive"
-                ],
-                "operationId": "videoSubtitleArchiveTranscribe",
-                "responses":   {
-                    "200": {
-                        "description": "OK",
-                        "content":     {
-                            "application/json": {
-                                "schema": {
-                                    "type":       "object",
-                                    "properties": {
-                                        "status":           {
-                                            "type":    "string",
-                                            "example": "ok"
-                                        },
-                                        "permission_level": {
-                                            "type":    "string",
-                                            "example": "admin"
-                                        },
-                                        "cached":           {
-                                            "type":    "boolean",
-                                            "example": false
-                                        },
-                                        "cache_time":       {
-                                            "type":        "integer",
-                                            "description": "If the reponse is returned from cache, this property details the cache time.",
-                                            "example":     1610486659
-                                        },
-                                        "data":             {
-                                            "type":       "object",
-                                            "properties": {}
-                                        },
-                                        "message":          {
-                                            "type":    "string",
-                                            "example": "The archive transcription has been started."
                                         }
                                     }
                                 }
@@ -43408,6 +43762,15 @@
                                     "locale":               {
                                         "description": "Update the language for the webinar.",
                                         "type":        "string"
+                                    },
+                                    "seo_policy":           {
+                                        "description": "Control the SEO policy for the webinar.",
+                                        "type":        "string",
+                                        "enum":        [
+                                            "",
+                                            "index",
+                                            "noindex"
+                                        ]
                                     },
                                     "action_id":            {
                                         "description": "Optionally, attach a collector action to the webinar.",
@@ -50877,6 +51240,15 @@
                                     "timezone":            {
                                         "description": "Specify which timezone dates and times are specified in. Defaults to the workspace timezone.",
                                         "type":        "string"
+                                    },
+                                    "seo_policy":          {
+                                        "description": "Control the SEO policy for the webinar series.",
+                                        "type":        "string",
+                                        "enum":        [
+                                            "",
+                                            "index",
+                                            "noindex"
+                                        ]
                                     },
                                     "locale":              {
                                         "description": "Specify which language/locale to use for the series, default is the workspace locale.",

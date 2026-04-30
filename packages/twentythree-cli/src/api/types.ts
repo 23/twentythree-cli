@@ -1990,6 +1990,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/player/remove-thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove player thumbnail
+         * @description Remove the custom thumbnail for a player, reverting it to the default generated thumbnail image.
+         */
+        post: operations["playerRemoveThumbnail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/player/set-thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set player thumbnail
+         * @description Upload and set a custom thumbnail image for a player. The image must be supplied as a multipart file upload via the `file` parameter.
+         */
+        post: operations["playerSetThumbnail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/player/update": {
         parameters: {
             query?: never;
@@ -2442,6 +2482,26 @@ export interface paths {
         get: operations["thumbnailTemplateList"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/thumbnail/template/preview-scss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview SCSS for thumbnail template
+         * @description Prerender SCSS into CSS for previewing template thumbnails.
+         */
+        post: operations["thumbnailTemplatePreviewScss"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3030,26 +3090,6 @@ export interface paths {
          * @description Returns a breakdown of the archive transcription queue by status (waiting, completed, error) for the current workspace. Returns 404 if automatic transcription is not enabled on the workspace.
          */
         post: operations["videoSubtitleArchiveGetProgress"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/photo/subtitle/archive/transcribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Transcribe video archive
-         * @description Queues all eligible videos in the workspace archive for automatic transcription using the workspace's default language. The automatic transcription feature must be enabled. Returns 412 if transcription has already been started, or 404 if the feature is unavailable.
-         */
-        post: operations["videoSubtitleArchiveTranscribe"];
         delete?: never;
         options?: never;
         head?: never;
@@ -18569,6 +18609,228 @@ export interface operations {
             };
         };
     };
+    playerRemoveThumbnail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the player to update. */
+                    player_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 7664900 */
+                            player_id?: number;
+                        };
+                        /** @example The thumbnail has been removed */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    playerSetThumbnail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** @description ID of the player to update. */
+                    player_id: number;
+                    /** @description The image file to use as the player thumbnail. */
+                    file: Record<string, never>;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 7664900 */
+                            player_id?: number;
+                        };
+                        /** @example The thumbnail has been updated */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
     playerUpdate: {
         parameters: {
             query?: never;
@@ -18581,6 +18843,10 @@ export interface operations {
                 "application/x-www-form-urlencoded": {
                     /** @description The ID of the player to update. */
                     player_id: number;
+                    /** @description Update name of player */
+                    player_name?: string;
+                    /** @description Update description of player */
+                    description?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
                 };
@@ -21180,6 +21446,122 @@ export interface operations {
                             /** @example 1710510000 */
                             creation_time__epoch?: number;
                         }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    thumbnailTemplatePreviewScss: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the thumbnail template to update. */
+                    thumbnail_template_id: number;
+                    /** @description SCSS styles for the thumbnail template. Compiled to CSS at render time. */
+                    scss_template?: string;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example admin */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 7664900 */
+                            thumbnail_template_id?: number;
+                            /** @example .title { font-size: 32px; color: {{ brand.primary_color }}; } */
+                            scss_template?: string;
+                            /** @example .title { font-size: 32px; color: #ff0000; } */
+                            css?: string;
+                        };
+                        /** @example The thumbnail template was rendered for preview */
+                        message?: string;
                     };
                 };
             };
@@ -24066,6 +24448,11 @@ export interface operations {
                     timezone?: string;
                     /** @description A custom canonical URI for the video, overriding the default URL assigned by the workspace. */
                     absolute_url?: string;
+                    /**
+                     * @description Control the SEO policy for the video.
+                     * @enum {string}
+                     */
+                    seo_policy?: "" | "index" | "noindex";
                     /** @description Whether this video is a video editor template. Set to `true` to mark as a template, `false` to clear. */
                     mischung_template_p?: boolean;
                     /** @description Icon identifier for the video editor template. */
@@ -25138,111 +25525,6 @@ export interface operations {
                             /** @example 42 */
                             count?: number;
                         }[];
-                    };
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation400"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation401"];
-                };
-            };
-            /** @description Operation forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation403"];
-                };
-            };
-            /** @description Object not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation404"];
-                };
-            };
-            /** @description Not Acceptable */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation406"];
-                };
-            };
-            /** @description Precondition Failed */
-            412: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation412"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorInformation500"];
-                };
-            };
-        };
-    };
-    videoSubtitleArchiveTranscribe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/x-www-form-urlencoded": {
-                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
-                    fields?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example ok */
-                        status?: string;
-                        /** @example admin */
-                        permission_level?: string;
-                        /** @example false */
-                        cached?: boolean;
-                        /**
-                         * @description If the reponse is returned from cache, this property details the cache time.
-                         * @example 1610486659
-                         */
-                        cache_time?: number;
-                        data?: Record<string, never>;
-                        /** @example The archive transcription has been started. */
-                        message?: string;
                     };
                 };
             };
@@ -28669,6 +28951,11 @@ export interface operations {
                     timezone?: string;
                     /** @description Update the language for the webinar. */
                     locale?: string;
+                    /**
+                     * @description Control the SEO policy for the webinar.
+                     * @enum {string}
+                     */
+                    seo_policy?: "" | "index" | "noindex";
                     /** @description Optionally, attach a collector action to the webinar. */
                     action_id?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
@@ -33456,6 +33743,11 @@ export interface operations {
                     recurrence_end_time?: string;
                     /** @description Specify which timezone dates and times are specified in. Defaults to the workspace timezone. */
                     timezone?: string;
+                    /**
+                     * @description Control the SEO policy for the webinar series.
+                     * @enum {string}
+                     */
+                    seo_policy?: "" | "index" | "noindex";
                     /** @description Specify which language/locale to use for the series, default is the workspace locale. */
                     locale?: string;
                     /** @description ID of a video to be used as the series trailer. */

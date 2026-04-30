@@ -73,6 +73,11 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       allowNo: true,
       required: false,
     }),
+    'seo-policy': Flags.string({
+      description: 'SEO policy for the video: index, noindex, or empty string to reset',
+      options: ['', 'index', 'noindex'],
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives (undocumented, for advanced users)
     'published-p': Flags.string({ hidden: true, required: false }),
     'promoted-p': Flags.string({ hidden: true, required: false }),
@@ -107,6 +112,7 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       flags['published-p'],
       flags['promoted-p'],
       flags['video-360-p'],
+      flags['seo-policy'],
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { photo_id: videoId }
@@ -192,6 +198,7 @@ export default class VideoUpdate extends AuthenticatedCommand<typeof VideoUpdate
       if (promoteVal !== undefined) body.promoted_p = promoteVal ? 1 : 0
       if (flags['publish-date'] !== undefined) body['publish_date'] = flags['publish-date']
       if (video360Val !== undefined) body.video_360_p = video360Val ? 1 : 0
+      if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/photo/update', {

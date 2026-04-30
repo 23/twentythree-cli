@@ -59,6 +59,11 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       allowNo: true,
       required: false,
     }),
+    'seo-policy': Flags.string({
+      description: 'SEO policy for the webinar: index, noindex, or empty string to reset',
+      options: ['', 'index', 'noindex'],
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives
     'draft-p': Flags.string({ hidden: true, required: false }),
     'published-p': Flags.string({ hidden: true, required: false }),
@@ -94,6 +99,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       flags.publish,
       flags['draft-p'],
       flags['published-p'],
+      flags['seo-policy'],
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { live_id: webinarId }
@@ -185,6 +191,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       if (draftVal !== undefined) body.draft_p = draftVal ? 1 : 0
       const publishVal = parseBoolParam(flags.publish, flags['published-p'])
       if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
+      if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/live/update', {
