@@ -5,3 +5,7 @@ dist/
 oclif.manifest.json
 .DS_Store
 tmp/
+packages/twentythree-skills/.agents/
+packages/twentythree-skills/.claude/
+packages/twentythree-skills/.cursor/
+packages/twentythree-skills/.github/
