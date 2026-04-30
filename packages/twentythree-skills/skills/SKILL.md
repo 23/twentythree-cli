@@ -4,7 +4,7 @@ description: |
   Full TwentyThree video platform CLI. Use when the user asks to upload or manage
   videos, run webinars, query analytics, manage audiences, configure players,
   create categories, manage tags, spots, thumbnails, webhooks, collectors, polls,
-  presentations, or any TwentyThree platform operation. Covers 235+ API commands
+  presentations, or any TwentyThree platform operation. Covers 238+ API commands
   across 22 resource groups plus meta commands (auth, workspace, autocomplete, doctor).
   Every command supports --json for machine-readable output and --agent for
   self-describing metadata (api_endpoint, auth_scope, output_shape, side_effects).
@@ -25,7 +25,7 @@ compatibility: Requires twentythree-cli installed globally (npm install -g twent
 
 # TwentyThree CLI
 
-> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 235+ commands across 22 resource groups.
+> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 238+ commands across 22 resource groups.
 >
 > Always use `--json` in agentic contexts for structured output. Always run `twentythree <command> --agent` before calling an unfamiliar command to discover its flags, API endpoint, auth scope, and side effects.
 
@@ -145,11 +145,11 @@ All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | `action` | `list`, `create`, `get`, `update`, `delete` + subtypes | Interactive overlays, CTAs inside videos |
 | `collector` | `list`, `create`, `delete` | Lead capture forms |
 | `comment` | `list`, `create`, `get`, `update`, `delete` | Video comments moderation |
-| `player` | `list`, `create`, `get`, `update`, `delete` | Player configuration and theming |
+| `player` | `list`, `create`, `get`, `update`, `delete`, `set-thumbnail`, `remove-thumbnail` | Player configuration, theming, and custom thumbnails |
 | `poll` | `list`, `create`, `get`, `update`, `delete` | In-video polls |
 | `spot` | `list`, `create`, `get`, `update`, `delete` | Hotspot annotations on videos |
 | `tag` | `list`, `create` | Content tagging |
-| `thumbnail` | `list`, `create`, `get`, `update`, `delete` | Video thumbnail management |
+| `thumbnail` | `list`, `create`, `get`, `update`, `delete`, `preview-scss` | Video thumbnail and template management |
 | `webhook` | `list`, `create`, `get`, `update`, `delete` | Event webhooks |
 | `app` | `list`, `thumbnail`, `create`, `get`, `update`, `delete` | App/integration management |
 | `presentation` | `list` + page/setting subtopics | Presentation content |
