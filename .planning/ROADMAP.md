@@ -72,7 +72,7 @@ Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 ### v1.5 Agent Behavioral Guidelines
 
 - [x] **Phase 23: Behavioral Guide Authoring** — Verify flag names, write `skills/guide.md`, update `skills/SKILL.md`, add inline notes to reference files (completed 2026-04-23)
-- [ ] **Phase 24: Integration & CI Validation** — Update `npm pack --dry-run` file count assertion, smoke-test installer confirms guide.md is copied
+- [x] **Phase 24: Integration & CI Validation** — Update `npm pack --dry-run` file count assertion, smoke-test installer confirms guide.md is copied (completed 2026-04-23)
 
 ## Phase Details
 
@@ -240,7 +240,7 @@ Plans:
   3. `validate-skills` script still exits 0 (no regressions from guide.md addition)
 **Plans**: 1 plan
 Plans:
-- [ ] 24-01-PLAN.md — Add Gate 3 pack file count assertion (EXPECTED_FILE_COUNT = 29, skills/guide.md presence check)
+- [x] 24-01-PLAN.md — Add Gate 3 pack file count assertion (EXPECTED_FILE_COUNT = 29, skills/guide.md presence check)
 **UI hint**: no
 
 ## Progress
@@ -271,4 +271,4 @@ Plans:
 | 21. Skills npm Publish | v1.4 | 2/2 | Complete   | 2026-04-20 |
 | 22. SKILL.md Hyperlinks | v1.4 | 0/? | Not started | - |
 | 23. Behavioral Guide Authoring | v1.5 | 2/2 | Complete   | 2026-04-23 |
-| 24. Integration & CI Validation | v1.5 | 0/1 | Not started | - |
+| 24. Integration & CI Validation | v1.5 | 1/1 | Complete    | 2026-04-23 |
