@@ -69,7 +69,7 @@ if (!existsSync(referenceDir)) {
 
 // ─── Gate 3: Pack file count ──────────────────────────────────────────────────
 // Update EXPECTED_FILE_COUNT when adding new files to the package.
-const EXPECTED_FILE_COUNT = 29
+const EXPECTED_FILE_COUNT = 30
 
 const packResult = spawnSync('npm', ['pack', '--dry-run'], {
   cwd: packageRoot,
