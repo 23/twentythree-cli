@@ -147,7 +147,7 @@ export default class VideoReplace extends AuthenticatedCommand<typeof VideoRepla
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: result,
+        data: { ...result, admin_url: adminUrl },
         summary: `Video ${args.id} replaced`,
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },

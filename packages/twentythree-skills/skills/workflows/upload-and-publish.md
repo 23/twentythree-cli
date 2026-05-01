@@ -39,11 +39,10 @@ On failure:
 twentythree video upload ./video.mp4 --title "Product Demo" --category-id <category_id> --json
 ```
 
-Expected output shape: `{ ok: true, data: { photo_id, tree_id, token } }`
+Expected output shape: `{ ok: true, data: { photo_id, tree_id, token, admin_url } }`
 Capture:
 - `data.photo_id` as `video_id`
-- Construct admin URL as: `https://<domain>/manage/video/<data.photo_id>`
-  (surface this to the user — the CLI prints it on stdout but it is not in the JSON data object)
+- `data.admin_url` — the admin URL for the uploaded video (surface this to the user)
 
 On failure:
 - Network error or `401` → run `twentythree auth status` and `twentythree doctor`
@@ -141,6 +140,6 @@ On failure:
   twentythree video upload ./video.mp4 --title "Demo" --publish --json
   ```
   This is valid but skips the optional metadata, frame, and transcoding-check steps.
-- The admin URL from Step 2 opens the video's admin edit page — surface this to the user so they can review or make manual edits. Construct it as `https://<domain>/manage/video/<data.photo_id>` (it is printed on stdout by the CLI but is not included in the JSON data object).
+- The admin URL from Step 2 opens the video's admin edit page — surface this to the user so they can review or make manual edits. It is available as `data.admin_url` in the JSON response and also printed on stdout.
 - `--category-id` accepts a comma-separated list of IDs to assign to multiple categories simultaneously.
 - After a successful publish, use `twentythree video get <video_id> --json` to confirm the `published` field is `true` before reporting success to the user.

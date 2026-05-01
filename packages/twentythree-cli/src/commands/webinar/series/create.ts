@@ -84,7 +84,8 @@ export default class WebinarSeriesCreate extends AuthenticatedCommand<typeof Web
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: { ...(data as any), admin_url: `https://${this.activeWorkspace.domain}/manage/webinar/series/${seriesId}` },
         summary: 'Series created',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },

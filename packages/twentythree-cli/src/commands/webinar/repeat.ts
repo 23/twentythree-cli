@@ -62,7 +62,8 @@ export default class WebinarRepeat extends AuthenticatedCommand<typeof WebinarRe
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: repeatData,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: { ...(repeatData as any), admin_url: `https://${this.activeWorkspace.domain}/manage/webinar/${newLiveId}` },
         summary: 'Webinar duplicated and scheduled',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },

@@ -171,7 +171,7 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
     if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: result!,
+        data: { ...result!, admin_url: adminUrl },
         summary: 'Video uploaded',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
