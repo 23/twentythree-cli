@@ -36,6 +36,31 @@ twentythree webinar list --search "Q2 Town Hall" --json
 
 ---
 
+### Personal Video Requires Dedicated Workspace
+
+Personal is always on its own workspace. Before any Personal or video recording operation, confirm the CLI is pointed at the Personal workspace.
+
+1. Check current workspace: `twentythree auth status --json` — inspect `data.domain`
+2. Personal workspace domains follow `*.personalvideo.co` or a custom domain configured for Personal
+3. If not on the Personal workspace, list options: `twentythree workspace list --json`
+4. Confirm intent with the user before switching, showing both current and target domains
+5. Switch: `twentythree workspace use <personal-domain>`
+
+Never silently switch workspaces. Always show the user what workspace they're on and what they're switching to.
+
+```bash
+# Check current workspace
+twentythree auth status --json
+
+# List all configured workspaces
+twentythree workspace list --json
+
+# Switch to Personal workspace (confirm with user first)
+twentythree workspace use company.personalvideo.co
+```
+
+---
+
 ### Webinar Creation Defaults
 
 Verify publication and draft flags when creating webinars — the defaults may not match your intent. Pass `--publish` to make the webinar immediately visible or `--draft` to hold it unpublished. Run `twentythree webinar create --agent` to confirm all available access flags before creating.

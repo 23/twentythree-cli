@@ -17,6 +17,9 @@ triggers:
   - twentythree
   - video platform
   - TwentyThree CLI
+  - personal video
+  - record video
+  - video recording
 invocable: true
 argument-hint: "<topic> <verb> [flags]"
 allowed-tools: Bash(twentythree *)
@@ -138,6 +141,7 @@ All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | Topic | Representative verbs | Use for |
 |-------|---------------------|---------|
 | `video` | `upload`, `list`, `get`, `update`, `delete`, `replace`, `frame`, `transcoding-progress` | Video file management, upload, metadata, thumbnails |
+| `personal` | workspace switch, list, tasks, flows, templates, email | Personal video recording — browser-based recording, mischung videos, tasks, flows |
 | `webinar` | `create`, `list`, `get`, `update`, `delete`, `repeat`, `highlights`, `clips`, `metrics`, `log` + attachment/mail/queued-video/recording/room/section/series/speaker/transcription subtopics | Live events, scheduling, recordings, attendee comms |
 | `analytics` | `conversions`, `live`, `usage`, `video` subtopics (many verbs each) | Reporting, viewer data, playback metrics, conversion tracking |
 | `audience` | `list`, `create`, `get`, `update`, `delete` + segment ops | Audience segmentation and targeting |
