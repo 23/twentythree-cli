@@ -161,22 +161,28 @@ export default class VideoUpload extends AuthenticatedCommand<typeof VideoUpload
     }
 
     const videoId = result!.photo_id
-    const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${videoId}`
     this.log(chalk.green('Video uploaded successfully'))
     if (videoId) {
+      const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${videoId}`
       this.log(`ID:    ${videoId}`)
       this.log(`Admin: ${adminUrl}`)
-    }
-
-    if (this.jsonEnabled()) {
+      if (this.jsonEnabled()) {
+        return formatJsonOutput({
+          ok: true,
+          data: { ...result!, admin_url: adminUrl },
+          summary: 'Video uploaded',
+          breadcrumbs: [
+            { domain: this.activeWorkspace.domain },
+            { resource: 'video', id: String(videoId) },
+          ],
+        })
+      }
+    } else if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: { ...result!, admin_url: adminUrl },
+        data: result!,
         summary: 'Video uploaded',
-        breadcrumbs: [
-          { domain: this.activeWorkspace.domain },
-          { resource: 'video', id: result!.photo_id ? String(result!.photo_id) : undefined },
-        ],
+        breadcrumbs: [{ domain: this.activeWorkspace.domain }],
       })
     }
   }

@@ -100,7 +100,7 @@ export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCr
       return formatJsonOutput({
         ok: true,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data: { ...(createData as any), admin_url: `https://${this.activeWorkspace.domain}/manage/webinar/${liveId}` },
+        data: { ...(createData ?? {}), admin_url: `https://${this.activeWorkspace.domain}/manage/webinar/${liveId}` },
         summary: 'Webinar created',
         breadcrumbs: [
           { domain: this.activeWorkspace.domain },
