@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree poll list --object-id 12345 --json
 ```
 
-_See code: [src/commands/poll/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/poll/list.ts)_
+_See code: [src/commands/poll/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/poll/list.ts)_

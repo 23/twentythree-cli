@@ -7,6 +7,8 @@ Delete a player from the active workspace
 * [`twentythree player embed`](#twentythree-player-embed)
 * [`twentythree player embed-versions`](#twentythree-player-embed-versions)
 * [`twentythree player list`](#twentythree-player-list)
+* [`twentythree player remove-thumbnail ID`](#twentythree-player-remove-thumbnail-id)
+* [`twentythree player set-thumbnail FILE`](#twentythree-player-set-thumbnail-file)
 * [`twentythree player styles`](#twentythree-player-styles)
 * [`twentythree player update ID`](#twentythree-player-update-id)
 
@@ -34,7 +36,7 @@ EXAMPLES
   $ twentythree player delete 42 --json
 ```
 
-_See code: [src/commands/player/delete.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/delete.ts)_
+_See code: [src/commands/player/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/delete.ts)_
 
 ## `twentythree player embed`
 
@@ -79,7 +81,7 @@ EXAMPLES
   $ twentythree player embed --video-id 123 --json
 ```
 
-_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/embed.ts)_
+_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/embed.ts)_
 
 ## `twentythree player embed-versions`
 
@@ -107,7 +109,7 @@ EXAMPLES
   $ twentythree player embed-versions --object-type live --object-id 456 --json
 ```
 
-_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/embed-versions.ts)_
+_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/embed-versions.ts)_
 
 ## `twentythree player list`
 
@@ -133,7 +135,62 @@ EXAMPLES
   $ twentythree player list --json
 ```
 
-_See code: [src/commands/player/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/list.ts)_
+_See code: [src/commands/player/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/list.ts)_
+
+## `twentythree player remove-thumbnail ID`
+
+Remove the custom thumbnail for a player, reverting to the default
+
+```
+USAGE
+  $ twentythree player remove-thumbnail ID [--json] [-w <value>]
+
+ARGUMENTS
+  ID  Player ID
+
+GLOBAL FLAGS
+  -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
+      --json               Format output as json.
+
+DESCRIPTION
+  Remove the custom thumbnail for a player, reverting to the default
+
+EXAMPLES
+  $ twentythree player remove-thumbnail 42
+
+  $ twentythree player remove-thumbnail 42 --json
+```
+
+_See code: [src/commands/player/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/remove-thumbnail.ts)_
+
+## `twentythree player set-thumbnail FILE`
+
+Upload and set a custom thumbnail image for a player
+
+```
+USAGE
+  $ twentythree player set-thumbnail FILE --player-id <value> [--json] [-w <value>]
+
+ARGUMENTS
+  FILE  Path to the thumbnail image file
+
+FLAGS
+  --player-id=<value>  (required) Player ID to update
+
+GLOBAL FLAGS
+  -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
+      --json               Format output as json.
+
+DESCRIPTION
+  Upload and set a custom thumbnail image for a player
+
+EXAMPLES
+  $ twentythree player set-thumbnail ./thumbnail.png --player-id 42
+
+  $ twentythree player set-thumbnail ./thumbnail.jpg --player-id 42 --json
+```
+
+_See code: [src/commands/player/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/set-thumbnail.ts)_
 
 ## `twentythree player styles`
 
@@ -159,7 +216,7 @@ EXAMPLES
   $ twentythree player styles --json
 ```
 
-_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/styles.ts)_
+_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/styles.ts)_
 
 ## `twentythree player update ID`
 
@@ -190,4 +247,4 @@ EXAMPLES
   $ twentythree player update 42 --description "New description"
 ```
 
-_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/player/update.ts)_
+_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/player/update.ts)_

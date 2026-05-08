@@ -38,4 +38,4 @@ EXAMPLES
   $ twentythree app update 12345 --name "Updated Name" --json
 ```
 
-_See code: [src/commands/app/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/app/update.ts)_
+_See code: [src/commands/app/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/app/update.ts)_

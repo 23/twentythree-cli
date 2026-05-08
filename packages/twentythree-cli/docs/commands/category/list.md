@@ -31,4 +31,4 @@ EXAMPLES
   $ twentythree category list --include-hidden
 ```
 
-_See code: [src/commands/category/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/category/list.ts)_
+_See code: [src/commands/category/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/category/list.ts)_

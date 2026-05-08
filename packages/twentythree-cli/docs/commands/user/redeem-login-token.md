@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree user redeem-login-token --login-token abc123 --json
 ```
 
-_See code: [src/commands/user/redeem-login-token.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/user/redeem-login-token.ts)_
+_See code: [src/commands/user/redeem-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/user/redeem-login-token.ts)_

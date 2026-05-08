@@ -12,7 +12,7 @@ Update details for a webinar
 ```
 USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish]
+    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex]
 
 ARGUMENTS
   ID  Webinar ID
@@ -22,6 +22,8 @@ FLAGS
   --[no-]draft           Set as draft
   --live-date=<value>    Schedule date/time (ISO 8601)
   --[no-]publish         Publish or unpublish the webinar
+  --seo-policy=<option>  SEO policy for the webinar: index, noindex, or empty string to reset
+                         <options: |index|noindex>
   --status=<value>       Webinar status: upcoming, live, or previous
   --title=<value>        New title for the webinar
 
@@ -40,4 +42,4 @@ EXAMPLES
   $ twentythree webinar update 12345
 ```
 
-_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/webinar/update.ts)_
+_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/webinar/update.ts)_

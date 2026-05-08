@@ -12,7 +12,7 @@ Update metadata for a video
 ```
 USAGE
   $ twentythree video update ID [--360] [--json] [-w <value>] [--title <value>] [--description <value>] [--tags
-    <value>] [--category-id <value>] [--publish] [--promote] [--publish-date <value>]
+    <value>] [--category-id <value>] [--publish] [--promote] [--publish-date <value>] [--seo-policy |index|noindex]
 
 ARGUMENTS
   ID  Video ID
@@ -24,6 +24,8 @@ FLAGS
   --[no-]promote          Promote or demote the video
   --[no-]publish          Publish or unpublish the video
   --publish-date=<value>  Scheduled publish date/time (ISO 8601)
+  --seo-policy=<option>   SEO policy for the video: index, noindex, or empty string to reset
+                          <options: |index|noindex>
   --tags=<value>          Space-separated tags (replaces existing tags)
   --title=<value>         New title for the video
 
@@ -42,4 +44,4 @@ EXAMPLES
   $ twentythree video update 12345
 ```
 
-_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/update.ts)_
+_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/update.ts)_

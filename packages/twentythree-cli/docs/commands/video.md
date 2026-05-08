@@ -12,6 +12,7 @@ Manage videos — upload, list, update, delete, and more
 * [`twentythree video section`](#twentythree-video-section)
 * [`twentythree video section create ID`](#twentythree-video-section-create-id)
 * [`twentythree video section delete ID`](#twentythree-video-section-delete-id)
+* [`twentythree video section generate ID`](#twentythree-video-section-generate-id)
 * [`twentythree video section list ID`](#twentythree-video-section-list-id)
 * [`twentythree video section set-thumbnail ID`](#twentythree-video-section-set-thumbnail-id)
 * [`twentythree video section update ID`](#twentythree-video-section-update-id)
@@ -43,7 +44,7 @@ DESCRIPTION
   Manage videos — upload, list, update, delete, and more
 ```
 
-_See code: [src/commands/video/index.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/index.ts)_
+_See code: [src/commands/video/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/index.ts)_
 
 ## `twentythree video delete ID`
 
@@ -69,7 +70,7 @@ EXAMPLES
   $ twentythree video delete 12345 --json
 ```
 
-_See code: [src/commands/video/delete.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/delete.ts)_
+_See code: [src/commands/video/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/delete.ts)_
 
 ## `twentythree video frame ID`
 
@@ -100,7 +101,7 @@ EXAMPLES
   $ twentythree video frame 12345 --time 30 --json
 ```
 
-_See code: [src/commands/video/frame.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/frame.ts)_
+_See code: [src/commands/video/frame.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/frame.ts)_
 
 ## `twentythree video get ID`
 
@@ -126,7 +127,7 @@ EXAMPLES
   $ twentythree video get 12345 --json
 ```
 
-_See code: [src/commands/video/get.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/get.ts)_
+_See code: [src/commands/video/get.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/get.ts)_
 
 ## `twentythree video list`
 
@@ -153,7 +154,7 @@ EXAMPLES
   $ twentythree video list --json
 ```
 
-_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/list.ts)_
+_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/list.ts)_
 
 ## `twentythree video replace ID FILE`
 
@@ -184,7 +185,7 @@ EXAMPLES
   $ twentythree video replace 12345 ./new-video.mp4 --chunk-size 52428800 --concurrency 3
 ```
 
-_See code: [src/commands/video/replace.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/replace.ts)_
+_See code: [src/commands/video/replace.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/replace.ts)_
 
 ## `twentythree video section`
 
@@ -198,7 +199,7 @@ DESCRIPTION
   Manage video sections (chapters)
 ```
 
-_See code: [src/commands/video/section/index.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/index.ts)_
+_See code: [src/commands/video/section/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/index.ts)_
 
 ## `twentythree video section create ID`
 
@@ -230,7 +231,7 @@ EXAMPLES
   $ twentythree video section create 12345 --title "Chapter 1" --start-time 30 --description "First chapter"
 ```
 
-_See code: [src/commands/video/section/create.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/create.ts)_
+_See code: [src/commands/video/section/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/create.ts)_
 
 ## `twentythree video section delete ID`
 
@@ -259,7 +260,33 @@ EXAMPLES
   $ twentythree video section delete 12345 --section-id 67 --json
 ```
 
-_See code: [src/commands/video/section/delete.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/delete.ts)_
+_See code: [src/commands/video/section/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/delete.ts)_
+
+## `twentythree video section generate ID`
+
+Automatically generate sections for a video using AI (requires transcript)
+
+```
+USAGE
+  $ twentythree video section generate ID [--json] [-w <value>]
+
+ARGUMENTS
+  ID  Video ID
+
+GLOBAL FLAGS
+  -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
+      --json               Format output as json.
+
+DESCRIPTION
+  Automatically generate sections for a video using AI (requires transcript)
+
+EXAMPLES
+  $ twentythree video section generate 12345
+
+  $ twentythree video section generate 12345 --json
+```
+
+_See code: [src/commands/video/section/generate.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/generate.ts)_
 
 ## `twentythree video section list ID`
 
@@ -285,7 +312,7 @@ EXAMPLES
   $ twentythree video section list 12345 --json
 ```
 
-_See code: [src/commands/video/section/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/list.ts)_
+_See code: [src/commands/video/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/list.ts)_
 
 ## `twentythree video section set-thumbnail ID`
 
@@ -317,7 +344,7 @@ EXAMPLES
   $ twentythree video section set-thumbnail 12345 --section-id 67 --time 15 --json
 ```
 
-_See code: [src/commands/video/section/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/set-thumbnail.ts)_
+_See code: [src/commands/video/section/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/set-thumbnail.ts)_
 
 ## `twentythree video section update ID`
 
@@ -350,7 +377,7 @@ EXAMPLES
   $ twentythree video section update 12345 --section-id 67 --start-time 45 --description "Updated"
 ```
 
-_See code: [src/commands/video/section/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/section/update.ts)_
+_See code: [src/commands/video/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/section/update.ts)_
 
 ## `twentythree video subtitle`
 
@@ -364,35 +391,30 @@ DESCRIPTION
   Manage video subtitles and captions
 ```
 
-_See code: [src/commands/video/subtitle/index.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/index.ts)_
+_See code: [src/commands/video/subtitle/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/index.ts)_
 
 ## `twentythree video subtitle archive`
 
-Manage workspace subtitle archive transcription
+Check workspace subtitle archive transcription progress
 
 ```
 USAGE
-  $ twentythree video subtitle archive [--json] [-w <value>] [--progress]
-
-FLAGS
-  --progress  Check transcription progress instead of triggering transcription
+  $ twentythree video subtitle archive [--json] [-w <value>]
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
       --json               Format output as json.
 
 DESCRIPTION
-  Manage workspace subtitle archive transcription
+  Check workspace subtitle archive transcription progress
 
 EXAMPLES
   $ twentythree video subtitle archive
 
-  $ twentythree video subtitle archive --progress
-
-  $ twentythree video subtitle archive --progress --json
+  $ twentythree video subtitle archive --json
 ```
 
-_See code: [src/commands/video/subtitle/archive.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/archive.ts)_
+_See code: [src/commands/video/subtitle/archive.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/archive.ts)_
 
 ## `twentythree video subtitle create ID`
 
@@ -425,7 +447,7 @@ EXAMPLES
   $ twentythree video subtitle create 12345 --locale auto --draft
 ```
 
-_See code: [src/commands/video/subtitle/create.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/create.ts)_
+_See code: [src/commands/video/subtitle/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/create.ts)_
 
 ## `twentythree video subtitle data ID`
 
@@ -458,7 +480,7 @@ EXAMPLES
   $ twentythree video subtitle data 12345 --subtitle-id en_US --json
 ```
 
-_See code: [src/commands/video/subtitle/data.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/data.ts)_
+_See code: [src/commands/video/subtitle/data.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/data.ts)_
 
 ## `twentythree video subtitle delete ID`
 
@@ -488,7 +510,7 @@ EXAMPLES
   $ twentythree video subtitle delete 12345 --subtitle-id en_US --json
 ```
 
-_See code: [src/commands/video/subtitle/delete.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/delete.ts)_
+_See code: [src/commands/video/subtitle/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/delete.ts)_
 
 ## `twentythree video subtitle duplicate ID`
 
@@ -522,7 +544,7 @@ EXAMPLES
   $ twentythree video subtitle duplicate 12345 --subtitle-id en_US --target-locale de_DE --json
 ```
 
-_See code: [src/commands/video/subtitle/duplicate.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/duplicate.ts)_
+_See code: [src/commands/video/subtitle/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/duplicate.ts)_
 
 ## `twentythree video subtitle list ID`
 
@@ -553,7 +575,7 @@ EXAMPLES
   $ twentythree video subtitle list 12345 --include-drafts
 ```
 
-_See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/list.ts)_
+_See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/list.ts)_
 
 ## `twentythree video subtitle locales`
 
@@ -576,7 +598,7 @@ EXAMPLES
   $ twentythree video subtitle locales --json
 ```
 
-_See code: [src/commands/video/subtitle/locales.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/locales.ts)_
+_See code: [src/commands/video/subtitle/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/locales.ts)_
 
 ## `twentythree video subtitle set-primary ID`
 
@@ -605,7 +627,7 @@ EXAMPLES
   $ twentythree video subtitle set-primary 12345 --subtitle-id fr_FR --json
 ```
 
-_See code: [src/commands/video/subtitle/set-primary.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/set-primary.ts)_
+_See code: [src/commands/video/subtitle/set-primary.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/set-primary.ts)_
 
 ## `twentythree video subtitle types`
 
@@ -628,7 +650,7 @@ EXAMPLES
   $ twentythree video subtitle types --json
 ```
 
-_See code: [src/commands/video/subtitle/types.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/types.ts)_
+_See code: [src/commands/video/subtitle/types.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/types.ts)_
 
 ## `twentythree video subtitle update ID`
 
@@ -661,7 +683,7 @@ EXAMPLES
   $ twentythree video subtitle update 12345 --subtitle-id en_US --type closedcaptions
 ```
 
-_See code: [src/commands/video/subtitle/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/update.ts)_
+_See code: [src/commands/video/subtitle/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/update.ts)_
 
 ## `twentythree video subtitle upload ID FILE`
 
@@ -695,7 +717,7 @@ EXAMPLES
   $ twentythree video subtitle upload 12345 ./subtitles.srt --locale en_US --draft
 ```
 
-_See code: [src/commands/video/subtitle/upload.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/upload.ts)_
+_See code: [src/commands/video/subtitle/upload.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/upload.ts)_
 
 ## `twentythree video transcoding-progress ID`
 
@@ -721,7 +743,7 @@ EXAMPLES
   $ twentythree video transcoding-progress 12345 --json
 ```
 
-_See code: [src/commands/video/transcoding-progress.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/transcoding-progress.ts)_
+_See code: [src/commands/video/transcoding-progress.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/transcoding-progress.ts)_
 
 ## `twentythree video update ID`
 
@@ -730,7 +752,7 @@ Update metadata for a video
 ```
 USAGE
   $ twentythree video update ID [--360] [--json] [-w <value>] [--title <value>] [--description <value>] [--tags
-    <value>] [--category-id <value>] [--publish] [--promote] [--publish-date <value>]
+    <value>] [--category-id <value>] [--publish] [--promote] [--publish-date <value>] [--seo-policy |index|noindex]
 
 ARGUMENTS
   ID  Video ID
@@ -742,6 +764,8 @@ FLAGS
   --[no-]promote          Promote or demote the video
   --[no-]publish          Publish or unpublish the video
   --publish-date=<value>  Scheduled publish date/time (ISO 8601)
+  --seo-policy=<option>   SEO policy for the video: index, noindex, or empty string to reset
+                          <options: |index|noindex>
   --tags=<value>          Space-separated tags (replaces existing tags)
   --title=<value>         New title for the video
 
@@ -760,7 +784,7 @@ EXAMPLES
   $ twentythree video update 12345
 ```
 
-_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/update.ts)_
+_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/update.ts)_
 
 ## `twentythree video upload FILE`
 
@@ -798,4 +822,4 @@ EXAMPLES
   $ twentythree video upload ./video.mp4 --chunk-size 52428800 --concurrency 3
 ```
 
-_See code: [src/commands/video/upload.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/upload.ts)_
+_See code: [src/commands/video/upload.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/upload.ts)_

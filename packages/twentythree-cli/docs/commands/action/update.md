@@ -39,4 +39,4 @@ EXAMPLES
   $ twentythree action update 12345 --name "Buy Now" --start-time 10 --end-time 20 --json
 ```
 
-_See code: [src/commands/action/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/action/update.ts)_
+_See code: [src/commands/action/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/action/update.ts)_

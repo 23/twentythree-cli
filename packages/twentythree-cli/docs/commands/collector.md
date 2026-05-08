@@ -32,7 +32,7 @@ EXAMPLES
   $ twentythree collector exclude 456 --object-id 123
 ```
 
-_See code: [src/commands/collector/exclude.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/collector/exclude.ts)_
+_See code: [src/commands/collector/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/collector/exclude.ts)_
 
 ## `twentythree collector include ID`
 
@@ -59,7 +59,7 @@ EXAMPLES
   $ twentythree collector include 456 --object-id 123
 ```
 
-_See code: [src/commands/collector/include.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/collector/include.ts)_
+_See code: [src/commands/collector/include.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/collector/include.ts)_
 
 ## `twentythree collector list`
 
@@ -90,4 +90,4 @@ EXAMPLES
   $ twentythree collector list --json
 ```
 
-_See code: [src/commands/collector/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/collector/list.ts)_
+_See code: [src/commands/collector/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/collector/list.ts)_

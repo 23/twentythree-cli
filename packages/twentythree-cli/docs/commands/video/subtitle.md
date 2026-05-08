@@ -28,35 +28,30 @@ DESCRIPTION
   Manage video subtitles and captions
 ```
 
-_See code: [src/commands/video/subtitle/index.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/index.ts)_
+_See code: [src/commands/video/subtitle/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/index.ts)_
 
 ## `twentythree video subtitle archive`
 
-Manage workspace subtitle archive transcription
+Check workspace subtitle archive transcription progress
 
 ```
 USAGE
-  $ twentythree video subtitle archive [--json] [-w <value>] [--progress]
-
-FLAGS
-  --progress  Check transcription progress instead of triggering transcription
+  $ twentythree video subtitle archive [--json] [-w <value>]
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
       --json               Format output as json.
 
 DESCRIPTION
-  Manage workspace subtitle archive transcription
+  Check workspace subtitle archive transcription progress
 
 EXAMPLES
   $ twentythree video subtitle archive
 
-  $ twentythree video subtitle archive --progress
-
-  $ twentythree video subtitle archive --progress --json
+  $ twentythree video subtitle archive --json
 ```
 
-_See code: [src/commands/video/subtitle/archive.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/archive.ts)_
+_See code: [src/commands/video/subtitle/archive.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/archive.ts)_
 
 ## `twentythree video subtitle create ID`
 
@@ -89,7 +84,7 @@ EXAMPLES
   $ twentythree video subtitle create 12345 --locale auto --draft
 ```
 
-_See code: [src/commands/video/subtitle/create.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/create.ts)_
+_See code: [src/commands/video/subtitle/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/create.ts)_
 
 ## `twentythree video subtitle data ID`
 
@@ -122,7 +117,7 @@ EXAMPLES
   $ twentythree video subtitle data 12345 --subtitle-id en_US --json
 ```
 
-_See code: [src/commands/video/subtitle/data.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/data.ts)_
+_See code: [src/commands/video/subtitle/data.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/data.ts)_
 
 ## `twentythree video subtitle delete ID`
 
@@ -152,7 +147,7 @@ EXAMPLES
   $ twentythree video subtitle delete 12345 --subtitle-id en_US --json
 ```
 
-_See code: [src/commands/video/subtitle/delete.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/delete.ts)_
+_See code: [src/commands/video/subtitle/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/delete.ts)_
 
 ## `twentythree video subtitle duplicate ID`
 
@@ -186,7 +181,7 @@ EXAMPLES
   $ twentythree video subtitle duplicate 12345 --subtitle-id en_US --target-locale de_DE --json
 ```
 
-_See code: [src/commands/video/subtitle/duplicate.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/duplicate.ts)_
+_See code: [src/commands/video/subtitle/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/duplicate.ts)_
 
 ## `twentythree video subtitle list ID`
 
@@ -217,7 +212,7 @@ EXAMPLES
   $ twentythree video subtitle list 12345 --include-drafts
 ```
 
-_See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/list.ts)_
+_See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/list.ts)_
 
 ## `twentythree video subtitle locales`
 
@@ -240,7 +235,7 @@ EXAMPLES
   $ twentythree video subtitle locales --json
 ```
 
-_See code: [src/commands/video/subtitle/locales.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/locales.ts)_
+_See code: [src/commands/video/subtitle/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/locales.ts)_
 
 ## `twentythree video subtitle set-primary ID`
 
@@ -269,7 +264,7 @@ EXAMPLES
   $ twentythree video subtitle set-primary 12345 --subtitle-id fr_FR --json
 ```
 
-_See code: [src/commands/video/subtitle/set-primary.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/set-primary.ts)_
+_See code: [src/commands/video/subtitle/set-primary.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/set-primary.ts)_
 
 ## `twentythree video subtitle types`
 
@@ -292,7 +287,7 @@ EXAMPLES
   $ twentythree video subtitle types --json
 ```
 
-_See code: [src/commands/video/subtitle/types.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/types.ts)_
+_See code: [src/commands/video/subtitle/types.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/types.ts)_
 
 ## `twentythree video subtitle update ID`
 
@@ -325,7 +320,7 @@ EXAMPLES
   $ twentythree video subtitle update 12345 --subtitle-id en_US --type closedcaptions
 ```
 
-_See code: [src/commands/video/subtitle/update.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/update.ts)_
+_See code: [src/commands/video/subtitle/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/update.ts)_
 
 ## `twentythree video subtitle upload ID FILE`
 
@@ -359,4 +354,4 @@ EXAMPLES
   $ twentythree video subtitle upload 12345 ./subtitles.srt --locale en_US --draft
 ```
 
-_See code: [src/commands/video/subtitle/upload.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/video/subtitle/upload.ts)_
+_See code: [src/commands/video/subtitle/upload.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/subtitle/upload.ts)_

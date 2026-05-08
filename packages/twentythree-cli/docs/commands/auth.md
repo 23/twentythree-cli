@@ -5,6 +5,7 @@ Configure domain and bearer token for a TwentyThree workspace
 
 * [`twentythree auth credentials`](#twentythree-auth-credentials)
 * [`twentythree auth status`](#twentythree-auth-status)
+* [`twentythree auth switch`](#twentythree-auth-switch)
 
 ## `twentythree auth credentials`
 
@@ -21,7 +22,7 @@ EXAMPLES
   $ twentythree auth credentials
 ```
 
-_See code: [src/commands/auth/credentials.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/auth/credentials.ts)_
+_See code: [src/commands/auth/credentials.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/auth/credentials.ts)_
 
 ## `twentythree auth status`
 
@@ -42,4 +43,21 @@ EXAMPLES
   $ twentythree auth status
 ```
 
-_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v0.1.0/src/commands/auth/status.ts)_
+_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/auth/status.ts)_
+
+## `twentythree auth switch`
+
+Switch the active workspace
+
+```
+USAGE
+  $ twentythree auth switch
+
+DESCRIPTION
+  Switch the active workspace
+
+EXAMPLES
+  $ twentythree auth switch
+```
+
+_See code: [src/commands/auth/switch.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/auth/switch.ts)_
