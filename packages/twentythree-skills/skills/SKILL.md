@@ -170,7 +170,7 @@ These are not in the 22 resource groups — they are CLI-local utilities:
 
 | Topic | Commands | Purpose |
 |-------|----------|---------|
-| `auth` | `credentials`, `status` | Configure and verify bearer-token auth |
+| `auth` | `credentials`, `status`, `switch` | Configure and verify bearer-token auth |
 | `workspace` | `list`, `use` | Multi-workspace selection |
 | `autocomplete` | `bash`, `zsh` | Shell completion (`twentythree autocomplete bash | source`) |
 | `doctor` | (top-level: `twentythree doctor`) | Diagnose auth, connectivity, dependency issues |
