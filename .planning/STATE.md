@@ -121,7 +121,7 @@ None — v1.5 milestone complete.
 | 260508-dhl | Add auth switch command to re-select active workspace | 2026-05-08 | 0b5b2c4 | [260508-dhl-add-auth-switch-command-to-re-select-act](./quick/260508-dhl-add-auth-switch-command-to-re-select-act/) |
 | 260508-dnq | Release v1.3.3: docs, skill update, version bump, and tags | 2026-05-08 | 7d682c2 | [260508-dnq-release-v1-3-3-docs-skill-update-version](./quick/260508-dnq-release-v1-3-3-docs-skill-update-version/) |
 | 260513-aab | Add seo get/status/update commands, update SKILL.md, release v1.3.4 | 2026-05-13 | 1038e93 | [260513-aab-api-spec-update-seo-commands-release-v1-3-4](./quick/260513-aab-api-spec-update-seo-commands-release-v1-3-4/) |
-| 260513-a06 | Review command documentation and make sure commands listed in the root README reflect available commands | 2026-05-13 | — | [260513-a06-readme-commands-sync](./quick/260513-a06-readme-commands-sync/) |
+| 260513-a06 | Review command documentation and make sure commands listed in the root README reflect available commands | 2026-05-13 | 35e4eda | [260513-a06-readme-commands-sync](./quick/260513-a06-readme-commands-sync/) |
 
 ## Session Continuity
 
