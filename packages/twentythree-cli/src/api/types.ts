@@ -2111,6 +2111,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/seo/get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get SEO metadata
+         * @description Returns the SEO metadata for a given object. Supported object types are videos, webinars, and webinar series. Returns 412 if the object does not exist on the workspace or if the object type does not support SEO metadata.
+         */
+        post: operations["seoGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seo/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get SEO status
+         * @description Returns the SEO readiness status for a given object, including an overall score and a breakdown of individual SEO signals. Supported object types are videos, webinars, and webinar series. Returns 412 if the object does not exist on the workspace or if the object type does not support SEO metadata.
+         */
+        post: operations["seoStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seo/update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update SEO metadata
+         * @description Updates the SEO metadata for a given object. Supported object types are videos, webinars, and webinar series. All parameters are optional ? only the fields provided will be updated. Returns 412 if the object does not exist on the workspace, if the object type does not support SEO metadata, or if a field is not supported for the given object type.
+         */
+        post: operations["seoUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/session/get-token": {
         parameters: {
             query?: never;
@@ -19225,6 +19285,373 @@ export interface operations {
                             protected_token?: string;
                         };
                         /** @example You have access to the resource */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    seoGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The ID of the object to retrieve SEO metadata for. */
+                    object_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example Product Launch Keynote 2024 */
+                            seo_title?: string;
+                            /** @example Watch the full keynote introducing our 2024 product line. */
+                            seo_description?: string;
+                            /** @example product, launch, keynote, 2024 */
+                            seo_keywords?: string;
+                            /** @example {} */
+                            seo_data?: Record<string, never>;
+                            /** @example {} */
+                            enriched_seo_data?: Record<string, never>;
+                            /** @example custom */
+                            state?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    seoStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The ID of the object to retrieve SEO status for. */
+                    object_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 7667553 */
+                            object_id?: number;
+                            /** @example photo */
+                            object_type?: string;
+                            /** @example 100 */
+                            max_score?: number;
+                            /** @example 70 */
+                            current_score?: number;
+                            /** @example on */
+                            overall_state?: string;
+                            /** @example Ready to be indexed */
+                            overall_state_label?: string;
+                            states?: {
+                                /** @example done */
+                                state?: string;
+                                /** @example Title for SEO */
+                                label?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    seoUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The ID of the object to update SEO metadata for. */
+                    object_id: number;
+                    /** @description SEO title for the object, used in search engine results and social sharing previews. */
+                    seo_name?: string;
+                    /** @description SEO description for the object, used in search engine results and social sharing previews. */
+                    seo_description?: string;
+                    /** @description Comma-separated keywords for SEO. */
+                    seo_keywords?: string;
+                    /** @description Canonical URL for the object. Supported for videos, webinars, and webinar series. */
+                    canonical_url?: string;
+                    /**
+                     * @description Control the SEO indexing policy for the object. Leave empty to use the workspace default, `index` to allow indexing, or `noindex` to prevent indexing.
+                     * @enum {string}
+                     */
+                    seo_policy?: "" | "index" | "noindex";
+                    /**
+                     * @description Whether to trigger AI enrichment immediately for the content. Requires the workspace feature to be enabled. Not available on the public API; all usage may incur costs.
+                     * @default false
+                     */
+                    enrich_immediately_p?: boolean;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: Record<string, never>;
+                        /** @example The seo data was successfully updated */
                         message?: string;
                     };
                 };

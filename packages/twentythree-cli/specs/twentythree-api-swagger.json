@@ -27456,6 +27456,541 @@
                 "deprecated":  false
             }
         },
+        "/seo/get":             {
+            "post": {
+                "summary":     "Get SEO metadata",
+                "description": "Returns the SEO metadata for a given object. Supported object types are videos, webinars, and webinar series. Returns 412 if the object does not exist on the workspace or if the object type does not support SEO metadata.",
+                "tags":        [
+                    "SEO and GEO"
+                ],
+                "operationId": "seoGet",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "seo_title":         {
+                                                    "type":    "string",
+                                                    "example": "Product Launch Keynote 2024"
+                                                },
+                                                "seo_description":   {
+                                                    "type":    "string",
+                                                    "example": "Watch the full keynote introducing our 2024 product line."
+                                                },
+                                                "seo_keywords":      {
+                                                    "type":    "string",
+                                                    "example": "product, launch, keynote, 2024"
+                                                },
+                                                "seo_data":          {
+                                                    "type":    "object",
+                                                    "example": {}
+                                                },
+                                                "enriched_seo_data": {
+                                                    "type":    "object",
+                                                    "example": {}
+                                                },
+                                                "state":             {
+                                                    "type":    "string",
+                                                    "example": "custom"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "object_id": {
+                                        "description": "The ID of the object to retrieve SEO metadata for.",
+                                        "type":        "integer"
+                                    },
+                                    "fields":    {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "object_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/seo/status":          {
+            "post": {
+                "summary":     "Get SEO status",
+                "description": "Returns the SEO readiness status for a given object, including an overall score and a breakdown of individual SEO signals. Supported object types are videos, webinars, and webinar series. Returns 412 if the object does not exist on the workspace or if the object type does not support SEO metadata.",
+                "tags":        [
+                    "SEO and GEO"
+                ],
+                "operationId": "seoStatus",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "object_id":           {
+                                                    "type":    "number",
+                                                    "example": 7667553
+                                                },
+                                                "object_type":         {
+                                                    "type":    "string",
+                                                    "example": "photo"
+                                                },
+                                                "max_score":           {
+                                                    "type":    "number",
+                                                    "example": 100
+                                                },
+                                                "current_score":       {
+                                                    "type":    "number",
+                                                    "example": 70
+                                                },
+                                                "overall_state":       {
+                                                    "type":    "string",
+                                                    "example": "on"
+                                                },
+                                                "overall_state_label": {
+                                                    "type":    "string",
+                                                    "example": "Ready to be indexed"
+                                                },
+                                                "states":              {
+                                                    "type":  "array",
+                                                    "items": {
+                                                        "type":       "object",
+                                                        "properties": {
+                                                            "state": {
+                                                                "type":    "string",
+                                                                "example": "done"
+                                                            },
+                                                            "label": {
+                                                                "type":    "string",
+                                                                "example": "Title for SEO"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "object_id": {
+                                        "description": "The ID of the object to retrieve SEO status for.",
+                                        "type":        "integer"
+                                    },
+                                    "fields":    {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "object_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/seo/update":          {
+            "post": {
+                "summary":     "Update SEO metadata",
+                "description": "Updates the SEO metadata for a given object. Supported object types are videos, webinars, and webinar series. All parameters are optional ? only the fields provided will be updated. Returns 412 if the object does not exist on the workspace, if the object type does not support SEO metadata, or if a field is not supported for the given object type.",
+                "tags":        [
+                    "SEO and GEO"
+                ],
+                "operationId": "seoUpdate",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {}
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The seo data was successfully updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "object_id":            {
+                                        "description": "The ID of the object to update SEO metadata for.",
+                                        "type":        "integer"
+                                    },
+                                    "seo_name":             {
+                                        "description": "SEO title for the object, used in search engine results and social sharing previews.",
+                                        "type":        "string"
+                                    },
+                                    "seo_description":      {
+                                        "description": "SEO description for the object, used in search engine results and social sharing previews.",
+                                        "type":        "string"
+                                    },
+                                    "seo_keywords":         {
+                                        "description": "Comma-separated keywords for SEO.",
+                                        "type":        "string"
+                                    },
+                                    "canonical_url":        {
+                                        "description": "Canonical URL for the object. Supported for videos, webinars, and webinar series.",
+                                        "type":        "string"
+                                    },
+                                    "seo_policy":           {
+                                        "description": "Control the SEO indexing policy for the object. Leave empty to use the workspace default, `index` to allow indexing, or `noindex` to prevent indexing.",
+                                        "type":        "string",
+                                        "enum":        [
+                                            "",
+                                            "index",
+                                            "noindex"
+                                        ]
+                                    },
+                                    "enrich_immediately_p": {
+                                        "description": "Whether to trigger AI enrichment immediately for the content. Requires the workspace feature to be enabled. Not available on the public API; all usage may incur costs.",
+                                        "type":        "boolean",
+                                        "default":     false
+                                    },
+                                    "fields":               {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "object_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/session/get-token":   {
             "get": {
                 "summary":     "Get session token",
