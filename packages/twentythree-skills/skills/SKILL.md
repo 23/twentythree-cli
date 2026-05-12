@@ -4,8 +4,8 @@ description: |
   Full TwentyThree video platform CLI. Use when the user asks to upload or manage
   videos, run webinars, query analytics, manage audiences, configure players,
   create categories, manage tags, spots, thumbnails, webhooks, collectors, polls,
-  presentations, or any TwentyThree platform operation. Covers 238+ API commands
-  across 22 resource groups plus meta commands (auth, workspace, autocomplete, doctor).
+  presentations, or any TwentyThree platform operation. Covers 241+ API commands
+  across 23 resource groups plus meta commands (auth, workspace, autocomplete, doctor).
   Every command supports --json for machine-readable output and --agent for
   self-describing metadata (api_endpoint, auth_scope, output_shape, side_effects).
 triggers:
@@ -28,7 +28,7 @@ compatibility: Requires twentythree-cli installed globally (npm install -g twent
 
 # TwentyThree CLI
 
-> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 238+ commands across 22 resource groups.
+> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 241+ commands across 23 resource groups.
 >
 > Always use `--json` in agentic contexts for structured output. Always run `twentythree <command> --agent` before calling an unfamiliar command to discover its flags, API endpoint, auth scope, and side effects.
 
@@ -136,7 +136,7 @@ The guide covers two categories:
 
 ## Resource Index
 
-All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
+All 23 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
 
 | Topic | Representative verbs | Use for |
 |-------|---------------------|---------|
@@ -163,6 +163,7 @@ All 22 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | `site` | `list`, `search` | Site-level operations |
 | `openupload` | `list`, `create`, `delete` | Open upload tokens |
 | `user` | `list`, `create`, `get`, `update`, `delete` | User management |
+| `seo` | `get`, `status`, `update` | SEO metadata management |
 
 ## Meta Commands
 
