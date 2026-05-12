@@ -31,4 +31,4 @@ EXAMPLES
   $ twentythree action types --json
 ```
 
-_See code: [src/commands/action/types.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/action/types.ts)_
+_See code: [src/commands/action/types.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/action/types.ts)_

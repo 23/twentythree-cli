@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree video list --json
 ```
 
-_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/list.ts)_
+_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/video/list.ts)_

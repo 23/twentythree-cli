@@ -39,4 +39,4 @@ EXAMPLES
   $ twentythree audience list --search "john" --identified --json
 ```
 
-_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/audience/list.ts)_
+_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/audience/list.ts)_

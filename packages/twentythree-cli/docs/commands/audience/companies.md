@@ -38,4 +38,4 @@ EXAMPLES
   $ twentythree audience companies --domains "acme.com" --json
 ```
 
-_See code: [src/commands/audience/companies.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/audience/companies.ts)_
+_See code: [src/commands/audience/companies.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/audience/companies.ts)_

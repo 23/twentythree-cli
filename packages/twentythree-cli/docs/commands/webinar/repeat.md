@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree webinar repeat 12345 --date "2024-12-01T14:00:00Z" --json
 ```
 
-_See code: [src/commands/webinar/repeat.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/webinar/repeat.ts)_
+_See code: [src/commands/webinar/repeat.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/repeat.ts)_

@@ -37,4 +37,4 @@ EXAMPLES
   $ twentythree webinar create --title "My Webinar" --json
 ```
 
-_See code: [src/commands/webinar/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/webinar/create.ts)_
+_See code: [src/commands/webinar/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/create.ts)_

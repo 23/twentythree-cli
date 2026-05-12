@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree app add --name "My App" --json
 ```
 
-_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/app/add.ts)_
+_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/app/add.ts)_

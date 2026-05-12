@@ -44,4 +44,4 @@ EXAMPLES
   $ twentythree video update 12345
 ```
 
-_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/video/update.ts)_
+_See code: [src/commands/video/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/video/update.ts)_

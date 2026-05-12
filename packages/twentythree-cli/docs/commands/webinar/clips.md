@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree webinar clips 12345 --json
 ```
 
-_See code: [src/commands/webinar/clips.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/webinar/clips.ts)_
+_See code: [src/commands/webinar/clips.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/clips.ts)_

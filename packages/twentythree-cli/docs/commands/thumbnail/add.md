@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree thumbnail add --name "My Template" --liquid-template "<div>{{ video.title }}</div>" --json
 ```
 
-_See code: [src/commands/thumbnail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/thumbnail/add.ts)_
+_See code: [src/commands/thumbnail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/thumbnail/add.ts)_

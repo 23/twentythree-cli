@@ -28,7 +28,7 @@ EXAMPLES
   $ twentythree presentation page link-locations --json
 ```
 
-_See code: [src/commands/presentation/page/link-locations.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/presentation/page/link-locations.ts)_
+_See code: [src/commands/presentation/page/link-locations.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/presentation/page/link-locations.ts)_
 
 ## `twentythree presentation setting list`
 
@@ -51,7 +51,7 @@ EXAMPLES
   $ twentythree presentation setting list --json
 ```
 
-_See code: [src/commands/presentation/setting/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/presentation/setting/list.ts)_
+_See code: [src/commands/presentation/setting/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/presentation/setting/list.ts)_
 
 ## `twentythree presentation setting update`
 
@@ -79,4 +79,4 @@ EXAMPLES
   $ twentythree presentation setting update --set site_name="My Site" --json
 ```
 
-_See code: [src/commands/presentation/setting/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.3/src/commands/presentation/setting/update.ts)_
+_See code: [src/commands/presentation/setting/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/presentation/setting/update.ts)_
