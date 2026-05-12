@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-23)
 Phase: 24 — COMPLETE
 Plan: 1/1 complete
 Status: Milestone v1.5 complete — all phases done
-Last activity: 2026-05-08 - Completed quick task 260508-dnq: Release v1.3.3 — docs, skill update, version bump, tags v1.3.3 + skills-v1.3.3
+Last activity: 2026-05-13 - Completed quick task 260513-aab: Add seo get/status/update commands, update SKILL.md, release v1.3.4
 
 Progress: [██████████] 100%
 
@@ -120,6 +120,7 @@ None — v1.5 milestone complete.
 |---|-------------|------|--------|-----------|
 | 260508-dhl | Add auth switch command to re-select active workspace | 2026-05-08 | 0b5b2c4 | [260508-dhl-add-auth-switch-command-to-re-select-act](./quick/260508-dhl-add-auth-switch-command-to-re-select-act/) |
 | 260508-dnq | Release v1.3.3: docs, skill update, version bump, and tags | 2026-05-08 | 7d682c2 | [260508-dnq-release-v1-3-3-docs-skill-update-version](./quick/260508-dnq-release-v1-3-3-docs-skill-update-version/) |
+| 260513-aab | Add seo get/status/update commands, update SKILL.md, release v1.3.4 | 2026-05-13 | 1038e93 | [260513-aab-api-spec-update-seo-commands-release-v1-3-4](./quick/260513-aab-api-spec-update-seo-commands-release-v1-3-4/) |
 
 ## Session Continuity
 
