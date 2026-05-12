@@ -26,7 +26,7 @@ Follow the on-screen instructions to add the eval line to your shell RC file (`~
 
 ## Commands
 
-TwentyThree CLI provides 244 commands across 24 topics.
+TwentyThree CLI provides 247 commands across 26 topics.
 
 | Topic | Description | Reference |
 |-------|-------------|-----------|
@@ -44,6 +44,7 @@ TwentyThree CLI provides 244 commands across 24 topics.
 | `poll` | Create a new poll for a webinar | [docs](packages/twentythree-cli/docs/commands/poll.md) |
 | `presentation` | List available presentation page link locations | [docs](packages/twentythree-cli/docs/commands/presentation.md) |
 | `protection` | Apply protection to content | [docs](packages/twentythree-cli/docs/commands/protection.md) |
+| `seo` | Get and update SEO metadata for videos, webinars, and webinar series | [docs](packages/twentythree-cli/docs/commands/seo.md) |
 | `session` | Get a session access token | [docs](packages/twentythree-cli/docs/commands/session.md) |
 | `setting` | Update workspace settings (key=value pairs) | [docs](packages/twentythree-cli/docs/commands/setting.md) |
 | `site` | Get site settings for the active workspace | [docs](packages/twentythree-cli/docs/commands/site.md) |
