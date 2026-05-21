@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-23)
 Phase: 24 — COMPLETE
 Plan: 1/1 complete
 Status: Milestone v1.5 complete — all phases done
-Last activity: 2026-05-13 - Completed quick task 260513-a06: Review command documentation and make sure commands listed in the root README reflect available commands
+Last activity: 2026-05-21 - Completed quick task 260521-a01: Review updated API spec and add new options/features to CLI and skill
 
 Progress: [██████████] 100%
 
@@ -122,6 +122,7 @@ None — v1.5 milestone complete.
 | 260508-dnq | Release v1.3.3: docs, skill update, version bump, and tags | 2026-05-08 | 7d682c2 | [260508-dnq-release-v1-3-3-docs-skill-update-version](./quick/260508-dnq-release-v1-3-3-docs-skill-update-version/) |
 | 260513-aab | Add seo get/status/update commands, update SKILL.md, release v1.3.4 | 2026-05-13 | 1038e93 | [260513-aab-api-spec-update-seo-commands-release-v1-3-4](./quick/260513-aab-api-spec-update-seo-commands-release-v1-3-4/) |
 | 260513-a06 | Review command documentation and make sure commands listed in the root README reflect available commands | 2026-05-13 | 35e4eda | [260513-a06-readme-commands-sync](./quick/260513-a06-readme-commands-sync/) |
+| 260521-a01 | Review updated API spec and add new options/features to CLI and skill | 2026-05-21 | fadb563 | [260521-a01-api-spec-review-add-new-options](./quick/260521-a01-api-spec-review-add-new-options/) |
 
 ## Session Continuity
 
