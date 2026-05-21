@@ -14,7 +14,7 @@
     "update-api-spec": "cd packages/twentythree-cli && ./update-api-spec.sh"
   },
   "devDependencies": {
-    "turbo": "^2.9.6",
+    "turbo": "^2.9.14",
     "@changesets/cli": "^2.30.0",
     "typescript": "^5.0.0"
   }
