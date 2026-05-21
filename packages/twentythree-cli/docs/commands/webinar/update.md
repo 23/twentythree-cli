@@ -12,20 +12,21 @@ Update details for a webinar
 ```
 USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex]
+    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --description=<value>  New description for the webinar
-  --[no-]draft           Set as draft
-  --live-date=<value>    Schedule date/time (ISO 8601)
-  --[no-]publish         Publish or unpublish the webinar
-  --seo-policy=<option>  SEO policy for the webinar: index, noindex, or empty string to reset
-                         <options: |index|noindex>
-  --status=<value>       Webinar status: upcoming, live, or previous
-  --title=<value>        New title for the webinar
+  --description=<value>        New description for the webinar
+  --[no-]draft                 Set as draft
+  --live-date=<value>          Schedule date/time (ISO 8601)
+  --[no-]publish               Publish or unpublish the webinar
+  --seo-policy=<option>        SEO policy for the webinar: index, noindex, or empty string to reset
+                               <options: |index|noindex>
+  --status=<value>             Webinar status: upcoming, live, or previous
+  --title=<value>              New title for the webinar
+  --webinar-design-id=<value>  Assign a webinar design by ID to this webinar
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -42,4 +43,4 @@ EXAMPLES
   $ twentythree webinar update 12345
 ```
 
-_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/update.ts)_
+_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/update.ts)_

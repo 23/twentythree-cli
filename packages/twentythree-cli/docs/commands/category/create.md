@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree category create --title "Hidden Category" --hidden
 ```
 
-_See code: [src/commands/category/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/category/create.ts)_
+_See code: [src/commands/category/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/category/create.ts)_

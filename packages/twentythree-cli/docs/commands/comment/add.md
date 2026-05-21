@@ -40,4 +40,4 @@ EXAMPLES
   $ twentythree comment add --object-id 456 --object-type live --content "Question?" --comment-type question
 ```
 
-_See code: [src/commands/comment/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/comment/add.ts)_
+_See code: [src/commands/comment/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/comment/add.ts)_

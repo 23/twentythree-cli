@@ -40,4 +40,4 @@ EXAMPLES
   $ twentythree spot list --json
 ```
 
-_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/spot/list.ts)_
+_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/spot/list.ts)_

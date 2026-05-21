@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree webinar highlights 12345 --json
 ```
 
-_See code: [src/commands/webinar/highlights.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/highlights.ts)_
+_See code: [src/commands/webinar/highlights.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/highlights.ts)_

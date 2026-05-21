@@ -32,7 +32,7 @@ EXAMPLES
   $ twentythree webinar recording split 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/split.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/recording/split.ts)_
+_See code: [src/commands/webinar/recording/split.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/split.ts)_
 
 ## `twentythree webinar recording start ID`
 
@@ -58,7 +58,7 @@ EXAMPLES
   $ twentythree webinar recording start 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/start.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/recording/start.ts)_
+_See code: [src/commands/webinar/recording/start.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/start.ts)_
 
 ## `twentythree webinar recording status ID`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ twentythree webinar recording status 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/recording/status.ts)_
+_See code: [src/commands/webinar/recording/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/status.ts)_
 
 ## `twentythree webinar recording stop ID`
 
@@ -110,4 +110,4 @@ EXAMPLES
   $ twentythree webinar recording stop 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/stop.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webinar/recording/stop.ts)_
+_See code: [src/commands/webinar/recording/stop.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/stop.ts)_

@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree spot delete 12345 --json
 ```
 
-_See code: [src/commands/spot/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/spot/delete.ts)_
+_See code: [src/commands/spot/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/spot/delete.ts)_

@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree webhook sample video.uploaded --json
 ```
 
-_See code: [src/commands/webhook/sample.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/webhook/sample.ts)_
+_See code: [src/commands/webhook/sample.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webhook/sample.ts)_

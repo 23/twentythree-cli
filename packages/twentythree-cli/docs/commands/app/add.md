@@ -12,11 +12,12 @@ Create a new app integration
 ```
 USAGE
   $ twentythree app add --name <value> [--json] [-w <value>] [--description <value>] [--style <value>]
-    [--type <value>]
+    [--type <value>] [--player-id <value>]
 
 FLAGS
   --description=<value>  App description
   --name=<value>         (required) App name
+  --player-id=<value>    Add a contextual player being forked
   --style=<value>        App style
   --type=<value>         App type
 
@@ -35,4 +36,4 @@ EXAMPLES
   $ twentythree app add --name "My App" --json
 ```
 
-_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/app/add.ts)_
+_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/app/add.ts)_

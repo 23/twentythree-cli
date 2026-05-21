@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree action include 12345 --object-id 6789 --json
 ```
 
-_See code: [src/commands/action/include.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/action/include.ts)_
+_See code: [src/commands/action/include.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/action/include.ts)_

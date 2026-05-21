@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree openupload list --json
 ```
 
-_See code: [src/commands/openupload/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.4/src/commands/openupload/list.ts)_
+_See code: [src/commands/openupload/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/openupload/list.ts)_
