@@ -64,6 +64,10 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       options: ['', 'index', 'noindex'],
       required: false,
     }),
+    'webinar-design-id': Flags.integer({
+      description: 'Assign a webinar design by ID to this webinar',
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives
     'draft-p': Flags.string({ hidden: true, required: false }),
     'published-p': Flags.string({ hidden: true, required: false }),
@@ -100,6 +104,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       flags['draft-p'],
       flags['published-p'],
       flags['seo-policy'],
+      flags['webinar-design-id'],
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { live_id: webinarId }
@@ -192,6 +197,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       const publishVal = parseBoolParam(flags.publish, flags['published-p'])
       if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
       if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
+      if (flags['webinar-design-id'] !== undefined) body.webinar_design_id = flags['webinar-design-id']
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/live/update', {

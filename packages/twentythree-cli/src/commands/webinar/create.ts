@@ -55,6 +55,10 @@ export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCr
       allowNo: true,
       required: false,
     }),
+    'webinar-design-id': Flags.integer({
+      description: 'Assign a webinar design by ID to this webinar',
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives
     'draft-p': Flags.string({ hidden: true, required: false }),
     'published-p': Flags.string({ hidden: true, required: false }),
@@ -83,6 +87,7 @@ export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCr
     if (draftVal !== undefined) body.draft_p = draftVal ? 1 : 0
     const publishVal = parseBoolParam(flags.publish, flags['published-p'])
     if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
+    if (flags['webinar-design-id'] !== undefined) body.webinar_design_id = flags['webinar-design-id']
 
     const { data: createData, error: createError } = await this.apiClient.POST('/live/create', {
       body: body as any,

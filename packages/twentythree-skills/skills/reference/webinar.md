@@ -38,6 +38,7 @@ After create, the CLI prints the new webinar ID and its admin URL. Capture `data
 | `--live-date` | no | — | Schedule date/time (ISO 8601) |
 | `--draft` | no | false | Set as draft |
 | `--publish` | no | false | Publish the webinar |
+| `--webinar-design-id` | no | — | Assign a webinar design by ID |
 
 ```bash
 # Create a basic upcoming webinar
@@ -86,6 +87,7 @@ twentythree webinar list --search "Q2 Town Hall" --include-private --json
 | `--live-date` | no | — | Schedule date/time (ISO 8601) |
 | `--draft` | no | — | Set as draft |
 | `--publish` | no | — | Publish or unpublish the webinar |
+| `--webinar-design-id` | no | — | Assign a webinar design by ID |
 
 ```bash
 # Update title and description
@@ -124,6 +126,7 @@ Duplicates a webinar and schedules the copy at a new date/time. After repeat, th
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--date` | yes | — | Schedule date/time for the new webinar (ISO 8601) |
+| `--webinar-design-id` | no | — | Assign a webinar design by ID to the new webinar |
 
 ```bash
 # Schedule a repeat of a webinar

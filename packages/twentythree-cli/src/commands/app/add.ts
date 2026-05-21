@@ -39,6 +39,10 @@ export default class AppAdd extends AuthenticatedCommand<typeof AppAdd> {
       description: 'App type',
       required: false,
     }),
+    'player-id': Flags.integer({
+      description: 'Add a contextual player being forked',
+      required: false,
+    }),
   }
 
   static args = {}
@@ -61,6 +65,7 @@ export default class AppAdd extends AuthenticatedCommand<typeof AppAdd> {
     if (flags.description !== undefined) body.description = flags.description
     if (flags.style !== undefined) body.style = flags.style
     if (flags.type !== undefined) body.type = flags.type
+    if (flags['player-id'] !== undefined) body.player_id = flags['player-id']
 
     const { data: createData, error: createError } = await this.apiClient.POST('/app/add', {
       body: body as any,

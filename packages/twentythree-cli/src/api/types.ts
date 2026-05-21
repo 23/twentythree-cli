@@ -3016,6 +3016,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/photo/section/check-generate-available": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check video chapter generation availability
+         * @description Checks whether AI chapter generation is available for a given video. Requires the workspace feature to be enabled and the video to have a transcript available.
+         */
+        post: operations["videoSectionCheckGenerateAvailable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/photo/section/create": {
         parameters: {
             query?: never;
@@ -3026,8 +3046,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Create video section
-         * @description Creates a new section at the specified `start_time` within a video, with an optional `title` and `description`. The `start_time` must be within the bounds of the video's duration; if a section already exists at that timestamp, 400 is returned.
+         * Create video chapter
+         * @description Creates a new chapter at the specified `start_time` within a video, with an optional `title` and `description`. The `start_time` must be within the bounds of the video's duration; if a chapter already exists at that timestamp, 400 is returned.
          */
         post: operations["videoSectionCreate"];
         delete?: never;
@@ -3046,8 +3066,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Delete video section
-         * @description Permanently deletes the section identified by `section_id` from the specified video. Both `photo_id` and `section_id` must exist; otherwise a 412 error is returned.
+         * Delete video chapter
+         * @description Permanently deletes the chapter identified by `section_id` from the specified video. Both `photo_id` and `section_id` must exist; otherwise a 412 error is returned.
          */
         post: operations["videoSectionDelete"];
         delete?: never;
@@ -3066,8 +3086,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Generate video sections
-         * @description Automatically generates sections for a video by analysing its transcript using AI. Existing sections are replaced. Requires the video to have a transcript available.
+         * Generate video chapters
+         * @description Automatically generates chapters for a video by analysing its transcript using AI. Existing chapters are replaced. Requires the video to have a transcript available.
          */
         post: operations["videoSectionGenerate"];
         delete?: never;
@@ -3084,8 +3104,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List video sections
-         * @description Returns all sections for a video identified by `photo_id` and `token`, including each section's start time, title, description, thumbnail, and format-specific download links. The `token` may be time-limited, in which case responses are not cached.
+         * List video chapters
+         * @description Returns all chapters for a video identified by `photo_id` and `token`, including each chapter's start time, title, description, thumbnail, and format-specific download links. The `token` may be time-limited, in which case responses are not cached.
          */
         get: operations["videoSectionList"];
         put?: never;
@@ -3106,8 +3126,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Set section thumbnail
-         * @description Uploads an image file and assigns it as the thumbnail for the section identified by `section_id` within the specified video. Both `photo_id` and `section_id` must exist; a processing failure returns a 500 error.
+         * Set chapter thumbnail
+         * @description Uploads an image file and assigns it as the thumbnail for the chapter identified by `section_id` within the specified video. Both `photo_id` and `section_id` must exist; a processing failure returns a 500 error.
          */
         post: operations["videoSectionSetThumbnail"];
         delete?: never;
@@ -3126,8 +3146,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Update video section
-         * @description Updates the `title`, `description`, and `start_time` of an existing section identified by `section_id` within the specified video. The `start_time` is rounded to the nearest integer and must fall within the video's duration; an out-of-range value returns a 400 error.
+         * Update video chapter
+         * @description Updates the `title`, `description`, and `start_time` of an existing chapter identified by `section_id` within the specified video. The `start_time` is rounded to the nearest integer and must fall within the video's duration; an out-of-range value returns a 400 error.
          */
         post: operations["videoSectionUpdate"];
         delete?: never;
@@ -12765,6 +12785,8 @@ export interface operations {
                      * @default player
                      */
                     type?: string;
+                    /** @description Add a contextual player being forked. */
+                    player_id?: number;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
                 };
@@ -21142,7 +21164,7 @@ export interface operations {
                     /** @description Display name for the thumbnail template. */
                     name: string;
                     /** @description Liquid template markup used to render the thumbnail. */
-                    liquid_template: string;
+                    liquid_template?: string;
                     /**
                      * @description Object type this template applies to: `live` (webinar), `photo` (video), or `liveseries`.
                      * @default live
@@ -25221,6 +25243,114 @@ export interface operations {
             };
         };
     };
+    videoSectionCheckGenerateAvailable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The ID of the video to check chapter generation availability for. */
+                    photo_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example true */
+                            section_generation_available_p?: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
     videoSectionCreate: {
         parameters: {
             query?: never;
@@ -27789,6 +27919,8 @@ export interface operations {
                     registration_mode?: "" | "all" | "none";
                     /** @description Override the streaming method for the new webinar. Valid values: `webcam`, `hardware`, `software`. */
                     streaming_method?: string;
+                    /** @description Assign a webinar design by id to this webinar. */
+                    webinar_design_id?: number;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
                 };
@@ -27971,6 +28103,8 @@ export interface operations {
                     registration_mode?: "" | "all" | "none";
                     /** @description Attach to a live series. */
                     live_series_id?: number;
+                    /** @description Assign a webinar design by id to this webinar. */
+                    webinar_design_id?: number;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
                 };
@@ -29342,6 +29476,8 @@ export interface operations {
                     before_webinar_countdown_p?: boolean;
                     /** @description ID of a video to be played in the webinar waiting room. */
                     before_webinar_photo_id?: number;
+                    /** @description Assign a webinar design by id to this webinar. */
+                    webinar_design_id?: number;
                     /** @description ID of a video to be used as the webinar trailer. */
                     trailer_photo_id?: number;
                     /** @description Set the headline in the webinar post experience. */

@@ -15968,6 +15968,10 @@
                                         "type":        "string",
                                         "default":     "player"
                                     },
+                                    "player_id":   {
+                                        "description": "Add a contextual player being forked.",
+                                        "type":        "integer"
+                                    },
                                     "fields":      {
                                         "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
                                         "type":        "string"
@@ -30393,8 +30397,7 @@
                                     },
                                     "liquid_template": {
                                         "description": "Liquid template markup used to render the thumbnail.",
-                                        "type":        "string",
-                                        "minLength":   1
+                                        "type":        "string"
                                     },
                                     "object_type":     {
                                         "description": "Object type this template applies to: `live` (webinar), `photo` (video), or `liveseries`.",
@@ -30427,8 +30430,7 @@
                                     }
                                 },
                                 "required":   [
-                                    "name",
-                                    "liquid_template"
+                                    "name"
                                 ]
                             }
                         }
@@ -37355,12 +37357,162 @@
                 }
             }
         },
+        "/photo/section/check-generate-available": {
+            "post": {
+                "summary":     "Check video chapter generation availability",
+                "description": "Checks whether AI chapter generation is available for a given video. Requires the workspace feature to be enabled and the video to have a transcript available.",
+                "tags":        [
+                    "Videos: Chapters"
+                ],
+                "operationId": "videoSectionCheckGenerateAvailable",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "section_generation_available_p": {
+                                                    "type":    "boolean",
+                                                    "example": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "photo_id": {
+                                        "description": "The ID of the video to check chapter generation availability for.",
+                                        "type":        "integer"
+                                    },
+                                    "fields":   {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "photo_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/photo/section/create": {
             "post": {
-                "summary":     "Create video section",
-                "description": "Creates a new section at the specified `start_time` within a video, with an optional `title` and `description`. The `start_time` must be within the bounds of the video's duration; if a section already exists at that timestamp, 400 is returned.",
+                "summary":     "Create video chapter",
+                "description": "Creates a new chapter at the specified `start_time` within a video, with an optional `title` and `description`. The `start_time` must be within the bounds of the video's duration; if a chapter already exists at that timestamp, 400 is returned.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionCreate",
                 "responses":   {
@@ -37546,10 +37698,10 @@
         },
         "/photo/section/delete": {
             "post": {
-                "summary":     "Delete video section",
-                "description": "Permanently deletes the section identified by `section_id` from the specified video. Both `photo_id` and `section_id` must exist; otherwise a 412 error is returned.",
+                "summary":     "Delete video chapter",
+                "description": "Permanently deletes the chapter identified by `section_id` from the specified video. Both `photo_id` and `section_id` must exist; otherwise a 412 error is returned.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionDelete",
                 "responses":   {
@@ -37700,10 +37852,10 @@
         },
         "/photo/section/generate": {
             "post": {
-                "summary":     "Generate video sections",
-                "description": "Automatically generates sections for a video by analysing its transcript using AI. Existing sections are replaced. Requires the video to have a transcript available.",
+                "summary":     "Generate video chapters",
+                "description": "Automatically generates chapters for a video by analysing its transcript using AI. Existing chapters are replaced. Requires the video to have a transcript available.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionGenerate",
                 "responses":   {
@@ -37849,10 +38001,10 @@
         },
         "/photo/section/list":  {
             "get": {
-                "summary":     "List video sections",
-                "description": "Returns all sections for a video identified by `photo_id` and `token`, including each section's start time, title, description, thumbnail, and format-specific download links. The `token` may be time-limited, in which case responses are not cached.",
+                "summary":     "List video chapters",
+                "description": "Returns all chapters for a video identified by `photo_id` and `token`, including each chapter's start time, title, description, thumbnail, and format-specific download links. The `token` may be time-limited, in which case responses are not cached.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionList",
                 "parameters":  [
@@ -38059,10 +38211,10 @@
         },
         "/photo/section/set-thumbnail": {
             "post": {
-                "summary":     "Set section thumbnail",
-                "description": "Uploads an image file and assigns it as the thumbnail for the section identified by `section_id` within the specified video. Both `photo_id` and `section_id` must exist; a processing failure returns a 500 error.",
+                "summary":     "Set chapter thumbnail",
+                "description": "Uploads an image file and assigns it as the thumbnail for the chapter identified by `section_id` within the specified video. Both `photo_id` and `section_id` must exist; a processing failure returns a 500 error.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionSetThumbnail",
                 "responses":   {
@@ -38218,10 +38370,10 @@
         },
         "/photo/section/update": {
             "post": {
-                "summary":     "Update video section",
-                "description": "Updates the `title`, `description`, and `start_time` of an existing section identified by `section_id` within the specified video. The `start_time` is rounded to the nearest integer and must fall within the video's duration; an out-of-range value returns a 400 error.",
+                "summary":     "Update video chapter",
+                "description": "Updates the `title`, `description`, and `start_time` of an existing chapter identified by `section_id` within the specified video. The `start_time` is rounded to the nearest integer and must fall within the video's duration; an out-of-range value returns a 400 error.",
                 "tags":        [
-                    "Videos: Sections"
+                    "Videos: Chapters"
                 ],
                 "operationId": "videoSectionUpdate",
                 "responses":   {
@@ -41300,6 +41452,10 @@
                                         "description": "Override the streaming method for the new webinar. Valid values: `webcam`, `hardware`, `software`.",
                                         "type":        "string"
                                     },
+                                    "webinar_design_id":   {
+                                        "description": "Assign a webinar design by id to this webinar.",
+                                        "type":        "integer"
+                                    },
                                     "fields":              {
                                         "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
                                         "type":        "string"
@@ -41562,6 +41718,10 @@
                                     },
                                     "live_series_id":       {
                                         "description": "Attach to a live series.",
+                                        "type":        "integer"
+                                    },
+                                    "webinar_design_id":    {
+                                        "description": "Assign a webinar design by id to this webinar.",
                                         "type":        "integer"
                                     },
                                     "fields":               {
@@ -44228,6 +44388,10 @@
                                     },
                                     "before_webinar_photo_id": {
                                         "description": "ID of a video to be played in the webinar waiting room.",
+                                        "type":        "integer"
+                                    },
+                                    "webinar_design_id":    {
+                                        "description": "Assign a webinar design by id to this webinar.",
                                         "type":        "integer"
                                     },
                                     "trailer_photo_id":     {

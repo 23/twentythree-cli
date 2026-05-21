@@ -25,6 +25,10 @@ export default class WebinarRepeat extends AuthenticatedCommand<typeof WebinarRe
       description: 'Schedule date/time for the new webinar (ISO 8601)',
       required: true,
     }),
+    'webinar-design-id': Flags.integer({
+      description: 'Assign a webinar design by ID to the new webinar',
+      required: false,
+    }),
   }
 
   static args = {
@@ -46,6 +50,7 @@ export default class WebinarRepeat extends AuthenticatedCommand<typeof WebinarRe
       live_id: Number(args.id),
       schedule_start_time: flags.date,
     }
+    if (flags['webinar-design-id'] !== undefined) body.webinar_design_id = flags['webinar-design-id']
 
     const { data: repeatData, error: repeatError } = await this.apiClient.POST('/live/repeat', {
       body: body as any,

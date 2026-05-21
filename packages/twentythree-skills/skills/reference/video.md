@@ -291,6 +291,29 @@ twentythree video section generate 12345 --json
 
 ---
 
+### video section check-generate-available
+
+**Auth scope:** write  **Side effects:** none  **Output:** key-value
+
+Checks whether AI chapter generation is available for a given video. Returns `section_generation_available_p` (boolean). Requires both the workspace feature to be enabled and the video to have a transcript. Use this before calling `video section generate` to avoid errors.
+
+No required flags beyond the video ID positional argument.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--fields` | no | — | Comma-separated list of fields to return |
+
+```bash
+# Check if AI chapter generation is available
+twentythree video section check-generate-available <id> --json
+
+# Example with a real ID
+twentythree video section check-generate-available 12345 --json
+#    => { "data": { "section_generation_available_p": true } }
+```
+
+---
+
 ### video section set-thumbnail
 
 **Auth scope:** write  **Side effects:** updates  **Output:** key-value
