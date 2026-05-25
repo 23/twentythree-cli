@@ -26,14 +26,21 @@ Run `twentythree auth status --json` to confirm the current workspace's bearer t
 
 **Auth scope:** admin  **Side effects:** none  **Output:** table (ID, Username, Display Name, URL)
 
-Flags:
-
 | Flag | Required | Description |
 |------|----------|-------------|
 | `--page` | no | Page number |
 | `--size` | no | Number of results per page |
 | `--search` | no | Search query (username, display name, or email) |
 | `--user-id` | no | Filter by user ID |
+| `--user-group-id` | no | Filter to users assigned to a specific user group |
+| `--only-admins` | no | Return only admin users |
+| `--only-owner` | no | Return only the workspace owner |
+| `--seated` / `--no-seated` | no | Filter by seated status |
+| `--include-disabled-login` | no | Include users with disabled login |
+| `--include-metrics` | no | Include per-user performance metrics |
+| `--orderby` | no | Field to order results by |
+| `--order` | no | Sort direction: `asc` or `desc` |
+| `--fields` | no | Comma-separated list of fields to return |
 
 ```bash
 # List all users in the workspace
@@ -41,6 +48,12 @@ twentythree user list --json
 
 # Search for a user by name or email
 twentythree user list --search "alice" --json
+
+# List only admin users
+twentythree user list --only-admins --json
+
+# List users in a specific group, sorted
+twentythree user list --user-group-id 5 --orderby display_name --order asc --json
 ```
 
 ### user create

@@ -61,16 +61,41 @@ twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:0
 |------|----------|---------|-------------|
 | `--limit` | no | 20 | Maximum number of webinars to return |
 | `--all` | no | false | Fetch all webinars across all pages (overrides --limit) |
-| `--include-private` | no | false | Include private webinars in results |
-| `--status` | no | — | Filter by status: `upcoming`, `live`, or `previous` |
 | `--search` | no | — | Search webinars by keyword |
+| `--status` | no | — | Filter by status: `upcoming`, `live`, or `previous` |
+| `--include-private` | no | false | Include private webinars in results |
+| `--live-id` | no | — | Limit to a single webinar by ID |
+| `--album-id` | no | — | Filter to webinars in a specific category |
+| `--user-id` | no | — | Filter by creator (`me` for authenticated user) |
+| `--live-format` | no | — | Filter by format: `event` or `webinar` |
+| `--live-series-id` | no | — | Filter to webinars in a specific series |
+| `--ordering` | no | — | Sort field: `private`, `promoted`, `streaming`, `broadcasting`, `name`, `live_label`, `live_status`, `live_date`, `creation_date` |
+| `--order` | no | — | Sort direction: `asc` or `desc` |
+| `--promoted` / `--no-promoted` | no | — | Filter by promoted status |
+| `--draft` / `--no-draft` | no | — | Filter by draft status |
+| `--cancelled` / `--no-cancelled` | no | — | Filter by cancelled status |
+| `--streaming` | no | — | Filter to currently streaming webinars only |
+| `--template` | no | — | Filter to webinar templates only |
+| `--include-stats` | no | — | Include performance statistics for each webinar |
+| `--include-speakers` | no | — | Include speaker information for each webinar |
+| `--include-albums` | no | — | Include category information for each webinar |
+| `--fields` | no | — | Comma-separated list of fields to return |
 
 ```bash
 # List upcoming webinars
 twentythree webinar list --status upcoming --json
 
+# List all webinars sorted by date ascending
+twentythree webinar list --all --ordering live_date --order asc --json
+
 # Search for a webinar by title and include private
 twentythree webinar list --search "Q2 Town Hall" --include-private --json
+
+# List webinars in a series with speakers included
+twentythree webinar list --live-series-id 42 --include-speakers --json
+
+# List webinars by the authenticated user
+twentythree webinar list --user-id me --live-format webinar --json
 ```
 
 ---

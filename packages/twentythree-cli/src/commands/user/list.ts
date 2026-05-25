@@ -17,6 +17,8 @@ export default class UserList extends AuthenticatedCommand<typeof UserList> {
     '<%= config.bin %> user list --search "alice"',
     '<%= config.bin %> user list --page 2 --size 20',
     '<%= config.bin %> user list --json',
+    '<%= config.bin %> user list --only-admins --json',
+    '<%= config.bin %> user list --user-group-id 5 --orderby display_name --json',
   ]
 
   static enableJsonFlag = true
@@ -39,6 +41,44 @@ export default class UserList extends AuthenticatedCommand<typeof UserList> {
       description: 'Filter by user ID',
       required: false,
     }),
+    'user-group-id': Flags.string({
+      description: 'Filter to users assigned to a specific user group',
+      required: false,
+    }),
+    'only-admins': Flags.boolean({
+      description: 'Return only admin users',
+      required: false,
+    }),
+    'only-owner': Flags.boolean({
+      description: 'Return only the workspace owner',
+      required: false,
+    }),
+    seated: Flags.boolean({
+      description: 'Filter by seated status',
+      allowNo: true,
+      required: false,
+    }),
+    'include-disabled-login': Flags.boolean({
+      description: 'Include users with disabled login',
+      required: false,
+    }),
+    'include-metrics': Flags.boolean({
+      description: 'Include per-user performance metrics',
+      required: false,
+    }),
+    orderby: Flags.string({
+      description: 'Field to order results by',
+      required: false,
+    }),
+    order: Flags.string({
+      description: 'Sort direction',
+      options: ['asc', 'desc'],
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {}
@@ -54,15 +94,24 @@ export default class UserList extends AuthenticatedCommand<typeof UserList> {
     const { flags } = await this.parse(UserList)
     this.printWorkspaceHeader()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = {}
+    if (flags.search !== undefined) query.search = flags.search
+    if (flags['user-id'] !== undefined) query.user_id = Number(flags['user-id'])
+    if (flags['user-group-id'] !== undefined) query.user_group_id = flags['user-group-id']
+    if (flags['only-admins']) query.only_admins_p = true
+    if (flags['only-owner']) query.only_owner_p = true
+    if (flags.seated !== undefined) query.seated_p = flags.seated
+    if (flags['include-disabled-login']) query.include_disabled_login_p = true
+    if (flags['include-metrics']) query.include_metrics_p = true
+    if (flags.orderby !== undefined) query.orderby = flags.orderby
+    if (flags.order !== undefined) query.order = flags.order
+    if (flags.fields !== undefined) query.fields = flags.fields
+    if (flags.page !== undefined) query.p = flags.page
+    if (flags.size !== undefined) query.size = flags.size
+
     const { data, error } = await this.apiClient.GET('/user/list', {
-      params: {
-        query: {
-          search: flags.search,
-          user_id: flags['user-id'] ? Number(flags['user-id']) : undefined,
-          p: flags.page,
-          size: flags.size,
-        },
-      },
+      params: { query },
     })
 
     if (error) {

@@ -36,11 +36,21 @@ export default class SpotList extends AuthenticatedCommand<typeof SpotList> {
       required: false,
     }),
     search: Flags.string({
-      description: 'Search term',
+      description: 'Search spots by name',
+      required: false,
+    }),
+    'spot-id': Flags.integer({
+      description: 'Filter to a specific spot by ID',
       required: false,
     }),
     'spot-type': Flags.string({
       description: 'Filter by spot type',
+      options: ['page', 'widget'],
+      required: false,
+    }),
+    'spot-object-type': Flags.string({
+      description: 'Filter by the object type the spot is configured for',
+      options: ['live', 'video'],
       required: false,
     }),
     active: Flags.boolean({
@@ -49,12 +59,22 @@ export default class SpotList extends AuthenticatedCommand<typeof SpotList> {
       required: false,
     }),
     'active-p': Flags.string({ hidden: true, required: false }),
+    'include-analytics': Flags.boolean({
+      description: 'Include impression analytics data for each spot',
+      required: false,
+    }),
     orderby: Flags.string({
       description: 'Field to order results by',
+      options: ['spot_name', 'creation_time', 'title'],
       required: false,
     }),
     order: Flags.string({
-      description: 'Sort order (asc or desc)',
+      description: 'Sort direction',
+      options: ['asc', 'desc'],
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
       required: false,
     }),
   }
@@ -77,19 +97,22 @@ export default class SpotList extends AuthenticatedCommand<typeof SpotList> {
 
     const activeVal = parseBoolParam(flags.active, flags['active-p'])
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = {}
+    if (flags.search !== undefined) query.search = flags.search
+    if (flags['spot-id'] !== undefined) query.spot_id = flags['spot-id']
+    if (flags['spot-type'] !== undefined) query.spot_type = flags['spot-type']
+    if (flags['spot-object-type'] !== undefined) query.spot_object_type = flags['spot-object-type']
+    if (activeVal !== undefined) query.active_p = activeVal
+    if (flags['include-analytics']) query.include_analytics_p = true
+    if (flags.orderby !== undefined) query.orderby = flags.orderby
+    if (flags.order !== undefined) query.order = flags.order
+    if (flags.fields !== undefined) query.fields = flags.fields
+    if (flags.page !== undefined) query.p = flags.page
+    if (flags.size !== undefined) query.size = flags.size
+
     const { data, error } = await this.apiClient.GET('/spot/list', {
-      params: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        query: {
-          search: flags.search,
-          spot_type: flags['spot-type'] as any,
-          active_p: activeVal !== undefined ? activeVal : undefined,
-          p: flags.page,
-          size: flags.size,
-          orderby: flags.orderby as any,
-          order: flags.order as any,
-        },
-      },
+      params: { query },
     })
 
     if (error) {

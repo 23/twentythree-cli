@@ -23,17 +23,19 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Type, Active)
 
-Flags:
-
 | Flag | Required | Description |
 |------|----------|-------------|
 | `--page` | no | Page number |
 | `--size` | no | Number of results per page |
-| `--search` | no | Search term |
-| `--spot-type` | no | Filter by spot type |
-| `--active` | no | Filter by active status (boolean) |
-| `--orderby` | no | Field to order results by |
-| `--order` | no | Sort order (asc or desc) |
+| `--search` | no | Search spots by name |
+| `--spot-id` | no | Filter to a specific spot by ID |
+| `--spot-type` | no | Filter by spot type: `page` or `widget` |
+| `--spot-object-type` | no | Filter by object type the spot is configured for: `live` or `video` |
+| `--active` / `--no-active` | no | Filter by active status |
+| `--include-analytics` | no | Include impression analytics data for each spot |
+| `--orderby` | no | Sort field: `spot_name`, `creation_time`, or `title` |
+| `--order` | no | Sort direction: `asc` or `desc` |
+| `--fields` | no | Comma-separated list of fields to return |
 
 ```bash
 # List all spots in the workspace
@@ -41,6 +43,12 @@ twentythree spot list --json
 
 # List only active spots
 twentythree spot list --active --json
+
+# List page-type spots sorted by creation time
+twentythree spot list --spot-type page --orderby creation_time --order desc --json
+
+# List webinar spots with analytics
+twentythree spot list --spot-object-type live --include-analytics --json
 ```
 
 ### spot create
