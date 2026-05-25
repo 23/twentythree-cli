@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree webinar metrics 12345 --json
 ```
 
-_See code: [src/commands/webinar/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/metrics.ts)_
+_See code: [src/commands/webinar/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webinar/metrics.ts)_

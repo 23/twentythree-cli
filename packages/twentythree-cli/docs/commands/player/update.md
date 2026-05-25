@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree player update 42 --description "New description"
 ```
 
-_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/player/update.ts)_
+_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/player/update.ts)_

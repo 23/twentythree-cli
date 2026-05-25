@@ -48,4 +48,4 @@ EXAMPLES
   $ twentythree player embed --video-id 123 --json
 ```
 
-_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/player/embed.ts)_
+_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/player/embed.ts)_

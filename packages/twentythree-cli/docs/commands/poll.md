@@ -35,7 +35,7 @@ EXAMPLES
   $ twentythree poll add --object-id 12345 --question "How are you?" --json
 ```
 
-_See code: [src/commands/poll/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/add.ts)_
+_See code: [src/commands/poll/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/add.ts)_
 
 ## `twentythree poll answer ID`
 
@@ -67,7 +67,7 @@ EXAMPLES
   $ twentythree poll answer 99 --object-id 12345 --option-id 3 --json
 ```
 
-_See code: [src/commands/poll/answer.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/answer.ts)_
+_See code: [src/commands/poll/answer.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/answer.ts)_
 
 ## `twentythree poll list`
 
@@ -94,7 +94,7 @@ EXAMPLES
   $ twentythree poll list --object-id 12345 --json
 ```
 
-_See code: [src/commands/poll/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/list.ts)_
+_See code: [src/commands/poll/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/list.ts)_
 
 ## `twentythree poll remove ID`
 
@@ -120,7 +120,7 @@ EXAMPLES
   $ twentythree poll remove 99 --json
 ```
 
-_See code: [src/commands/poll/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/remove.ts)_
+_See code: [src/commands/poll/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/remove.ts)_
 
 ## `twentythree poll set-options ID`
 
@@ -149,7 +149,7 @@ EXAMPLES
   $ twentythree poll set-options 99 --option "Option A" --option "Option B" --json
 ```
 
-_See code: [src/commands/poll/set-options.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/set-options.ts)_
+_See code: [src/commands/poll/set-options.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/set-options.ts)_
 
 ## `twentythree poll update ID`
 
@@ -184,4 +184,4 @@ EXAMPLES
   $ twentythree poll update 99 --question "New?" --open --json
 ```
 
-_See code: [src/commands/poll/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/update.ts)_
+_See code: [src/commands/poll/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/update.ts)_
