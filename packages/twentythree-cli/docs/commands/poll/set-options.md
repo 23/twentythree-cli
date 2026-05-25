@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree poll set-options 99 --option "Option A" --option "Option B" --json
 ```
 
-_See code: [src/commands/poll/set-options.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/poll/set-options.ts)_
+_See code: [src/commands/poll/set-options.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/set-options.ts)_

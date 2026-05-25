@@ -37,7 +37,7 @@ EXAMPLES
   $ twentythree webinar transcription connect 12345 --json
 ```
 
-_See code: [src/commands/webinar/transcription/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/connect.ts)_
+_See code: [src/commands/webinar/transcription/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/connect.ts)_
 
 ## `twentythree webinar transcription list ID`
 
@@ -68,7 +68,7 @@ EXAMPLES
   $ twentythree webinar transcription list 12345 --token mytoken
 ```
 
-_See code: [src/commands/webinar/transcription/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/list.ts)_
+_See code: [src/commands/webinar/transcription/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/list.ts)_
 
 ## `twentythree webinar transcription locales ID`
 
@@ -99,7 +99,7 @@ EXAMPLES
   $ twentythree webinar transcription locales 12345 --token mytoken
 ```
 
-_See code: [src/commands/webinar/transcription/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/locales.ts)_
+_See code: [src/commands/webinar/transcription/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/locales.ts)_
 
 ## `twentythree webinar transcription transcriptionlist`
 
@@ -122,4 +122,4 @@ EXAMPLES
   $ twentythree webinar transcription transcriptionlist --json
 ```
 
-_See code: [src/commands/webinar/transcription/transcriptionlist.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/transcriptionlist.ts)_
+_See code: [src/commands/webinar/transcription/transcriptionlist.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/transcriptionlist.ts)_

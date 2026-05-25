@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree app remove-thumbnail 42 --json
 ```
 
-_See code: [src/commands/app/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/app/remove-thumbnail.ts)_
+_See code: [src/commands/app/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/app/remove-thumbnail.ts)_

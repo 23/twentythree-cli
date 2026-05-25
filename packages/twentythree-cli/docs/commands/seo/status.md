@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree seo status --object-id 12345 --json
 ```
 
-_See code: [src/commands/seo/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/seo/status.ts)_
+_See code: [src/commands/seo/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/seo/status.ts)_

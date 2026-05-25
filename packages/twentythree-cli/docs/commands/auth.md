@@ -22,7 +22,7 @@ EXAMPLES
   $ twentythree auth credentials
 ```
 
-_See code: [src/commands/auth/credentials.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/auth/credentials.ts)_
+_See code: [src/commands/auth/credentials.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/auth/credentials.ts)_
 
 ## `twentythree auth status`
 
@@ -43,7 +43,7 @@ EXAMPLES
   $ twentythree auth status
 ```
 
-_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/auth/status.ts)_
+_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/auth/status.ts)_
 
 ## `twentythree auth switch`
 
@@ -60,4 +60,4 @@ EXAMPLES
   $ twentythree auth switch
 ```
 
-_See code: [src/commands/auth/switch.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/auth/switch.ts)_
+_See code: [src/commands/auth/switch.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/auth/switch.ts)_

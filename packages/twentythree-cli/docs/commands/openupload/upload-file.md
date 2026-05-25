@@ -36,4 +36,4 @@ EXAMPLES
   $ twentythree openupload upload-file --file-path ./video.mp4 --token-upload-id 123 --token abc123 --json
 ```
 
-_See code: [src/commands/openupload/upload-file.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/openupload/upload-file.ts)_
+_See code: [src/commands/openupload/upload-file.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/openupload/upload-file.ts)_

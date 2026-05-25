@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree video transcoding-progress 12345 --json
 ```
 
-_See code: [src/commands/video/transcoding-progress.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/video/transcoding-progress.ts)_
+_See code: [src/commands/video/transcoding-progress.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/video/transcoding-progress.ts)_

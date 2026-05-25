@@ -39,4 +39,4 @@ EXAMPLES
   $ twentythree seo update --object-id 12345 --seo-policy index --json
 ```
 
-_See code: [src/commands/seo/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/seo/update.ts)_
+_See code: [src/commands/seo/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/seo/update.ts)_

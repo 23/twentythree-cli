@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree poll remove 99 --json
 ```
 
-_See code: [src/commands/poll/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/poll/remove.ts)_
+_See code: [src/commands/poll/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/poll/remove.ts)_

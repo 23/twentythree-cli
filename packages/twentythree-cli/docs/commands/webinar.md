@@ -83,7 +83,7 @@ DESCRIPTION
   Manage webinars — create, list, update, delete, and more
 ```
 
-_See code: [src/commands/webinar/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/index.ts)_
+_See code: [src/commands/webinar/index.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/index.ts)_
 
 ## `twentythree webinar attachment delete ID`
 
@@ -112,7 +112,7 @@ EXAMPLES
   $ twentythree webinar attachment delete 12345 --filename handout.pdf --json
 ```
 
-_See code: [src/commands/webinar/attachment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/attachment/delete.ts)_
+_See code: [src/commands/webinar/attachment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/attachment/delete.ts)_
 
 ## `twentythree webinar attachment list ID`
 
@@ -144,7 +144,7 @@ EXAMPLES
   $ twentythree webinar attachment list 12345 --include-hidden
 ```
 
-_See code: [src/commands/webinar/attachment/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/attachment/list.ts)_
+_See code: [src/commands/webinar/attachment/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/attachment/list.ts)_
 
 ## `twentythree webinar attachment set-hidden ID`
 
@@ -176,7 +176,7 @@ EXAMPLES
   $ twentythree webinar attachment set-hidden 12345 --filename slides.pdf --hidden --json
 ```
 
-_See code: [src/commands/webinar/attachment/set-hidden.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/attachment/set-hidden.ts)_
+_See code: [src/commands/webinar/attachment/set-hidden.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/attachment/set-hidden.ts)_
 
 ## `twentythree webinar attachment upload ID FILE`
 
@@ -209,7 +209,7 @@ EXAMPLES
   $ twentythree webinar attachment upload 12345 ./handout.pdf --hidden
 ```
 
-_See code: [src/commands/webinar/attachment/upload.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/attachment/upload.ts)_
+_See code: [src/commands/webinar/attachment/upload.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/attachment/upload.ts)_
 
 ## `twentythree webinar clips ID`
 
@@ -235,7 +235,7 @@ EXAMPLES
   $ twentythree webinar clips 12345 --json
 ```
 
-_See code: [src/commands/webinar/clips.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/clips.ts)_
+_See code: [src/commands/webinar/clips.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/clips.ts)_
 
 ## `twentythree webinar create`
 
@@ -269,7 +269,7 @@ EXAMPLES
   $ twentythree webinar create --title "My Webinar" --json
 ```
 
-_See code: [src/commands/webinar/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/create.ts)_
+_See code: [src/commands/webinar/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/create.ts)_
 
 ## `twentythree webinar delete ID`
 
@@ -295,7 +295,7 @@ EXAMPLES
   $ twentythree webinar delete 12345 --json
 ```
 
-_See code: [src/commands/webinar/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/delete.ts)_
+_See code: [src/commands/webinar/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/delete.ts)_
 
 ## `twentythree webinar highlights ID`
 
@@ -326,7 +326,7 @@ EXAMPLES
   $ twentythree webinar highlights 12345 --json
 ```
 
-_See code: [src/commands/webinar/highlights.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/highlights.ts)_
+_See code: [src/commands/webinar/highlights.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/highlights.ts)_
 
 ## `twentythree webinar list`
 
@@ -361,7 +361,7 @@ EXAMPLES
   $ twentythree webinar list --status upcoming --json
 ```
 
-_See code: [src/commands/webinar/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/list.ts)_
+_See code: [src/commands/webinar/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/list.ts)_
 
 ## `twentythree webinar list-formats`
 
@@ -384,7 +384,7 @@ EXAMPLES
   $ twentythree webinar list-formats --json
 ```
 
-_See code: [src/commands/webinar/list-formats.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/list-formats.ts)_
+_See code: [src/commands/webinar/list-formats.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/list-formats.ts)_
 
 ## `twentythree webinar log ID`
 
@@ -410,7 +410,7 @@ EXAMPLES
   $ twentythree webinar log 12345 --json
 ```
 
-_See code: [src/commands/webinar/log.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/log.ts)_
+_See code: [src/commands/webinar/log.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/log.ts)_
 
 ## `twentythree webinar mail add [ID]`
 
@@ -444,7 +444,7 @@ EXAMPLES
   $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
 ```
 
-_See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/add.ts)_
+_See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/add.ts)_
 
 ## `twentythree webinar mail list [ID]`
 
@@ -475,7 +475,7 @@ EXAMPLES
   $ twentythree webinar mail list 12345 --json
 ```
 
-_See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/list.ts)_
+_See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/list.ts)_
 
 ## `twentythree webinar mail preview ID`
 
@@ -507,7 +507,7 @@ EXAMPLES
   $ twentythree webinar mail preview 555 --webinar-id 12345 --json
 ```
 
-_See code: [src/commands/webinar/mail/preview.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/preview.ts)_
+_See code: [src/commands/webinar/mail/preview.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/preview.ts)_
 
 ## `twentythree webinar mail remove ID`
 
@@ -537,7 +537,7 @@ EXAMPLES
   $ twentythree webinar mail remove 555 --series-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/mail/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/remove.ts)_
+_See code: [src/commands/webinar/mail/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/remove.ts)_
 
 ## `twentythree webinar mail send ID`
 
@@ -567,7 +567,7 @@ EXAMPLES
   $ twentythree webinar mail send 555 --series-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/mail/send.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/send.ts)_
+_See code: [src/commands/webinar/mail/send.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/send.ts)_
 
 ## `twentythree webinar mail test ID`
 
@@ -601,7 +601,7 @@ EXAMPLES
   $ twentythree webinar mail test 555 --webinar-id 12345 --email me@example.com --json
 ```
 
-_See code: [src/commands/webinar/mail/test.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/test.ts)_
+_See code: [src/commands/webinar/mail/test.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/test.ts)_
 
 ## `twentythree webinar mail update ID`
 
@@ -636,7 +636,7 @@ EXAMPLES
   $ twentythree webinar mail update 555 --webinar-id 12345 --subject "Updated" --json
 ```
 
-_See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/update.ts)_
+_See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/update.ts)_
 
 ## `twentythree webinar metrics ID`
 
@@ -662,7 +662,7 @@ EXAMPLES
   $ twentythree webinar metrics 12345 --json
 ```
 
-_See code: [src/commands/webinar/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/metrics.ts)_
+_See code: [src/commands/webinar/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/metrics.ts)_
 
 ## `twentythree webinar queued-video add ID`
 
@@ -691,7 +691,7 @@ EXAMPLES
   $ twentythree webinar queued-video add 12345 --video-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/queued-video/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/queued-video/add.ts)_
+_See code: [src/commands/webinar/queued-video/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/queued-video/add.ts)_
 
 ## `twentythree webinar queued-video remove ID`
 
@@ -720,7 +720,7 @@ EXAMPLES
   $ twentythree webinar queued-video remove 12345 --video-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/queued-video/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/queued-video/remove.ts)_
+_See code: [src/commands/webinar/queued-video/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/queued-video/remove.ts)_
 
 ## `twentythree webinar recording split ID`
 
@@ -746,7 +746,7 @@ EXAMPLES
   $ twentythree webinar recording split 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/split.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/split.ts)_
+_See code: [src/commands/webinar/recording/split.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/recording/split.ts)_
 
 ## `twentythree webinar recording start ID`
 
@@ -772,7 +772,7 @@ EXAMPLES
   $ twentythree webinar recording start 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/start.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/start.ts)_
+_See code: [src/commands/webinar/recording/start.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/recording/start.ts)_
 
 ## `twentythree webinar recording status ID`
 
@@ -798,7 +798,7 @@ EXAMPLES
   $ twentythree webinar recording status 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/status.ts)_
+_See code: [src/commands/webinar/recording/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/recording/status.ts)_
 
 ## `twentythree webinar recording stop ID`
 
@@ -824,7 +824,7 @@ EXAMPLES
   $ twentythree webinar recording stop 12345 --json
 ```
 
-_See code: [src/commands/webinar/recording/stop.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/recording/stop.ts)_
+_See code: [src/commands/webinar/recording/stop.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/recording/stop.ts)_
 
 ## `twentythree webinar repeat ID`
 
@@ -853,7 +853,7 @@ EXAMPLES
   $ twentythree webinar repeat 12345 --date "2024-12-01T14:00:00Z" --json
 ```
 
-_See code: [src/commands/webinar/repeat.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/repeat.ts)_
+_See code: [src/commands/webinar/repeat.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/repeat.ts)_
 
 ## `twentythree webinar room connect ID`
 
@@ -879,7 +879,7 @@ EXAMPLES
   $ twentythree webinar room connect 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/room/connect.ts)_
+_See code: [src/commands/webinar/room/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/room/connect.ts)_
 
 ## `twentythree webinar room info ID`
 
@@ -905,7 +905,7 @@ EXAMPLES
   $ twentythree webinar room info 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/info.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/room/info.ts)_
+_See code: [src/commands/webinar/room/info.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/room/info.ts)_
 
 ## `twentythree webinar room send-recording ID`
 
@@ -931,7 +931,7 @@ EXAMPLES
   $ twentythree webinar room send-recording 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/send-recording.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/room/send-recording.ts)_
+_See code: [src/commands/webinar/room/send-recording.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/room/send-recording.ts)_
 
 ## `twentythree webinar room themes`
 
@@ -954,7 +954,7 @@ EXAMPLES
   $ twentythree webinar room themes --json
 ```
 
-_See code: [src/commands/webinar/room/themes.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/room/themes.ts)_
+_See code: [src/commands/webinar/room/themes.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/room/themes.ts)_
 
 ## `twentythree webinar section add ID`
 
@@ -988,7 +988,7 @@ EXAMPLES
   $ twentythree webinar section add 12345 --title "Welcome" --description "Opening remarks" --json
 ```
 
-_See code: [src/commands/webinar/section/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/section/add.ts)_
+_See code: [src/commands/webinar/section/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/section/add.ts)_
 
 ## `twentythree webinar section list ID`
 
@@ -1017,7 +1017,7 @@ EXAMPLES
   $ twentythree webinar section list 12345 --json
 ```
 
-_See code: [src/commands/webinar/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/section/list.ts)_
+_See code: [src/commands/webinar/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/section/list.ts)_
 
 ## `twentythree webinar section remove WEBINARID ID`
 
@@ -1044,7 +1044,7 @@ EXAMPLES
   $ twentythree webinar section remove 12345 99 --json
 ```
 
-_See code: [src/commands/webinar/section/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/section/remove.ts)_
+_See code: [src/commands/webinar/section/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/section/remove.ts)_
 
 ## `twentythree webinar section update WEBINARID ID`
 
@@ -1079,7 +1079,7 @@ EXAMPLES
   $ twentythree webinar section update 12345 99 --title "Q&A" --description "Audience questions" --json
 ```
 
-_See code: [src/commands/webinar/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/section/update.ts)_
+_See code: [src/commands/webinar/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/section/update.ts)_
 
 ## `twentythree webinar series apply-recurrence ID`
 
@@ -1108,7 +1108,7 @@ EXAMPLES
   $ twentythree webinar series apply-recurrence 42 --recurrence-id 7 --json
 ```
 
-_See code: [src/commands/webinar/series/apply-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/apply-recurrence.ts)_
+_See code: [src/commands/webinar/series/apply-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/apply-recurrence.ts)_
 
 ## `twentythree webinar series cancel ID`
 
@@ -1139,7 +1139,7 @@ EXAMPLES
   $ twentythree webinar series cancel 42 --json
 ```
 
-_See code: [src/commands/webinar/series/cancel.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/cancel.ts)_
+_See code: [src/commands/webinar/series/cancel.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/cancel.ts)_
 
 ## `twentythree webinar series create`
 
@@ -1168,7 +1168,7 @@ EXAMPLES
   $ twentythree webinar series create --name "My Series" --json
 ```
 
-_See code: [src/commands/webinar/series/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/create.ts)_
+_See code: [src/commands/webinar/series/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/create.ts)_
 
 ## `twentythree webinar series delete ID`
 
@@ -1199,7 +1199,7 @@ EXAMPLES
   $ twentythree webinar series delete 42 --json
 ```
 
-_See code: [src/commands/webinar/series/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/delete.ts)_
+_See code: [src/commands/webinar/series/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/delete.ts)_
 
 ## `twentythree webinar series list`
 
@@ -1222,7 +1222,7 @@ EXAMPLES
   $ twentythree webinar series list --json
 ```
 
-_See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/list.ts)_
+_See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/list.ts)_
 
 ## `twentythree webinar series mapped-objects ID`
 
@@ -1248,7 +1248,7 @@ EXAMPLES
   $ twentythree webinar series mapped-objects 42 --json
 ```
 
-_See code: [src/commands/webinar/series/mapped-objects.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/mapped-objects.ts)_
+_See code: [src/commands/webinar/series/mapped-objects.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/mapped-objects.ts)_
 
 ## `twentythree webinar series metrics ID`
 
@@ -1274,7 +1274,7 @@ EXAMPLES
   $ twentythree webinar series metrics 42 --json
 ```
 
-_See code: [src/commands/webinar/series/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/metrics.ts)_
+_See code: [src/commands/webinar/series/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/metrics.ts)_
 
 ## `twentythree webinar series recurrences ID`
 
@@ -1300,7 +1300,7 @@ EXAMPLES
   $ twentythree webinar series recurrences 42 --json
 ```
 
-_See code: [src/commands/webinar/series/recurrences.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/recurrences.ts)_
+_See code: [src/commands/webinar/series/recurrences.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/recurrences.ts)_
 
 ## `twentythree webinar series set-ondemand ID`
 
@@ -1331,7 +1331,7 @@ EXAMPLES
   $ twentythree webinar series set-ondemand 42 --json
 ```
 
-_See code: [src/commands/webinar/series/set-ondemand.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/set-ondemand.ts)_
+_See code: [src/commands/webinar/series/set-ondemand.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/set-ondemand.ts)_
 
 ## `twentythree webinar series skip-recurrence ID`
 
@@ -1363,7 +1363,7 @@ EXAMPLES
   $ twentythree webinar series skip-recurrence 42 --recurrence-id 7 --skipped --json
 ```
 
-_See code: [src/commands/webinar/series/skip-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/skip-recurrence.ts)_
+_See code: [src/commands/webinar/series/skip-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/skip-recurrence.ts)_
 
 ## `twentythree webinar series update ID`
 
@@ -1398,7 +1398,7 @@ EXAMPLES
   $ twentythree webinar series update 42 --name "Updated" --json
 ```
 
-_See code: [src/commands/webinar/series/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/update.ts)_
+_See code: [src/commands/webinar/series/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/update.ts)_
 
 ## `twentythree webinar series upload-thumbnail ID FILE`
 
@@ -1430,7 +1430,7 @@ EXAMPLES
   $ twentythree webinar series upload-thumbnail 42 ./thumbnail.png --json
 ```
 
-_See code: [src/commands/webinar/series/upload-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/upload-thumbnail.ts)_
+_See code: [src/commands/webinar/series/upload-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/upload-thumbnail.ts)_
 
 ## `twentythree webinar speaker add ID`
 
@@ -1465,7 +1465,7 @@ EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
 ```
 
-_See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/add.ts)_
+_See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/add.ts)_
 
 ## `twentythree webinar speaker add-from-speaker ID`
 
@@ -1496,7 +1496,7 @@ EXAMPLES
   $ twentythree webinar speaker add-from-speaker 12345 --speaker-id 99 --json
 ```
 
-_See code: [src/commands/webinar/speaker/add-from-speaker.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/add-from-speaker.ts)_
+_See code: [src/commands/webinar/speaker/add-from-speaker.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/add-from-speaker.ts)_
 
 ## `twentythree webinar speaker add-from-user ID`
 
@@ -1527,7 +1527,7 @@ EXAMPLES
   $ twentythree webinar speaker add-from-user 12345 --user-id 42 --json
 ```
 
-_See code: [src/commands/webinar/speaker/add-from-user.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/add-from-user.ts)_
+_See code: [src/commands/webinar/speaker/add-from-user.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/add-from-user.ts)_
 
 ## `twentythree webinar speaker cancel-guest-request WEBINARID ID`
 
@@ -1554,7 +1554,7 @@ EXAMPLES
   $ twentythree webinar speaker cancel-guest-request 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/cancel-guest-request.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/cancel-guest-request.ts)_
+_See code: [src/commands/webinar/speaker/cancel-guest-request.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/cancel-guest-request.ts)_
 
 ## `twentythree webinar speaker connection-types ID`
 
@@ -1580,7 +1580,7 @@ EXAMPLES
   $ twentythree webinar speaker connection-types 12345 --json
 ```
 
-_See code: [src/commands/webinar/speaker/connection-types.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/connection-types.ts)_
+_See code: [src/commands/webinar/speaker/connection-types.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/connection-types.ts)_
 
 ## `twentythree webinar speaker library`
 
@@ -1603,7 +1603,7 @@ EXAMPLES
   $ twentythree webinar speaker library --json
 ```
 
-_See code: [src/commands/webinar/speaker/library.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/library.ts)_
+_See code: [src/commands/webinar/speaker/library.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/library.ts)_
 
 ## `twentythree webinar speaker list ID`
 
@@ -1632,7 +1632,7 @@ EXAMPLES
   $ twentythree webinar speaker list 12345 --json
 ```
 
-_See code: [src/commands/webinar/speaker/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/list.ts)_
+_See code: [src/commands/webinar/speaker/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/list.ts)_
 
 ## `twentythree webinar speaker remove WEBINARID ID`
 
@@ -1659,7 +1659,7 @@ EXAMPLES
   $ twentythree webinar speaker remove 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/remove.ts)_
+_See code: [src/commands/webinar/speaker/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/remove.ts)_
 
 ## `twentythree webinar speaker remove-avatar WEBINARID ID`
 
@@ -1686,7 +1686,7 @@ EXAMPLES
   $ twentythree webinar speaker remove-avatar 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/remove-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/remove-avatar.ts)_
+_See code: [src/commands/webinar/speaker/remove-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/remove-avatar.ts)_
 
 ## `twentythree webinar speaker request-guest WEBINARID ID`
 
@@ -1713,7 +1713,7 @@ EXAMPLES
   $ twentythree webinar speaker request-guest 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/request-guest.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/request-guest.ts)_
+_See code: [src/commands/webinar/speaker/request-guest.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/request-guest.ts)_
 
 ## `twentythree webinar speaker send-invitation WEBINARID ID`
 
@@ -1740,7 +1740,7 @@ EXAMPLES
   $ twentythree webinar speaker send-invitation 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/send-invitation.ts)_
+_See code: [src/commands/webinar/speaker/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/send-invitation.ts)_
 
 ## `twentythree webinar speaker set-avatar WEBINARID ID FILE`
 
@@ -1773,7 +1773,7 @@ EXAMPLES
   $ twentythree webinar speaker set-avatar 12345 9900 ./avatar.png --chunk-size 524288
 ```
 
-_See code: [src/commands/webinar/speaker/set-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/set-avatar.ts)_
+_See code: [src/commands/webinar/speaker/set-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/set-avatar.ts)_
 
 ## `twentythree webinar speaker set-order ID`
 
@@ -1805,7 +1805,7 @@ EXAMPLES
   $ twentythree webinar speaker set-order 12345 --speaker-id 9900 --order 1 --json
 ```
 
-_See code: [src/commands/webinar/speaker/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/set-order.ts)_
+_See code: [src/commands/webinar/speaker/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/set-order.ts)_
 
 ## `twentythree webinar speaker update WEBINARID ID`
 
@@ -1841,7 +1841,7 @@ EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```
 
-_See code: [src/commands/webinar/speaker/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/speaker/update.ts)_
+_See code: [src/commands/webinar/speaker/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/speaker/update.ts)_
 
 ## `twentythree webinar transcription connect ID`
 
@@ -1872,7 +1872,7 @@ EXAMPLES
   $ twentythree webinar transcription connect 12345 --json
 ```
 
-_See code: [src/commands/webinar/transcription/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/connect.ts)_
+_See code: [src/commands/webinar/transcription/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/connect.ts)_
 
 ## `twentythree webinar transcription list ID`
 
@@ -1903,7 +1903,7 @@ EXAMPLES
   $ twentythree webinar transcription list 12345 --token mytoken
 ```
 
-_See code: [src/commands/webinar/transcription/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/list.ts)_
+_See code: [src/commands/webinar/transcription/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/list.ts)_
 
 ## `twentythree webinar transcription locales ID`
 
@@ -1934,7 +1934,7 @@ EXAMPLES
   $ twentythree webinar transcription locales 12345 --token mytoken
 ```
 
-_See code: [src/commands/webinar/transcription/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/locales.ts)_
+_See code: [src/commands/webinar/transcription/locales.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/locales.ts)_
 
 ## `twentythree webinar transcription transcriptionlist`
 
@@ -1957,7 +1957,7 @@ EXAMPLES
   $ twentythree webinar transcription transcriptionlist --json
 ```
 
-_See code: [src/commands/webinar/transcription/transcriptionlist.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/transcription/transcriptionlist.ts)_
+_See code: [src/commands/webinar/transcription/transcriptionlist.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/transcription/transcriptionlist.ts)_
 
 ## `twentythree webinar update ID`
 
@@ -1996,7 +1996,7 @@ EXAMPLES
   $ twentythree webinar update 12345
 ```
 
-_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/update.ts)_
+_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/update.ts)_
 
 ## `twentythree webinar upload-image ID FILE`
 
@@ -2032,4 +2032,4 @@ EXAMPLES
   $ twentythree webinar upload-image 12345 ./before.jpg --type before_webinar
 ```
 
-_See code: [src/commands/webinar/upload-image.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/upload-image.ts)_
+_See code: [src/commands/webinar/upload-image.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/upload-image.ts)_

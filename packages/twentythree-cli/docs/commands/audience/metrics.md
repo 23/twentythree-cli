@@ -37,4 +37,4 @@ EXAMPLES
   $ twentythree audience metrics --search "acme" --size 100
 ```
 
-_See code: [src/commands/audience/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/audience/metrics.ts)_
+_See code: [src/commands/audience/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/audience/metrics.ts)_

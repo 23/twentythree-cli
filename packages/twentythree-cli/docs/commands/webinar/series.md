@@ -43,7 +43,7 @@ EXAMPLES
   $ twentythree webinar series apply-recurrence 42 --recurrence-id 7 --json
 ```
 
-_See code: [src/commands/webinar/series/apply-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/apply-recurrence.ts)_
+_See code: [src/commands/webinar/series/apply-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/apply-recurrence.ts)_
 
 ## `twentythree webinar series cancel ID`
 
@@ -74,7 +74,7 @@ EXAMPLES
   $ twentythree webinar series cancel 42 --json
 ```
 
-_See code: [src/commands/webinar/series/cancel.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/cancel.ts)_
+_See code: [src/commands/webinar/series/cancel.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/cancel.ts)_
 
 ## `twentythree webinar series create`
 
@@ -103,7 +103,7 @@ EXAMPLES
   $ twentythree webinar series create --name "My Series" --json
 ```
 
-_See code: [src/commands/webinar/series/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/create.ts)_
+_See code: [src/commands/webinar/series/create.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/create.ts)_
 
 ## `twentythree webinar series delete ID`
 
@@ -134,7 +134,7 @@ EXAMPLES
   $ twentythree webinar series delete 42 --json
 ```
 
-_See code: [src/commands/webinar/series/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/delete.ts)_
+_See code: [src/commands/webinar/series/delete.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/delete.ts)_
 
 ## `twentythree webinar series list`
 
@@ -157,7 +157,7 @@ EXAMPLES
   $ twentythree webinar series list --json
 ```
 
-_See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/list.ts)_
+_See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/list.ts)_
 
 ## `twentythree webinar series mapped-objects ID`
 
@@ -183,7 +183,7 @@ EXAMPLES
   $ twentythree webinar series mapped-objects 42 --json
 ```
 
-_See code: [src/commands/webinar/series/mapped-objects.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/mapped-objects.ts)_
+_See code: [src/commands/webinar/series/mapped-objects.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/mapped-objects.ts)_
 
 ## `twentythree webinar series metrics ID`
 
@@ -209,7 +209,7 @@ EXAMPLES
   $ twentythree webinar series metrics 42 --json
 ```
 
-_See code: [src/commands/webinar/series/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/metrics.ts)_
+_See code: [src/commands/webinar/series/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/metrics.ts)_
 
 ## `twentythree webinar series recurrences ID`
 
@@ -235,7 +235,7 @@ EXAMPLES
   $ twentythree webinar series recurrences 42 --json
 ```
 
-_See code: [src/commands/webinar/series/recurrences.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/recurrences.ts)_
+_See code: [src/commands/webinar/series/recurrences.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/recurrences.ts)_
 
 ## `twentythree webinar series set-ondemand ID`
 
@@ -266,7 +266,7 @@ EXAMPLES
   $ twentythree webinar series set-ondemand 42 --json
 ```
 
-_See code: [src/commands/webinar/series/set-ondemand.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/set-ondemand.ts)_
+_See code: [src/commands/webinar/series/set-ondemand.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/set-ondemand.ts)_
 
 ## `twentythree webinar series skip-recurrence ID`
 
@@ -298,7 +298,7 @@ EXAMPLES
   $ twentythree webinar series skip-recurrence 42 --recurrence-id 7 --skipped --json
 ```
 
-_See code: [src/commands/webinar/series/skip-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/skip-recurrence.ts)_
+_See code: [src/commands/webinar/series/skip-recurrence.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/skip-recurrence.ts)_
 
 ## `twentythree webinar series update ID`
 
@@ -333,7 +333,7 @@ EXAMPLES
   $ twentythree webinar series update 42 --name "Updated" --json
 ```
 
-_See code: [src/commands/webinar/series/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/update.ts)_
+_See code: [src/commands/webinar/series/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/update.ts)_
 
 ## `twentythree webinar series upload-thumbnail ID FILE`
 
@@ -365,4 +365,4 @@ EXAMPLES
   $ twentythree webinar series upload-thumbnail 42 ./thumbnail.png --json
 ```
 
-_See code: [src/commands/webinar/series/upload-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/series/upload-thumbnail.ts)_
+_See code: [src/commands/webinar/series/upload-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/upload-thumbnail.ts)_

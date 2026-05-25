@@ -31,4 +31,4 @@ EXAMPLES
   $ twentythree webhook events --json
 ```
 
-_See code: [src/commands/webhook/events.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webhook/events.ts)_
+_See code: [src/commands/webhook/events.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webhook/events.ts)_

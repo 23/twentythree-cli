@@ -43,7 +43,7 @@ EXAMPLES
   $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
 ```
 
-_See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/add.ts)_
+_See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/add.ts)_
 
 ## `twentythree webinar mail list [ID]`
 
@@ -74,7 +74,7 @@ EXAMPLES
   $ twentythree webinar mail list 12345 --json
 ```
 
-_See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/list.ts)_
+_See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/list.ts)_
 
 ## `twentythree webinar mail preview ID`
 
@@ -106,7 +106,7 @@ EXAMPLES
   $ twentythree webinar mail preview 555 --webinar-id 12345 --json
 ```
 
-_See code: [src/commands/webinar/mail/preview.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/preview.ts)_
+_See code: [src/commands/webinar/mail/preview.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/preview.ts)_
 
 ## `twentythree webinar mail remove ID`
 
@@ -136,7 +136,7 @@ EXAMPLES
   $ twentythree webinar mail remove 555 --series-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/mail/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/remove.ts)_
+_See code: [src/commands/webinar/mail/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/remove.ts)_
 
 ## `twentythree webinar mail send ID`
 
@@ -166,7 +166,7 @@ EXAMPLES
   $ twentythree webinar mail send 555 --series-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/mail/send.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/send.ts)_
+_See code: [src/commands/webinar/mail/send.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/send.ts)_
 
 ## `twentythree webinar mail test ID`
 
@@ -200,7 +200,7 @@ EXAMPLES
   $ twentythree webinar mail test 555 --webinar-id 12345 --email me@example.com --json
 ```
 
-_See code: [src/commands/webinar/mail/test.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/test.ts)_
+_See code: [src/commands/webinar/mail/test.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/test.ts)_
 
 ## `twentythree webinar mail update ID`
 
@@ -235,4 +235,4 @@ EXAMPLES
   $ twentythree webinar mail update 555 --webinar-id 12345 --subject "Updated" --json
 ```
 
-_See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.5/src/commands/webinar/mail/update.ts)_
+_See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/update.ts)_
