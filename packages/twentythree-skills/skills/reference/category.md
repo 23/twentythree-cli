@@ -26,11 +26,16 @@ Category `list` does not require auth — it works before running `twentythree a
 
 **Auth scope:** anonymous  **Side effects:** none  **Output:** table (ID, Title, Hidden, Created)
 
-Flags:
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--include-hidden` | no | Include hidden categories in the results |
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--include-hidden` | no | — | Include hidden categories in the results |
+| `--search` | no | — | Search categories by title |
+| `--album-id` | no | — | Filter to categories attached to a specific album |
+| `--photo-id` | no | — | Filter to categories attached to a specific video |
+| `--user-id` | no | — | Filter to categories created by a specific user |
+| `--orderby` | no | — | Order by: `sortkey`, `title`, `editing_date`, `creation_date`, `live_create` |
+| `--order` | no | — | Sort direction: `asc`, `desc` |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all visible categories
@@ -38,6 +43,12 @@ twentythree category list --json
 
 # Include hidden categories
 twentythree category list --include-hidden --json
+
+# Search for categories by name, ordered alphabetically
+twentythree category list --search "product" --orderby title --order asc --json
+
+# List categories for a specific album
+twentythree category list --album-id <album-id> --json
 ```
 
 ### category create

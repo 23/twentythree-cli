@@ -26,6 +26,8 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
   static examples = [
     '<%= config.bin %> poll list --object-id 12345',
     '<%= config.bin %> poll list --object-id 12345 --json',
+    '<%= config.bin %> poll list --object-id 12345 --open --json',
+    '<%= config.bin %> poll list --object-id 12345 --poll-id 99 --json',
   ]
 
   static enableJsonFlag = true
@@ -40,6 +42,29 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
       description: 'Object token (auto-looked up if omitted)',
       required: false,
     }),
+    'poll-id': Flags.integer({
+      description: 'Limit results to a single poll by its ID',
+      required: false,
+    }),
+    open: Flags.boolean({
+      description: 'Filter by open/closed status',
+      allowNo: true,
+      required: false,
+    }),
+    public: Flags.boolean({
+      description: 'Filter by public/non-public status',
+      allowNo: true,
+      required: false,
+    }),
+    'display-results': Flags.boolean({
+      description: 'Filter to polls with publicly displayed results',
+      allowNo: true,
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {}
@@ -51,8 +76,17 @@ export default class PollList extends AuthenticatedCommand<typeof PollList> {
     const objectId = Number(flags['object-id'])
     const objectToken = flags['object-token'] ?? await this.fetchWebinarToken(objectId)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = { object_id: objectId, object_token: objectToken }
+    if (flags['poll-id'] !== undefined) query.poll_id = flags['poll-id']
+    if (flags.open !== undefined) query.open_p = flags.open
+    if (flags.public !== undefined) query.public_p = flags.public
+    if (flags['display-results'] !== undefined) query.display_results_p = flags['display-results']
+    if (flags.fields !== undefined) query.fields = flags.fields
+
     const { data, error } = await this.apiClient.GET('/poll/list', {
-      params: { query: { object_id: objectId, object_token: objectToken } as any },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: { query: query as any },
     })
 
     if (error) {

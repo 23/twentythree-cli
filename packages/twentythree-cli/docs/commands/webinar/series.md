@@ -142,7 +142,32 @@ List webinar series
 
 ```
 USAGE
-  $ twentythree webinar series list [--json] [-w <value>]
+  $ twentythree webinar series list [--json] [-w <value>] [--search <value>] [--live-series-id <value>]
+    [--live-id <value>] [--album-id <value>] [--user-id <value>] [--series-type liveevent|series]
+    [--ordering name|private|live_status|live_date|creation_date|updated_date] [--order asc|desc]
+    [--cancelled] [--no-cancelled] [--draft] [--no-draft] [--private] [--no-private] [--include-private]
+    [--include-speakers] [--include-stats] [--include-albums] [--fields <value>]
+
+FLAGS
+  --album-id=<value>        Filter to series belonging to a specific category
+  --[no-]cancelled          Filter by cancelled status
+  --[no-]draft              Filter by draft status
+  --fields=<value>          Comma-separated list of fields to return in the API response
+  --include-albums          Include category information for each series
+  --include-private         Include private series in results
+  --include-speakers        Include speaker information for each series
+  --include-stats           Include performance statistics for each series
+  --live-id=<value>         Filter to series that contain a specific webinar ID
+  --live-series-id=<value>  Limit results to a single series by its ID
+  --order=<option>          Sort direction
+                            <options: asc|desc>
+  --ordering=<option>       Field to order results by
+                            <options: name|private|live_status|live_date|creation_date|updated_date>
+  --[no-]private            Filter by private status
+  --search=<value>          Search for specific series by keyword
+  --series-type=<option>    Filter by series type
+                            <options: liveevent|series>
+  --user-id=<value>         Filter to series created by a specific user (use "me" for authenticated user)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -155,6 +180,12 @@ EXAMPLES
   $ twentythree webinar series list
 
   $ twentythree webinar series list --json
+
+  $ twentythree webinar series list --search "Q4" --ordering live_date --order asc
+
+  $ twentythree webinar series list --series-type series --include-speakers --json
+
+  $ twentythree webinar series list --user-id me --include-stats --json
 ```
 
 _See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/series/list.ts)_

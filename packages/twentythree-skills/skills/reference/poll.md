@@ -23,19 +23,28 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** anonymous  **Side effects:** none  **Output:** table (ID, Question, Open, Results Visible)
 
-Flags:
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--object-id` | yes | Object ID (webinar or live object) |
-| `--object-token` | no | Object token (auto-looked up if omitted) |
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--object-id` | yes | — | Object ID (webinar or live object) |
+| `--object-token` | no | — | Object token (auto-looked up if omitted) |
+| `--poll-id` | no | — | Limit results to a single poll by its ID |
+| `--open` | no | — | Filter by open/closed status (use `--no-open` for closed) |
+| `--public` | no | — | Filter by public/non-public status (use `--no-public` for non-public) |
+| `--display-results` | no | — | Filter to polls with publicly displayed results (use `--no-display-results` to negate) |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all polls for a webinar
 twentythree poll list --object-id <webinar-id> --json
 
-# List polls using a specific object token
-twentythree poll list --object-id <webinar-id> --object-token <token> --json
+# List only open polls
+twentythree poll list --object-id <webinar-id> --open --json
+
+# Get a specific poll by ID
+twentythree poll list --object-id <webinar-id> --poll-id <poll-id> --json
+
+# List public polls with results displayed
+twentythree poll list --object-id <webinar-id> --public --display-results --json
 ```
 
 ### poll add

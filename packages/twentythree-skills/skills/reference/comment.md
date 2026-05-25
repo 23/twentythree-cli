@@ -22,25 +22,33 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (ID, Author, Content, Type, Date)
 
-Flags:
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--object-id` | no | Filter by object ID |
-| `--object-type` | no | Filter by object type (photo, album, live) |
-| `--comment-type` | no | Filter by comment type (comment, question, chat) |
-| `--search` | no | Search comments by content |
-| `--order` | no | Sort order for results |
-| `--include-reactions` | no | Include reactions on each comment |
-| `--include-replies` | no | Include reply-to comments |
-| `--promoted` | no | Filter to promoted comments only |
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--object-id` | no | — | Filter by object ID |
+| `--object-type` | no | — | Filter by object type: `photo`, `album` |
+| `--comment-type` | no | — | Filter by comment type: `comment`, `question`, `chat` |
+| `--search` | no | — | Search comments by content |
+| `--order` | no | — | Sort order: `asc`, `desc` |
+| `--comment-id` | no | — | Limit to a specific comment by its ID |
+| `--comment-user-id` | no | — | List comments by a specific user |
+| `--include-reactions` | no | — | Include emoji reaction counts for each comment |
+| `--include-replies` | no | — | Include details about the parent comment for reply comments |
+| `--promoted` | no | — | Filter to promoted comments only |
+| `--prioritize-promoted` | no | — | Sort promoted comments before non-promoted ones |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all comments in the workspace
 twentythree comment list --json
 
-# List only questions on a specific webinar
-twentythree comment list --object-id <webinar-id> --object-type live --comment-type question --json
+# List only questions on a specific video
+twentythree comment list --object-id <video-id> --object-type photo --comment-type question --json
+
+# List comments by a specific user with reactions
+twentythree comment list --comment-user-id <user-id> --include-reactions --json
+
+# List promoted questions, promoted first
+twentythree comment list --comment-type question --prioritize-promoted --json
 ```
 
 ### comment add

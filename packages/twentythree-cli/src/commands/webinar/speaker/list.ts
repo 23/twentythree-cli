@@ -27,6 +27,36 @@ export default class WebinarSpeakerList extends AuthenticatedCommand<typeof Webi
       description: 'Webinar token (auto-looked up if omitted)',
       required: false,
     }),
+    'speaker-id': Flags.integer({
+      description: 'Filter to a single speaker by their speaker record ID',
+      required: false,
+    }),
+    'request-status': Flags.string({
+      description: 'Filter by the speaker\'s request status',
+      options: ['requested', 'approved', 'denied', 'expired'],
+      required: false,
+    }),
+    'creation-source': Flags.string({
+      description: 'Filter by the source of the speaker record',
+      options: ['admin', 'guest'],
+      required: false,
+    }),
+    'exclude-hidden': Flags.boolean({
+      description: 'Exclude speakers marked as hidden',
+      required: false,
+    }),
+    'include-unapproved': Flags.boolean({
+      description: 'Include speakers with a non-approved request status',
+      required: false,
+    }),
+    'include-hidden-guests': Flags.boolean({
+      description: 'Include guest speakers even if they are marked as hidden',
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {
@@ -50,8 +80,19 @@ export default class WebinarSpeakerList extends AuthenticatedCommand<typeof Webi
     const webinarId = Number(args.id)
     const token = flags.token ?? await this.fetchWebinarToken(webinarId)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = { live_id: webinarId, token }
+    if (flags['speaker-id'] !== undefined) query.live_speaker_id = flags['speaker-id']
+    if (flags['request-status'] !== undefined) query.request_status = flags['request-status']
+    if (flags['creation-source'] !== undefined) query.creation_source = flags['creation-source']
+    if (flags['exclude-hidden']) query.exclude_hidden_p = true
+    if (flags['include-unapproved']) query.include_unapproved_p = true
+    if (flags['include-hidden-guests']) query.include_hidden_guest_speakers_p = true
+    if (flags.fields !== undefined) query.fields = flags.fields
+
     const { data, error } = await this.apiClient.GET('/live/speaker/list', {
-      params: { query: { live_id: webinarId, token } },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: { query: query as any },
     })
 
     if (error) {

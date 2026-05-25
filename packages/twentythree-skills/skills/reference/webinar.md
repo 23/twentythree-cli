@@ -284,13 +284,23 @@ Speakers are presenters attached to a webinar. Commands cover list, add, update,
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--token` | no | — | Webinar token (auto-looked up if omitted) |
+| `--speaker-id` | no | — | Filter to a specific speaker by ID |
+| `--request-status` | no | — | Filter by request status: `requested`, `approved`, `denied`, `expired` |
+| `--creation-source` | no | — | Filter by creation source: `admin`, `guest` |
+| `--exclude-hidden` | no | — | Exclude hidden speakers from the results |
+| `--include-unapproved` | no | — | Include unapproved speakers |
+| `--include-hidden-guests` | no | — | Include hidden guest speakers |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List speakers for a webinar
 twentythree webinar speaker list <id> --json
 
-# Example with a real ID
-twentythree webinar speaker list 12345 --json
+# List only approved speakers
+twentythree webinar speaker list <id> --request-status approved --json
+
+# List admin-created speakers, excluding hidden ones
+twentythree webinar speaker list <id> --creation-source admin --exclude-hidden --json
 ```
 
 ---
@@ -547,14 +557,40 @@ A series groups multiple webinars together (e.g. a recurring show). Commands cov
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (ID, Name, Status, Created)
 
-No additional flags.
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--page` | no | — | Page number |
+| `--size` | no | — | Page size |
+| `--all` | no | — | Fetch all pages automatically |
+| `--search` | no | — | Search series by name |
+| `--live-series-id` | no | — | Filter to a specific series by ID |
+| `--live-id` | no | — | Filter to series containing a specific webinar ID |
+| `--album-id` | no | — | Filter by album ID |
+| `--user-id` | no | — | Filter by user ID |
+| `--series-type` | no | — | Filter by type: `liveevent`, `series` |
+| `--ordering` | no | — | Order by: `name`, `private`, `live_status`, `live_date`, `creation_date`, `updated_date` |
+| `--order` | no | — | Sort direction: `asc`, `desc` |
+| `--cancelled` | no | — | Include cancelled series (allowNo) |
+| `--draft` | no | — | Include draft series (allowNo) |
+| `--private` | no | — | Include private series (allowNo) |
+| `--include-private` | no | — | Include private series in results |
+| `--include-speakers` | no | — | Include speaker data in response |
+| `--include-stats` | no | — | Include statistics in response |
+| `--include-albums` | no | — | Include album data in response |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all webinar series
 twentythree webinar series list --json
 
-# Use the ID to reference a series in other commands
-twentythree webinar series list --json
+# List series ordered by creation date descending
+twentythree webinar series list --ordering creation_date --order desc --json
+
+# List all live event series including speakers
+twentythree webinar series list --series-type liveevent --include-speakers --json
+
+# Fetch all pages of series
+twentythree webinar series list --all --json
 ```
 
 ---
@@ -772,6 +808,9 @@ Mail templates and scheduled emails associated with a webinar (invitations, remi
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--series-id` | no | — | Series ID — list mails for a series instead of a webinar |
+| `--mail-id` | no | — | Return a specific mail by its ID |
+| `--include-metrics` | no | — | Include metrics on mail performance in the response |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List emails for a webinar
@@ -779,6 +818,9 @@ twentythree webinar mail list <id> --json
 
 # List emails for a series
 twentythree webinar mail list --series-id <series-id> --json
+
+# Get a specific mail with performance metrics
+twentythree webinar mail list <id> --mail-id <mail-id> --include-metrics --json
 ```
 
 ---

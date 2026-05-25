@@ -25,6 +25,18 @@ export default class WebinarMailList extends AuthenticatedCommand<typeof Webinar
     'series-id': Flags.string({
       description: 'Series ID — list mails for a series instead of a webinar',
     }),
+    'mail-id': Flags.integer({
+      description: 'Return a specific mail by its ID',
+      required: false,
+    }),
+    'include-metrics': Flags.boolean({
+      description: 'Include metrics on mail performance in the response',
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {
@@ -55,8 +67,14 @@ export default class WebinarMailList extends AuthenticatedCommand<typeof Webinar
       this.error(applyCliTerms('Either a webinar ID argument or --series-id is required'), { exit: EXIT_ERROR })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = { ...contextField }
+    if (flags['mail-id'] !== undefined) query.live_mail_id = flags['mail-id']
+    if (flags['include-metrics']) query.include_metrics_p = true
+    if (flags.fields !== undefined) query.fields = flags.fields
+
     const { data, error } = await this.apiClient.GET('/live/mail/list', {
-      params: { query: contextField },
+      params: { query },
     })
 
     if (error) {

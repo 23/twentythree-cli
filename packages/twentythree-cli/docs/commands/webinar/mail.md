@@ -51,12 +51,16 @@ List emails for a webinar
 
 ```
 USAGE
-  $ twentythree webinar mail list [ID] [--json] [-w <value>] [--series-id <value>]
+  $ twentythree webinar mail list [ID] [--json] [-w <value>] [--series-id <value>] [--mail-id <value>]
+    [--include-metrics] [--fields <value>]
 
 ARGUMENTS
   [ID]  Webinar ID (omit when using --series-id)
 
 FLAGS
+  --fields=<value>     Comma-separated list of fields to return in the API response
+  --include-metrics    Include metrics on mail performance in the response
+  --mail-id=<value>    Return a specific mail by its ID
   --series-id=<value>  Series ID — list mails for a series instead of a webinar
 
 GLOBAL FLAGS
@@ -72,6 +76,8 @@ EXAMPLES
   $ twentythree webinar mail list --series-id 67890
 
   $ twentythree webinar mail list 12345 --json
+
+  $ twentythree webinar mail list 12345 --include-metrics --json
 ```
 
 _See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/webinar/mail/list.ts)_

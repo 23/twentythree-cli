@@ -49,18 +49,35 @@ export default class CommentList extends AuthenticatedCommand<typeof CommentList
     }),
     order: Flags.string({
       description: 'Sort order for results',
+      options: ['asc', 'desc'],
+      required: false,
+    }),
+    'comment-id': Flags.integer({
+      description: 'Limit to a specific comment by its ID',
+      required: false,
+    }),
+    'comment-user-id': Flags.integer({
+      description: 'List comments by a specific user',
+      required: false,
+    }),
+    'prioritize-promoted': Flags.boolean({
+      description: 'Sort promoted comments before non-promoted ones',
       required: false,
     }),
     'include-reactions': Flags.boolean({
-      description: 'Include reactions on each comment',
+      description: 'Include emoji reaction counts for each comment',
       required: false,
     }),
     'include-replies': Flags.boolean({
-      description: 'Include reply-to comments',
+      description: 'Include details about the parent comment for reply comments',
       required: false,
     }),
     promoted: Flags.boolean({
       description: 'Filter to promoted comments only',
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
       required: false,
     }),
   }
@@ -84,9 +101,13 @@ export default class CommentList extends AuthenticatedCommand<typeof CommentList
             comment_type: flags['comment-type'] as any,
             search: flags.search,
             order: flags.order as any,
+            comment_id: flags['comment-id'],
+            comment_user_id: flags['comment-user-id'],
+            prioritize_promoted_p: flags['prioritize-promoted'] ? true : undefined,
             include_reactions_p: flags['include-reactions'] ? (1 as any) : undefined,
             include_reply_to_comments_p: flags['include-replies'] ? (1 as any) : undefined,
             promoted_p: flags.promoted ? (1 as any) : undefined,
+            fields: flags.fields,
           },
         },
       })

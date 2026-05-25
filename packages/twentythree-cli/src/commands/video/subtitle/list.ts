@@ -32,6 +32,28 @@ export default class VideoSubtitleList extends AuthenticatedCommand<typeof Video
       required: false,
     }),
     'include-drafts-p': Flags.string({ hidden: true, required: false }),
+    'subtitle-format': Flags.string({
+      description: 'Format to use for subtitle download URLs',
+      options: ['websrt', 'json', 'adobe', 'subviewer', 'webvtt'],
+      required: false,
+    }),
+    type: Flags.string({
+      description: 'Filter by subtitle type',
+      options: ['general', 'closedcaptions', 'audiodescriptions'],
+      required: false,
+    }),
+    stripped: Flags.boolean({
+      description: 'Return a stripped (timing-only) version of the subtitle file',
+      required: false,
+    }),
+    'detect-language': Flags.boolean({
+      description: 'Use the viewer\'s browser language to determine the default subtitle',
+      required: false,
+    }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {
@@ -47,10 +69,16 @@ export default class VideoSubtitleList extends AuthenticatedCommand<typeof Video
 
     const { data, error } = await this.apiClient.GET('/photo/subtitle/list', {
       params: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         query: {
           photo_id: Number(args.id),
           token,
           ...(parseBoolParam(flags['include-drafts'], flags['include-drafts-p']) && { include_drafts_p: true }),
+          ...(flags['subtitle-format'] !== undefined && { subtitle_format: flags['subtitle-format'] as any }),
+          ...(flags.type !== undefined && { type: flags.type as any }),
+          ...(flags.stripped && { stripped_p: true }),
+          ...(flags['detect-language'] && { detect_subtitle_language_p: true }),
+          ...(flags.fields !== undefined && { fields: flags.fields }),
         },
       },
     })

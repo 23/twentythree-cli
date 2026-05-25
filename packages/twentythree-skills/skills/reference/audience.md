@@ -22,18 +22,30 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (UUID, Name, Email, Company, Score, Timelines)
 
-Flags:
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--page` | no | Page number |
-| `--size` | no | Page size (max 500) |
-| `--offset` | no | Offset for pagination |
-| `--orderby` | no | Order by field (recent, timeline_count, score, first) |
-| `--order` | no | Sort direction (asc/desc) |
-| `--search` | no | Free-text search across names and emails |
-| `--identified` | no | Filter to identified profiles only |
-| `--objects` | no | Filter by viewed object IDs (space-separated) |
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--page` | no | — | Page number |
+| `--size` | no | — | Page size (max 500) |
+| `--offset` | no | — | Offset for pagination |
+| `--orderby` | no | — | Order by: `profile_count`, `recent`, `timeline_count`, `score`, `first` |
+| `--order` | no | — | Sort direction: `asc`, `desc` |
+| `--search` | no | — | Free-text search across names and emails |
+| `--identified` | no | — | Filter to identified profiles only |
+| `--objects` | no | — | Filter by viewed object IDs (space-separated) |
+| `--attended-objects` | no | — | Filter to profiles that attended specific object IDs (space-separated) |
+| `--company` | no | — | Filter by company name |
+| `--identity-sources` | no | — | Filter by the source of profile information |
+| `--score` | no | — | Filter by exact engagement score |
+| `--score-interval` | no | — | Filter by a range of engagement scores (e.g. `50:100`) |
+| `--activity-interval` | no | — | Filter to profiles with activity within this date interval (e.g. `30d`) |
+| `--first` | no | — | Filter to profiles first seen after this date |
+| `--recent` | no | — | Filter to profiles with recent activity after this date |
+| `--event-type` | no | — | Filter by conversion event type |
+| `--include-timelines` | no | — | Include viewing timelines in the result |
+| `--include-events` | no | — | Include conversion events in the result |
+| `--include-total-count` | no | — | Include the total matching profile count in the response |
+| `--export-format` | no | — | Export results as a file: `csv`, `xlsx` |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all audience members (paginated)
@@ -41,6 +53,15 @@ twentythree audience list --json
 
 # List identified audience members ordered by engagement score
 twentythree audience list --identified --orderby score --order desc --size 100 --json
+
+# Filter to high-engagement profiles active in the last 30 days
+twentythree audience list --score-interval "50:100" --activity-interval "30d" --json
+
+# Export audience to CSV
+twentythree audience list --export-format csv > audience.csv
+
+# List profiles that attended specific webinars
+twentythree audience list --attended-objects "12345 67890" --include-timelines --json
 ```
 
 ### audience search

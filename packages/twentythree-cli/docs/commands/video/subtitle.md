@@ -190,12 +190,21 @@ List all subtitle tracks for a video
 ```
 USAGE
   $ twentythree video subtitle list ID [--json] [-w <value>] [--include-drafts]
+    [--subtitle-format websrt|json|adobe|subviewer|webvtt] [--type general|closedcaptions|audiodescriptions]
+    [--stripped] [--detect-language] [--fields <value>]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --[no-]include-drafts  Include draft (unpublished) subtitle tracks
+  --detect-language           Use the viewer's browser language to determine the default subtitle
+  --fields=<value>            Comma-separated list of fields to return in the API response
+  --[no-]include-drafts       Include draft (unpublished) subtitle tracks
+  --stripped                  Return a stripped (timing-only) version of the subtitle file
+  --subtitle-format=<option>  Format to use for subtitle download URLs
+                              <options: websrt|json|adobe|subviewer|webvtt>
+  --type=<option>             Filter by subtitle type
+                              <options: general|closedcaptions|audiodescriptions>
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -210,6 +219,8 @@ EXAMPLES
   $ twentythree video subtitle list 12345 --json
 
   $ twentythree video subtitle list 12345 --include-drafts
+
+  $ twentythree video subtitle list 12345 --type closedcaptions --subtitle-format webvtt --json
 ```
 
 _See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.6/src/commands/video/subtitle/list.ts)_

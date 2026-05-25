@@ -386,6 +386,11 @@ Subtitle commands manage caption tracks on a video (SRT/WebVTT formats). Use `tw
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--include-drafts` | no | — | Include draft (unpublished) subtitle tracks |
+| `--subtitle-format` | no | — | Format for subtitle download URLs: `websrt`, `json`, `adobe`, `subviewer`, `webvtt` |
+| `--type` | no | — | Filter by subtitle type: `general`, `closedcaptions`, `audiodescriptions` |
+| `--stripped` | no | — | Return a stripped (timing-only) version of the subtitle file |
+| `--detect-language` | no | — | Use the viewer's browser language to determine the default subtitle |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List published subtitle tracks for a video
@@ -393,6 +398,12 @@ twentythree video subtitle list <id> --json
 
 # List all tracks including drafts
 twentythree video subtitle list <id> --include-drafts --json
+
+# List closed-captions tracks with WebVTT download URLs
+twentythree video subtitle list <id> --type closedcaptions --subtitle-format webvtt --json
+
+# List all tracks including drafts, return specific fields
+twentythree video subtitle list <id> --include-drafts --fields "locale,type,status" --json
 ```
 
 ---
