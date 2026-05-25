@@ -32,7 +32,7 @@ export default class WebinarSpeakerAdd extends AuthenticatedCommand<typeof Webin
       required: false,
     }),
     email: Flags.string({
-      description: 'Speaker email',
+      description: 'Speaker email (required for WebRTC speakers)',
       required: false,
     }),
     title: Flags.string({
@@ -41,6 +41,15 @@ export default class WebinarSpeakerAdd extends AuthenticatedCommand<typeof Webin
     }),
     description: Flags.string({
       description: 'Speaker bio or description',
+      required: false,
+    }),
+    'connection-type': Flags.string({
+      description: 'Speaker connection type',
+      options: ['webrtc', 'gearmode', 'rtmp', 'whip', 'srt', 'url'],
+      required: false,
+    }),
+    'connection-type-pull-url': Flags.string({
+      description: 'Pull URL for connection types that support stream pull (whip, url)',
       required: false,
     }),
   }
@@ -64,30 +73,23 @@ export default class WebinarSpeakerAdd extends AuthenticatedCommand<typeof Webin
     let email = flags.email
 
     // Interactive fallback (Decision D-2)
-    if ((!name || !email) && !this.jsonEnabled()) {
-      if (!name) {
-        const result = await text({ message: 'Speaker name' })
-        if (isCancel(result)) process.exit(EXIT_CANCELLED)
-        name = result as string
-      }
-      if (!email) {
-        const result = await text({ message: 'Speaker email' })
-        if (isCancel(result)) process.exit(EXIT_CANCELLED)
-        email = result as string
-      }
+    if (!name && !this.jsonEnabled()) {
+      const result = await text({ message: 'Speaker name' })
+      if (isCancel(result)) process.exit(EXIT_CANCELLED)
+      name = result as string
     }
 
     if (!name) {
       this.error('--name is required in non-interactive mode', { exit: EXIT_ERROR })
     }
-    if (!email) {
-      this.error('--email is required in non-interactive mode', { exit: EXIT_ERROR })
-    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const body: Record<string, unknown> = { live_id: Number(args.id), name, email }
+    const body: Record<string, unknown> = { live_id: Number(args.id), name }
+    if (email !== undefined) body.email = email
     if (flags.title !== undefined) body.title = flags.title
     if (flags.description !== undefined) body.description = flags.description
+    if (flags['connection-type'] !== undefined) body.connection_type = flags['connection-type']
+    if (flags['connection-type-pull-url'] !== undefined) body.connection_type_pull_url = flags['connection-type-pull-url']
 
     const { data, error } = await this.apiClient.POST('/live/speaker/add', {
       body: body as any,

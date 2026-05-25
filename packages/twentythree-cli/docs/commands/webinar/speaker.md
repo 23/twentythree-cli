@@ -25,16 +25,19 @@ Add a speaker to a webinar
 ```
 USAGE
   $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>]
-    [--description <value>]
+    [--description <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url] [--connection-type-pull-url <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --description=<value>  Speaker bio or description
-  --email=<value>        Speaker email
-  --name=<value>         Speaker name
-  --title=<value>        Speaker title or job title
+  --connection-type=<option>      Speaker connection type
+                                  <options: webrtc|gearmode|rtmp|whip|srt|url>
+  --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
+  --description=<value>           Speaker bio or description
+  --email=<value>                 Speaker email (required for WebRTC speakers)
+  --name=<value>                  Speaker name
+  --title=<value>                 Speaker title or job title
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -46,7 +49,7 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com
 
-  $ twentythree webinar speaker add 12345
+  $ twentythree webinar speaker add 12345 --name "John Smith" --connection-type rtmp
 
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
 ```
@@ -400,17 +403,21 @@ Update a speaker on a webinar
 ```
 USAGE
   $ twentythree webinar speaker update WEBINARID ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title
-    <value>] [--description <value>]
+    <value>] [--description <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
+    [--connection-type-pull-url <value>]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
 
 FLAGS
-  --description=<value>  Speaker bio or description
-  --email=<value>        Speaker email
-  --name=<value>         Speaker name
-  --title=<value>        Speaker title or job title
+  --connection-type=<option>          Speaker connection type
+                                      <options: webrtc|gearmode|rtmp|whip|srt|url>
+  --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
+  --description=<value>               Speaker bio or description
+  --email=<value>                     Speaker email
+  --name=<value>                      Speaker name
+  --title=<value>                     Speaker title or job title
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -421,6 +428,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe"
+
+  $ twentythree webinar speaker update 12345 9900 --connection-type rtmp
 
   $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO"
 

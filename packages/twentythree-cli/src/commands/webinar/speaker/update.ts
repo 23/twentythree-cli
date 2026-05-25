@@ -42,6 +42,15 @@ export default class WebinarSpeakerUpdate extends AuthenticatedCommand<typeof We
       description: 'Speaker bio or description',
       required: false,
     }),
+    'connection-type': Flags.string({
+      description: 'Speaker connection type',
+      options: ['webrtc', 'gearmode', 'rtmp', 'whip', 'srt', 'url'],
+      required: false,
+    }),
+    'connection-type-pull-url': Flags.string({
+      description: 'Pull URL for connection types that support stream pull (whip, url)',
+      required: false,
+    }),
   }
 
   static args = {
@@ -65,6 +74,8 @@ export default class WebinarSpeakerUpdate extends AuthenticatedCommand<typeof We
     if (flags.email !== undefined) body.email = flags.email
     if (flags.title !== undefined) body.title = flags.title
     if (flags.description !== undefined) body.description = flags.description
+    if (flags['connection-type'] !== undefined) body.connection_type = flags['connection-type']
+    if (flags['connection-type-pull-url'] !== undefined) body.connection_type_pull_url = flags['connection-type-pull-url']
 
     const { data, error } = await this.apiClient.POST('/live/speaker/update', {
       body: body as any,

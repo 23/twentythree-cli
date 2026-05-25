@@ -58,7 +58,29 @@ twentythree video upload ./video.mp4 --title "Q2 Keynote" --category-id <cat-id>
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--limit` | no | — | Maximum number of videos to return (default: all) |
+| `--search` | no | — | Search by title, description, or tags |
+| `--album-id` | no | — | Filter to videos in one or more categories (comma-separated IDs) |
+| `--user-id` | no | — | Filter by uploader (`me` for authenticated user) |
+| `--photo-id` | no | — | Limit results to a single video by its ID |
+| `--live-id` | no | — | Filter to videos associated with a specific webinar |
+| `--tag` | no | — | Filter to videos with a specific tag |
+| `--tags` | no | — | Space-separated list of tags to filter by |
+| `--tag-mode` | no | — | How to combine tag filters: `and` or `or` |
+| `--order-by` | no | — | Sort field: `uploaded`, `published`, `created`, `creation`, `taken`, `title`, `views`, `comments`, `rating`, `numratings`, `video_length`, `words`, `related`, `posted`, `rank`, `default-published` |
+| `--order` | no | — | Sort direction: `asc` or `desc` |
+| `--before-time` | no | — | Filter to videos uploaded before this timestamp (ISO 8601) |
+| `--after-time` | no | — | Filter to videos uploaded after this timestamp (ISO 8601) |
+| `--year` | no | — | Filter to videos from a specific year |
+| `--month` | no | — | Filter to videos from a specific month (1–12, requires `--year`) |
+| `--day` | no | — | Filter to videos from a specific day (1–31, requires `--year` and `--month`) |
+| `--published` / `--no-published` | no | — | Filter by published status |
+| `--promoted` / `--no-promoted` | no | — | Filter by promoted status |
+| `--unalbummed` | no | — | Filter to videos not assigned to any category |
 | `--include-unpublished` | no | — | Include unpublished videos in results |
+| `--include-stats` | no | — | Include per-video performance statistics (view count, play rate, engagement) |
+| `--include-sections-count` | no | — | Include the number of chapters for each video |
+| `--include-user-group` | no | — | Include the user group assignment for each video |
+| `--fields` | no | — | Comma-separated list of fields to return in the API response |
 
 ```bash
 # List all published videos
@@ -66,6 +88,24 @@ twentythree video list --json
 
 # List up to 20 videos including unpublished
 twentythree video list --limit 20 --include-unpublished --json
+
+# Search for videos by keyword, sorted by most viewed
+twentythree video list --search "intro" --order-by views --order desc --json
+
+# Filter to videos in a category
+twentythree video list --album-id 42 --json
+
+# Filter to videos uploaded by the authenticated user
+twentythree video list --user-id me --limit 10 --json
+
+# Filter by date range
+twentythree video list --after-time 2024-01-01T00:00:00Z --before-time 2024-12-31T23:59:59Z --json
+
+# List with stats included
+twentythree video list --include-stats --include-sections-count --json
+
+# Return only specific fields
+twentythree video list --fields photo_id,title,views --json
 ```
 
 ---

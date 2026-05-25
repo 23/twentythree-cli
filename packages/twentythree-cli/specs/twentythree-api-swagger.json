@@ -35561,6 +35561,7 @@
                                 "uploaded",
                                 "published",
                                 "created",
+                                "creation",
                                 "taken",
                                 "title",
                                 "views",
@@ -52575,7 +52576,7 @@
                                         "minLength":   1
                                     },
                                     "email":             {
-                                        "description": "E-mail address for the speaker.",
+                                        "description": "E-mail address for the speaker. The email address is required for all webrtc speakers.",
                                         "type":        "string"
                                     },
                                     "user_id":           {
@@ -52652,7 +52653,9 @@
                                         "enum":        [
                                             "webrtc",
                                             "gearmode",
+                                            "rtmp",
                                             "whip",
+                                            "srt",
                                             "url"
                                         ]
                                     },
@@ -52667,8 +52670,7 @@
                                 },
                                 "required":   [
                                     "live_id",
-                                    "name",
-                                    "email"
+                                    "name"
                                 ]
                             }
                         }
@@ -54733,7 +54735,11 @@
                                         "type":        "string",
                                         "enum":        [
                                             "webrtc",
-                                            "gearmode"
+                                            "gearmode",
+                                            "rtmp",
+                                            "whip",
+                                            "srt",
+                                            "url"
                                         ]
                                     },
                                     "connection_type_pull_url": {

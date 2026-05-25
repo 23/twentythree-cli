@@ -276,14 +276,19 @@ twentythree webinar speaker list 12345 --json
 
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
-| `--name` | no | — | Speaker name |
-| `--email` | no | — | Speaker email |
+| `--name` | yes | — | Speaker name |
+| `--email` | no | — | Speaker email (required for WebRTC speakers) |
 | `--title` | no | — | Speaker title or job title |
 | `--description` | no | — | Speaker bio or description |
+| `--connection-type` | no | `webrtc` | Speaker connection type: `webrtc`, `gearmode`, `rtmp`, `whip`, `srt`, `url` |
+| `--connection-type-pull-url` | no | — | Pull URL for connection types that support stream pull (`whip`, `url`) |
 
 ```bash
-# Add a speaker with name and email
+# Add a WebRTC speaker (email required for webrtc)
 twentythree webinar speaker add <id> --name "Jane Doe" --email jane@example.com --json
+
+# Add an RTMP speaker (no email required)
+twentythree webinar speaker add <id> --name "John Smith" --connection-type rtmp --json
 
 # Add a speaker with full details
 twentythree webinar speaker add <id> --name "John Smith" --email john@example.com --title "CTO" --description "Engineering lead" --json
@@ -341,10 +346,15 @@ twentythree webinar speaker add-from-user <id> --user-id <user-id> --json
 | `--email` | no | — | Speaker email |
 | `--title` | no | — | Speaker title or job title |
 | `--description` | no | — | Speaker bio or description |
+| `--connection-type` | no | — | Speaker connection type: `webrtc`, `gearmode`, `rtmp`, `whip`, `srt`, `url` |
+| `--connection-type-pull-url` | no | — | Pull URL for connection types that support stream pull (`whip`, `url`) |
 
 ```bash
 # Update a speaker's title and email
 twentythree webinar speaker update <id> <speaker-id> --title "CEO" --email ceo@example.com --json
+
+# Change a speaker's connection type to RTMP
+twentythree webinar speaker update <id> <speaker-id> --connection-type rtmp --json
 
 # Update speaker bio
 twentythree webinar speaker update <id> <speaker-id> --description "Updated bio" --json

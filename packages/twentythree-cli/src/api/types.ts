@@ -24181,7 +24181,7 @@ export interface operations {
                 /** @description Number of objects to include in the response. Default is `20` and maximum value is `pagination_max`. */
                 size?: number;
                 /** @description Order returned objects by this value. */
-                orderby?: "uploaded" | "published" | "created" | "taken" | "title" | "views" | "comments" | "rating" | "numratings" | "video_length" | "words" | "related" | "posted" | "rank" | "default-published";
+                orderby?: "uploaded" | "published" | "created" | "creation" | "taken" | "title" | "views" | "comments" | "rating" | "numratings" | "video_length" | "words" | "related" | "posted" | "rank" | "default-published";
                 /** @description Order of the objects in the response. */
                 order?: "desc" | "asc";
                 /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
@@ -34680,8 +34680,8 @@ export interface operations {
                     live_id: number;
                     /** @description Name of the speaker. */
                     name: string;
-                    /** @description E-mail address for the speaker. */
-                    email: string;
+                    /** @description E-mail address for the speaker. The email address is required for all webrtc speakers. */
+                    email?: string;
                     /** @description The workspace user ID to associate with the speaker, if the speaker is also a workspace user. */
                     user_id?: number;
                     /** @description Speaker's title. */
@@ -34730,7 +34730,7 @@ export interface operations {
                      * @default webrtc
                      * @enum {string}
                      */
-                    connection_type?: "webrtc" | "gearmode" | "whip" | "url";
+                    connection_type?: "webrtc" | "gearmode" | "rtmp" | "whip" | "srt" | "url";
                     /** @description A pull URL for connection types that support ingest via stream pull (e.g. `whip` or `url`). */
                     connection_type_pull_url?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
@@ -36089,7 +36089,7 @@ export interface operations {
                      * @description Set connection type for the speaker.
                      * @enum {string}
                      */
-                    connection_type?: "webrtc" | "gearmode";
+                    connection_type?: "webrtc" | "gearmode" | "rtmp" | "whip" | "srt" | "url";
                     /** @description A pull URL for connection types that support ingest via stream pull (e.g. `whip` or `url`). */
                     connection_type_pull_url?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
