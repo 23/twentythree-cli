@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree protection protect --protection-method token --grace-minutes 30 --json
 ```
 
-_See code: [src/commands/protection/protect.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/protection/protect.ts)_
+_See code: [src/commands/protection/protect.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/protection/protect.ts)_

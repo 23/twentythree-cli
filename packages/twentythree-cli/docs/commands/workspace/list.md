@@ -24,4 +24,4 @@ EXAMPLES
   $ twentythree workspace list
 ```
 
-_See code: [src/commands/workspace/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/workspace/list.ts)_
+_See code: [src/commands/workspace/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/workspace/list.ts)_

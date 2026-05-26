@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree poll answer 99 --object-id 12345 --option-id 3 --json
 ```
 
-_See code: [src/commands/poll/answer.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/poll/answer.ts)_
+_See code: [src/commands/poll/answer.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/poll/answer.ts)_

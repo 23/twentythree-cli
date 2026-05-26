@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree site get --include-quota --json
 ```
 
-_See code: [src/commands/site/get.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/site/get.ts)_
+_See code: [src/commands/site/get.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/site/get.ts)_

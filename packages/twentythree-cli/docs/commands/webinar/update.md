@@ -43,4 +43,4 @@ EXAMPLES
   $ twentythree webinar update 12345
 ```
 
-_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webinar/update.ts)_
+_See code: [src/commands/webinar/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/update.ts)_

@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree action add --type overlay --object-id 12345 --json
 ```
 
-_See code: [src/commands/action/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/action/add.ts)_
+_See code: [src/commands/action/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/action/add.ts)_

@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree app list --json
 ```
 
-_See code: [src/commands/app/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/app/list.ts)_
+_See code: [src/commands/app/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/app/list.ts)_

@@ -42,4 +42,4 @@ EXAMPLES
   $ twentythree audience register --email "user@co.com" --company "Acme Corp" --source api --json
 ```
 
-_See code: [src/commands/audience/register.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/audience/register.ts)_
+_See code: [src/commands/audience/register.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/audience/register.ts)_

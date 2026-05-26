@@ -35,7 +35,7 @@ EXAMPLES
   $ twentythree webhook events --json
 ```
 
-_See code: [src/commands/webhook/events.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webhook/events.ts)_
+_See code: [src/commands/webhook/events.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webhook/events.ts)_
 
 ## `twentythree webhook list`
 
@@ -58,7 +58,7 @@ EXAMPLES
   $ twentythree webhook list --json
 ```
 
-_See code: [src/commands/webhook/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webhook/list.ts)_
+_See code: [src/commands/webhook/list.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webhook/list.ts)_
 
 ## `twentythree webhook sample EVENT`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ twentythree webhook sample video.uploaded --json
 ```
 
-_See code: [src/commands/webhook/sample.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webhook/sample.ts)_
+_See code: [src/commands/webhook/sample.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webhook/sample.ts)_
 
 ## `twentythree webhook subscribe`
 
@@ -111,7 +111,7 @@ EXAMPLES
   $ twentythree webhook subscribe --target-url https://example.com/hook --event video.uploaded --json
 ```
 
-_See code: [src/commands/webhook/subscribe.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webhook/subscribe.ts)_
+_See code: [src/commands/webhook/subscribe.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webhook/subscribe.ts)_
 
 ## `twentythree webhook unsubscribe`
 
@@ -140,4 +140,4 @@ EXAMPLES
   $ twentythree webhook unsubscribe --webhook-id 12345 --json
 ```
 
-_See code: [src/commands/webhook/unsubscribe.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/webhook/unsubscribe.ts)_
+_See code: [src/commands/webhook/unsubscribe.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webhook/unsubscribe.ts)_

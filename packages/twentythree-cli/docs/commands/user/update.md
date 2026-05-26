@@ -41,4 +41,4 @@ EXAMPLES
   $ twentythree user update 12345 --json
 ```
 
-_See code: [src/commands/user/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/user/update.ts)_
+_See code: [src/commands/user/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/user/update.ts)_

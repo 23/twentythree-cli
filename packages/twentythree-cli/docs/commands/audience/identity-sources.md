@@ -26,4 +26,4 @@ EXAMPLES
   $ twentythree audience identity-sources --json
 ```
 
-_See code: [src/commands/audience/identity-sources.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/audience/identity-sources.ts)_
+_See code: [src/commands/audience/identity-sources.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/audience/identity-sources.ts)_

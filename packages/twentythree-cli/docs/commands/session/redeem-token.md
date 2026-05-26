@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree session redeem-token --session-token <token> --json
 ```
 
-_See code: [src/commands/session/redeem-token.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/session/redeem-token.ts)_
+_See code: [src/commands/session/redeem-token.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/session/redeem-token.ts)_

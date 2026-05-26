@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree thumbnail data 42 --object-id 12345 --json
 ```
 
-_See code: [src/commands/thumbnail/data.ts](https://github.com/23/twentythree-cli/blob/v1.3.7/src/commands/thumbnail/data.ts)_
+_See code: [src/commands/thumbnail/data.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/thumbnail/data.ts)_
