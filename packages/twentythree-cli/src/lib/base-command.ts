@@ -173,7 +173,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     // Extract all missing flag names from error message.
     // Verified format (oclif/core@4.10.5 lib/parser/validate.js):
     //   "The following error(s) occurred:\n  Missing required flag {name}\n..."
-    const flagNames = [...err.message.matchAll(/Missing required flag ([^\n]+)/g)].map(m => m[1])
+    // NOTE: oclif wraps the reason string in ANSI dim codes, so `[^\n]+` would
+    // capture trailing escape sequences (e.g. `[22m`). Restrict the
+    // capture to valid flag-name characters only to avoid that.
+    const flagNames = [...err.message.matchAll(/Missing required flag ([a-zA-Z0-9_-]+)/g)].map(m => m[1])
     if (flagNames.length === 0) {
       return super.catch(err)
     }
