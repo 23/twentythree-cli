@@ -71,7 +71,7 @@ export default class SeoGet extends AuthenticatedCommand<typeof SeoGet> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const resp = data as any
+    const resp = (data as any)?.data ?? data
     this.log(`seo_title:       ${String(resp?.seo_title ?? '')}`)
     this.log(`seo_description: ${String(resp?.seo_description ?? '')}`)
     this.log(`seo_keywords:    ${String(resp?.seo_keywords ?? '')}`)

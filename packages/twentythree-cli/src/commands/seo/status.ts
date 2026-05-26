@@ -70,11 +70,20 @@ export default class SeoStatus extends AuthenticatedCommand<typeof SeoStatus> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const resp = data as any
+    const resp = (data as any)?.data ?? data
     this.log(`object_id:           ${String(resp?.object_id ?? '')}`)
     this.log(`object_type:         ${String(resp?.object_type ?? '')}`)
     this.log(`current_score:       ${String(resp?.current_score ?? '')}`)
     this.log(`max_score:           ${String(resp?.max_score ?? '')}`)
     this.log(`overall_state_label: ${String(resp?.overall_state_label ?? '')}`)
+
+    const states = resp?.states
+    if (Array.isArray(states) && states.length > 0) {
+      this.log('')
+      this.log('SEO states:')
+      for (const s of states) {
+        this.log(`  [${String(s.state).padEnd(8)}] ${String(s.label)}`)
+      }
+    }
   }
 }
