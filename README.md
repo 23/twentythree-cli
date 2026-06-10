@@ -22,7 +22,8 @@ Have an AI coding agent? Skip the terminal. Paste this into Claude Code, OpenAI 
 Install the TwentyThree CLI and its AI skills on this machine, then verify:
 1. Run: npm install -g twentythree-cli
 2. Run: npx -y twentythree-skills
-3. Run: twentythree auth credentials  (pause so I can enter my workspace domain + token)
+3. Ask me for my TwentyThree workspace domain and bearer token, then run:
+   twentythree auth credentials --domain <domain> --token <token>
 4. Verify with: twentythree doctor
 If Node 22+ / npm isn't installed, stop and tell me how to install it first.
 ```

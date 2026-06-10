@@ -13,13 +13,34 @@ Configure domain and bearer token for a TwentyThree workspace
 
 ```
 USAGE
-  $ twentythree auth credentials
+  $ twentythree auth credentials [--json] [--domain <value>] [--token <value>] [--workspace <value>]
+
+FLAGS
+  --domain=<value>     Workspace domain (e.g. company.video23.com). Passing this runs the command
+                       non-interactively (no prompts).
+  --token=<value>      Bearer/login token. Falls back to the TWENTYTHREE_TOKEN env var. Omit for
+                       anonymous (domain-only) access.
+  --workspace=<value>  Which discovered workspace to set active (domain or display name) when the
+                       token unlocks several. Non-interactive mode only.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Configure domain and bearer token for a TwentyThree workspace
 
+  Run with no flags for an interactive prompt. Pass --domain to run non-interactively — useful for
+  AI agents, scripts, and CI. The bearer token can be supplied via --token or the TWENTYTHREE_TOKEN
+  environment variable (preferred, so the token stays out of shell history and process listings).
+
 EXAMPLES
   $ twentythree auth credentials
+
+  $ twentythree auth credentials --domain company.video23.com --token <token>
+
+  $ twentythree auth credentials --domain company.video23.com --token <token> --workspace "Marketing"
+
+  $ TWENTYTHREE_TOKEN=<token> twentythree auth credentials --domain company.video23.com --json
 ```
 
 _See code: [src/commands/auth/credentials.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/auth/credentials.ts)_

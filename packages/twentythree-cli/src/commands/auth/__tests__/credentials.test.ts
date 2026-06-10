@@ -11,6 +11,7 @@ vi.mock('../../../auth/credential-store.js', () => ({
 vi.mock('../../../auth/workspace-config.js', () => ({
   setWorkspaces: vi.fn(),
   setActiveWorkspace: vi.fn(),
+  setCredentialDomain: vi.fn(),
   getWorkspaces: vi.fn(() => []),
   getActiveWorkspace: vi.fn(() => undefined),
   getWorkspaceForDomain: vi.fn(() => null),
@@ -143,5 +144,106 @@ describe('auth credentials', () => {
 
     expect(vi.mocked(wsConfig.setWorkspaces)).toHaveBeenCalledWith(workspaces)
     expect(vi.mocked(wsConfig.setActiveWorkspace)).toHaveBeenCalledWith('a.video23.com')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Non-interactive mode — actually runs the command via a lightweight config stub
+// ---------------------------------------------------------------------------
+describe('auth credentials — non-interactive', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    delete process.env.TWENTYTHREE_TOKEN
+  })
+
+  // Minimal oclif config stub: enough for this.parse() + this.jsonEnabled().
+  function makeConfig() {
+    return {
+      runHook: vi.fn(async () => ({ successes: [], failures: [] })),
+      scopedEnvVar: () => undefined,
+      bin: 'twentythree',
+    } as never
+  }
+
+  async function runCmd(argv: string[]) {
+    const { default: Credentials } = await import('../credentials.js')
+    const cmd = new Credentials(argv, makeConfig())
+    return cmd.run()
+  }
+
+  it('authenticated mode: stores token and sets the discovered workspace active', async () => {
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([
+      makeWorkspace('company.video23.com', 'Company'),
+    ])
+
+    const result = await runCmd([
+      '--domain',
+      'company.video23.com',
+      '--token',
+      'login-token',
+      '--json',
+    ])
+
+    expect(vi.mocked(credStore.setCredential)).toHaveBeenCalledWith(
+      'company.video23.com',
+      'login-token',
+    )
+    expect(vi.mocked(tokenRefresh.fetchWorkspaceTokens)).toHaveBeenCalledWith(
+      'company.video23.com',
+      'login-token',
+    )
+    expect(vi.mocked(wsConfig.setActiveWorkspace)).toHaveBeenCalledWith('company.video23.com')
+    expect(result).toMatchObject({ mode: 'authenticated', active_workspace: 'company.video23.com' })
+  })
+
+  it('reads the token from the TWENTYTHREE_TOKEN env var when --token is omitted', async () => {
+    process.env.TWENTYTHREE_TOKEN = 'env-token'
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([
+      makeWorkspace('company.video23.com', 'Company'),
+    ])
+
+    await runCmd(['--domain', 'company.video23.com'])
+
+    expect(vi.mocked(credStore.setCredential)).toHaveBeenCalledWith(
+      'company.video23.com',
+      'env-token',
+    )
+  })
+
+  it('selects the workspace named by --workspace when several are discovered', async () => {
+    const a = makeWorkspace('a.video23.com', 'Site A')
+    const b = makeWorkspace('b.video23.com', 'Site B')
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([a, b])
+    vi.mocked(wsConfig.findWorkspace).mockReturnValue(b)
+
+    await runCmd(['--domain', 'a.video23.com', '--token', 't', '--workspace', 'Site B'])
+
+    expect(vi.mocked(wsConfig.findWorkspace)).toHaveBeenCalledWith('Site B', [a, b])
+    expect(vi.mocked(wsConfig.setWorkspaces)).toHaveBeenCalledWith([a, b])
+    expect(vi.mocked(wsConfig.setActiveWorkspace)).toHaveBeenCalledWith('b.video23.com')
+  })
+
+  it('defaults to the starred workspace when multiple discovered and no --workspace', async () => {
+    const a = makeWorkspace('a.video23.com', 'Site A')
+    const starred = { ...makeWorkspace('b.video23.com', 'Site B'), starred_p: true }
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([a, starred])
+
+    await runCmd(['--domain', 'a.video23.com', '--token', 't'])
+
+    expect(vi.mocked(wsConfig.setActiveWorkspace)).toHaveBeenCalledWith('b.video23.com')
+  })
+
+  it('anonymous mode: no token stores a domain-only entry and skips discovery', async () => {
+    const result = await runCmd(['--domain', 'anon.video23.com', '--json'])
+
+    expect(vi.mocked(credStore.setCredential)).not.toHaveBeenCalled()
+    expect(vi.mocked(tokenRefresh.fetchWorkspaceTokens)).not.toHaveBeenCalled()
+    expect(vi.mocked(wsConfig.setActiveWorkspace)).toHaveBeenCalledWith('anon.video23.com')
+    expect(result).toMatchObject({ mode: 'anonymous', active_workspace: 'anon.video23.com' })
+  })
+
+  it('errors on an invalid domain', async () => {
+    await expect(runCmd(['--domain', 'not-a-domain'])).rejects.toThrow(/Invalid domain/)
+    expect(vi.mocked(wsConfig.setWorkspaces)).not.toHaveBeenCalled()
   })
 })

@@ -14,7 +14,8 @@ If your agent can run shell commands (Claude Code, Codex, Cursor, Windsurf, Clin
 Install the TwentyThree CLI and its AI skills on this machine, then verify:
 1. Run: npm install -g twentythree-cli
 2. Run: npx -y twentythree-skills
-3. Run: twentythree auth credentials  (pause so I can enter my workspace domain + token)
+3. Ask me for my TwentyThree workspace domain and bearer token, then run:
+   twentythree auth credentials --domain <domain> --token <token>
 4. Verify with: twentythree doctor
 If Node 22+ / npm isn't installed, stop and tell me how to install it first.
 ```
@@ -117,6 +118,26 @@ npm install -g twentythree-cli && npx twentythree-skills
 Skills land in `~/.gemini/skills/twentythree/`. Run `gemini` and ask it to manage your TwentyThree content; it will invoke the CLI on your behalf.
 
 ---
+
+## Non-interactive authentication (for agents and CI)
+
+`twentythree auth credentials` prompts interactively by default, which a non-TTY agent or CI job can't drive. Pass `--domain` to run it non-interactively instead:
+
+```bash
+# Token via env var (preferred — keeps it out of shell history and process listings)
+TWENTYTHREE_TOKEN=<token> twentythree auth credentials --domain company.video23.com --json
+
+# Or pass the token as a flag
+twentythree auth credentials --domain company.video23.com --token <token>
+
+# Pick a specific workspace when the token unlocks several
+twentythree auth credentials --domain company.video23.com --token <token> --workspace "Marketing"
+
+# Anonymous (domain-only) access — omit the token
+twentythree auth credentials --domain company.video23.com
+```
+
+With `--json`, the command returns the configured `mode`, `active_workspace`, and the list of discovered `workspaces` for the agent to parse. If multiple workspaces are discovered and `--workspace` is omitted, the starred (then canonical, then first) workspace is set active.
 
 ## How the agent calls the CLI
 

@@ -44,6 +44,14 @@ Prompts interactively for:
 - **Domain** — your workspace domain (e.g. `company.video.twentythree.com`)
 - **Bearer token** — copy from `Settings → API` inside your TwentyThree workspace admin
 
+**Agentic / non-interactive setup:** the interactive prompt cannot be driven without a TTY. Pass `--domain` to configure credentials without prompts — ask the user for their domain and token first, then run:
+
+```bash
+twentythree auth credentials --domain <domain> --token <token> --json
+```
+
+The token can also be supplied via the `TWENTYTHREE_TOKEN` env var instead of `--token` (keeps it out of shell history). Add `--workspace "<name or domain>"` to pick the active workspace when the token unlocks several; omit the token entirely for anonymous (domain-only) access.
+
 Credentials are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) — never in plaintext files.
 
 Verify auth is working:
