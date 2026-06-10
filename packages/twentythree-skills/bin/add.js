@@ -38,6 +38,24 @@ const RUNTIMES = [
     globalDest: join(home, '.cursor', 'skills', 'twentythree'),
     projectDest: join(cwd, '.cursor', 'skills', 'twentythree'),
   },
+  {
+    name: 'Windsurf',
+    detect: join(home, '.codeium'),
+    globalDest: join(home, '.codeium', 'windsurf', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.windsurf', 'skills', 'twentythree'),
+  },
+  {
+    name: 'Cline',
+    detect: join(home, '.clinerules'),
+    globalDest: join(home, '.clinerules', 'twentythree'),
+    projectDest: join(cwd, '.clinerules', 'twentythree'),
+  },
+  {
+    name: 'Gemini CLI',
+    detect: join(home, '.gemini'),
+    globalDest: join(home, '.gemini', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.gemini', 'skills', 'twentythree'),
+  },
 ]
 
 function walkDir(dir) {

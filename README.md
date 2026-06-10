@@ -14,6 +14,21 @@ twentythree video list
 
 See the [Getting Started guide](packages/twentythree-cli/docs/guides/getting-started.md) for full setup instructions.
 
+## Install from your AI assistant
+
+Have an AI coding agent? Skip the terminal. Paste this into Claude Code, OpenAI Codex, Cursor, Windsurf, Cline, Gemini CLI, or GitHub Copilot, and it installs the CLI plus its skills for you:
+
+```text
+Install the TwentyThree CLI and its AI skills on this machine, then verify:
+1. Run: npm install -g twentythree-cli
+2. Run: npx -y twentythree-skills
+3. Run: twentythree auth credentials  (pause so I can enter my workspace domain + token)
+4. Verify with: twentythree doctor
+If Node 22+ / npm isn't installed, stop and tell me how to install it first.
+```
+
+Once installed, ask in plain language — *"upload ./keynote.mp4 and publish it"* — and the agent runs the right commands. See the [AI agents guide](packages/twentythree-cli/docs/guides/ai-agents.md) for per-runtime quick starts (Claude Code, Codex, Copilot, Cursor, Windsurf, Cline, Gemini CLI).
+
 ## Tab Completion
 
 Enable tab completion for bash or zsh -- run once, then use `<TAB>` to discover commands and flags.
@@ -71,6 +86,7 @@ The TwentyThree API and CLI use different names for some objects:
 
 - [Command Reference](packages/twentythree-cli/docs/commands/README.md)
 - [Getting Started](packages/twentythree-cli/docs/guides/getting-started.md)
+- [Using TwentyThree with AI agents](packages/twentythree-cli/docs/guides/ai-agents.md)
 - [API Spec Upgrade Guide](packages/twentythree-cli/docs/guides/api-spec-upgrade.md)
 
 ## License
