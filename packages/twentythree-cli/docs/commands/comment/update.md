@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree comment update 789 --object-id 123 --status dismissed
 ```
 
-_See code: [src/commands/comment/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/comment/update.ts)_
+_See code: [src/commands/comment/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/update.ts)_

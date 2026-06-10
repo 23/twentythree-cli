@@ -33,7 +33,7 @@ EXAMPLES
   $ twentythree webinar queued-video add 12345 --video-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/queued-video/add.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/queued-video/add.ts)_
+_See code: [src/commands/webinar/queued-video/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/queued-video/add.ts)_
 
 ## `twentythree webinar queued-video remove ID`
 
@@ -62,4 +62,4 @@ EXAMPLES
   $ twentythree webinar queued-video remove 12345 --video-id 67890 --json
 ```
 
-_See code: [src/commands/webinar/queued-video/remove.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/queued-video/remove.ts)_
+_See code: [src/commands/webinar/queued-video/remove.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/queued-video/remove.ts)_

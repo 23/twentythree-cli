@@ -32,7 +32,7 @@ EXAMPLES
   $ twentythree webinar room connect 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/connect.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/room/connect.ts)_
+_See code: [src/commands/webinar/room/connect.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/room/connect.ts)_
 
 ## `twentythree webinar room info ID`
 
@@ -58,7 +58,7 @@ EXAMPLES
   $ twentythree webinar room info 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/info.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/room/info.ts)_
+_See code: [src/commands/webinar/room/info.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/room/info.ts)_
 
 ## `twentythree webinar room send-recording ID`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ twentythree webinar room send-recording 12345 --json
 ```
 
-_See code: [src/commands/webinar/room/send-recording.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/room/send-recording.ts)_
+_See code: [src/commands/webinar/room/send-recording.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/room/send-recording.ts)_
 
 ## `twentythree webinar room themes`
 
@@ -107,4 +107,4 @@ EXAMPLES
   $ twentythree webinar room themes --json
 ```
 
-_See code: [src/commands/webinar/room/themes.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/webinar/room/themes.ts)_
+_See code: [src/commands/webinar/room/themes.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/room/themes.ts)_

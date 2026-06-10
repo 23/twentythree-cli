@@ -32,7 +32,7 @@ EXAMPLES
   $ twentythree seo get --object-id 12345 --json
 ```
 
-_See code: [src/commands/seo/get.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/seo/get.ts)_
+_See code: [src/commands/seo/get.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/seo/get.ts)_
 
 ## `twentythree seo status`
 
@@ -59,7 +59,7 @@ EXAMPLES
   $ twentythree seo status --object-id 12345 --json
 ```
 
-_See code: [src/commands/seo/status.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/seo/status.ts)_
+_See code: [src/commands/seo/status.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/seo/status.ts)_
 
 ## `twentythree seo update`
 
@@ -95,4 +95,4 @@ EXAMPLES
   $ twentythree seo update --object-id 12345 --seo-policy index --json
 ```
 
-_See code: [src/commands/seo/update.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/seo/update.ts)_
+_See code: [src/commands/seo/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/seo/update.ts)_

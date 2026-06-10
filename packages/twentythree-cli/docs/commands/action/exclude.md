@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree action exclude 12345 --object-id 6789 --json
 ```
 
-_See code: [src/commands/action/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.3.8/src/commands/action/exclude.ts)_
+_See code: [src/commands/action/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/exclude.ts)_
