@@ -26,7 +26,7 @@ Verify: `twentythree auth status --json`
 
 **Auth scope:** write  **Side effects:** creates  **Output:** key-value (id + admin_url)
 
-> **Note:** Set access visibility explicitly when creating webinars — defaults may not match your intent. Pass `--publish` or `--draft` to control visibility. The `--json` response includes `data.admin_url`; read it from the response rather than constructing URLs. See [guide.md](../guide.md) for Webinar Creation Defaults and Admin Link Construction rules.
+> **Note:** By default a webinar is created as a **draft** with **registration enabled** (`registration-mode=all`). Pass `--no-draft`/`--publish` to publish, and `--registration-mode none` to disable registration. The `--json` response includes `data.admin_url`; read it from the response rather than constructing URLs. See [guide.md](../guide.md) for Webinar Creation Defaults and Admin Link Construction rules.
 
 After create, the CLI prints the new webinar ID and its admin URL. Capture `data.id` and `data.admin_url` from the `--json` response.
 
@@ -36,17 +36,26 @@ After create, the CLI prints the new webinar ID and its admin URL. Capture `data
 | `--description` | no | — | Description for the webinar |
 | `--status` | no | — | Webinar status: `upcoming`, `live`, or `previous` |
 | `--live-date` | no | — | Schedule date/time (ISO 8601) |
-| `--draft` | no | false | Set as draft |
-| `--publish` | no | false | Publish the webinar |
+| `--timezone` | no | — | Timezone for the schedule (e.g. `Europe/Copenhagen`) |
+| `--format` | no | — | Webinar format: `webinar` (registration, hub) or `event` (freeform stream) |
+| `--registration-mode` | no | `all` | Registration mode: `all` (enabled) or `none`. Defaults to `all`. |
+| `--private` / `--no-private` | no | — | Make private, or `--no-private` to make public (appears on the hub) |
+| `--category-id` | no | — | Assign to a category by ID (API `album_id`) |
+| `--locale` | no | — | Language/locale (e.g. `en_US`, `da_DK`) |
+| `--series-id` | no | — | Attach the webinar to a webinar series by ID |
+| `--publish-recordings` / `--no-publish-recordings` | no | — | Publish the webinar recordings |
+| `--draft` / `--no-draft` | no | `true` | Draft by default; `--no-draft` (or `--publish`) makes it live |
+| `--publish` / `--no-publish` | no | — | Publish the webinar (implies not a draft) |
 | `--webinar-design-id` | no | — | Assign a webinar design by ID |
 
 ```bash
-# Create a basic upcoming webinar
+# Create a basic webinar (draft, registration enabled by default)
 twentythree webinar create --title "Q2 Town Hall" --json
 #    => { "data": { "id": "<webinar-id>", "admin_url": "..." } }
 
-# Create and schedule with a live date
-twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:00:00Z" --description "Our biggest product release yet" --json
+# Create a fully configured public webinar in Danish, in a category and series
+twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:00:00Z" --timezone Europe/Copenhagen \
+  --format webinar --locale da_DK --category-id 127972488 --series-id 67890 --no-private --no-draft --json
 ```
 
 ---
@@ -110,8 +119,18 @@ twentythree webinar list --user-id me --live-format webinar --json
 | `--description` | no | — | New description for the webinar |
 | `--status` | no | — | Webinar status: `upcoming`, `live`, or `previous` |
 | `--live-date` | no | — | Schedule date/time (ISO 8601) |
-| `--draft` | no | — | Set as draft |
-| `--publish` | no | — | Publish or unpublish the webinar |
+| `--timezone` | no | — | Timezone for the schedule (e.g. `Europe/Copenhagen`) |
+| `--format` | no | — | Webinar format: `webinar` or `event` |
+| `--registration-mode` | no | — | Registration mode: `all` (enabled) or `none` |
+| `--private` / `--no-private` | no | — | Make private, or `--no-private` to make public |
+| `--category-id` | no | — | Assign to a category by ID (API `album_id`) |
+| `--locale` | no | — | Language/locale (e.g. `en_US`, `da_DK`) |
+| `--series-id` | no | — | Attach the webinar to a webinar series by ID |
+| `--ondemand` / `--no-ondemand` | no | — | Make the recording available on demand |
+| `--publish-recordings` / `--no-publish-recordings` | no | — | Publish the webinar recordings |
+| `--seo-policy` | no | — | SEO policy: `index`, `noindex`, or empty to reset |
+| `--draft` / `--no-draft` | no | — | Set as draft |
+| `--publish` / `--no-publish` | no | — | Publish or unpublish the webinar |
 | `--webinar-design-id` | no | — | Assign a webinar design by ID |
 
 ```bash
@@ -120,6 +139,9 @@ twentythree webinar update <id> --title "New Title" --description "Updated descr
 
 # Publish a draft webinar
 twentythree webinar update <id> --publish --json
+
+# Make public, set Danish locale, and enable on-demand recording
+twentythree webinar update <id> --no-private --locale da_DK --ondemand --json
 ```
 
 ---
@@ -314,7 +336,13 @@ twentythree webinar speaker list <id> --creation-source admin --exclude-hidden -
 | `--name` | yes | — | Speaker name |
 | `--email` | no | — | Speaker email (required for WebRTC speakers) |
 | `--title` | no | — | Speaker title or job title |
-| `--description` | no | — | Speaker bio or description |
+| `--bio` | no | — | Speaker bio shown in the UI |
+| `--description` | no | — | Alias for `--bio` |
+| `--company` | no | — | Speaker company / organization |
+| `--website` | no | — | Speaker website URL |
+| `--linkedin` | no | — | Speaker LinkedIn URL or handle |
+| `--facebook` | no | — | Speaker Facebook URL or handle |
+| `--twitter` | no | — | Speaker Twitter/X handle |
 | `--connection-type` | no | `webrtc` | Speaker connection type: `webrtc`, `gearmode`, `rtmp`, `whip`, `srt`, `url` |
 | `--connection-type-pull-url` | no | — | Pull URL for connection types that support stream pull (`whip`, `url`) |
 
@@ -325,8 +353,9 @@ twentythree webinar speaker add <id> --name "Jane Doe" --email jane@example.com 
 # Add an RTMP speaker (no email required)
 twentythree webinar speaker add <id> --name "John Smith" --connection-type rtmp --json
 
-# Add a speaker with full details
-twentythree webinar speaker add <id> --name "John Smith" --email john@example.com --title "CTO" --description "Engineering lead" --json
+# Add a speaker with full profile details
+twentythree webinar speaker add <id> --name "John Smith" --email john@example.com --title "CTO" \
+  --company "Acme" --bio "Engineering lead" --linkedin "in/johnsmith" --website "https://acme.example" --json
 ```
 
 ---
@@ -380,7 +409,13 @@ twentythree webinar speaker add-from-user <id> --user-id <user-id> --json
 | `--name` | no | — | Speaker name |
 | `--email` | no | — | Speaker email |
 | `--title` | no | — | Speaker title or job title |
-| `--description` | no | — | Speaker bio or description |
+| `--bio` | no | — | Speaker bio shown in the UI |
+| `--description` | no | — | Alias for `--bio` |
+| `--company` | no | — | Speaker company / organization |
+| `--website` | no | — | Speaker website URL |
+| `--linkedin` | no | — | Speaker LinkedIn URL or handle |
+| `--facebook` | no | — | Speaker Facebook URL or handle |
+| `--twitter` | no | — | Speaker Twitter/X handle |
 | `--connection-type` | no | — | Speaker connection type: `webrtc`, `gearmode`, `rtmp`, `whip`, `srt`, `url` |
 | `--connection-type-pull-url` | no | — | Pull URL for connection types that support stream pull (`whip`, `url`) |
 
@@ -391,8 +426,8 @@ twentythree webinar speaker update <id> <speaker-id> --title "CEO" --email ceo@e
 # Change a speaker's connection type to RTMP
 twentythree webinar speaker update <id> <speaker-id> --connection-type rtmp --json
 
-# Update speaker bio
-twentythree webinar speaker update <id> <speaker-id> --description "Updated bio" --json
+# Update speaker bio, company and LinkedIn
+twentythree webinar speaker update <id> <speaker-id> --bio "Updated bio" --company "Acme" --linkedin "in/janedoe" --json
 ```
 
 ---
@@ -834,10 +869,24 @@ twentythree webinar mail list <id> --mail-id <mail-id> --include-metrics --json
 | `--series-id` | no | — | Series ID — add mail to a series instead of a webinar |
 | `--subject` | no | — | Email subject |
 | `--message` | no | — | Email message body |
+| `--recipient-groups` | no | — | Comma-separated groups: `speakers`, `registered`, `attendees`, `noshows` |
+| `--scheduled-at` | no | — | When to send (ISO 8601 timestamp) |
+| `--cta-link` | no | — | Call-to-action link URL |
+| `--cta-label` | no | — | Call-to-action button label |
+| `--send-immediately` / `--no-send-immediately` | no | — | Send the email immediately |
+| `--include-live-info` / `--no-include-live-info` | no | — | Include the webinar info block |
+| `--include-series-archive` / `--no-include-series-archive` | no | — | Include the series archive block |
+
+> **Note:** The API does not accept a mail `type` and has no endpoint to seed the standard typed emails (confirmation/reminder/etc.). Emails added here are custom emails. Always set `--cta-link` to the webinar's own public URL.
 
 ```bash
 # Add a reminder email to a webinar
 twentythree webinar mail add <id> --subject "Join us tomorrow!" --message "The webinar starts at 4 PM UTC." --json
+
+# Add a scheduled reminder to registered attendees with a CTA
+twentythree webinar mail add <id> --subject "Starting soon" --message "See you there" \
+  --recipient-groups "registered,attendees" --scheduled-at "2026-05-15T15:00:00Z" \
+  --cta-link "https://video.example.com/watch/abc" --cta-label "Join now" --json
 
 # Add an email to a series
 twentythree webinar mail add --series-id <series-id> --subject "Series reminder" --json
@@ -855,10 +904,21 @@ twentythree webinar mail add --series-id <series-id> --subject "Series reminder"
 | `--series-id` | no | — | Series ID (mutually exclusive with --webinar-id) |
 | `--subject` | no | — | Email subject |
 | `--message` | no | — | Email message body |
+| `--enabled` / `--no-enabled` | no | — | Enable/disable the email (e.g. `--no-enabled` to disable the "missed" mail) |
+| `--recipient-groups` | no | — | Comma-separated groups: `speakers`, `registered`, `attendees`, `noshows` |
+| `--scheduled-at` | no | — | When to send (ISO 8601 timestamp) |
+| `--cta-link` | no | — | Call-to-action link URL |
+| `--cta-label` | no | — | Call-to-action button label |
+| `--include-live-info` / `--no-include-live-info` | no | — | Include the webinar info block |
+| `--include-series-archive` / `--no-include-series-archive` | no | — | Include the series archive block |
+| `--require-recording` / `--no-require-recording` | no | — | Only send once a recording is available |
 
 ```bash
 # Update the subject of a webinar email
 twentythree webinar mail update <mail-id> --webinar-id <id> --subject "Updated Subject" --json
+
+# Disable an email and fix its CTA link to the webinar's own URL
+twentythree webinar mail update <mail-id> --webinar-id <id> --no-enabled --cta-link "https://video.example.com/watch/abc" --json
 
 # Update an email on a series
 twentythree webinar mail update <mail-id> --series-id <series-id> --message "New content" --json
