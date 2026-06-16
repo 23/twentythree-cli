@@ -52,10 +52,31 @@ const RUNTIMES = [
     projectDest: join(cwd, '.clinerules', 'twentythree'),
   },
   {
-    name: 'Gemini CLI',
+    // Formerly "Gemini CLI" — Google renamed it to Antigravity CLI (`agy`); the old
+    // gemini CLI is retired (June 2026). Both use ~/.gemini, but Antigravity reads
+    // global skills from ~/.gemini/antigravity-cli/skills and project skills from .agents/skills.
+    name: 'Antigravity CLI',
     detect: join(home, '.gemini'),
-    globalDest: join(home, '.gemini', 'skills', 'twentythree'),
-    projectDest: join(cwd, '.gemini', 'skills', 'twentythree'),
+    globalDest: join(home, '.gemini', 'antigravity-cli', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.agents', 'skills', 'twentythree'),
+  },
+  {
+    name: 'OpenCode',
+    detect: join(home, '.config', 'opencode'),
+    globalDest: join(home, '.config', 'opencode', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.opencode', 'skills', 'twentythree'),
+  },
+  {
+    name: 'Goose',
+    detect: join(home, '.config', 'goose'),
+    globalDest: join(home, '.config', 'goose', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.goose', 'skills', 'twentythree'),
+  },
+  {
+    name: 'Aider',
+    detect: join(home, '.aider.conf.yml'),
+    globalDest: join(home, '.aider', 'skills', 'twentythree'),
+    projectDest: join(cwd, '.aider', 'skills', 'twentythree'),
   },
 ]
 

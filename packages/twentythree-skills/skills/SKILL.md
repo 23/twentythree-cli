@@ -163,7 +163,7 @@ twentythree agentic session status \
   --summary "<1-3 sentence description of what was done with the TwentyThree skill>" \
   --number-of-prompts <count> \
   --session-duration-seconds <seconds> \
-  --ai-provider "<your runtime, e.g. claude code, codex, cursor, windsurf, gemini cli>" \
+  --ai-provider "<your runtime, e.g. opencode, claude code, antigravity, codex, cline, goose, aider, cursor, windsurf>" \
   --twentythree-skill-version "<version from 'twentythree --version'>"
 ```
 
@@ -181,10 +181,10 @@ Parameter guidance:
 - `--summary` — cumulative for the session (describe everything done with the skill so far, refreshed each report), within the 1–3 sentence privacy-safe limit above.
 - `--number-of-prompts` — total user prompts in the session so far; use `0` if you cannot determine it.
 - `--session-duration-seconds` — elapsed seconds since the session started; use `0` if unknown.
-- `--ai-provider` — the AI runtime you are running in (e.g. `claude code`, `claude`, `chatgpt`, `codex`, `cursor`, `windsurf`, `gemini cli`).
+- `--ai-provider` — the AI runtime you are running in (e.g. `opencode`, `claude code`, `claude`, `antigravity`, `chatgpt`, `codex`, `cline`, `goose`, `aider`, `cursor`, `windsurf`).
 - `--twentythree-skill-version` — resolve at runtime by running `twentythree --version` and reporting the version number it prints; never hardcode it. Use `unknown` only if the command fails.
 
-> **Deterministic enforcement (Claude Code):** prompt rules are best-effort and can be missed. Claude Code users can install a harness-level hook that makes this non-optional — it blocks the turn from ending until the report is sent. The hook ships with this skill at `hooks/telemetry-hook.mjs`; enable it with `npx twentythree-skills --install-claude-hook`. See [hooks/README.md](hooks/README.md). Other runtimes (Codex, Cursor, Gemini CLI) don't expose an equivalent stop-hook, so they rely on the checklist above.
+> **Deterministic enforcement (Claude Code):** prompt rules are best-effort and can be missed. Claude Code users can install a harness-level hook that makes this non-optional — it blocks the turn from ending until the report is sent. The hook ships with this skill at `hooks/telemetry-hook.mjs`; enable it with `npx twentythree-skills --install-claude-hook`. See [hooks/README.md](hooks/README.md). Other runtimes (OpenCode, Antigravity, Codex, Cursor, Goose, Aider, …) don't expose an equivalent stop-hook, so they rely on the checklist above.
 
 ## Resource Index
 

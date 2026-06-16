@@ -8,7 +8,7 @@ This guide covers two install paths and a quick start for each supported runtime
 
 ## Install from your AI assistant (recommended — no terminal)
 
-If your agent can run shell commands (Claude Code, Codex, Cursor, Windsurf, Cline, Gemini CLI, …), paste this prompt into its chat and it will do everything:
+If your agent can run shell commands (OpenCode, Claude Code, Antigravity CLI, Codex, Cline, Goose, Aider, Cursor, Windsurf, …), paste this prompt into its chat and it will do everything:
 
 ```text
 Install the TwentyThree CLI and its AI skills on this machine, then verify:
@@ -47,15 +47,18 @@ npx twentythree-skills --project
 
 | Runtime | Detection | Global install path | Project install path (`--project`) |
 |---------|-----------|---------------------|------------------------------------|
+| OpenCode | `~/.config/opencode/` | `~/.config/opencode/skills/twentythree/` | `.opencode/skills/twentythree/` |
 | Claude Code | `~/.claude/` | `~/.claude/skills/twentythree/` | `.claude/skills/twentythree/` |
+| Antigravity CLI | `~/.gemini/` | `~/.gemini/antigravity-cli/skills/twentythree/` | `.agents/skills/twentythree/` |
 | OpenAI Codex | `~/.codex/` | `~/.codex/skills/twentythree/` | `.agents/skills/twentythree/` |
-| GitHub Copilot | `~/.github/copilot/` | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
+| Cline | `~/.clinerules/` | `~/.clinerules/twentythree/` | `.clinerules/twentythree/` |
+| Goose | `~/.config/goose/` | `~/.config/goose/skills/twentythree/` | `.goose/skills/twentythree/` |
+| Aider | `~/.aider.conf.yml` | `~/.aider/skills/twentythree/` | `.aider/skills/twentythree/` |
 | Cursor | `~/.cursor/` | `~/.cursor/skills/twentythree/` | `.cursor/skills/twentythree/` |
 | Windsurf | `~/.codeium/` | `~/.codeium/windsurf/skills/twentythree/` | `.windsurf/skills/twentythree/` |
-| Cline | `~/.clinerules/` | `~/.clinerules/twentythree/` | `.clinerules/twentythree/` |
-| Gemini CLI | `~/.gemini/` | `~/.gemini/skills/twentythree/` | `.gemini/skills/twentythree/` |
+| GitHub Copilot | `~/.github/copilot/` | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
 
-The installer copies the same Markdown skill tree into each detected runtime's directory. Every agent ingests it as context — there is no per-runtime format conversion.
+The installer copies the same Markdown skill tree into each detected runtime's directory; there is no per-runtime format conversion. OpenCode and Claude Code load it as a **native skill**; Antigravity, Codex, Cursor, Windsurf, Cline and Copilot read it as project/instruction context. **Goose** and **Aider** have no skill-directory convention, so the tree is dropped best-effort and must be referenced manually (see their quick starts below). **Antigravity CLI** is the renamed Gemini CLI (`agy`, Go rewrite); the old `gemini` CLI was retired in June 2026.
 
 ---
 
@@ -117,13 +120,45 @@ npm install -g twentythree-cli && npx twentythree-skills --project
 
 Project install lands in `.clinerules/twentythree/`, which Cline loads as workspace rules. Ask Cline to upload a video or pull analytics and approve the terminal commands it proposes.
 
-### Gemini CLI
+### OpenCode
 
 ```bash
 npm install -g twentythree-cli && npx twentythree-skills
 ```
 
-Skills land in `~/.gemini/skills/twentythree/`. Run `gemini` and ask it to manage your TwentyThree content; it will invoke the CLI on your behalf.
+Skills land in `~/.config/opencode/skills/twentythree/` — OpenCode's native global skills directory, so it's loaded automatically. Run `opencode` and ask it to manage your TwentyThree content.
+
+### Antigravity CLI
+
+```bash
+npm install -g twentythree-cli && npx twentythree-skills
+```
+
+Antigravity CLI (`agy`) is the successor to Gemini CLI (the old `gemini` was retired in June 2026). Skills land in `~/.gemini/antigravity-cli/skills/twentythree/` (global) or `.agents/skills/twentythree/` (with `--project`). Run `agy` and ask it to drive TwentyThree.
+
+### Goose
+
+```bash
+npm install -g twentythree-cli && npx twentythree-skills
+```
+
+Files land in `~/.config/goose/skills/twentythree/`. Goose has no skills directory, so reference the skill from a `.goosehints` file (e.g. add a line pointing Goose at `~/.config/goose/skills/twentythree/SKILL.md`), then ask Goose to run `twentythree` commands.
+
+### Aider
+
+```bash
+npm install -g twentythree-cli && npx twentythree-skills
+```
+
+Files land in `~/.aider/skills/twentythree/`. Aider reads convention files explicitly — start it with `aider --read ~/.aider/skills/twentythree/SKILL.md` (or add a `read:` entry to `~/.aider.conf.yml`) so it picks up the TwentyThree guidance.
+
+### Gemini CLI
+
+```bash
+npm install -g twentythree-cli && npx twentythree-skills --project
+```
+
+The standalone `gemini` CLI was retired in June 2026 and replaced by **Antigravity CLI** (above). If you still run a Gemini-based setup, install with `--project` so the skill lands in `.agents/skills/twentythree/` (the post-migration project location).
 
 ---
 

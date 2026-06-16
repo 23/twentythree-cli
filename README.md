@@ -16,7 +16,7 @@ See the [Getting Started guide](packages/twentythree-cli/docs/guides/getting-sta
 
 ## Install from your AI assistant
 
-Have an AI coding agent? Skip the terminal. Paste this into Claude Code, OpenAI Codex, Cursor, Windsurf, Cline, Gemini CLI, or GitHub Copilot, and it installs the CLI plus its skills for you:
+Have an AI coding agent? Skip the terminal. Paste this into OpenCode, Claude Code, Antigravity CLI, OpenAI Codex, Cline, Goose, Aider, Cursor, Windsurf, or GitHub Copilot, and it installs the CLI plus its skills for you:
 
 ```text
 Install the TwentyThree CLI and its AI skills on this machine, then verify:
@@ -28,7 +28,7 @@ Install the TwentyThree CLI and its AI skills on this machine, then verify:
 If Node 22+ / npm isn't installed, stop and tell me how to install it first.
 ```
 
-Once installed, ask in plain language — *"upload ./keynote.mp4 and publish it"* — and the agent runs the right commands. See the [AI agents guide](packages/twentythree-cli/docs/guides/ai-agents.md) for per-runtime quick starts (Claude Code, Codex, Copilot, Cursor, Windsurf, Cline, Gemini CLI).
+Once installed, ask in plain language — *"upload ./keynote.mp4 and publish it"* — and the agent runs the right commands. See the [AI agents guide](packages/twentythree-cli/docs/guides/ai-agents.md) for per-runtime quick starts (OpenCode, Claude Code, Antigravity CLI, Codex, Cline, Goose, Aider, Cursor, Windsurf, Copilot).
 
 ## Tab Completion
 

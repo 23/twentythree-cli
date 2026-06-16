@@ -1,6 +1,6 @@
 # twentythree-skills
 
-AI agent skills for the [TwentyThree CLI](https://github.com/23/twentythree-cli) — installable markdown skill definitions for Claude Code, OpenAI Codex, GitHub Copilot, Cursor, Windsurf, Cline, and Gemini CLI.
+AI agent skills for the [TwentyThree CLI](https://github.com/23/twentythree-cli) — installable markdown skill definitions for OpenCode, Claude Code, Antigravity CLI, OpenAI Codex, Cline, Goose, Aider, Cursor, Windsurf, and GitHub Copilot.
 
 ## Install from your AI assistant (no terminal)
 
@@ -55,15 +55,18 @@ It wires a hook into `~/.claude/settings.json` (idempotent, backed up first) tha
 
 | Runtime | Detection | Global install path | Project install path (`--project`) |
 |---------|-----------|---------------------|------------------------------------|
+| OpenCode | `~/.config/opencode/` | `~/.config/opencode/skills/twentythree/` | `.opencode/skills/twentythree/` |
 | Claude Code | `~/.claude/` | `~/.claude/skills/twentythree/` | `.claude/skills/twentythree/` |
+| Antigravity CLI | `~/.gemini/` | `~/.gemini/antigravity-cli/skills/twentythree/` | `.agents/skills/twentythree/` |
 | OpenAI Codex | `~/.codex/` | `~/.codex/skills/twentythree/` | `.agents/skills/twentythree/` |
-| GitHub Copilot | `~/.github/copilot/` | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
+| Cline | `~/.clinerules/` | `~/.clinerules/twentythree/` | `.clinerules/twentythree/` |
+| Goose | `~/.config/goose/` | `~/.config/goose/skills/twentythree/` | `.goose/skills/twentythree/` |
+| Aider | `~/.aider.conf.yml` | `~/.aider/skills/twentythree/` | `.aider/skills/twentythree/` |
 | Cursor | `~/.cursor/` | `~/.cursor/skills/twentythree/` | `.cursor/skills/twentythree/` |
 | Windsurf | `~/.codeium/` | `~/.codeium/windsurf/skills/twentythree/` | `.windsurf/skills/twentythree/` |
-| Cline | `~/.clinerules/` | `~/.clinerules/twentythree/` | `.clinerules/twentythree/` |
-| Gemini CLI | `~/.gemini/` | `~/.gemini/skills/twentythree/` | `.gemini/skills/twentythree/` |
+| GitHub Copilot | `~/.github/copilot/` | `~/.github/skills/twentythree/` | `.github/skills/twentythree/` |
 
-The installer copies the same Markdown skill tree into every detected runtime's directory — each agent ingests it as project/skill context. See the [AI agents guide](https://github.com/23/twentythree-cli/blob/master/packages/twentythree-cli/docs/guides/ai-agents.md) for per-runtime quick starts.
+The installer copies the same Markdown skill tree into every detected runtime's directory — each agent ingests it as project/skill context. OpenCode and Claude Code load it as a native skill; the others read it as project/instruction context. **Goose and Aider** have no skill-directory convention, so the files are dropped best-effort — point the tool at them (Aider: `--read ~/.aider/skills/twentythree/SKILL.md`; Goose: reference the path from a `.goosehints` file). **Antigravity CLI** is the renamed Gemini CLI (`agy`); Gemini CLI is retired as of June 2026. See the [AI agents guide](https://github.com/23/twentythree-cli/blob/master/packages/twentythree-cli/docs/guides/ai-agents.md) for per-runtime quick starts.
 
 ## Prerequisites
 
