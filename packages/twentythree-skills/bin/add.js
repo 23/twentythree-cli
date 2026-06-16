@@ -2,7 +2,7 @@
 // bin/add.js — TwentyThree Skills installer
 // Node.js built-ins only. ESM. No build step. Target: < 150 lines.
 
-import { existsSync, mkdirSync, cpSync, readdirSync } from 'node:fs'
+import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname, relative } from 'node:path'
 import { homedir } from 'node:os'
 import { fileURLToPath } from 'node:url'
@@ -12,6 +12,7 @@ const skillsSource = join(__dirname, '..', 'skills')
 const home = homedir()
 const cwd = process.cwd()
 const isProject = process.argv.includes('--project')
+const installClaudeHookFlag = process.argv.includes('--install-claude-hook')
 
 const RUNTIMES = [
   {
@@ -101,6 +102,61 @@ if (!existsSync(skillsSource)) {
   process.exit(1)
 }
 
+// --install-claude-hook: install the skill globally for Claude Code and wire the
+// deterministic telemetry hook into ~/.claude/settings.json (idempotent, backed up).
+function installClaudeHook() {
+  const claude = RUNTIMES.find(r => r.name === 'Claude Code')
+  installTo(claude.globalDest, `Claude Code (${shortPath(claude.globalDest)}/)`)
+
+  const settingsPath = join(home, '.claude', 'settings.json')
+  const hookCmd = `node "${join(claude.globalDest, 'hooks', 'telemetry-hook.mjs')}"`
+  let settings = {}
+  if (existsSync(settingsPath)) {
+    try {
+      settings = JSON.parse(readFileSync(settingsPath, 'utf8'))
+    } catch (err) {
+      console.error(`\n✗ Could not parse ${shortPath(settingsPath)} (${err.message}). Aborting to avoid corrupting it.`)
+      process.exit(1)
+    }
+    const backup = settingsPath + '.bak'
+    cpSync(settingsPath, backup)
+    console.log(`\nBacked up settings to ${shortPath(backup)}`)
+  }
+
+  settings.hooks = settings.hooks || {}
+  const events = [['UserPromptSubmit', null], ['PostToolUse', 'Bash'], ['Stop', null]]
+  let added = 0
+  for (const [event, matcher] of events) {
+    settings.hooks[event] = settings.hooks[event] || []
+    const already = settings.hooks[event].some(group =>
+      (group.hooks || []).some(h => typeof h.command === 'string' && h.command.includes('telemetry-hook.mjs')),
+    )
+    if (already) continue
+    const entry = { hooks: [{ type: 'command', command: hookCmd }] }
+    if (matcher) entry.matcher = matcher
+    settings.hooks[event].push(entry)
+    added++
+  }
+
+  if (added === 0) {
+    console.log('\nTelemetry hook already present in settings.json — nothing to change.')
+  } else {
+    mkdirSync(dirname(settingsPath), { recursive: true })
+    writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n')
+    console.log(`\n✓ Wired the telemetry hook into ${shortPath(settingsPath)} (${added} event${added === 1 ? '' : 's'}).`)
+    console.log('  Start a new Claude Code session for the hook to take effect.')
+  }
+  process.exit(process.exitCode ?? 0)
+}
+
+if (installClaudeHookFlag) {
+  if (!existsSync(join(home, '.claude'))) {
+    console.error('Claude Code not detected (~/.claude missing). --install-claude-hook only applies to Claude Code.')
+    process.exit(1)
+  }
+  installClaudeHook()
+}
+
 const detected = RUNTIMES.filter(r => existsSync(r.detect))
 
 if (detected.length === 0) {
@@ -118,4 +174,12 @@ for (const runtime of detected) {
 }
 
 console.log('\nDone.')
+
+if (detected.some(r => r.name === 'Claude Code')) {
+  console.log(
+    '\nTip (Claude Code): enforce session telemetry deterministically with a harness hook:\n' +
+      '  npx twentythree-skills --install-claude-hook',
+  )
+}
+
 process.exit(process.exitCode ?? 0)

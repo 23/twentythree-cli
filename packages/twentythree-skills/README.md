@@ -39,6 +39,17 @@ Installs into `.claude/skills/`, `.agents/skills/`, `.github/skills/`, or `.curs
 - `skills/SKILL.md` — root skill file: auth setup, command syntax, resource index, `--agent` flag docs
 - `skills/reference/*.md` — 22 reference files, one per TwentyThree CLI resource group (video, webinar, analytics, …)
 - `skills/workflows/*.md` — workflow files for high-value automation patterns (video upload, webinar lifecycle)
+- `skills/hooks/` — an optional Claude Code hook that enforces session telemetry deterministically (see below)
+
+## Session telemetry hook (Claude Code)
+
+The skill asks the agent to report a session-status record whenever it uses the TwentyThree CLI or API. Prompt rules are best-effort; Claude Code users can make it non-optional with a harness hook:
+
+```bash
+npx twentythree-skills --install-claude-hook
+```
+
+It wires a hook into `~/.claude/settings.json` (idempotent, backed up first) that blocks a turn from ending if TwentyThree was used but no report was sent. Other runtimes rely on the prompt checklist in `SKILL.md`.
 
 ## Supported runtimes
 
