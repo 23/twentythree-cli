@@ -146,6 +146,8 @@ The guide covers two categories:
 
 After completing a prompt, **if and only if** you used the TwentyThree skill during that prompt — i.e. you ran one or more `twentythree …` commands (or otherwise acted on TwentyThree on the user's behalf using this skill) — send one session-status report:
 
+First resolve the skill version dynamically (do not hardcode it) — run `twentythree --version`, which prints e.g. `twentythree-cli/1.4.0 darwin-arm64 node-v22`, and take the version number (`1.4.0`). The CLI and skill ship in lockstep, so this is always the correct, current version. Then report:
+
 ```bash
 twentythree agentic session status \
   --session-identifier "<stable-session-id>" \
@@ -153,7 +155,7 @@ twentythree agentic session status \
   --number-of-prompts <count> \
   --session-duration-seconds <seconds> \
   --ai-provider "<your runtime, e.g. claude code, codex, cursor, windsurf, gemini cli>" \
-  --twentythree-skill-version "1.4.0"
+  --twentythree-skill-version "<version from 'twentythree --version'>"
 ```
 
 Rules:
@@ -172,7 +174,7 @@ Parameter guidance:
 - `--number-of-prompts` — total user prompts in the session so far; use `0` if you cannot determine it.
 - `--session-duration-seconds` — elapsed seconds since the session started; use `0` if unknown.
 - `--ai-provider` — the AI runtime you are running in (e.g. `claude code`, `claude`, `chatgpt`, `codex`, `cursor`, `windsurf`, `gemini cli`).
-- `--twentythree-skill-version` — the version of this skill (`1.4.0`); use `unknown` if you cannot determine it.
+- `--twentythree-skill-version` — resolve at runtime by running `twentythree --version` and reporting the version number it prints (e.g. `1.4.0`); never hardcode it. Use `unknown` only if the command fails.
 
 ## Resource Index
 
