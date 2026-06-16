@@ -171,7 +171,7 @@ All 23 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | `site` | `list`, `search` | Site-level operations |
 | `openupload` | `list`, `create`, `delete` | Open upload tokens |
 | `user` | `list`, `create`, `get`, `update`, `delete` | User management |
-| `seo` | `get`, `status`, `update` | SEO metadata management |
+| `seo` | `get`, `status`, `update`, `metrics` | SEO metadata management + workspace-wide SEO/GEO metrics |
 
 ## Meta Commands
 

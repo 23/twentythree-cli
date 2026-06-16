@@ -27460,6 +27460,173 @@
                 "deprecated":  false
             }
         },
+        "/seo/metrics":         {
+            "post": {
+                "summary":     "Get SEO and GEO metrics",
+                "description": "Returns workspace-wide SEO and GEO metrics, including the average score across all objects, counts of videos, webinars, and pages, and a breakdown of the library's SEO health into high, medium, and low tiers.",
+                "tags":        [
+                    "SEO and GEO"
+                ],
+                "operationId": "seoMetrics",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "read"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "average_score":       {
+                                                    "type":    "number",
+                                                    "example": 72
+                                                },
+                                                "video_count":         {
+                                                    "type":    "number",
+                                                    "example": 210
+                                                },
+                                                "webinar_count":       {
+                                                    "type":    "number",
+                                                    "example": 23
+                                                },
+                                                "page_count":          {
+                                                    "type":    "number",
+                                                    "example": 923
+                                                },
+                                                "library_health_high": {
+                                                    "type":    "number",
+                                                    "example": 714
+                                                },
+                                                "library_health_medium": {
+                                                    "type":    "number",
+                                                    "example": 312
+                                                },
+                                                "library_health_low":  {
+                                                    "type":    "number",
+                                                    "example": 130
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "read"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "fields": {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/seo/get":             {
             "post": {
                 "summary":     "Get SEO metadata",

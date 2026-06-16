@@ -2111,6 +2111,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/seo/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get SEO and GEO metrics
+         * @description Returns workspace-wide SEO and GEO metrics, including the average score across all objects, counts of videos, webinars, and pages, and a breakdown of the library's SEO health into high, medium, and low tiers.
+         */
+        post: operations["seoMetrics"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/seo/get": {
         parameters: {
             query?: never;
@@ -19308,6 +19328,124 @@ export interface operations {
                         };
                         /** @example You have access to the resource */
                         message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    seoMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example read */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 72 */
+                            average_score?: number;
+                            /** @example 210 */
+                            video_count?: number;
+                            /** @example 23 */
+                            webinar_count?: number;
+                            /** @example 923 */
+                            page_count?: number;
+                            /** @example 714 */
+                            library_health_high?: number;
+                            /** @example 312 */
+                            library_health_medium?: number;
+                            /** @example 130 */
+                            library_health_low?: number;
+                        };
                     };
                 };
             };
