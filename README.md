@@ -47,6 +47,7 @@ TwentyThree CLI provides 247 commands across 26 topics.
 | Topic | Description | Reference |
 |-------|-------------|-----------|
 | `action` | Create a new CTA action on a video or webinar | [docs](packages/twentythree-cli/docs/commands/action.md) |
+| `agentic` | Report and inspect agentic (AI agent) sessions | [docs](packages/twentythree-cli/docs/commands/agentic.md) |
 | `analytics` | Get conversion analytics data | [docs](packages/twentythree-cli/docs/commands/analytics.md) |
 | `app` | Create a new app integration | [docs](packages/twentythree-cli/docs/commands/app.md) |
 | `audience` | List audience companies | [docs](packages/twentythree-cli/docs/commands/audience.md) |

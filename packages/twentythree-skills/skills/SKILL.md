@@ -144,7 +144,7 @@ The guide covers two categories:
 
 ## Resource Index
 
-All 23 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
+All 24 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
 
 | Topic | Representative verbs | Use for |
 |-------|---------------------|---------|
@@ -172,6 +172,7 @@ All 23 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | `openupload` | `list`, `create`, `delete` | Open upload tokens |
 | `user` | `list`, `create`, `get`, `update`, `delete` | User management |
 | `seo` | `get`, `status`, `update`, `metrics` | SEO metadata management + workspace-wide SEO/GEO metrics |
+| `agentic` | `session list`, `session status`, `session metrics` | Report AI agent sessions back to the workspace, list them, and view aggregate metrics |
 
 ## Meta Commands
 
