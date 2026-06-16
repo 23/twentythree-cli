@@ -39,8 +39,32 @@ export default class WebinarSpeakerAdd extends AuthenticatedCommand<typeof Webin
       description: 'Speaker title or job title',
       required: false,
     }),
+    bio: Flags.string({
+      description: 'Speaker bio shown in the UI',
+      required: false,
+    }),
     description: Flags.string({
-      description: 'Speaker bio or description',
+      description: 'Alias for --bio (sets the speaker bio shown in the UI)',
+      required: false,
+    }),
+    company: Flags.string({
+      description: 'Speaker company / organization',
+      required: false,
+    }),
+    website: Flags.string({
+      description: 'Speaker website URL',
+      required: false,
+    }),
+    linkedin: Flags.string({
+      description: 'Speaker LinkedIn URL or handle',
+      required: false,
+    }),
+    facebook: Flags.string({
+      description: 'Speaker Facebook URL or handle',
+      required: false,
+    }),
+    twitter: Flags.string({
+      description: 'Speaker Twitter/X handle',
       required: false,
     }),
     'connection-type': Flags.string({
@@ -87,7 +111,15 @@ export default class WebinarSpeakerAdd extends AuthenticatedCommand<typeof Webin
     const body: Record<string, unknown> = { live_id: Number(args.id), name }
     if (email !== undefined) body.email = email
     if (flags.title !== undefined) body.title = flags.title
-    if (flags.description !== undefined) body.description = flags.description
+    // CRITICAL: the speaker bio is the API field `bio`, NOT `description` (which the
+    // API ignores). --description is kept as a back-compat alias for --bio.
+    const bio = flags.bio ?? flags.description
+    if (bio !== undefined) body.bio = bio
+    if (flags.company !== undefined) body.company = flags.company
+    if (flags.website !== undefined) body.link = flags.website
+    if (flags.linkedin !== undefined) body.linkedin = flags.linkedin
+    if (flags.facebook !== undefined) body.facebook = flags.facebook
+    if (flags.twitter !== undefined) body.twitter = flags.twitter
     if (flags['connection-type'] !== undefined) body.connection_type = flags['connection-type']
     if (flags['connection-type-pull-url'] !== undefined) body.connection_type_pull_url = flags['connection-type-pull-url']
 
