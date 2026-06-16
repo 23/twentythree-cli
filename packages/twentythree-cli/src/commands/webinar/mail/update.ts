@@ -42,6 +42,42 @@ export default class WebinarMailUpdate extends AuthenticatedCommand<typeof Webin
       description: 'Email message body',
       required: false,
     }),
+    enabled: Flags.boolean({
+      description: 'Enable or disable the email (e.g. --no-enabled to disable the "missed" mail)',
+      allowNo: true,
+      required: false,
+    }),
+    'recipient-groups': Flags.string({
+      description: 'Recipient groups (comma-separated): speakers, registered, attendees, noshows',
+      required: false,
+    }),
+    'scheduled-at': Flags.string({
+      description: 'When to send the email (ISO 8601 timestamp)',
+      required: false,
+    }),
+    'cta-link': Flags.string({
+      description: 'Call-to-action link URL',
+      required: false,
+    }),
+    'cta-label': Flags.string({
+      description: 'Call-to-action button label',
+      required: false,
+    }),
+    'include-live-info': Flags.boolean({
+      description: 'Include the webinar info block in the email',
+      allowNo: true,
+      required: false,
+    }),
+    'include-series-archive': Flags.boolean({
+      description: 'Include the series archive block in the email',
+      allowNo: true,
+      required: false,
+    }),
+    'require-recording': Flags.boolean({
+      description: 'Only send once a recording is available',
+      allowNo: true,
+      required: false,
+    }),
   }
 
   static args = {
@@ -72,6 +108,14 @@ export default class WebinarMailUpdate extends AuthenticatedCommand<typeof Webin
     const body: Record<string, unknown> = { ...contextField, live_mail_id: Number(args.id) }
     if (flags.subject !== undefined) body.subject = flags.subject
     if (flags.message !== undefined) body.message = flags.message
+    if (flags.enabled !== undefined) body.enabled_p = flags.enabled ? 1 : 0
+    if (flags['recipient-groups'] !== undefined) body.recipient_groups = flags['recipient-groups']
+    if (flags['scheduled-at'] !== undefined) body.scheduled_at = flags['scheduled-at']
+    if (flags['cta-link'] !== undefined) body.cta_link = flags['cta-link']
+    if (flags['cta-label'] !== undefined) body.cta_label = flags['cta-label']
+    if (flags['include-live-info'] !== undefined) body.include_live_info_p = flags['include-live-info'] ? 1 : 0
+    if (flags['include-series-archive'] !== undefined) body.include_series_archive_p = flags['include-series-archive'] ? 1 : 0
+    if (flags['require-recording'] !== undefined) body.require_recording_p = flags['require-recording'] ? 1 : 0
 
     const { data, error } = await this.apiClient.POST('/live/mail/update', {
       body: body as any,

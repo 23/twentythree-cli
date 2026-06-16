@@ -38,6 +38,37 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
       description: 'Email message body',
       required: false,
     }),
+    'recipient-groups': Flags.string({
+      description: 'Recipient groups (comma-separated): speakers, registered, attendees, noshows',
+      required: false,
+    }),
+    'scheduled-at': Flags.string({
+      description: 'When to send the email (ISO 8601 timestamp)',
+      required: false,
+    }),
+    'cta-link': Flags.string({
+      description: 'Call-to-action link URL',
+      required: false,
+    }),
+    'cta-label': Flags.string({
+      description: 'Call-to-action button label',
+      required: false,
+    }),
+    'send-immediately': Flags.boolean({
+      description: 'Send the email immediately',
+      allowNo: true,
+      required: false,
+    }),
+    'include-live-info': Flags.boolean({
+      description: 'Include the webinar info block in the email',
+      allowNo: true,
+      required: false,
+    }),
+    'include-series-archive': Flags.boolean({
+      description: 'Include the series archive block in the email',
+      allowNo: true,
+      required: false,
+    }),
   }
 
   static args = {
@@ -89,9 +120,18 @@ export default class WebinarMailAdd extends AuthenticatedCommand<typeof WebinarM
       this.error('--message is required in non-interactive mode', { exit: EXIT_ERROR })
     }
 
+    const body: Record<string, unknown> = { ...contextField, subject, message }
+    if (flags['recipient-groups'] !== undefined) body.recipient_groups = flags['recipient-groups']
+    if (flags['scheduled-at'] !== undefined) body.scheduled_at = flags['scheduled-at']
+    if (flags['cta-link'] !== undefined) body.cta_link = flags['cta-link']
+    if (flags['cta-label'] !== undefined) body.cta_label = flags['cta-label']
+    if (flags['send-immediately'] !== undefined) body.send_immediately_p = flags['send-immediately'] ? 1 : 0
+    if (flags['include-live-info'] !== undefined) body.include_live_info_p = flags['include-live-info'] ? 1 : 0
+    if (flags['include-series-archive'] !== undefined) body.include_series_archive_p = flags['include-series-archive'] ? 1 : 0
+
     const { data, error } = await this.apiClient.POST('/live/mail/add', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body: { ...contextField, subject, message } as any,
+      body: body as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 
