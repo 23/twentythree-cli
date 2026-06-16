@@ -17,12 +17,15 @@ import { applyCliTerms } from '../../lib/term-map.js'
  *   T-04-08: extends AuthenticatedCommand — anonymous mode rejected
  */
 export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCreate> {
-  static description = 'Create a new webinar'
+  static description =
+    'Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.'
 
   static examples = [
     '<%= config.bin %> webinar create --title "My Webinar"',
-    '<%= config.bin %> webinar create --title "My Webinar" --live-date "2024-12-01T14:00:00Z"',
-    '<%= config.bin %> webinar create --title "My Webinar" --json',
+    '<%= config.bin %> webinar create --title "My Webinar" --live-date "2024-12-01T14:00:00Z" --timezone Europe/Copenhagen',
+    '<%= config.bin %> webinar create --title "My Webinar" --format webinar --locale da_DK --category-id 127972488',
+    '<%= config.bin %> webinar create --title "My Webinar" --no-draft --no-private --publish-recordings',
+    '<%= config.bin %> webinar create --title "Episode 3" --series-id 67890 --json',
   ]
 
   static enableJsonFlag = true
@@ -59,6 +62,43 @@ export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCr
       description: 'Assign a webinar design by ID to this webinar',
       required: false,
     }),
+    format: Flags.string({
+      description: 'Webinar format: "webinar" (registration, hub) or "event" (freeform live stream)',
+      options: ['event', 'webinar'],
+      required: false,
+    }),
+    'registration-mode': Flags.string({
+      description: 'Registration mode. Defaults to "all" (registration enabled); pass "none" to disable.',
+      options: ['', 'all', 'none'],
+      default: 'all',
+      required: false,
+    }),
+    private: Flags.boolean({
+      description: 'Make the webinar private (use --no-private to make it public and appear on the hub)',
+      allowNo: true,
+      required: false,
+    }),
+    'category-id': Flags.integer({
+      description: 'Assign the webinar to a category by ID (API album_id)',
+      required: false,
+    }),
+    locale: Flags.string({
+      description: 'Webinar language/locale (e.g. en_US, da_DK)',
+      required: false,
+    }),
+    'publish-recordings': Flags.boolean({
+      description: 'Publish the webinar recordings',
+      allowNo: true,
+      required: false,
+    }),
+    'series-id': Flags.integer({
+      description: 'Attach the webinar to a webinar series by ID',
+      required: false,
+    }),
+    timezone: Flags.string({
+      description: 'Timezone for the webinar schedule (e.g. Europe/Copenhagen)',
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives
     'draft-p': Flags.string({ hidden: true, required: false }),
     'published-p': Flags.string({ hidden: true, required: false }),
@@ -83,11 +123,25 @@ export default class WebinarCreate extends AuthenticatedCommand<typeof WebinarCr
     if (flags.status !== undefined) body.live_status = flags.status
     // CRITICAL: API date field is 'start_time' not 'live_date'
     if (flags['live-date'] !== undefined) body.start_time = flags['live-date']
-    const draftVal = parseBoolParam(flags.draft, flags['draft-p'])
-    if (draftVal !== undefined) body.draft_p = draftVal ? 1 : 0
+
+    // Draft by default: a new webinar is created as a draft unless the user
+    // explicitly opts out (--no-draft) or explicitly publishes (--publish).
     const publishVal = parseBoolParam(flags.publish, flags['published-p'])
+    let draftVal = parseBoolParam(flags.draft, flags['draft-p'])
+    if (draftVal === undefined) draftVal = publishVal === true ? false : true
+    body.draft_p = draftVal ? 1 : 0
     if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
+
     if (flags['webinar-design-id'] !== undefined) body.webinar_design_id = flags['webinar-design-id']
+    if (flags.format !== undefined) body.live_format = flags.format
+    // registration_mode defaults to 'all' (flag default) so registration is on unless --registration-mode none
+    if (flags['registration-mode'] !== undefined) body.registration_mode = flags['registration-mode']
+    if (flags.private !== undefined) body.private_p = flags.private ? 1 : 0
+    if (flags['category-id'] !== undefined) body.album_id = flags['category-id']
+    if (flags.locale !== undefined) body.locale = flags.locale
+    if (flags['publish-recordings'] !== undefined) body.publish_recordings_p = flags['publish-recordings'] ? 1 : 0
+    if (flags['series-id'] !== undefined) body.live_series_id = flags['series-id']
+    if (flags.timezone !== undefined) body.timezone = flags.timezone
 
     const { data: createData, error: createError } = await this.apiClient.POST('/live/create', {
       body: body as any,

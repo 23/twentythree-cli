@@ -68,6 +68,47 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       description: 'Assign a webinar design by ID to this webinar',
       required: false,
     }),
+    format: Flags.string({
+      description: 'Webinar format: "webinar" or "event"',
+      options: ['event', 'webinar'],
+      required: false,
+    }),
+    'registration-mode': Flags.string({
+      description: 'Registration mode: "all" (enabled) or "none" (disabled)',
+      options: ['all', 'none'],
+      required: false,
+    }),
+    private: Flags.boolean({
+      description: 'Make the webinar private (use --no-private to make it public)',
+      allowNo: true,
+      required: false,
+    }),
+    'category-id': Flags.integer({
+      description: 'Assign the webinar to a category by ID (API album_id)',
+      required: false,
+    }),
+    locale: Flags.string({
+      description: 'Webinar language/locale (e.g. en_US, da_DK)',
+      required: false,
+    }),
+    'publish-recordings': Flags.boolean({
+      description: 'Publish the webinar recordings',
+      allowNo: true,
+      required: false,
+    }),
+    ondemand: Flags.boolean({
+      description: 'Make the recording available on demand',
+      allowNo: true,
+      required: false,
+    }),
+    'series-id': Flags.integer({
+      description: 'Attach the webinar to a webinar series by ID',
+      required: false,
+    }),
+    timezone: Flags.string({
+      description: 'Timezone for the webinar schedule (e.g. Europe/Copenhagen)',
+      required: false,
+    }),
     // Hidden raw _p-suffixed alternatives
     'draft-p': Flags.string({ hidden: true, required: false }),
     'published-p': Flags.string({ hidden: true, required: false }),
@@ -105,6 +146,15 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       flags['published-p'],
       flags['seo-policy'],
       flags['webinar-design-id'],
+      flags.format,
+      flags['registration-mode'],
+      flags.private,
+      flags['category-id'],
+      flags.locale,
+      flags['publish-recordings'],
+      flags.ondemand,
+      flags['series-id'],
+      flags.timezone,
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { live_id: webinarId }
@@ -198,6 +248,15 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       if (publishVal !== undefined) body.published_p = publishVal ? 1 : 0
       if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
       if (flags['webinar-design-id'] !== undefined) body.webinar_design_id = flags['webinar-design-id']
+      if (flags.format !== undefined) body.live_format = flags.format
+      if (flags['registration-mode'] !== undefined) body.registration_mode = flags['registration-mode']
+      if (flags.private !== undefined) body.private_p = flags.private ? 1 : 0
+      if (flags['category-id'] !== undefined) body.album_id = flags['category-id']
+      if (flags.locale !== undefined) body.locale = flags.locale
+      if (flags['publish-recordings'] !== undefined) body.publish_recordings_p = flags['publish-recordings'] ? 1 : 0
+      if (flags.ondemand !== undefined) body.enable_ondemand_p = flags.ondemand ? 1 : 0
+      if (flags['series-id'] !== undefined) body.live_series_id = flags['series-id']
+      if (flags.timezone !== undefined) body.timezone = flags.timezone
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/live/update', {
