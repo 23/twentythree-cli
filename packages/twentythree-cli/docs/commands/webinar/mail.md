@@ -18,15 +18,23 @@ Add an email to a webinar
 ```
 USAGE
   $ twentythree webinar mail add [ID] [--json] [-w <value>] [--series-id <value>] [--subject <value>] [--message
-    <value>]
+    <value>] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link <value>] [--cta-label <value>]
+    [--send-immediately] [--include-live-info] [--include-series-archive]
 
 ARGUMENTS
   [ID]  Webinar ID (omit when using --series-id)
 
 FLAGS
-  --message=<value>    Email message body
-  --series-id=<value>  Series ID — add mail to a series instead of a webinar
-  --subject=<value>    Email subject
+  --cta-label=<value>            Call-to-action button label
+  --cta-link=<value>             Call-to-action link URL
+  --[no-]include-live-info       Include the webinar info block in the email
+  --[no-]include-series-archive  Include the series archive block in the email
+  --message=<value>              Email message body
+  --recipient-groups=<value>     Recipient groups (comma-separated): speakers, registered, attendees, noshows
+  --scheduled-at=<value>         When to send the email (ISO 8601 timestamp)
+  --[no-]send-immediately        Send the email immediately
+  --series-id=<value>            Series ID — add mail to a series instead of a webinar
+  --subject=<value>              Email subject
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -40,7 +48,7 @@ EXAMPLES
 
   $ twentythree webinar mail add --series-id 67890 --subject "Reminder"
 
-  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
+  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --recipient-groups "registered,attendees" --cta-link "https://example.com" --cta-label "Join" --json
 ```
 
 _See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/mail/add.ts)_
@@ -215,16 +223,25 @@ Update a webinar email
 ```
 USAGE
   $ twentythree webinar mail update ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>] [--subject
-    <value>] [--message <value>]
+    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link
+    <value>] [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
 
 ARGUMENTS
   ID  Mail ID
 
 FLAGS
-  --message=<value>     Email message body
-  --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
-  --subject=<value>     Email subject
-  --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
+  --cta-label=<value>            Call-to-action button label
+  --cta-link=<value>             Call-to-action link URL
+  --[no-]enabled                 Enable or disable the email (e.g. --no-enabled to disable the "missed" mail)
+  --[no-]include-live-info       Include the webinar info block in the email
+  --[no-]include-series-archive  Include the series archive block in the email
+  --message=<value>              Email message body
+  --recipient-groups=<value>     Recipient groups (comma-separated): speakers, registered, attendees, noshows
+  --[no-]require-recording       Only send once a recording is available
+  --scheduled-at=<value>         When to send the email (ISO 8601 timestamp)
+  --series-id=<value>            Series ID (mutually exclusive with --webinar-id)
+  --subject=<value>              Email subject
+  --webinar-id=<value>           Webinar ID (mutually exclusive with --series-id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -238,7 +255,7 @@ EXAMPLES
 
   $ twentythree webinar mail update 555 --series-id 67890 --message "New content"
 
-  $ twentythree webinar mail update 555 --webinar-id 12345 --subject "Updated" --json
+  $ twentythree webinar mail update 555 --webinar-id 12345 --no-enabled --cta-link "https://example.com" --json
 ```
 
 _See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/mail/update.ts)_

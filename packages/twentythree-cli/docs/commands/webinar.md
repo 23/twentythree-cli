@@ -244,29 +244,48 @@ Create a new webinar
 ```
 USAGE
   $ twentythree webinar create --title <value> [--json] [-w <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish]
+    [--live-date <value>] [--draft] [--publish] [--webinar-design-id <value>] [--format event|webinar]
+    [--registration-mode |all|none] [--private] [--category-id <value>] [--locale <value>] [--publish-recordings]
+    [--series-id <value>] [--timezone <value>]
 
 FLAGS
-  --description=<value>  Description for the webinar
-  --[no-]draft           Set as draft
-  --live-date=<value>    Schedule date/time (ISO 8601)
-  --[no-]publish         Publish the webinar
-  --status=<value>       Webinar status: upcoming, live, or previous
-  --title=<value>        (required) Title for the new webinar
+  --category-id=<value>         Assign the webinar to a category by ID (API album_id)
+  --description=<value>         Description for the webinar
+  --[no-]draft                  Set as draft
+  --format=<option>             Webinar format: "webinar" (registration, hub) or "event" (freeform live stream)
+                                <options: event|webinar>
+  --live-date=<value>           Schedule date/time (ISO 8601)
+  --locale=<value>              Webinar language/locale (e.g. en_US, da_DK)
+  --[no-]private                Make the webinar private (use --no-private to make it public and appear on the hub)
+  --[no-]publish                Publish the webinar
+  --[no-]publish-recordings     Publish the webinar recordings
+  --registration-mode=<option>  [default: all] Registration mode. Defaults to "all" (registration enabled); pass
+                                "none" to disable.
+                                <options: |all|none>
+  --series-id=<value>           Attach the webinar to a webinar series by ID
+  --status=<value>              Webinar status: upcoming, live, or previous
+  --timezone=<value>            Timezone for the webinar schedule (e.g. Europe/Copenhagen)
+  --title=<value>               (required) Title for the new webinar
+  --webinar-design-id=<value>   Assign a webinar design by ID to this webinar
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
       --json               Format output as json.
 
 DESCRIPTION
-  Create a new webinar
+  Create a new webinar. By default the webinar is created as a draft with registration enabled
+  (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
 
 EXAMPLES
   $ twentythree webinar create --title "My Webinar"
 
-  $ twentythree webinar create --title "My Webinar" --live-date "2024-12-01T14:00:00Z"
+  $ twentythree webinar create --title "My Webinar" --live-date "2024-12-01T14:00:00Z" --timezone Europe/Copenhagen
 
-  $ twentythree webinar create --title "My Webinar" --json
+  $ twentythree webinar create --title "My Webinar" --format webinar --locale da_DK --category-id 127972488
+
+  $ twentythree webinar create --title "My Webinar" --no-draft --no-private --publish-recordings
+
+  $ twentythree webinar create --title "Episode 3" --series-id 67890 --json
 ```
 
 _See code: [src/commands/webinar/create.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/create.ts)_
@@ -419,15 +438,23 @@ Add an email to a webinar
 ```
 USAGE
   $ twentythree webinar mail add [ID] [--json] [-w <value>] [--series-id <value>] [--subject <value>] [--message
-    <value>]
+    <value>] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link <value>] [--cta-label <value>]
+    [--send-immediately] [--include-live-info] [--include-series-archive]
 
 ARGUMENTS
   [ID]  Webinar ID (omit when using --series-id)
 
 FLAGS
-  --message=<value>    Email message body
-  --series-id=<value>  Series ID — add mail to a series instead of a webinar
-  --subject=<value>    Email subject
+  --cta-label=<value>            Call-to-action button label
+  --cta-link=<value>             Call-to-action link URL
+  --[no-]include-live-info       Include the webinar info block in the email
+  --[no-]include-series-archive  Include the series archive block in the email
+  --message=<value>              Email message body
+  --recipient-groups=<value>     Recipient groups (comma-separated): speakers, registered, attendees, noshows
+  --scheduled-at=<value>         When to send the email (ISO 8601 timestamp)
+  --[no-]send-immediately        Send the email immediately
+  --series-id=<value>            Series ID — add mail to a series instead of a webinar
+  --subject=<value>              Email subject
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -441,7 +468,7 @@ EXAMPLES
 
   $ twentythree webinar mail add --series-id 67890 --subject "Reminder"
 
-  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
+  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --recipient-groups "registered,attendees" --cta-link "https://example.com" --cta-label "Join" --json
 ```
 
 _See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/mail/add.ts)_
@@ -610,16 +637,25 @@ Update a webinar email
 ```
 USAGE
   $ twentythree webinar mail update ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>] [--subject
-    <value>] [--message <value>]
+    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link
+    <value>] [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
 
 ARGUMENTS
   ID  Mail ID
 
 FLAGS
-  --message=<value>     Email message body
-  --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
-  --subject=<value>     Email subject
-  --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
+  --cta-label=<value>            Call-to-action button label
+  --cta-link=<value>             Call-to-action link URL
+  --[no-]enabled                 Enable or disable the email (e.g. --no-enabled to disable the "missed" mail)
+  --[no-]include-live-info       Include the webinar info block in the email
+  --[no-]include-series-archive  Include the series archive block in the email
+  --message=<value>              Email message body
+  --recipient-groups=<value>     Recipient groups (comma-separated): speakers, registered, attendees, noshows
+  --[no-]require-recording       Only send once a recording is available
+  --scheduled-at=<value>         When to send the email (ISO 8601 timestamp)
+  --series-id=<value>            Series ID (mutually exclusive with --webinar-id)
+  --subject=<value>              Email subject
+  --webinar-id=<value>           Webinar ID (mutually exclusive with --series-id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1439,16 +1475,27 @@ Add a speaker to a webinar
 ```
 USAGE
   $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>]
-    [--description <value>]
+    [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
+    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
+    [--connection-type-pull-url <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --description=<value>  Speaker bio or description
-  --email=<value>        Speaker email
-  --name=<value>         Speaker name
-  --title=<value>        Speaker title or job title
+  --bio=<value>                       Speaker bio shown in the UI
+  --company=<value>                   Speaker company / organization
+  --connection-type=<option>          Speaker connection type
+                                      <options: webrtc|gearmode|rtmp|whip|srt|url>
+  --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
+  --description=<value>               Alias for --bio (sets the speaker bio shown in the UI)
+  --email=<value>                     Speaker email (required for WebRTC speakers)
+  --facebook=<value>                  Speaker Facebook URL or handle
+  --linkedin=<value>                  Speaker LinkedIn URL or handle
+  --name=<value>                      Speaker name
+  --title=<value>                     Speaker title or job title
+  --twitter=<value>                   Speaker Twitter/X handle
+  --website=<value>                   Speaker website URL
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1460,9 +1507,9 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com
 
-  $ twentythree webinar speaker add 12345
+  $ twentythree webinar speaker add 12345 --name "John Smith" --connection-type rtmp
 
-  $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
+  $ twentythree webinar speaker add 12345 --name "Jane Doe" --title "CTO" --company "Acme" --bio "Builds things" --linkedin "in/janedoe" --json
 ```
 
 _See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/speaker/add.ts)_
@@ -1814,17 +1861,28 @@ Update a speaker on a webinar
 ```
 USAGE
   $ twentythree webinar speaker update WEBINARID ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title
-    <value>] [--description <value>]
+    <value>] [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
+    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
+    [--connection-type-pull-url <value>]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
 
 FLAGS
-  --description=<value>  Speaker bio or description
-  --email=<value>        Speaker email
-  --name=<value>         Speaker name
-  --title=<value>        Speaker title or job title
+  --bio=<value>                       Speaker bio shown in the UI
+  --company=<value>                   Speaker company / organization
+  --connection-type=<option>          Speaker connection type
+                                      <options: webrtc|gearmode|rtmp|whip|srt|url>
+  --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
+  --description=<value>               Alias for --bio (sets the speaker bio shown in the UI)
+  --email=<value>                     Speaker email
+  --facebook=<value>                  Speaker Facebook URL or handle
+  --linkedin=<value>                  Speaker LinkedIn URL or handle
+  --name=<value>                      Speaker name
+  --title=<value>                     Speaker title or job title
+  --twitter=<value>                   Speaker Twitter/X handle
+  --website=<value>                   Speaker website URL
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1836,7 +1894,9 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe"
 
-  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO"
+  $ twentythree webinar speaker update 12345 9900 --company "Acme" --linkedin "in/janedoe"
+
+  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO" --bio "Builds things"
 
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```
@@ -1966,20 +2026,34 @@ Update details for a webinar
 ```
 USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex]
+    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
+    [--format event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
+    [--publish-recordings] [--ondemand] [--series-id <value>] [--timezone <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --description=<value>  New description for the webinar
-  --[no-]draft           Set as draft
-  --live-date=<value>    Schedule date/time (ISO 8601)
-  --[no-]publish         Publish or unpublish the webinar
-  --seo-policy=<option>  SEO policy for the webinar: index, noindex, or empty string to reset
-                         <options: |index|noindex>
-  --status=<value>       Webinar status: upcoming, live, or previous
-  --title=<value>        New title for the webinar
+  --category-id=<value>         Assign the webinar to a category by ID (API album_id)
+  --description=<value>         New description for the webinar
+  --[no-]draft                  Set as draft
+  --format=<option>             Webinar format: "webinar" or "event"
+                                <options: event|webinar>
+  --live-date=<value>           Schedule date/time (ISO 8601)
+  --locale=<value>              Webinar language/locale (e.g. en_US, da_DK)
+  --[no-]ondemand               Make the recording available on demand
+  --[no-]private                Make the webinar private (use --no-private to make it public)
+  --[no-]publish                Publish or unpublish the webinar
+  --[no-]publish-recordings     Publish the webinar recordings
+  --registration-mode=<option>  Registration mode: "all" (enabled) or "none" (disabled)
+                                <options: all|none>
+  --seo-policy=<option>         SEO policy for the webinar: index, noindex, or empty string to reset
+                                <options: |index|noindex>
+  --series-id=<value>           Attach the webinar to a webinar series by ID
+  --status=<value>              Webinar status: upcoming, live, or previous
+  --timezone=<value>            Timezone for the webinar schedule (e.g. Europe/Copenhagen)
+  --title=<value>               New title for the webinar
+  --webinar-design-id=<value>   Assign a webinar design by ID to this webinar
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1992,6 +2066,8 @@ EXAMPLES
   $ twentythree webinar update 12345 --title "New Title"
 
   $ twentythree webinar update 12345 --status upcoming
+
+  $ twentythree webinar update 12345 --ondemand --no-private --locale da_DK
 
   $ twentythree webinar update 12345
 ```

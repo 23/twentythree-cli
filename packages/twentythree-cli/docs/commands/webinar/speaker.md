@@ -25,19 +25,27 @@ Add a speaker to a webinar
 ```
 USAGE
   $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>]
-    [--description <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url] [--connection-type-pull-url <value>]
+    [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
+    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
+    [--connection-type-pull-url <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --connection-type=<option>      Speaker connection type
-                                  <options: webrtc|gearmode|rtmp|whip|srt|url>
+  --bio=<value>                       Speaker bio shown in the UI
+  --company=<value>                   Speaker company / organization
+  --connection-type=<option>          Speaker connection type
+                                      <options: webrtc|gearmode|rtmp|whip|srt|url>
   --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
-  --description=<value>           Speaker bio or description
-  --email=<value>                 Speaker email (required for WebRTC speakers)
-  --name=<value>                  Speaker name
-  --title=<value>                 Speaker title or job title
+  --description=<value>               Alias for --bio (sets the speaker bio shown in the UI)
+  --email=<value>                     Speaker email (required for WebRTC speakers)
+  --facebook=<value>                  Speaker Facebook URL or handle
+  --linkedin=<value>                  Speaker LinkedIn URL or handle
+  --name=<value>                      Speaker name
+  --title=<value>                     Speaker title or job title
+  --twitter=<value>                   Speaker Twitter/X handle
+  --website=<value>                   Speaker website URL
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -51,7 +59,7 @@ EXAMPLES
 
   $ twentythree webinar speaker add 12345 --name "John Smith" --connection-type rtmp
 
-  $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
+  $ twentythree webinar speaker add 12345 --name "Jane Doe" --title "CTO" --company "Acme" --bio "Builds things" --linkedin "in/janedoe" --json
 ```
 
 _See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/speaker/add.ts)_
@@ -403,7 +411,8 @@ Update a speaker on a webinar
 ```
 USAGE
   $ twentythree webinar speaker update WEBINARID ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title
-    <value>] [--description <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
+    <value>] [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
+    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
     [--connection-type-pull-url <value>]
 
 ARGUMENTS
@@ -411,13 +420,19 @@ ARGUMENTS
   ID         Speaker ID
 
 FLAGS
+  --bio=<value>                       Speaker bio shown in the UI
+  --company=<value>                   Speaker company / organization
   --connection-type=<option>          Speaker connection type
                                       <options: webrtc|gearmode|rtmp|whip|srt|url>
   --connection-type-pull-url=<value>  Pull URL for connection types that support stream pull (whip, url)
-  --description=<value>               Speaker bio or description
+  --description=<value>               Alias for --bio (sets the speaker bio shown in the UI)
   --email=<value>                     Speaker email
+  --facebook=<value>                  Speaker Facebook URL or handle
+  --linkedin=<value>                  Speaker LinkedIn URL or handle
   --name=<value>                      Speaker name
   --title=<value>                     Speaker title or job title
+  --twitter=<value>                   Speaker Twitter/X handle
+  --website=<value>                   Speaker website URL
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -429,9 +444,9 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe"
 
-  $ twentythree webinar speaker update 12345 9900 --connection-type rtmp
+  $ twentythree webinar speaker update 12345 9900 --company "Acme" --linkedin "in/janedoe"
 
-  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO"
+  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO" --bio "Builds things"
 
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```
