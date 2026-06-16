@@ -379,6 +379,39 @@ twentythree video section set-thumbnail <id> --section-id <section-id> --time 15
 
 Subtitle commands manage caption tracks on a video (SRT/WebVTT formats). Use `twentythree video subtitle locales --json` to list all supported locales, and `twentythree video subtitle types --json` to list available subtitle types. Use `--agent` on any subtitle command to inspect the full flag list.
 
+### Transcripts are subtitles
+
+In TwentyThree, **a transcript IS a subtitle track**. There is no separate "transcript" resource — to read or manage a transcript, use the `video subtitle` commands. The timed transcript content (with timestamps) is the subtitle track's data.
+
+**Retrieve a transcript for a video:**
+
+1. Discover the tracks: `twentythree video subtitle list <videoId> --json` — each entry has a `locale` (e.g. `en_US`), a `type` (`general`, `closedcaptions`, `audiodescriptions`), and status. A video also carries a `subtitles_p: true` boolean in `video list`/`video get` responses indicating it has at least one track.
+2. Fetch the timed content: `twentythree video subtitle data <videoId> --subtitle-id <locale> --type <type> --format <format>`.
+   - **`--subtitle-id` is the locale**, not a numeric ID (e.g. `--subtitle-id en_US`).
+   - `--format` defaults to `websrt`; use `webvtt`, `json`, `adobe`, or `subviewer` as needed. `json` is easiest to parse programmatically.
+
+```bash
+# List a video's transcript/subtitle tracks, then fetch the English transcript as JSON
+twentythree video subtitle list 127764838 --json
+twentythree video subtitle data 127764838 --subtitle-id en_US --type general --format json
+```
+
+### Transcripts for webinars
+
+A webinar's transcript lives on its **recording video**, not on the webinar object. The `webinar transcription` commands configure *live* (real-time) transcription during an event — they do **not** return the finished transcript. To retrieve a webinar transcript:
+
+1. Find the webinar's recording video(s): `twentythree video list --live-id <webinarId> --json`.
+2. In that response, a video with `subtitles_p: true` has transcripts. Take its video ID (`id`).
+3. Use the `video subtitle list` / `video subtitle data` flow above with that video ID.
+
+```bash
+# Find the recording for a webinar and pull its transcript
+twentythree video list --live-id 555001 --json
+#   => find a video with "subtitles_p": true, note its "id"
+twentythree video subtitle list <recordingVideoId> --json
+twentythree video subtitle data <recordingVideoId> --subtitle-id en_US --format json
+```
+
 ### video subtitle list
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (Locale, Language, Type, Status, Primary)

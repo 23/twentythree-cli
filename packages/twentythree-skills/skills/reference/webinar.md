@@ -1345,7 +1345,9 @@ twentythree webinar queued-video remove 12345 --video-id 67890 --json
 
 ## Subtopic: webinar transcription
 
-Transcription commands manage speech-to-text transcripts generated from webinar recordings. Transcripts feed into closed captions and AI-generated summaries.
+These commands manage *live* (real-time) transcription for a webinar — connecting a transcription, listing locales, and listing configured transcriptions. They configure transcription; they do **not** return the finished transcript text.
+
+> **Retrieving a webinar's transcript:** the transcript lives on the webinar's **recording video** as a subtitle track, not on the webinar object. Find the recording with `twentythree video list --live-id <webinarId> --json` (look for a video with `subtitles_p: true`), then use `twentythree video subtitle list <recordingVideoId>` and `twentythree video subtitle data <recordingVideoId> --subtitle-id <locale> --format json`. See the **Transcripts are subtitles** and **Transcripts for webinars** sections in [video.md](video.md).
 
 ### webinar transcription list
 
