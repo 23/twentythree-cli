@@ -39,7 +39,7 @@ EXAMPLES
   $ twentythree comment reaction add 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/add.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/add.ts)_
+_See code: [src/commands/comment/reaction/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/comment/reaction/add.ts)_
 
 ## `twentythree comment reaction list`
 
@@ -69,7 +69,7 @@ EXAMPLES
   $ twentythree comment reaction list --object-id 123 --object-token abc --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/list.ts)_
+_See code: [src/commands/comment/reaction/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/comment/reaction/list.ts)_
 
 ## `twentythree comment reaction remove ID`
 
@@ -103,4 +103,4 @@ EXAMPLES
   $ twentythree comment reaction remove 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/remove.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/remove.ts)_
+_See code: [src/commands/comment/reaction/remove.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/comment/reaction/remove.ts)_

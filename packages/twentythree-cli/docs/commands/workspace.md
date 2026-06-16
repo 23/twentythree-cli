@@ -25,7 +25,7 @@ EXAMPLES
   $ twentythree workspace list
 ```
 
-_See code: [src/commands/workspace/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/workspace/list.ts)_
+_See code: [src/commands/workspace/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/workspace/list.ts)_
 
 ## `twentythree workspace use NAME`
 
@@ -51,4 +51,4 @@ EXAMPLES
   $ twentythree workspace use "Company Name"
 ```
 
-_See code: [src/commands/workspace/use.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/workspace/use.ts)_
+_See code: [src/commands/workspace/use.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/workspace/use.ts)_

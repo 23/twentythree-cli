@@ -31,4 +31,4 @@ EXAMPLES
   $ twentythree comment set-order --object-id 123 --order "789,456" --comment-type question
 ```
 
-_See code: [src/commands/comment/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/set-order.ts)_
+_See code: [src/commands/comment/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/comment/set-order.ts)_

@@ -36,7 +36,7 @@ EXAMPLES
   $ twentythree protection protect --protection-method token --grace-minutes 30 --json
 ```
 
-_See code: [src/commands/protection/protect.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/protection/protect.ts)_
+_See code: [src/commands/protection/protect.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/protection/protect.ts)_
 
 ## `twentythree protection unprotect`
 
@@ -64,7 +64,7 @@ EXAMPLES
   $ twentythree protection unprotect --object-id 12345 --json
 ```
 
-_See code: [src/commands/protection/unprotect.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/protection/unprotect.ts)_
+_See code: [src/commands/protection/unprotect.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/protection/unprotect.ts)_
 
 ## `twentythree protection verify`
 
@@ -97,4 +97,4 @@ EXAMPLES
   $ twentythree protection verify --protection-method token --verification-data mytoken --json
 ```
 
-_See code: [src/commands/protection/verify.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/protection/verify.ts)_
+_See code: [src/commands/protection/verify.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/protection/verify.ts)_

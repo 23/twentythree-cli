@@ -62,7 +62,7 @@ EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --title "CTO" --company "Acme" --bio "Builds things" --linkedin "in/janedoe" --json
 ```
 
-_See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/add.ts)_
+_See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/add.ts)_
 
 ## `twentythree webinar speaker add-from-speaker ID`
 
@@ -93,7 +93,7 @@ EXAMPLES
   $ twentythree webinar speaker add-from-speaker 12345 --speaker-id 99 --json
 ```
 
-_See code: [src/commands/webinar/speaker/add-from-speaker.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/add-from-speaker.ts)_
+_See code: [src/commands/webinar/speaker/add-from-speaker.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/add-from-speaker.ts)_
 
 ## `twentythree webinar speaker add-from-user ID`
 
@@ -124,7 +124,7 @@ EXAMPLES
   $ twentythree webinar speaker add-from-user 12345 --user-id 42 --json
 ```
 
-_See code: [src/commands/webinar/speaker/add-from-user.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/add-from-user.ts)_
+_See code: [src/commands/webinar/speaker/add-from-user.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/add-from-user.ts)_
 
 ## `twentythree webinar speaker cancel-guest-request WEBINARID ID`
 
@@ -151,7 +151,7 @@ EXAMPLES
   $ twentythree webinar speaker cancel-guest-request 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/cancel-guest-request.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/cancel-guest-request.ts)_
+_See code: [src/commands/webinar/speaker/cancel-guest-request.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/cancel-guest-request.ts)_
 
 ## `twentythree webinar speaker connection-types ID`
 
@@ -177,7 +177,7 @@ EXAMPLES
   $ twentythree webinar speaker connection-types 12345 --json
 ```
 
-_See code: [src/commands/webinar/speaker/connection-types.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/connection-types.ts)_
+_See code: [src/commands/webinar/speaker/connection-types.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/connection-types.ts)_
 
 ## `twentythree webinar speaker library`
 
@@ -200,7 +200,7 @@ EXAMPLES
   $ twentythree webinar speaker library --json
 ```
 
-_See code: [src/commands/webinar/speaker/library.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/library.ts)_
+_See code: [src/commands/webinar/speaker/library.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/library.ts)_
 
 ## `twentythree webinar speaker list ID`
 
@@ -229,7 +229,7 @@ EXAMPLES
   $ twentythree webinar speaker list 12345 --json
 ```
 
-_See code: [src/commands/webinar/speaker/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/list.ts)_
+_See code: [src/commands/webinar/speaker/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/list.ts)_
 
 ## `twentythree webinar speaker remove WEBINARID ID`
 
@@ -256,7 +256,7 @@ EXAMPLES
   $ twentythree webinar speaker remove 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/remove.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/remove.ts)_
+_See code: [src/commands/webinar/speaker/remove.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/remove.ts)_
 
 ## `twentythree webinar speaker remove-avatar WEBINARID ID`
 
@@ -283,7 +283,7 @@ EXAMPLES
   $ twentythree webinar speaker remove-avatar 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/remove-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/remove-avatar.ts)_
+_See code: [src/commands/webinar/speaker/remove-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/remove-avatar.ts)_
 
 ## `twentythree webinar speaker request-guest WEBINARID ID`
 
@@ -310,7 +310,7 @@ EXAMPLES
   $ twentythree webinar speaker request-guest 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/request-guest.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/request-guest.ts)_
+_See code: [src/commands/webinar/speaker/request-guest.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/request-guest.ts)_
 
 ## `twentythree webinar speaker send-invitation WEBINARID ID`
 
@@ -337,7 +337,7 @@ EXAMPLES
   $ twentythree webinar speaker send-invitation 12345 9900 --json
 ```
 
-_See code: [src/commands/webinar/speaker/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/send-invitation.ts)_
+_See code: [src/commands/webinar/speaker/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/send-invitation.ts)_
 
 ## `twentythree webinar speaker set-avatar WEBINARID ID FILE`
 
@@ -370,7 +370,7 @@ EXAMPLES
   $ twentythree webinar speaker set-avatar 12345 9900 ./avatar.png --chunk-size 524288
 ```
 
-_See code: [src/commands/webinar/speaker/set-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/set-avatar.ts)_
+_See code: [src/commands/webinar/speaker/set-avatar.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/set-avatar.ts)_
 
 ## `twentythree webinar speaker set-order ID`
 
@@ -402,7 +402,7 @@ EXAMPLES
   $ twentythree webinar speaker set-order 12345 --speaker-id 9900 --order 1 --json
 ```
 
-_See code: [src/commands/webinar/speaker/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/set-order.ts)_
+_See code: [src/commands/webinar/speaker/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/set-order.ts)_
 
 ## `twentythree webinar speaker update WEBINARID ID`
 
@@ -451,4 +451,4 @@ EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```
 
-_See code: [src/commands/webinar/speaker/update.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/speaker/update.ts)_
+_See code: [src/commands/webinar/speaker/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webinar/speaker/update.ts)_

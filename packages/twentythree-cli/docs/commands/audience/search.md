@@ -36,4 +36,4 @@ EXAMPLES
   $ twentythree audience search --text "jane" --orderby score --order desc
 ```
 
-_See code: [src/commands/audience/search.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/audience/search.ts)_
+_See code: [src/commands/audience/search.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/audience/search.ts)_

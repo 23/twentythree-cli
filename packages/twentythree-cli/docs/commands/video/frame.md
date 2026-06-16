@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree video frame 12345 --time 30 --json
 ```
 
-_See code: [src/commands/video/frame.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/video/frame.ts)_
+_See code: [src/commands/video/frame.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/video/frame.ts)_

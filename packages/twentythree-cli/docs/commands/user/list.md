@@ -52,4 +52,4 @@ EXAMPLES
   $ twentythree user list --user-group-id 5 --orderby display_name --json
 ```
 
-_See code: [src/commands/user/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/user/list.ts)_
+_See code: [src/commands/user/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/user/list.ts)_

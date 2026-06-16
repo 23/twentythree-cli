@@ -68,4 +68,4 @@ EXAMPLES
   $ twentythree audience list --export-format csv > audience.csv
 ```
 
-_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/audience/list.ts)_
+_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/audience/list.ts)_

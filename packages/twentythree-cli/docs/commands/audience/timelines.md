@@ -38,4 +38,4 @@ EXAMPLES
   $ twentythree audience timelines --objects "456 789" --json
 ```
 
-_See code: [src/commands/audience/timelines.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/audience/timelines.ts)_
+_See code: [src/commands/audience/timelines.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/audience/timelines.ts)_

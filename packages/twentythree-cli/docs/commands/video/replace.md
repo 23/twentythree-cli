@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree video replace 12345 ./new-video.mp4 --chunk-size 52428800 --concurrency 3
 ```
 
-_See code: [src/commands/video/replace.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/video/replace.ts)_
+_See code: [src/commands/video/replace.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/video/replace.ts)_
