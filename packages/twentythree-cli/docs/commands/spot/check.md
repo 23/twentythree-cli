@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree spot check 12345 --json
 ```
 
-_See code: [src/commands/spot/check.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/check.ts)_
+_See code: [src/commands/spot/check.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/check.ts)_

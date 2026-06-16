@@ -38,4 +38,4 @@ EXAMPLES
   $ twentythree user create --email alice@example.com --json
 ```
 
-_See code: [src/commands/user/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/user/create.ts)_
+_See code: [src/commands/user/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/user/create.ts)_

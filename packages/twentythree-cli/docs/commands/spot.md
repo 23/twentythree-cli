@@ -35,7 +35,7 @@ EXAMPLES
   $ twentythree spot check 12345 --json
 ```
 
-_See code: [src/commands/spot/check.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/check.ts)_
+_See code: [src/commands/spot/check.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/check.ts)_
 
 ## `twentythree spot create`
 
@@ -67,7 +67,7 @@ EXAMPLES
   $ twentythree spot create --spot-name "My Spot" --json
 ```
 
-_See code: [src/commands/spot/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/create.ts)_
+_See code: [src/commands/spot/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/create.ts)_
 
 ## `twentythree spot delete ID`
 
@@ -93,7 +93,7 @@ EXAMPLES
   $ twentythree spot delete 12345 --json
 ```
 
-_See code: [src/commands/spot/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/delete.ts)_
+_See code: [src/commands/spot/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/delete.ts)_
 
 ## `twentythree spot list`
 
@@ -130,7 +130,7 @@ EXAMPLES
   $ twentythree spot list --json
 ```
 
-_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/list.ts)_
+_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/list.ts)_
 
 ## `twentythree spot reset-version ID`
 
@@ -156,7 +156,7 @@ EXAMPLES
   $ twentythree spot reset-version 12345 --json
 ```
 
-_See code: [src/commands/spot/reset-version.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/reset-version.ts)_
+_See code: [src/commands/spot/reset-version.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/reset-version.ts)_
 
 ## `twentythree spot set-videos ID`
 
@@ -185,7 +185,7 @@ EXAMPLES
   $ twentythree spot set-videos 12345 --videos "111" --json
 ```
 
-_See code: [src/commands/spot/set-videos.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/set-videos.ts)_
+_See code: [src/commands/spot/set-videos.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/set-videos.ts)_
 
 ## `twentythree spot update ID`
 
@@ -219,4 +219,4 @@ EXAMPLES
   $ twentythree spot update 12345 --spot-name "New Name" --json
 ```
 
-_See code: [src/commands/spot/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/spot/update.ts)_
+_See code: [src/commands/spot/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/update.ts)_

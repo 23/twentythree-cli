@@ -20,4 +20,4 @@ EXAMPLES
   $ twentythree auth switch
 ```
 
-_See code: [src/commands/auth/switch.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/auth/switch.ts)_
+_See code: [src/commands/auth/switch.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/auth/switch.ts)_

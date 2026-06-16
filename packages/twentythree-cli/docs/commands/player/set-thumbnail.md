@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree player set-thumbnail ./thumbnail.jpg --player-id 42 --json
 ```
 
-_See code: [src/commands/player/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/player/set-thumbnail.ts)_
+_See code: [src/commands/player/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/player/set-thumbnail.ts)_

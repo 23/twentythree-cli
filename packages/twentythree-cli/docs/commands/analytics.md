@@ -79,7 +79,7 @@ EXAMPLES
   $ twentythree analytics conversions --json
 ```
 
-_See code: [src/commands/analytics/conversions/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/conversions/index.ts)_
+_See code: [src/commands/analytics/conversions/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/index.ts)_
 
 ## `twentythree analytics conversions timeseries`
 
@@ -114,7 +114,7 @@ EXAMPLES
   $ twentythree analytics conversions timeseries --json
 ```
 
-_See code: [src/commands/analytics/conversions/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/conversions/timeseries.ts)_
+_See code: [src/commands/analytics/conversions/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/timeseries.ts)_
 
 ## `twentythree analytics conversions totals`
 
@@ -149,7 +149,7 @@ EXAMPLES
   $ twentythree analytics conversions totals --json
 ```
 
-_See code: [src/commands/analytics/conversions/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/conversions/totals.ts)_
+_See code: [src/commands/analytics/conversions/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/totals.ts)_
 
 ## `twentythree analytics live`
 
@@ -187,7 +187,7 @@ EXAMPLES
   $ twentythree analytics live --json
 ```
 
-_See code: [src/commands/analytics/live/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/index.ts)_
+_See code: [src/commands/analytics/live/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/index.ts)_
 
 ## `twentythree analytics live event`
 
@@ -225,7 +225,7 @@ EXAMPLES
   $ twentythree analytics live event --json
 ```
 
-_See code: [src/commands/analytics/live/event.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/event.ts)_
+_See code: [src/commands/analytics/live/event.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/event.ts)_
 
 ## `twentythree analytics live event-timeseries`
 
@@ -260,7 +260,7 @@ EXAMPLES
   $ twentythree analytics live event-timeseries --json
 ```
 
-_See code: [src/commands/analytics/live/event-timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/event-timeseries.ts)_
+_See code: [src/commands/analytics/live/event-timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/event-timeseries.ts)_
 
 ## `twentythree analytics live event-totals`
 
@@ -295,7 +295,7 @@ EXAMPLES
   $ twentythree analytics live event-totals --json
 ```
 
-_See code: [src/commands/analytics/live/event-totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/event-totals.ts)_
+_See code: [src/commands/analytics/live/event-totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/event-totals.ts)_
 
 ## `twentythree analytics live timeseries`
 
@@ -330,7 +330,7 @@ EXAMPLES
   $ twentythree analytics live timeseries --json
 ```
 
-_See code: [src/commands/analytics/live/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/timeseries.ts)_
+_See code: [src/commands/analytics/live/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/timeseries.ts)_
 
 ## `twentythree analytics live totals`
 
@@ -365,7 +365,7 @@ EXAMPLES
   $ twentythree analytics live totals --json
 ```
 
-_See code: [src/commands/analytics/live/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/totals.ts)_
+_See code: [src/commands/analytics/live/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/totals.ts)_
 
 ## `twentythree analytics live weekday`
 
@@ -403,7 +403,7 @@ EXAMPLES
   $ twentythree analytics live weekday --json
 ```
 
-_See code: [src/commands/analytics/live/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/weekday.ts)_
+_See code: [src/commands/analytics/live/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/weekday.ts)_
 
 ## `twentythree analytics live weekday timeseries`
 
@@ -438,7 +438,7 @@ EXAMPLES
   $ twentythree analytics live weekday timeseries --json
 ```
 
-_See code: [src/commands/analytics/live/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/weekday/timeseries.ts)_
+_See code: [src/commands/analytics/live/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/weekday/timeseries.ts)_
 
 ## `twentythree analytics live weekday totals`
 
@@ -473,7 +473,7 @@ EXAMPLES
   $ twentythree analytics live weekday totals --json
 ```
 
-_See code: [src/commands/analytics/live/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/live/weekday/totals.ts)_
+_See code: [src/commands/analytics/live/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/live/weekday/totals.ts)_
 
 ## `twentythree analytics usage devices`
 
@@ -511,7 +511,7 @@ EXAMPLES
   $ twentythree analytics usage devices --json
 ```
 
-_See code: [src/commands/analytics/usage/devices.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/devices.ts)_
+_See code: [src/commands/analytics/usage/devices.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/devices.ts)_
 
 ## `twentythree analytics usage devices timeseries`
 
@@ -546,7 +546,7 @@ EXAMPLES
   $ twentythree analytics usage devices timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/devices/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/devices/timeseries.ts)_
+_See code: [src/commands/analytics/usage/devices/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/devices/timeseries.ts)_
 
 ## `twentythree analytics usage devices totals`
 
@@ -581,7 +581,7 @@ EXAMPLES
   $ twentythree analytics usage devices totals --json
 ```
 
-_See code: [src/commands/analytics/usage/devices/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/devices/totals.ts)_
+_See code: [src/commands/analytics/usage/devices/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/devices/totals.ts)_
 
 ## `twentythree analytics usage domains`
 
@@ -619,7 +619,7 @@ EXAMPLES
   $ twentythree analytics usage domains --json
 ```
 
-_See code: [src/commands/analytics/usage/domains.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/domains.ts)_
+_See code: [src/commands/analytics/usage/domains.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/domains.ts)_
 
 ## `twentythree analytics usage domains totals`
 
@@ -654,7 +654,7 @@ EXAMPLES
   $ twentythree analytics usage domains totals --json
 ```
 
-_See code: [src/commands/analytics/usage/domains/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/domains/totals.ts)_
+_See code: [src/commands/analytics/usage/domains/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/domains/totals.ts)_
 
 ## `twentythree analytics usage locations`
 
@@ -692,7 +692,7 @@ EXAMPLES
   $ twentythree analytics usage locations --json
 ```
 
-_See code: [src/commands/analytics/usage/locations.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/locations.ts)_
+_See code: [src/commands/analytics/usage/locations.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/locations.ts)_
 
 ## `twentythree analytics usage locations totals`
 
@@ -727,7 +727,7 @@ EXAMPLES
   $ twentythree analytics usage locations totals --json
 ```
 
-_See code: [src/commands/analytics/usage/locations/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/locations/totals.ts)_
+_See code: [src/commands/analytics/usage/locations/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/locations/totals.ts)_
 
 ## `twentythree analytics usage sourceids`
 
@@ -765,7 +765,7 @@ EXAMPLES
   $ twentythree analytics usage sourceids --json
 ```
 
-_See code: [src/commands/analytics/usage/sourceids.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/sourceids.ts)_
+_See code: [src/commands/analytics/usage/sourceids.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/sourceids.ts)_
 
 ## `twentythree analytics usage sourceids totals`
 
@@ -800,7 +800,7 @@ EXAMPLES
   $ twentythree analytics usage sourceids totals --json
 ```
 
-_See code: [src/commands/analytics/usage/sourceids/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/sourceids/totals.ts)_
+_See code: [src/commands/analytics/usage/sourceids/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/sourceids/totals.ts)_
 
 ## `twentythree analytics usage sources`
 
@@ -838,7 +838,7 @@ EXAMPLES
   $ twentythree analytics usage sources --json
 ```
 
-_See code: [src/commands/analytics/usage/sources.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/sources.ts)_
+_See code: [src/commands/analytics/usage/sources.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/sources.ts)_
 
 ## `twentythree analytics usage sources totals`
 
@@ -873,7 +873,7 @@ EXAMPLES
   $ twentythree analytics usage sources totals --json
 ```
 
-_See code: [src/commands/analytics/usage/sources/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/sources/totals.ts)_
+_See code: [src/commands/analytics/usage/sources/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/sources/totals.ts)_
 
 ## `twentythree analytics usage spots`
 
@@ -911,7 +911,7 @@ EXAMPLES
   $ twentythree analytics usage spots --json
 ```
 
-_See code: [src/commands/analytics/usage/spots.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/spots.ts)_
+_See code: [src/commands/analytics/usage/spots.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/spots.ts)_
 
 ## `twentythree analytics usage spots timeseries`
 
@@ -946,7 +946,7 @@ EXAMPLES
   $ twentythree analytics usage spots timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/spots/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/spots/timeseries.ts)_
+_See code: [src/commands/analytics/usage/spots/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/spots/timeseries.ts)_
 
 ## `twentythree analytics usage spots totals`
 
@@ -981,7 +981,7 @@ EXAMPLES
   $ twentythree analytics usage spots totals --json
 ```
 
-_See code: [src/commands/analytics/usage/spots/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/spots/totals.ts)_
+_See code: [src/commands/analytics/usage/spots/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/spots/totals.ts)_
 
 ## `twentythree analytics usage storage`
 
@@ -1016,7 +1016,7 @@ EXAMPLES
   $ twentythree analytics usage storage --selection videos
 ```
 
-_See code: [src/commands/analytics/usage/storage.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/storage.ts)_
+_See code: [src/commands/analytics/usage/storage.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/storage.ts)_
 
 ## `twentythree analytics usage traffic`
 
@@ -1054,7 +1054,7 @@ EXAMPLES
   $ twentythree analytics usage traffic --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/traffic.ts)_
+_See code: [src/commands/analytics/usage/traffic.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/traffic.ts)_
 
 ## `twentythree analytics usage traffic timeseries`
 
@@ -1089,7 +1089,7 @@ EXAMPLES
   $ twentythree analytics usage traffic timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/traffic/timeseries.ts)_
+_See code: [src/commands/analytics/usage/traffic/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/traffic/timeseries.ts)_
 
 ## `twentythree analytics usage traffic totals`
 
@@ -1124,7 +1124,7 @@ EXAMPLES
   $ twentythree analytics usage traffic totals --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/usage/traffic/totals.ts)_
+_See code: [src/commands/analytics/usage/traffic/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/usage/traffic/totals.ts)_
 
 ## `twentythree analytics video`
 
@@ -1162,7 +1162,7 @@ EXAMPLES
   $ twentythree analytics video --json
 ```
 
-_See code: [src/commands/analytics/video/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/index.ts)_
+_See code: [src/commands/analytics/video/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/index.ts)_
 
 ## `twentythree analytics video performance`
 
@@ -1200,7 +1200,7 @@ EXAMPLES
   $ twentythree analytics video performance --json
 ```
 
-_See code: [src/commands/analytics/video/performance.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/performance.ts)_
+_See code: [src/commands/analytics/video/performance.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/performance.ts)_
 
 ## `twentythree analytics video performance timeseries`
 
@@ -1235,7 +1235,7 @@ EXAMPLES
   $ twentythree analytics video performance timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/performance/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/performance/timeseries.ts)_
+_See code: [src/commands/analytics/video/performance/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/performance/timeseries.ts)_
 
 ## `twentythree analytics video performance totals`
 
@@ -1270,7 +1270,7 @@ EXAMPLES
   $ twentythree analytics video performance totals --json
 ```
 
-_See code: [src/commands/analytics/video/performance/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/performance/totals.ts)_
+_See code: [src/commands/analytics/video/performance/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/performance/totals.ts)_
 
 ## `twentythree analytics video published`
 
@@ -1308,7 +1308,7 @@ EXAMPLES
   $ twentythree analytics video published --json
 ```
 
-_See code: [src/commands/analytics/video/published.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/published.ts)_
+_See code: [src/commands/analytics/video/published.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/published.ts)_
 
 ## `twentythree analytics video published timeseries`
 
@@ -1343,7 +1343,7 @@ EXAMPLES
   $ twentythree analytics video published timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/published/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/published/timeseries.ts)_
+_See code: [src/commands/analytics/video/published/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/published/timeseries.ts)_
 
 ## `twentythree analytics video published totals`
 
@@ -1378,7 +1378,7 @@ EXAMPLES
   $ twentythree analytics video published totals --json
 ```
 
-_See code: [src/commands/analytics/video/published/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/published/totals.ts)_
+_See code: [src/commands/analytics/video/published/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/published/totals.ts)_
 
 ## `twentythree analytics video timeseries`
 
@@ -1413,7 +1413,7 @@ EXAMPLES
   $ twentythree analytics video timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/timeseries.ts)_
+_See code: [src/commands/analytics/video/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/timeseries.ts)_
 
 ## `twentythree analytics video totals`
 
@@ -1448,7 +1448,7 @@ EXAMPLES
   $ twentythree analytics video totals --json
 ```
 
-_See code: [src/commands/analytics/video/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/totals.ts)_
+_See code: [src/commands/analytics/video/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/totals.ts)_
 
 ## `twentythree analytics video weekday`
 
@@ -1486,7 +1486,7 @@ EXAMPLES
   $ twentythree analytics video weekday --json
 ```
 
-_See code: [src/commands/analytics/video/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/weekday.ts)_
+_See code: [src/commands/analytics/video/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/weekday.ts)_
 
 ## `twentythree analytics video weekday timeseries`
 
@@ -1521,7 +1521,7 @@ EXAMPLES
   $ twentythree analytics video weekday timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/weekday/timeseries.ts)_
+_See code: [src/commands/analytics/video/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/weekday/timeseries.ts)_
 
 ## `twentythree analytics video weekday totals`
 
@@ -1556,4 +1556,4 @@ EXAMPLES
   $ twentythree analytics video weekday totals --json
 ```
 
-_See code: [src/commands/analytics/video/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/analytics/video/weekday/totals.ts)_
+_See code: [src/commands/analytics/video/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/video/weekday/totals.ts)_

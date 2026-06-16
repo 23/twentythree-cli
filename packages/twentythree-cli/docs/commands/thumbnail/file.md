@@ -32,7 +32,7 @@ EXAMPLES
   $ twentythree thumbnail file delete --template-id 42 --filename logo.png --json
 ```
 
-_See code: [src/commands/thumbnail/file/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/thumbnail/file/delete.ts)_
+_See code: [src/commands/thumbnail/file/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/thumbnail/file/delete.ts)_
 
 ## `twentythree thumbnail file list ID`
 
@@ -58,7 +58,7 @@ EXAMPLES
   $ twentythree thumbnail file list 42 --json
 ```
 
-_See code: [src/commands/thumbnail/file/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/thumbnail/file/list.ts)_
+_See code: [src/commands/thumbnail/file/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/thumbnail/file/list.ts)_
 
 ## `twentythree thumbnail file upload FILE`
 
@@ -87,4 +87,4 @@ EXAMPLES
   $ twentythree thumbnail file upload ./banner.jpg --template-id 42 --json
 ```
 
-_See code: [src/commands/thumbnail/file/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/thumbnail/file/upload.ts)_
+_See code: [src/commands/thumbnail/file/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/thumbnail/file/upload.ts)_

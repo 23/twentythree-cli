@@ -24,4 +24,4 @@ EXAMPLES
   $ twentythree auth status
 ```
 
-_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/auth/status.ts)_
+_See code: [src/commands/auth/status.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/auth/status.ts)_

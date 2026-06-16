@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree collector list --json
 ```
 
-_See code: [src/commands/collector/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/collector/list.ts)_
+_See code: [src/commands/collector/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/collector/list.ts)_

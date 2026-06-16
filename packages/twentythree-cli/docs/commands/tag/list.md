@@ -41,4 +41,4 @@ EXAMPLES
   $ twentythree tag list --json
 ```
 
-_See code: [src/commands/tag/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/tag/list.ts)_
+_See code: [src/commands/tag/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/tag/list.ts)_

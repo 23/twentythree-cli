@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree webhook unsubscribe --webhook-id 12345 --json
 ```
 
-_See code: [src/commands/webhook/unsubscribe.ts](https://github.com/23/twentythree-cli/blob/v1.6.0/src/commands/webhook/unsubscribe.ts)_
+_See code: [src/commands/webhook/unsubscribe.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/webhook/unsubscribe.ts)_
