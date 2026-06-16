@@ -6803,6 +6803,8 @@ export interface operations {
                     number_of_prompts: number;
                     /** @description The duration of the agent session, in seconds. May be `0` if the value is unknown. */
                     session_duration_seconds: number;
+                    /** @description The estimated number of minutes saved by the automatic run in the agent session, compared to completing the task by hand. May be `0` if the value is unknown. */
+                    estimated_minutes_saved: number;
                     /** @description Name of the AI/LLM provider used in the agent session for example `claude code`, `claude`, `chatgpt`, `codex`, `windsurf` etc. */
                     ai_provider: string;
                     /** @description The version number for the TwentyThree Skill, `unknown` if unknown. */

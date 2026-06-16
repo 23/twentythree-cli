@@ -2581,6 +2581,10 @@
                                         "description": "The duration of the agent session, in seconds. May be `0` if the value is unknown.",
                                         "type":        "integer"
                                     },
+                                    "estimated_minutes_saved": {
+                                        "description": "The estimated number of minutes saved by the automatic run in the agent session, compared to completing the task by hand. May be `0` if the value is unknown.",
+                                        "type":        "integer"
+                                    },
                                     "ai_provider":        {
                                         "description": "Name of the AI/LLM provider used in the agent session for example `claude code`, `claude`, `chatgpt`, `codex`, `windsurf` etc.",
                                         "type":        "string",
@@ -2601,6 +2605,7 @@
                                     "summary",
                                     "number_of_prompts",
                                     "session_duration_seconds",
+                                    "estimated_minutes_saved",
                                     "ai_provider",
                                     "twentythree_skill_version"
                                 ]

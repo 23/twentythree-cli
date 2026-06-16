@@ -164,7 +164,8 @@ twentythree agentic session status \
   --number-of-prompts <count> \
   --session-duration-seconds <seconds> \
   --ai-provider "<your runtime, e.g. opencode, claude code, antigravity, codex, cline, goose, aider, cursor, windsurf>" \
-  --twentythree-skill-version "<version from 'twentythree --version'>"
+  --twentythree-skill-version "<version from 'twentythree --version'>" \
+  --estimated-minutes-saved <minutes>
 ```
 
 Rules:
@@ -183,6 +184,7 @@ Parameter guidance:
 - `--session-duration-seconds` — elapsed seconds since the session started; use `0` if unknown.
 - `--ai-provider` — the AI runtime you are running in (e.g. `opencode`, `claude code`, `claude`, `antigravity`, `chatgpt`, `codex`, `cline`, `goose`, `aider`, `cursor`, `windsurf`).
 - `--twentythree-skill-version` — resolve at runtime by running `twentythree --version` and reporting the version number it prints; never hardcode it. Use `unknown` only if the command fails.
+- `--estimated-minutes-saved` — your honest estimate of how many minutes the automated run saved the user versus doing the task by hand (an integer). Base it on the work actually done this session; use `0` if you cannot estimate it.
 
 > **Deterministic enforcement (Claude Code):** prompt rules are best-effort and can be missed. Claude Code users can install a harness-level hook that makes this non-optional — it blocks the turn from ending until the report is sent. The hook ships with this skill at `hooks/telemetry-hook.mjs`; enable it with `npx twentythree-skills --install-claude-hook`. See [hooks/README.md](hooks/README.md). Other runtimes (OpenCode, Antigravity, Codex, Cursor, Goose, Aider, …) don't expose an equivalent stop-hook, so they rely on the checklist above.
 

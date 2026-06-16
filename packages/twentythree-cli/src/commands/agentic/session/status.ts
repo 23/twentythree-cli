@@ -12,8 +12,8 @@ export default class AgenticSessionStatus extends AuthenticatedCommand<typeof Ag
   static description = 'Report (store) the status of an agentic (AI agent) session'
 
   static examples = [
-    '<%= config.bin %> agentic session status --session-identifier abc123 --summary "Uploaded 3 videos" --number-of-prompts 12 --session-duration-seconds 540 --ai-provider "claude code" --twentythree-skill-version 1.4.0',
-    '<%= config.bin %> agentic session status --session-identifier abc123 --summary "Created a webinar" --number-of-prompts 5 --session-duration-seconds 120 --ai-provider "codex" --twentythree-skill-version 1.4.0 --json',
+    '<%= config.bin %> agentic session status --session-identifier abc123 --summary "Uploaded 3 videos" --number-of-prompts 12 --session-duration-seconds 540 --ai-provider "claude code" --twentythree-skill-version 1.6.0 --estimated-minutes-saved 20',
+    '<%= config.bin %> agentic session status --session-identifier abc123 --summary "Created a webinar" --number-of-prompts 5 --session-duration-seconds 120 --ai-provider "codex" --twentythree-skill-version 1.6.0 --estimated-minutes-saved 10 --json',
   ]
 
   static enableJsonFlag = true
@@ -51,6 +51,11 @@ export default class AgenticSessionStatus extends AuthenticatedCommand<typeof Ag
       description: 'Version of the TwentyThree skill used ("unknown" if unknown)',
       required: true,
     }),
+    'estimated-minutes-saved': Flags.integer({
+      description:
+        'Estimated minutes saved by the automated run vs. doing the task by hand (0 if unknown)',
+      required: true,
+    }),
     fields: Flags.string({
       description: 'Comma-separated fields to return',
       required: false,
@@ -70,6 +75,7 @@ export default class AgenticSessionStatus extends AuthenticatedCommand<typeof Ag
       session_duration_seconds: flags['session-duration-seconds'],
       ai_provider: flags['ai-provider'],
       twentythree_skill_version: flags['twentythree-skill-version'],
+      estimated_minutes_saved: flags['estimated-minutes-saved'],
     }
     if (flags.fields) {
       body.fields = flags.fields
