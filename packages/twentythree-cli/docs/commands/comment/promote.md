@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree comment promote 789 --no-promoted
 ```
 
-_See code: [src/commands/comment/promote.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/promote.ts)_
+_See code: [src/commands/comment/promote.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/promote.ts)_

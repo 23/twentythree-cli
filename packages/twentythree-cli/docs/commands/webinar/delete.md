@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree webinar delete 12345 --json
 ```
 
-_See code: [src/commands/webinar/delete.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/webinar/delete.ts)_
+_See code: [src/commands/webinar/delete.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/webinar/delete.ts)_

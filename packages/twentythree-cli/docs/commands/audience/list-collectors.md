@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree audience list-collectors --action-id 456 --json
 ```
 
-_See code: [src/commands/audience/list-collectors.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/audience/list-collectors.ts)_
+_See code: [src/commands/audience/list-collectors.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/audience/list-collectors.ts)_

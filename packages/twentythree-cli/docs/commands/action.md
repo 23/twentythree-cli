@@ -41,7 +41,7 @@ EXAMPLES
   $ twentythree action add --type overlay --object-id 12345 --json
 ```
 
-_See code: [src/commands/action/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/add.ts)_
+_See code: [src/commands/action/add.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/add.ts)_
 
 ## `twentythree action delete ID`
 
@@ -67,7 +67,7 @@ EXAMPLES
   $ twentythree action delete 12345 --json
 ```
 
-_See code: [src/commands/action/delete.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/delete.ts)_
+_See code: [src/commands/action/delete.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/delete.ts)_
 
 ## `twentythree action exclude ID`
 
@@ -99,7 +99,7 @@ EXAMPLES
   $ twentythree action exclude 12345 --object-id 6789 --json
 ```
 
-_See code: [src/commands/action/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/exclude.ts)_
+_See code: [src/commands/action/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/exclude.ts)_
 
 ## `twentythree action get [ID]`
 
@@ -140,7 +140,7 @@ EXAMPLES
   $ twentythree action get 12345 --json
 ```
 
-_See code: [src/commands/action/get.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/get.ts)_
+_See code: [src/commands/action/get.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/get.ts)_
 
 ## `twentythree action include ID`
 
@@ -172,7 +172,7 @@ EXAMPLES
   $ twentythree action include 12345 --object-id 6789 --json
 ```
 
-_See code: [src/commands/action/include.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/include.ts)_
+_See code: [src/commands/action/include.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/include.ts)_
 
 ## `twentythree action list`
 
@@ -209,7 +209,7 @@ EXAMPLES
   $ twentythree action list --video-id 12345 --json
 ```
 
-_See code: [src/commands/action/list.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/list.ts)_
+_See code: [src/commands/action/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/list.ts)_
 
 ## `twentythree action types`
 
@@ -237,7 +237,7 @@ EXAMPLES
   $ twentythree action types --json
 ```
 
-_See code: [src/commands/action/types.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/types.ts)_
+_See code: [src/commands/action/types.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/types.ts)_
 
 ## `twentythree action update ID`
 
@@ -273,7 +273,7 @@ EXAMPLES
   $ twentythree action update 12345 --name "Buy Now" --start-time 10 --end-time 20 --json
 ```
 
-_See code: [src/commands/action/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/update.ts)_
+_See code: [src/commands/action/update.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/update.ts)_
 
 ## `twentythree action upload ID VARIABLE-NAME FILE`
 
@@ -303,4 +303,4 @@ EXAMPLES
   $ twentythree action upload 12345 image ./banner.png --json
 ```
 
-_See code: [src/commands/action/upload.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/action/upload.ts)_
+_See code: [src/commands/action/upload.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/action/upload.ts)_

@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree setting update --set timezone=UTC --json
 ```
 
-_See code: [src/commands/setting/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/setting/update.ts)_
+_See code: [src/commands/setting/update.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/setting/update.ts)_

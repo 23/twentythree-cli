@@ -49,7 +49,7 @@ EXAMPLES
   $ twentythree comment add --object-id 456 --object-type live --content "Question?" --comment-type question
 ```
 
-_See code: [src/commands/comment/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/add.ts)_
+_See code: [src/commands/comment/add.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/add.ts)_
 
 ## `twentythree comment clone [ID]`
 
@@ -78,7 +78,7 @@ EXAMPLES
   $ twentythree comment clone 789 --clone-type question
 ```
 
-_See code: [src/commands/comment/clone.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/clone.ts)_
+_See code: [src/commands/comment/clone.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/clone.ts)_
 
 ## `twentythree comment delete ID`
 
@@ -104,7 +104,7 @@ EXAMPLES
   $ twentythree comment delete 789 --json
 ```
 
-_See code: [src/commands/comment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/delete.ts)_
+_See code: [src/commands/comment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/delete.ts)_
 
 ## `twentythree comment list`
 
@@ -140,7 +140,7 @@ EXAMPLES
   $ twentythree comment list --json
 ```
 
-_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/list.ts)_
+_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/list.ts)_
 
 ## `twentythree comment promote ID`
 
@@ -171,7 +171,7 @@ EXAMPLES
   $ twentythree comment promote 789 --no-promoted
 ```
 
-_See code: [src/commands/comment/promote.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/promote.ts)_
+_See code: [src/commands/comment/promote.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/promote.ts)_
 
 ## `twentythree comment reaction add ID`
 
@@ -205,7 +205,7 @@ EXAMPLES
   $ twentythree comment reaction add 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/add.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/reaction/add.ts)_
+_See code: [src/commands/comment/reaction/add.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/add.ts)_
 
 ## `twentythree comment reaction list`
 
@@ -235,7 +235,7 @@ EXAMPLES
   $ twentythree comment reaction list --object-id 123 --object-token abc --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/list.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/reaction/list.ts)_
+_See code: [src/commands/comment/reaction/list.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/list.ts)_
 
 ## `twentythree comment reaction remove ID`
 
@@ -269,7 +269,7 @@ EXAMPLES
   $ twentythree comment reaction remove 789 --object-id 123 --object-token abc --reaction "❤️" --object-type photo
 ```
 
-_See code: [src/commands/comment/reaction/remove.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/reaction/remove.ts)_
+_See code: [src/commands/comment/reaction/remove.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/reaction/remove.ts)_
 
 ## `twentythree comment set-order`
 
@@ -297,7 +297,7 @@ EXAMPLES
   $ twentythree comment set-order --object-id 123 --order "789,456" --comment-type question
 ```
 
-_See code: [src/commands/comment/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/set-order.ts)_
+_See code: [src/commands/comment/set-order.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/set-order.ts)_
 
 ## `twentythree comment update ID`
 
@@ -327,4 +327,4 @@ EXAMPLES
   $ twentythree comment update 789 --object-id 123 --status dismissed
 ```
 
-_See code: [src/commands/comment/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/comment/update.ts)_
+_See code: [src/commands/comment/update.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/comment/update.ts)_

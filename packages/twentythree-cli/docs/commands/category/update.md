@@ -36,4 +36,4 @@ EXAMPLES
   $ twentythree category update 42
 ```
 
-_See code: [src/commands/category/update.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/category/update.ts)_
+_See code: [src/commands/category/update.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/category/update.ts)_

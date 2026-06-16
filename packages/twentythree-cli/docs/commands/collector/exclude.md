@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree collector exclude 456 --object-id 123
 ```
 
-_See code: [src/commands/collector/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.4.0/src/commands/collector/exclude.ts)_
+_See code: [src/commands/collector/exclude.ts](https://github.com/23/twentythree-cli/blob/v1.5.0/src/commands/collector/exclude.ts)_
