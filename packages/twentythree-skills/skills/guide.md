@@ -101,6 +101,20 @@ echo "Admin URL: $(echo $RESPONSE | jq -r '.data.admin_url')"
 
 These rules are best practice. Following them improves output quality and agent efficiency.
 
+### Generate Chapters/Sections, Don't Hand-Build Them
+
+When asked to create chapters or sections for a video (the terms are interchangeable), prefer the platform's AI generation over reading the transcript and building sections manually. Check availability, then generate:
+
+```bash
+twentythree video section check-generate-available <videoId> --json   # section_generation_available_p?
+twentythree video section generate <videoId> --json                   # if available
+twentythree video section list <videoId> --json
+```
+
+Fall back to manual `video section create` only when generation is unavailable (e.g. the video has no transcript) or the user explicitly wants hand-authored chapters. See video.md → "Subtopic: video section".
+
+---
+
 ### Thumbnails from Listing Response
 
 When you need a video's thumbnail URL, prefer `video list --json` — the response includes thumbnail fields. Avoid a separate `thumbnail list` call when the listing data is sufficient.

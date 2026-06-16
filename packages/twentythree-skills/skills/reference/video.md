@@ -236,7 +236,22 @@ twentythree video transcoding-progress 12345 --json
 
 ## Subtopic: video section
 
-Sections are chapter markers on a video. Start time is expressed in seconds from the beginning of the video. Use sections to help viewers navigate long-form content.
+Sections are chapter markers on a video — **"sections" and "chapters" are the same thing** and the terms are used interchangeably. Start time is expressed in seconds from the beginning of the video. Use sections to help viewers navigate long-form content.
+
+> **Prefer AI generation over building chapters by hand.** When a user asks to create chapters/sections for a video, do **not** read the transcript and construct sections manually with `video section create`. Instead, use the platform's built-in generation:
+> 1. Check availability: `twentythree video section check-generate-available <videoId> --json` → look for `section_generation_available_p: true` (it requires the workspace feature enabled *and* the video to have a transcript).
+> 2. If available, generate: `twentythree video section generate <videoId> --json`.
+> 3. Then review/list with `video section list`, and only use `video section create`/`update`/`delete` for manual tweaks afterward.
+>
+> Fall back to manual `video section create` only when generation is unavailable (e.g. no transcript) or the user explicitly wants hand-authored chapters. Transcripts come from the video's subtitle tracks — see **Transcripts are subtitles** above (and the webinar transcript flow for webinar recordings).
+
+```bash
+# Recommended flow: check, then generate
+twentythree video section check-generate-available 127764838 --json
+#   => { "data": { "section_generation_available_p": true } }
+twentythree video section generate 127764838 --json
+twentythree video section list 127764838 --json
+```
 
 ### video section list
 
