@@ -86,7 +86,9 @@ For transcoding-progress, check `.data.progress.all` in the response — `1.0` m
 |-----------|-------|
 | Upload (new mischung) | Multi-step asset flow — see Raw API Operations section |
 | Replace (edit existing) | Raw API — see Raw API Operations section |
-| Duplicate / create from template | `POST /photo/mischung/duplicate?photo_id=<id>` |
+| Duplicate / create from template | `POST /photo/mischung/duplicate?photo_id=<id>` → returns a new `photo_id`. Works on a **normal (non-mischung) video** too — it wraps the source video in a fresh mischung composition. |
+| Read the misch JSON | `GET /photo/list?photo_id=<id>&mischung_p=1&include_unpublished_p=1`, then download the URL in the `video_medium_download` property and parse it as JSON (contains `misch.info.originalParts`). |
+| Replace thumbnail | Token + Resumable flow: `POST /photo/get-replace-token?photo_id=<id>&valid_minutes=360&max_uploads=5` → returns `replace_token` → upload a PNG to `/photo/redeem-replace-token` with that token. |
 
 ---
 
@@ -120,25 +122,34 @@ Tasks assign recording work to users. All task operations use raw API calls. Get
 | Complete task | `POST /photo/mischung/task/complete?task_id=<id>` |
 | Delete task | `POST /photo/mischung/task/delete?task_id=<id>` |
 
-**Task fields:** `task_title` (required), `task_description`, `task_notes` (script for the recording), `recipient_email`, `deadline_date`.
+**Task fields:** `task_title` (required), `task_description`, `task_notes` (script for the recording), `recipient_email`, `deadline_date`. Use `assignee_users=<id>,<id>` (comma-separated) for new-video tasks, or `assignee_user_id=<id>` for a single part-recording task.
+
+**Shorthand listing:** `POST /photo/mischung/task/list?task_for=me` (assigned to me) or `?task_for=others` (created by me for others).
+
+**Auto-completion:** a task is normally completed automatically when the assignee uploads/replaces the finished video — `POST /photo/mischung/upload` and `/photo/mischung/replace` return a `tasks` array of tasks completed by that action (refresh task lists when it is non-empty). Explicit completion via `task/complete` or `?complete_task_id=<id>` on upload/replace is rarely needed.
 
 ---
 
 ## § Flows (User Groups)
 
-Flows group users and videos. No dedicated CLI topic — use raw API calls.
+Flows group users **and** videos/templates. A flow has a `join_policy` of `open` (public) or `closed` (private). No dedicated CLI topic — use raw API calls.
 
 | Operation | Endpoint |
 |-----------|----------|
-| Create flow | `POST /usergroup/create?name=…&join_policy=open\|closed` |
-| Update flow | `POST /usergroup/update?user_group_id=<id>&name=…` |
+| Create flow | `POST /usergroup/create?name=…&join_policy=open\|closed[&description=…]` → returns `user_group_id` |
+| Update flow | `POST /usergroup/update?user_group_id=<id>&name=…[&join_policy=…&description=…]` |
 | Delete flow | `POST /usergroup/delete?user_group_id=<id>` |
-| List flows | `GET /usergroup/list[?user_id=…&photo_id=…&search=…]` |
-| Add user to flow | `POST /usergroup/join?user_group_id=<id>&user_id=<id>` |
+| List flows | `GET /usergroup/list[?user_group_id=…&user_id=…&not_user_id=…&photo_id=…&search=…&join_policy=…&include_member_list=0\|1]` |
+| List flows + my membership | `GET /usergroup/list?include_member_status_p=1` (adds whether the authenticated user is a member of each) |
+| Add user to flow | `POST /usergroup/join?user_group_id=<id>&user_id=<id>` (also used by a user to join an `open` flow) |
 | Remove user from flow | `POST /usergroup/leave?user_group_id=<id>&user_id=<id>` |
-| Videos in flow | `twentythree video list --user-group-id <id> --mischung --json` (verify flag with `--agent`) |
+| Videos in flow | raw `GET /photo/list?user_group_id=<id>&mischung_p=1&mischung_template_p=0` |
 | Templates in flow | raw `GET /photo/list?user_group_id=<id>&mischung_p=1&mischung_template_p=1` |
-| Users in flow | `twentythree user list --user-group-id <id> --json` (verify flag with `--agent`) |
+| Attach video/template to flow | raw `POST /photo/update?photo_id=<id>&user_group_id=<id>` |
+| Users in flow | raw `GET /user/list?user_group_id=<id>&use_full_urls_p=1` |
+| Users NOT in flow | raw `GET /user/list?not_user_group_id=<id>&exclude_requesting_user_p=1&use_full_urls_p=1[&search=…]` |
+
+**Save a video as a new template + flow in one step:** `POST /photo/mischung/replace?photo_id=<id>&asset_uri=…&mischung_template_p=1&attach_mischung_template_to_new_user_group_p=1&title=<name>` — the response includes the new `user_group_id`.
 
 ---
 
@@ -172,9 +183,11 @@ Each item has: `message` (HTML), `timestamp` (UTC epoch), optional `user_avatar_
 |-----------|----------|
 | Preview email HTML | `GET /mail/get-attachments-html?selection=photo:<id>&gif_p=0` |
 | Send video email | `POST /mail/send?selection=photo:<id>&to=…&subject=…&body=…&gif_p=0` |
-| Get embed/share links | `twentythree player embed-versions <id> --object-type photo --json` |
+| Get embed/share links | `twentythree player embed-versions <id> --object-type photo --json` (raw API accepts `&email_image_time=0-2`) |
 
-Direct share link: in `player embed-versions` response, find the entry where `type=="link" && key=="secret"`.
+- **Body placeholder:** if `body` contains the string `***VIDEOATTACHMENT***`, the video thumbnails replace it there; otherwise they are appended after the body.
+- **Direct share link:** in `player embed-versions` response, find the entry where `type=="link" && key=="secret"`.
+- **Trackable email embed codes:** use the entries where `type=="email"`. Each version also carries a `copy_mime_type` (`text/plain` or `text/html`) indicating how it should be copied.
 
 ---
 
@@ -194,14 +207,45 @@ Pre-built video templates managed by TwentyThree admins.
 
 Standard user commands apply. Key Personal-specific patterns:
 
-| Operation | Command |
-|-----------|---------|
-| Get current user | `twentythree user get --json` |
-| Invite user | `twentythree user create --email … --json` |
-| Resend invite | `twentythree user send-invitation --user-id <id> --json` |
-| List users | `twentythree user list --json` |
+| Operation | Command / Endpoint |
+|-----------|--------------------|
+| Get current user | `twentythree user get --json` (returns `user_id`, `full_name`, `email`, `title`, `has_profile_image_p`, `profile_image_url`, `site_admin_p`, `accepted_invitation_p`) |
+| Invite user | `twentythree user create --email … --json` (raw API also accepts `&full_name=…&invitation_message=…`; bulk-invite by calling once per address for per-user error handling) |
+| Resend invite | `twentythree user send-invitation --user-id <id> --json` (raw API also accepts `&invitation_message=…`) |
+| List users | `twentythree user list --json` (raw filters: `search`, `orderby=full_name`, `use_full_urls_p=1`, pagination `p`/`size`) |
+| Team leaderboard | raw `GET /user/list?orderby=number_of_photos&order=desc&include_metrics_p=1&metric_interval=year\|month&size=10&use_full_urls_p=1` |
+| Grant/revoke admin | raw `POST /user/update?user_id=<id>&site_admin=0\|1` (admin only) |
+| Disable/enable login | raw `POST /user/update?user_id=<id>&allow_login_p=0\|1` (admin only) |
+| Update own profile/password | raw `POST /user/update?full_name=…&email=…&password=…` |
+| Update avatar | raw `POST /user/update` as `multipart/form-data` with a `profile_image` file field |
 
-Domain-gated signup: permitted domains are listed in `twentythree setting get --json` → `user_approval_auto_domains`.
+Domain-gated signup: permitted domains are listed in `twentythree setting get --json` → `user_approval_auto_domains` (may be empty on some sites — handle that). Onboarding state is tracked by the user's `accepted_invitation_p`.
+
+---
+
+## § Notifications
+
+In-product user notifications (e.g. the welcome message).
+
+| Operation | Endpoint |
+|-----------|----------|
+| List notifications | `GET /user/notification/list?context=videos` |
+| Dismiss a notification | `POST /user/notification/dismiss?user_notification_id=<id>` (e.g. `personal-welcome`) |
+
+---
+
+## § Cross-Site Invitations (same email domain)
+
+Users can request access to other Personal sites that share the main domain of their email address. All raw API.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List sites I can request | `GET /user/domainsite/sites` |
+| Request an invite to a site | `POST /user/domainsite/request-invite?site_id=<id>` |
+| List my outgoing requests | `GET /user/domainsite/user-invites` |
+| List requests to this site (admin) | `GET /user/domainsite/site-invites` |
+| Approve a request (admin) | `POST /user/domainsite/send-invitation?user_id=<id>` |
+| Dismiss a request (admin by `user_id`, or originator by `site_id`) | `POST /user/domainsite/dismiss-invitation?user_id=<id>` / `?site_id=<id>` |
 
 ---
 
