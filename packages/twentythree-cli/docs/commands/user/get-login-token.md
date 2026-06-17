@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree user get-login-token 12345 --json
 ```
 
-_See code: [src/commands/user/get-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/user/get-login-token.ts)_
+_See code: [src/commands/user/get-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/user/get-login-token.ts)_

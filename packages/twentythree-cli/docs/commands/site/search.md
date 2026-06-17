@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree site search --search "webinar" --json
 ```
 
-_See code: [src/commands/site/search.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/site/search.ts)_
+_See code: [src/commands/site/search.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/site/search.ts)_

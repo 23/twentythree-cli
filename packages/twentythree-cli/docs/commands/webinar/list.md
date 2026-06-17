@@ -68,4 +68,4 @@ EXAMPLES
   $ twentythree webinar list --live-series-id 42 --all --json
 ```
 
-_See code: [src/commands/webinar/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/webinar/list.ts)_
+_See code: [src/commands/webinar/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/list.ts)_

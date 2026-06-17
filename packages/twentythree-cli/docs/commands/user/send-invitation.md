@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree user send-invitation 12345 --json
 ```
 
-_See code: [src/commands/user/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/user/send-invitation.ts)_
+_See code: [src/commands/user/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/user/send-invitation.ts)_

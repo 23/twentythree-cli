@@ -26,4 +26,4 @@ EXAMPLES
   $ twentythree webinar list-formats --json
 ```
 
-_See code: [src/commands/webinar/list-formats.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/webinar/list-formats.ts)_
+_See code: [src/commands/webinar/list-formats.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/list-formats.ts)_

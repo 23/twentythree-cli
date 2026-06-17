@@ -34,7 +34,7 @@ EXAMPLES
   $ twentythree agentic session list --json
 ```
 
-_See code: [src/commands/agentic/session/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/agentic/session/list.ts)_
+_See code: [src/commands/agentic/session/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/agentic/session/list.ts)_
 
 ## `twentythree agentic session metrics`
 
@@ -63,7 +63,7 @@ EXAMPLES
   $ twentythree agentic session metrics --json
 ```
 
-_See code: [src/commands/agentic/session/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/agentic/session/metrics.ts)_
+_See code: [src/commands/agentic/session/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/agentic/session/metrics.ts)_
 
 ## `twentythree agentic session status`
 
@@ -102,4 +102,4 @@ EXAMPLES
   $ twentythree agentic session status --session-identifier abc123 --summary "Created a webinar" --number-of-prompts 5 --session-duration-seconds 120 --ai-provider "codex" --twentythree-skill-version 1.6.0 --estimated-minutes-saved 10 --json
 ```
 
-_See code: [src/commands/agentic/session/status.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/agentic/session/status.ts)_
+_See code: [src/commands/agentic/session/status.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/agentic/session/status.ts)_

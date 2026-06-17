@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree collector include 456 --object-id 123
 ```
 
-_See code: [src/commands/collector/include.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/collector/include.ts)_
+_See code: [src/commands/collector/include.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/collector/include.ts)_

@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree comment delete 789 --json
 ```
 
-_See code: [src/commands/comment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/comment/delete.ts)_
+_See code: [src/commands/comment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/comment/delete.ts)_

@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree workspace use "Company Name"
 ```
 
-_See code: [src/commands/workspace/use.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/workspace/use.ts)_
+_See code: [src/commands/workspace/use.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/workspace/use.ts)_

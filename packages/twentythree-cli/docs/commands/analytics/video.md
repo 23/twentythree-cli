@@ -52,7 +52,7 @@ EXAMPLES
   $ twentythree analytics video --json
 ```
 
-_See code: [src/commands/analytics/video/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/index.ts)_
+_See code: [src/commands/analytics/video/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/index.ts)_
 
 ## `twentythree analytics video performance`
 
@@ -90,7 +90,7 @@ EXAMPLES
   $ twentythree analytics video performance --json
 ```
 
-_See code: [src/commands/analytics/video/performance.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/performance.ts)_
+_See code: [src/commands/analytics/video/performance.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/performance.ts)_
 
 ## `twentythree analytics video performance timeseries`
 
@@ -125,7 +125,7 @@ EXAMPLES
   $ twentythree analytics video performance timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/performance/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/performance/timeseries.ts)_
+_See code: [src/commands/analytics/video/performance/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/performance/timeseries.ts)_
 
 ## `twentythree analytics video performance totals`
 
@@ -160,7 +160,7 @@ EXAMPLES
   $ twentythree analytics video performance totals --json
 ```
 
-_See code: [src/commands/analytics/video/performance/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/performance/totals.ts)_
+_See code: [src/commands/analytics/video/performance/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/performance/totals.ts)_
 
 ## `twentythree analytics video published`
 
@@ -198,7 +198,7 @@ EXAMPLES
   $ twentythree analytics video published --json
 ```
 
-_See code: [src/commands/analytics/video/published.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/published.ts)_
+_See code: [src/commands/analytics/video/published.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/published.ts)_
 
 ## `twentythree analytics video published timeseries`
 
@@ -233,7 +233,7 @@ EXAMPLES
   $ twentythree analytics video published timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/published/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/published/timeseries.ts)_
+_See code: [src/commands/analytics/video/published/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/published/timeseries.ts)_
 
 ## `twentythree analytics video published totals`
 
@@ -268,7 +268,7 @@ EXAMPLES
   $ twentythree analytics video published totals --json
 ```
 
-_See code: [src/commands/analytics/video/published/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/published/totals.ts)_
+_See code: [src/commands/analytics/video/published/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/published/totals.ts)_
 
 ## `twentythree analytics video timeseries`
 
@@ -303,7 +303,7 @@ EXAMPLES
   $ twentythree analytics video timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/timeseries.ts)_
+_See code: [src/commands/analytics/video/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/timeseries.ts)_
 
 ## `twentythree analytics video totals`
 
@@ -338,7 +338,7 @@ EXAMPLES
   $ twentythree analytics video totals --json
 ```
 
-_See code: [src/commands/analytics/video/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/totals.ts)_
+_See code: [src/commands/analytics/video/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/totals.ts)_
 
 ## `twentythree analytics video weekday`
 
@@ -376,7 +376,7 @@ EXAMPLES
   $ twentythree analytics video weekday --json
 ```
 
-_See code: [src/commands/analytics/video/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/weekday.ts)_
+_See code: [src/commands/analytics/video/weekday.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/weekday.ts)_
 
 ## `twentythree analytics video weekday timeseries`
 
@@ -411,7 +411,7 @@ EXAMPLES
   $ twentythree analytics video weekday timeseries --json
 ```
 
-_See code: [src/commands/analytics/video/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/weekday/timeseries.ts)_
+_See code: [src/commands/analytics/video/weekday/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/weekday/timeseries.ts)_
 
 ## `twentythree analytics video weekday totals`
 
@@ -446,4 +446,4 @@ EXAMPLES
   $ twentythree analytics video weekday totals --json
 ```
 
-_See code: [src/commands/analytics/video/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/analytics/video/weekday/totals.ts)_
+_See code: [src/commands/analytics/video/weekday/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/video/weekday/totals.ts)_

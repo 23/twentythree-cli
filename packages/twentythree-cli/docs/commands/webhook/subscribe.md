@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree webhook subscribe --target-url https://example.com/hook --event video.uploaded --json
 ```
 
-_See code: [src/commands/webhook/subscribe.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/webhook/subscribe.ts)_
+_See code: [src/commands/webhook/subscribe.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webhook/subscribe.ts)_

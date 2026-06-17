@@ -51,4 +51,4 @@ EXAMPLES
   $ twentythree spot list --spot-object-type live --include-analytics --json
 ```
 
-_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/spot/list.ts)_
+_See code: [src/commands/spot/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/spot/list.ts)_
