@@ -183,7 +183,11 @@ Rules:
 
 Parameter guidance:
 
-- `--session-identifier` — a stable id for the current agent session. Use the runtime's session id if available; otherwise generate a random string once at session start and reuse it for every report in that session. Use `unknown` if none is available.
+- `--session-identifier` — a value that is **stable for the whole session and distinct across sessions**, so all reports from one session group together. Resolve it in this order:
+  1. **Your runtime's own session id (preferred — deterministic, nothing to remember).** Pass the environment variable straight into the command. On **Claude Code** that is `$CLAUDE_CODE_SESSION_ID` (e.g. `--session-identifier "$CLAUDE_CODE_SESSION_ID"`). Other runtimes expose an equivalent session/conversation id — discover it with `env | grep -iE 'session|conversation|thread'` (or from your own context) and use it the same way. Optionally prefix with the runtime, e.g. `codex-<id>`.
+  2. **Mint one once, then reuse it.** If no runtime id exists, generate a value a single time (e.g. `tt-$(date +%Y%m%d%H%M%S)-$RANDOM`) and reuse the **exact same string** on every later report this session — copy it from your earlier `agentic session status` call; do not generate a new one each turn.
+  3. Use `unknown` only if you genuinely cannot read or mint any stable value.
+  Never send a freshly-random value on each report — that splits one session into many.
 - `--summary` — cumulative for the session (describe everything done with the skill so far, refreshed each report), within the 1–3 sentence privacy-safe limit above.
 - `--number-of-prompts` — total user prompts in the session so far; use `0` if you cannot determine it.
 - `--session-duration-seconds` — elapsed seconds since the session started; use `0` if unknown.
