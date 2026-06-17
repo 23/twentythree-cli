@@ -78,8 +78,8 @@ twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:0
 | `--user-id` | no | — | Filter by creator (`me` for authenticated user) |
 | `--live-format` | no | — | Filter by format: `event` or `webinar` |
 | `--live-series-id` | no | — | Filter to webinars in a specific series |
-| `--ordering` | no | — | Sort field: `private`, `promoted`, `streaming`, `broadcasting`, `name`, `live_label`, `live_status`, `live_date`, `creation_date` |
-| `--order` | no | — | Sort direction: `asc` or `desc` |
+| `--ordering` | no | `creation_date` | Sort field — see **Sorting webinars** below |
+| `--order` | no | per-field | Sort direction: `asc` or `desc`. If omitted, each field uses its own sensible default (see below) |
 | `--promoted` / `--no-promoted` | no | — | Filter by promoted status |
 | `--draft` / `--no-draft` | no | — | Filter by draft status |
 | `--cancelled` / `--no-cancelled` | no | — | Filter by cancelled status |
@@ -105,6 +105,38 @@ twentythree webinar list --live-series-id 42 --include-speakers --json
 
 # List webinars by the authenticated user
 twentythree webinar list --user-id me --live-format webinar --json
+```
+
+#### Sorting webinars
+
+Unlike `video list` (which always defaults to `desc`), each webinar `--ordering` field has its **own default direction** when `--order` is omitted. Pass `--order` only to override it.
+
+| `--ordering` | Sorts by | Default `--order` | Use for |
+|--------------|----------|-------------------|---------|
+| `creation_date` (default) | when the webinar was created | `desc` | Most recently created first |
+| `live_date` | scheduled date — `live_date`, falling back to `creation_date` | `desc` | Chronological by event date (the usual "by date") |
+| `name` | title | `asc` | Alphabetical A→Z |
+| `live_label` | label | `asc` | — |
+| `live_status` | status (`upcoming`/`live`/`previous`) | `asc` | Grouping by lifecycle state |
+| `private` | private flag | `desc` | Private webinars first |
+| `promoted` | promoted flag | `desc` | Promoted/featured first |
+| `streaming` | currently streaming first, then recency | `desc` | Live-now dashboards |
+| `broadcasting` | currently broadcasting first, then recency | `desc` | Live-now dashboards |
+
+> **Notes:**
+> - For the common "list webinars by date" intent, use `--ordering live_date`. Because it coalesces to `creation_date`, webinars with no scheduled date still sort sensibly.
+> - With `--ordering live_date` the default is newest/furthest-future first (`desc`); pass `--order asc` for chronological (earliest first).
+> - When `--include-stats` is set, metric fields (e.g. a metric name) can also be used as `--ordering`, sorted `desc`.
+
+```bash
+# Webinars by scheduled date, earliest first
+twentythree webinar list --all --ordering live_date --order asc --json
+
+# Most recently created webinars (default ordering)
+twentythree webinar list --json
+
+# Alphabetical (name defaults to asc, so --order is optional)
+twentythree webinar list --ordering name --json
 ```
 
 ---

@@ -66,8 +66,8 @@ twentythree video upload ./video.mp4 --title "Q2 Keynote" --category-id <cat-id>
 | `--tag` | no | — | Filter to videos with a specific tag |
 | `--tags` | no | — | Space-separated list of tags to filter by |
 | `--tag-mode` | no | — | How to combine tag filters: `and` or `or` |
-| `--order-by` | no | — | Sort field: `uploaded`, `published`, `created`, `creation`, `taken`, `title`, `views`, `comments`, `rating`, `numratings`, `video_length`, `words`, `related`, `posted`, `rank`, `default-published` |
-| `--order` | no | — | Sort direction: `asc` or `desc` |
+| `--order-by` | no | `default-published` | Sort field — see **Sorting videos** below for what each does |
+| `--order` | no | `desc` | Sort direction: `asc` or `desc`. Videos always default to `desc` — pass `--order asc` for oldest-first / A→Z |
 | `--before-time` | no | — | Filter to videos uploaded before this timestamp (ISO 8601) |
 | `--after-time` | no | — | Filter to videos uploaded after this timestamp (ISO 8601) |
 | `--year` | no | — | Filter to videos from a specific year |
@@ -106,6 +106,47 @@ twentythree video list --include-stats --include-sections-count --json
 
 # Return only specific fields
 twentythree video list --fields photo_id,title,views --json
+```
+
+#### Sorting videos
+
+`--order` always defaults to **`desc`**, regardless of field. To sort ascending (oldest-first, A→Z, shortest-first) you **must** pass `--order asc`.
+
+These are the `--order-by` fields that actually change the sort, and what each sorts on:
+
+| `--order-by` | Sorts by | Use for |
+|--------------|----------|---------|
+| `default-published` (default) / `uploaded` | `publish_date`, falling back to `creation_date` | The normal library view — most recently published first |
+| `published` | published videos first, then `publish_date`/`creation_date` | Surfacing live/published content ahead of drafts |
+| `created` | `creation_date` (when the video entered the system) | "Most recently added", independent of publish date |
+| `taken` | `original_date` (capture date from the source file) | Chronological by when footage was recorded |
+| `views` | `view_count` | Most/least watched |
+| `comments` | number of comments | Most discussed |
+| `rating` / `numratings` | average rating / number of ratings | Top-rated |
+| `video_length` | duration | Longest/shortest |
+| `title` | title (use `--order asc` for A→Z) | Alphabetical |
+| `words` | transcript/description content | — |
+| `posted` | post date (requires the post context) | Feed/timeline ordering |
+
+> **Gotchas:**
+> - The server only honors the fields above. Other accepted values (`creation`, `rank`, anything unknown) silently fall back to the **default** publish-date ordering — use `created` (not `creation`) for creation-date sorting, and don't rely on `rank`.
+> - "Newest" is ambiguous: `default-published` orders by *publish* date, `created` by *system creation* date, `taken` by *capture* date. Pick the one the user means.
+
+```bash
+# Most recently published (default)
+twentythree video list --json
+
+# Most recently added to the library
+twentythree video list --order-by created --order desc --json
+
+# Oldest first (note: must pass --order asc)
+twentythree video list --order-by created --order asc --json
+
+# Alphabetical by title
+twentythree video list --order-by title --order asc --json
+
+# Most viewed
+twentythree video list --order-by views --order desc --json
 ```
 
 ---
