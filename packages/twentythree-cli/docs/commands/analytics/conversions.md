@@ -40,7 +40,7 @@ EXAMPLES
   $ twentythree analytics conversions --json
 ```
 
-_See code: [src/commands/analytics/conversions/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/index.ts)_
+_See code: [src/commands/analytics/conversions/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/analytics/conversions/index.ts)_
 
 ## `twentythree analytics conversions timeseries`
 
@@ -75,7 +75,7 @@ EXAMPLES
   $ twentythree analytics conversions timeseries --json
 ```
 
-_See code: [src/commands/analytics/conversions/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/timeseries.ts)_
+_See code: [src/commands/analytics/conversions/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/analytics/conversions/timeseries.ts)_
 
 ## `twentythree analytics conversions totals`
 
@@ -110,4 +110,4 @@ EXAMPLES
   $ twentythree analytics conversions totals --json
 ```
 
-_See code: [src/commands/analytics/conversions/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/analytics/conversions/totals.ts)_
+_See code: [src/commands/analytics/conversions/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/analytics/conversions/totals.ts)_

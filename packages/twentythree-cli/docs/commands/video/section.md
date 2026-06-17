@@ -24,7 +24,7 @@ DESCRIPTION
   Manage video sections (chapters)
 ```
 
-_See code: [src/commands/video/section/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/index.ts)_
+_See code: [src/commands/video/section/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/index.ts)_
 
 ## `twentythree video section check-generate-available ID`
 
@@ -56,7 +56,7 @@ EXAMPLES
   $ twentythree video section check-generate-available 12345 --json
 ```
 
-_See code: [src/commands/video/section/check-generate-available.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/check-generate-available.ts)_
+_See code: [src/commands/video/section/check-generate-available.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/check-generate-available.ts)_
 
 ## `twentythree video section create ID`
 
@@ -88,7 +88,7 @@ EXAMPLES
   $ twentythree video section create 12345 --title "Chapter 1" --start-time 30 --description "First chapter"
 ```
 
-_See code: [src/commands/video/section/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/create.ts)_
+_See code: [src/commands/video/section/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/create.ts)_
 
 ## `twentythree video section delete ID`
 
@@ -117,7 +117,7 @@ EXAMPLES
   $ twentythree video section delete 12345 --section-id 67 --json
 ```
 
-_See code: [src/commands/video/section/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/delete.ts)_
+_See code: [src/commands/video/section/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/delete.ts)_
 
 ## `twentythree video section generate ID`
 
@@ -143,7 +143,7 @@ EXAMPLES
   $ twentythree video section generate 12345 --json
 ```
 
-_See code: [src/commands/video/section/generate.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/generate.ts)_
+_See code: [src/commands/video/section/generate.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/generate.ts)_
 
 ## `twentythree video section list ID`
 
@@ -169,7 +169,7 @@ EXAMPLES
   $ twentythree video section list 12345 --json
 ```
 
-_See code: [src/commands/video/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/list.ts)_
+_See code: [src/commands/video/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/list.ts)_
 
 ## `twentythree video section set-thumbnail ID`
 
@@ -201,7 +201,7 @@ EXAMPLES
   $ twentythree video section set-thumbnail 12345 --section-id 67 --time 15 --json
 ```
 
-_See code: [src/commands/video/section/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/set-thumbnail.ts)_
+_See code: [src/commands/video/section/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/set-thumbnail.ts)_
 
 ## `twentythree video section update ID`
 
@@ -234,4 +234,4 @@ EXAMPLES
   $ twentythree video section update 12345 --section-id 67 --start-time 45 --description "Updated"
 ```
 
-_See code: [src/commands/video/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/section/update.ts)_
+_See code: [src/commands/video/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/section/update.ts)_

@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree spot create --spot-name "My Spot" --json
 ```
 
-_See code: [src/commands/spot/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/spot/create.ts)_
+_See code: [src/commands/spot/create.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/spot/create.ts)_

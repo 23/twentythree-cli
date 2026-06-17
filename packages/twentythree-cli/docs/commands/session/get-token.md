@@ -35,4 +35,4 @@ EXAMPLES
   $ twentythree session get-token --json
 ```
 
-_See code: [src/commands/session/get-token.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/session/get-token.ts)_
+_See code: [src/commands/session/get-token.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/session/get-token.ts)_

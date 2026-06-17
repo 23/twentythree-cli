@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree comment clone 789 --clone-type question
 ```
 
-_See code: [src/commands/comment/clone.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/comment/clone.ts)_
+_See code: [src/commands/comment/clone.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/comment/clone.ts)_

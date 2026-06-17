@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree thumbnail preview-scss 42 --scss ".title { color: red; }" --json
 ```
 
-_See code: [src/commands/thumbnail/preview-scss.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/thumbnail/preview-scss.ts)_
+_See code: [src/commands/thumbnail/preview-scss.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/preview-scss.ts)_

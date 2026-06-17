@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree app set-thumbnail ./thumbnail.jpg --app-id 42 --json
 ```
 
-_See code: [src/commands/app/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/app/set-thumbnail.ts)_
+_See code: [src/commands/app/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/app/set-thumbnail.ts)_

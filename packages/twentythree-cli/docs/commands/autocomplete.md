@@ -24,4 +24,4 @@ EXAMPLES
   $ twentythree autocomplete
 ```
 
-_See code: [src/commands/autocomplete/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/autocomplete/index.ts)_
+_See code: [src/commands/autocomplete/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/autocomplete/index.ts)_

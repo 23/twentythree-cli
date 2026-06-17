@@ -41,4 +41,4 @@ EXAMPLES
   $ twentythree video upload ./video.mp4 --chunk-size 52428800 --concurrency 3
 ```
 
-_See code: [src/commands/video/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.1/src/commands/video/upload.ts)_
+_See code: [src/commands/video/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/video/upload.ts)_
