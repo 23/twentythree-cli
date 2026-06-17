@@ -25,4 +25,4 @@ EXAMPLES
   $ twentythree doctor --json
 ```
 
-_See code: [src/commands/doctor.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/doctor.ts)_
+_See code: [src/commands/doctor.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/doctor.ts)_

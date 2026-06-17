@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree audience remove --email "user@co.com" --json
 ```
 
-_See code: [src/commands/audience/remove.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/audience/remove.ts)_
+_See code: [src/commands/audience/remove.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/audience/remove.ts)_

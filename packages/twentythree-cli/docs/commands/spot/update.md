@@ -37,4 +37,4 @@ EXAMPLES
   $ twentythree spot update 12345 --spot-name "New Name" --json
 ```
 
-_See code: [src/commands/spot/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/spot/update.ts)_
+_See code: [src/commands/spot/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/spot/update.ts)_

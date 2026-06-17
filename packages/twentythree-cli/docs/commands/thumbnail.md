@@ -27,7 +27,7 @@ DESCRIPTION
   Manage thumbnail templates — list, add, update, delete, duplicate, data, and manage files
 ```
 
-_See code: [src/commands/thumbnail/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/index.ts)_
+_See code: [src/commands/thumbnail/index.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/index.ts)_
 
 ## `twentythree thumbnail add`
 
@@ -54,7 +54,7 @@ EXAMPLES
   $ twentythree thumbnail add --name "My Template" --liquid-template "<div>{{ video.title }}</div>" --json
 ```
 
-_See code: [src/commands/thumbnail/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/add.ts)_
+_See code: [src/commands/thumbnail/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/add.ts)_
 
 ## `twentythree thumbnail data ID`
 
@@ -83,7 +83,7 @@ EXAMPLES
   $ twentythree thumbnail data 42 --object-id 12345 --json
 ```
 
-_See code: [src/commands/thumbnail/data.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/data.ts)_
+_See code: [src/commands/thumbnail/data.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/data.ts)_
 
 ## `twentythree thumbnail delete ID`
 
@@ -109,7 +109,7 @@ EXAMPLES
   $ twentythree thumbnail delete 42 --json
 ```
 
-_See code: [src/commands/thumbnail/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/delete.ts)_
+_See code: [src/commands/thumbnail/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/delete.ts)_
 
 ## `twentythree thumbnail duplicate ID`
 
@@ -140,7 +140,7 @@ EXAMPLES
   $ twentythree thumbnail duplicate 42 --name "My Copy" --json
 ```
 
-_See code: [src/commands/thumbnail/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/duplicate.ts)_
+_See code: [src/commands/thumbnail/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/duplicate.ts)_
 
 ## `twentythree thumbnail file delete`
 
@@ -167,7 +167,7 @@ EXAMPLES
   $ twentythree thumbnail file delete --template-id 42 --filename logo.png --json
 ```
 
-_See code: [src/commands/thumbnail/file/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/file/delete.ts)_
+_See code: [src/commands/thumbnail/file/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/file/delete.ts)_
 
 ## `twentythree thumbnail file list ID`
 
@@ -193,7 +193,7 @@ EXAMPLES
   $ twentythree thumbnail file list 42 --json
 ```
 
-_See code: [src/commands/thumbnail/file/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/file/list.ts)_
+_See code: [src/commands/thumbnail/file/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/file/list.ts)_
 
 ## `twentythree thumbnail file upload FILE`
 
@@ -222,7 +222,7 @@ EXAMPLES
   $ twentythree thumbnail file upload ./banner.jpg --template-id 42 --json
 ```
 
-_See code: [src/commands/thumbnail/file/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/file/upload.ts)_
+_See code: [src/commands/thumbnail/file/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/file/upload.ts)_
 
 ## `twentythree thumbnail list`
 
@@ -253,7 +253,7 @@ EXAMPLES
   $ twentythree thumbnail list --json
 ```
 
-_See code: [src/commands/thumbnail/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/list.ts)_
+_See code: [src/commands/thumbnail/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/list.ts)_
 
 ## `twentythree thumbnail preview-scss ID`
 
@@ -282,7 +282,7 @@ EXAMPLES
   $ twentythree thumbnail preview-scss 42 --scss ".title { color: red; }" --json
 ```
 
-_See code: [src/commands/thumbnail/preview-scss.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/preview-scss.ts)_
+_See code: [src/commands/thumbnail/preview-scss.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/preview-scss.ts)_
 
 ## `twentythree thumbnail update ID`
 
@@ -320,4 +320,4 @@ EXAMPLES
   $ twentythree thumbnail update 42 --name "Updated Name" --json
 ```
 
-_See code: [src/commands/thumbnail/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/thumbnail/update.ts)_
+_See code: [src/commands/thumbnail/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/thumbnail/update.ts)_

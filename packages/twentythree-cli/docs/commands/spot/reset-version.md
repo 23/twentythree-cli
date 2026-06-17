@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree spot reset-version 12345 --json
 ```
 
-_See code: [src/commands/spot/reset-version.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/spot/reset-version.ts)_
+_See code: [src/commands/spot/reset-version.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/spot/reset-version.ts)_

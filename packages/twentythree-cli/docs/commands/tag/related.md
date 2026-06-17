@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree tag related marketing --json
 ```
 
-_See code: [src/commands/tag/related.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/tag/related.ts)_
+_See code: [src/commands/tag/related.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/tag/related.ts)_

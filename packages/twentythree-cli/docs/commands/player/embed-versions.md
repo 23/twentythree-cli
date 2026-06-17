@@ -31,4 +31,4 @@ EXAMPLES
   $ twentythree player embed-versions --object-type live --object-id 456 --json
 ```
 
-_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v1.6.2/src/commands/player/embed-versions.ts)_
+_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v1.6.3/src/commands/player/embed-versions.ts)_
