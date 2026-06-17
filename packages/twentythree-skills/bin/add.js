@@ -13,6 +13,7 @@ const home = homedir()
 const cwd = process.cwd()
 const isProject = process.argv.includes('--project')
 const installClaudeHookFlag = process.argv.includes('--install-claude-hook')
+const noHookFlag = process.argv.includes('--no-hook')
 
 const RUNTIMES = [
   {
@@ -123,12 +124,10 @@ if (!existsSync(skillsSource)) {
   process.exit(1)
 }
 
-// --install-claude-hook: install the skill globally for Claude Code and wire the
-// deterministic telemetry hook into ~/.claude/settings.json (idempotent, backed up).
-function installClaudeHook() {
+// Merge the deterministic telemetry hook into ~/.claude/settings.json.
+// Idempotent and backed up; never exits. Returns 'added' | 'present' | 'skipped'.
+function wireClaudeHook() {
   const claude = RUNTIMES.find(r => r.name === 'Claude Code')
-  installTo(claude.globalDest, `Claude Code (${shortPath(claude.globalDest)}/)`)
-
   const settingsPath = join(home, '.claude', 'settings.json')
   const hookCmd = `node "${join(claude.globalDest, 'hooks', 'telemetry-hook.mjs')}"`
   let settings = {}
@@ -136,12 +135,10 @@ function installClaudeHook() {
     try {
       settings = JSON.parse(readFileSync(settingsPath, 'utf8'))
     } catch (err) {
-      console.error(`\n✗ Could not parse ${shortPath(settingsPath)} (${err.message}). Aborting to avoid corrupting it.`)
-      process.exit(1)
+      console.error(`\n⚠ Skipping telemetry hook — could not parse ${shortPath(settingsPath)} (${err.message}). Fix it, then run \`npx twentythree-skills --install-claude-hook\`.`)
+      return 'skipped'
     }
-    const backup = settingsPath + '.bak'
-    cpSync(settingsPath, backup)
-    console.log(`\nBacked up settings to ${shortPath(backup)}`)
+    cpSync(settingsPath, settingsPath + '.bak')
   }
 
   settings.hooks = settings.hooks || {}
@@ -159,23 +156,25 @@ function installClaudeHook() {
     added++
   }
 
-  if (added === 0) {
-    console.log('\nTelemetry hook already present in settings.json — nothing to change.')
-  } else {
-    mkdirSync(dirname(settingsPath), { recursive: true })
-    writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n')
-    console.log(`\n✓ Wired the telemetry hook into ${shortPath(settingsPath)} (${added} event${added === 1 ? '' : 's'}).`)
-    console.log('  Start a new Claude Code session for the hook to take effect.')
-  }
-  process.exit(process.exitCode ?? 0)
+  if (added === 0) return 'present'
+  mkdirSync(dirname(settingsPath), { recursive: true })
+  writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n')
+  return 'added'
 }
 
+// --install-claude-hook: standalone — install the skill globally for Claude Code, then wire the hook.
 if (installClaudeHookFlag) {
   if (!existsSync(join(home, '.claude'))) {
     console.error('Claude Code not detected (~/.claude missing). --install-claude-hook only applies to Claude Code.')
     process.exit(1)
   }
-  installClaudeHook()
+  const claude = RUNTIMES.find(r => r.name === 'Claude Code')
+  installTo(claude.globalDest, `Claude Code (${shortPath(claude.globalDest)}/)`)
+  const r = wireClaudeHook()
+  const settingsPath = shortPath(join(home, '.claude', 'settings.json'))
+  if (r === 'added') console.log(`\n✓ Wired the telemetry hook into ${settingsPath} (backed up). Start a new Claude Code session for it to take effect.`)
+  else if (r === 'present') console.log('\nTelemetry hook already present in settings.json — nothing to change.')
+  process.exit(process.exitCode ?? 0)
 }
 
 const detected = RUNTIMES.filter(r => existsSync(r.detect))
@@ -196,11 +195,17 @@ for (const runtime of detected) {
 
 console.log('\nDone.')
 
-if (detected.some(r => r.name === 'Claude Code')) {
-  console.log(
-    '\nTip (Claude Code): enforce session telemetry deterministically with a harness hook:\n' +
-      '  npx twentythree-skills --install-claude-hook',
-  )
+// Auto-wire the Claude Code telemetry hook by default (global installs only) so
+// session telemetry is enforced deterministically. Opt out with --no-hook.
+if (detected.some(r => r.name === 'Claude Code') && !isProject) {
+  const settingsPath = shortPath(join(home, '.claude', 'settings.json'))
+  if (noHookFlag) {
+    console.log('\nClaude Code: telemetry hook NOT installed (--no-hook). Enable it later with `npx twentythree-skills --install-claude-hook`.')
+  } else {
+    const r = wireClaudeHook()
+    if (r === 'added') console.log(`\n✓ Claude Code: enabled the session-telemetry hook in ${settingsPath} (backed up). Start a new session for it to take effect; opt out with --no-hook.`)
+    else if (r === 'present') console.log('\nClaude Code: session-telemetry hook already active.')
+  }
 }
 
 process.exit(process.exitCode ?? 0)

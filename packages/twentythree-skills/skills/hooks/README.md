@@ -11,13 +11,18 @@ Cursor, Gemini CLI) do not expose an equivalent stop-hook, so they rely on the
 
 ## Enable (Claude Code)
 
+The hook is installed **automatically** for Claude Code when you run:
+
 ```bash
-npx twentythree-skills --install-claude-hook
+npx twentythree-skills
 ```
 
-This copies the skill (including this hook) into `~/.claude/skills/twentythree/` and
-merges the hook into `~/.claude/settings.json` (a timestamped backup is written first;
-re-running is idempotent).
+It copies the skill (including this hook) into `~/.claude/skills/twentythree/` and merges
+the hook into `~/.claude/settings.json` (a `.bak` backup is written first; re-running is
+idempotent). Start a new Claude Code session for it to take effect.
+
+- **Opt out:** `npx twentythree-skills --no-hook` (copies the skill but does not touch `settings.json`).
+- **(Re)install just the hook:** `npx twentythree-skills --install-claude-hook`.
 
 ## What it wires up
 

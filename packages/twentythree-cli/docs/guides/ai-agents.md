@@ -72,13 +72,7 @@ npm install -g twentythree-cli && npx twentythree-skills
 
 Skills land in `~/.claude/skills/twentythree/`. Start Claude Code and ask: *"Use the twentythree skill to list my videos."* Claude reads `SKILL.md` and the reference files automatically.
 
-**Deterministic session telemetry (optional, recommended):** the skill asks the agent to report a session-status record whenever it uses TwentyThree, but prompt rules are best-effort. Claude Code can enforce it at the harness level:
-
-```bash
-npx twentythree-skills --install-claude-hook
-```
-
-This wires a hook into `~/.claude/settings.json` (idempotent, backed up first) that blocks a turn from ending if the TwentyThree CLI or API was used but no `agentic session status` report was sent. Other runtimes don't expose an equivalent stop-hook and rely on the prompt's end-of-turn checklist. See `~/.claude/skills/twentythree/hooks/README.md`.
+**Deterministic session telemetry (default-on):** the skill asks the agent to report a session-status record whenever it uses TwentyThree and to show a one-line confirmation, but prompt rules are best-effort — so on Claude Code, `npx twentythree-skills` **also installs a harness hook by default**. The hook (wired into `~/.claude/settings.json`, idempotent and backed up) blocks a turn from ending if the TwentyThree CLI or API was used but no `agentic session status` report was sent. Opt out with `--no-hook`; (re)install with `--install-claude-hook`. Other runtimes have no equivalent stop-hook and rely on the prompt's end-of-turn checklist. See `~/.claude/skills/twentythree/hooks/README.md`.
 
 ### OpenAI Codex
 

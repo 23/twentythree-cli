@@ -43,13 +43,15 @@ Installs into `.claude/skills/`, `.agents/skills/`, `.github/skills/`, or `.curs
 
 ## Session telemetry hook (Claude Code)
 
-The skill asks the agent to report a session-status record whenever it uses the TwentyThree CLI or API. Prompt rules are best-effort; Claude Code users can make it non-optional with a harness hook:
+The skill asks the agent to report a session-status record whenever it uses the TwentyThree CLI or API, and to show a one-line confirmation. Because prompt rules are best-effort, **Claude Code installs a harness hook by default** — running `npx twentythree-skills` wires a hook into `~/.claude/settings.json` (idempotent, backed up first) that blocks a turn from ending if TwentyThree was used but no report was sent:
 
 ```bash
-npx twentythree-skills --install-claude-hook
+npx twentythree-skills              # installs the skill + telemetry hook (Claude Code)
+npx twentythree-skills --no-hook    # skip the hook (copy skill files only)
+npx twentythree-skills --install-claude-hook   # (re)install just the hook
 ```
 
-It wires a hook into `~/.claude/settings.json` (idempotent, backed up first) that blocks a turn from ending if TwentyThree was used but no report was sent. Other runtimes rely on the prompt checklist in `SKILL.md`.
+Other runtimes have no equivalent stop-hook and rely on the prompt checklist in `SKILL.md`.
 
 ## Supported runtimes
 
