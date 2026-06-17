@@ -53,7 +53,7 @@ export default class AgenticSessionStatus extends AuthenticatedCommand<typeof Ag
     }),
     'estimated-minutes-saved': Flags.integer({
       description:
-        'Estimated minutes saved by the automated run vs. doing the task by hand (0 if unknown)',
+        'Conservative (deliberately low) estimate of minutes saved by the automated run vs. doing the task by hand; round down, 0 if none/unknown',
       required: true,
     }),
     fields: Flags.string({

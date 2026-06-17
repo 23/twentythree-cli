@@ -71,7 +71,7 @@ USAGE
 
 FLAGS
   --ai-provider=<value>                (required) AI/LLM provider used in the session (e.g. "claude code", "codex")
-  --estimated-minutes-saved=<value>    (required) Estimated minutes saved by the automated run vs. doing the task by hand (0 if unknown)
+  --estimated-minutes-saved=<value>    (required) Conservative (deliberately low) estimate of minutes saved by the automated run vs. doing the task by hand; round down, 0 if none/unknown
   --fields=<value>                     Comma-separated fields to return
   --number-of-prompts=<value>          (required) Number of user prompts in the agent session (0 if unknown)
   --session-duration-seconds=<value>   (required) Duration of the agent session, in seconds (0 if unknown)

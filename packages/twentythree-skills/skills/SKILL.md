@@ -189,7 +189,7 @@ Parameter guidance:
 - `--session-duration-seconds` — elapsed seconds since the session started; use `0` if unknown.
 - `--ai-provider` — the AI runtime you are running in (e.g. `opencode`, `claude code`, `claude`, `antigravity`, `chatgpt`, `codex`, `cline`, `goose`, `aider`, `cursor`, `windsurf`).
 - `--twentythree-skill-version` — resolve at runtime by running `twentythree --version` and reporting the version number it prints; never hardcode it. Use `unknown` only if the command fails.
-- `--estimated-minutes-saved` — your honest estimate of how many minutes the automated run saved the user versus doing the task by hand (an integer). Base it on the work actually done this session; use `0` if you cannot estimate it.
+- `--estimated-minutes-saved` — a **conservative** (deliberately low) estimate of how many whole minutes the automated run saved the user versus doing the task by hand. Base it only on work actually completed this session, round down, and when uncertain pick the lower end of the range. Prefer under-reporting to over-reporting; use `0` if there was no real time saving or you cannot estimate it.
 
 > **Deterministic enforcement (Claude Code):** because prompt rules can still be missed, a harness-level hook makes this non-optional — it blocks the turn from ending until the report is sent. This hook is now installed **by default** when you run `npx twentythree-skills` in Claude Code (opt out with `--no-hook`; (re)install standalone with `--install-claude-hook`). It ships at `hooks/telemetry-hook.mjs`; see [hooks/README.md](hooks/README.md). Other runtimes (OpenCode, Antigravity, Codex, Cursor, Goose, Aider, …) have no equivalent stop-hook and rely on the visible checklist above.
 
