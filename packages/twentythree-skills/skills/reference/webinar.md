@@ -85,7 +85,7 @@ twentythree webinar create --title "Product Launch" --live-date "2026-05-15T16:0
 | `--cancelled` / `--no-cancelled` | no | — | Filter by cancelled status |
 | `--streaming` | no | — | Filter to currently streaming webinars only |
 | `--template` | no | — | Filter to webinar templates only |
-| `--include-stats` | no | — | Include performance statistics for each webinar |
+| `--include-stats` | no | — | Add per-webinar metrics inline (registrants, attendees, engagement, …) — see **webinar metrics** for the field meanings and `_fmt` siblings |
 | `--include-speakers` | no | — | Include speaker information for each webinar |
 | `--include-albums` | no | — | Include category information for each webinar |
 | `--fields` | no | — | Comma-separated list of fields to return |
@@ -222,7 +222,7 @@ twentythree webinar repeat <id> --date "2026-05-22T16:00:00Z" --json
 
 **Auth scope:** read  **Side effects:** none  **Output:** table (Metric, Value)
 
-No additional flags — pass the webinar ID as a positional argument.
+No additional flags — pass the webinar ID as a positional argument. Maps to `GET /live/metrics`, which returns the **aggregated** metric set for one webinar (by ID) or, when called without an ID via the API, across a filtered set.
 
 ```bash
 # Get metrics for a webinar
@@ -230,6 +230,53 @@ twentythree webinar metrics <id> --json
 
 # Example with a real ID
 twentythree webinar metrics 12345 --json
+```
+
+#### Two ways to read webinar metrics
+
+| Goal | How |
+|------|-----|
+| Full metric set for **one** webinar | `twentythree webinar metrics <id> --json` (`GET /live/metrics`) |
+| Metrics for **many** webinars at once | `twentythree webinar list --include-stats --json` — adds the metric fields inline to each webinar in the list (more efficient than one `metrics` call per webinar) |
+
+**Response shapes differ between the two paths:**
+
+- `webinar metrics <id>` returns an **array of rows** under `data`, each `{ "metric": "<key>", "value": <raw>, "formated": "<human string>" }` — note `formated` has **one `t`**.
+- `webinar list --include-stats` returns the metrics as **flat fields** on each webinar, where every metric also has a **`_fmt`** sibling (e.g. `live_peak_viewers` and `live_peak_viewers_fmt`) — the bare key is the raw number for calculations, `_fmt` is the human string. These flat metric fields can also be used as `--ordering` to rank webinars (see Sorting webinars).
+
+Most metrics require **read** auth; without it only `number_of_comments` and `broadcasting_duration` are returned.
+
+#### The metrics that matter (how the product reads them)
+
+The headline webinar funnel comes from the **`combined_conversion_*`** family (combined = live + recording). The product computes its KPIs from these:
+
+| Product metric | Derived from | Meaning |
+|----------------|--------------|---------|
+| **Registrants** | `combined_conversion_conversions` | People who registered |
+| **Attendees** | `combined_conversion_views` | People who actually viewed |
+| **Visits** | `combined_conversion_visits` | Landing/registration page visits |
+| **Attendance rate** | `combined_conversion_views ÷ combined_conversion_conversions` | % of registrants who attended |
+| **Conversion rate** | `combined_conversion_conversions ÷ combined_conversion_visits` | % of visitors who registered |
+| **Avg. engagement** | `combined_conversion_engagement ÷ combined_conversion_views` | Seconds watched per attendee |
+
+Each conversion family also exists split by stage — prefix `live_` (during the broadcast) and `recording_` (on-demand after) alongside `combined_`: `*_conversion_visits`, `*_conversion_conversions`, `*_conversion_views`, `*_conversion_conversion_rate`, `*_conversion_view_rate`, `*_conversion_engagement`, `*_conversion_engagement_per_view`.
+
+Other useful keys:
+
+- **Live viewership:** `live_total_viewers`, `live_peak_viewers`, `live_engagement`, `live_average_engagement`
+- **Recordings:** `number_of_recordings`, `number_of_published_recordings`, `recording_view_count`, `recording_duration`, `recording_engagement_minutes`, `duration_of_published_recordings`, `streaming_duration`, `broadcasting_duration`
+- **Interaction:** `number_of_comments`, `number_of_chat_messages`, `number_of_questions`, `number_of_polls`, `number_of_poll_votes`, `number_of_attachments`, `number_of_attachment_downloads`
+- **Audience profiles** (also split `live_`/`recording_`/`combined_`): `*_total_profiles`, `*_total_identified_profiles`, `*_avg_timeline_sessions`, `*_avg_timeline_count`, `*_avg_timeline_engagement`
+
+```bash
+# Read the funnel for one webinar. `webinar metrics` returns an array of
+# {metric, value, formated} rows, so select by metric name:
+twentythree webinar metrics 12345 --json \
+  | jq '[.data[] | select(.metric|test("^combined_conversion_(conversions|views|visits)$")) | {(.metric): .value}] | add'
+
+# Compare metrics across recent webinars in one call (flat fields), ranked by attendees
+twentythree webinar list --include-stats --ordering combined_conversion_views --order desc --json \
+  | jq '.data[] | {title, registrants: .combined_conversion_conversions, attendees: .combined_conversion_views}'
 ```
 
 ---
