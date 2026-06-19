@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree audience unregister --object-id 789 --json
 ```
 
-_See code: [src/commands/audience/unregister.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/audience/unregister.ts)_
+_See code: [src/commands/audience/unregister.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/unregister.ts)_

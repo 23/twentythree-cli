@@ -40,7 +40,7 @@ EXAMPLES
   $ twentythree webinar section add 12345 --title "Welcome" --description "Opening remarks" --json
 ```
 
-_See code: [src/commands/webinar/section/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/section/add.ts)_
+_See code: [src/commands/webinar/section/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/section/add.ts)_
 
 ## `twentythree webinar section list ID`
 
@@ -69,7 +69,7 @@ EXAMPLES
   $ twentythree webinar section list 12345 --json
 ```
 
-_See code: [src/commands/webinar/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/section/list.ts)_
+_See code: [src/commands/webinar/section/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/section/list.ts)_
 
 ## `twentythree webinar section remove WEBINARID ID`
 
@@ -96,7 +96,7 @@ EXAMPLES
   $ twentythree webinar section remove 12345 99 --json
 ```
 
-_See code: [src/commands/webinar/section/remove.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/section/remove.ts)_
+_See code: [src/commands/webinar/section/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/section/remove.ts)_
 
 ## `twentythree webinar section update WEBINARID ID`
 
@@ -131,4 +131,4 @@ EXAMPLES
   $ twentythree webinar section update 12345 99 --title "Q&A" --description "Audience questions" --json
 ```
 
-_See code: [src/commands/webinar/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/section/update.ts)_
+_See code: [src/commands/webinar/section/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/section/update.ts)_

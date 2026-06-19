@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree user get 12345 --json
 ```
 
-_See code: [src/commands/user/get.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/user/get.ts)_
+_See code: [src/commands/user/get.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/get.ts)_

@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree player styles --json
 ```
 
-_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/player/styles.ts)_
+_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/styles.ts)_

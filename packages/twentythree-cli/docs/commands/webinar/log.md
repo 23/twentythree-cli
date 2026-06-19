@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree webinar log 12345 --json
 ```
 
-_See code: [src/commands/webinar/log.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/webinar/log.ts)_
+_See code: [src/commands/webinar/log.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/log.ts)_

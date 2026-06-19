@@ -68,4 +68,4 @@ EXAMPLES
   $ twentythree video list --after-time 2024-01-01T00:00:00Z --fields photo_id,title
 ```
 
-_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/video/list.ts)_
+_See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/list.ts)_

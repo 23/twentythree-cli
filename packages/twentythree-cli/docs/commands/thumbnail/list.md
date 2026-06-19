@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree thumbnail list --json
 ```
 
-_See code: [src/commands/thumbnail/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/thumbnail/list.ts)_
+_See code: [src/commands/thumbnail/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/thumbnail/list.ts)_

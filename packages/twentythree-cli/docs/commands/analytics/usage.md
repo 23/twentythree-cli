@@ -58,7 +58,7 @@ EXAMPLES
   $ twentythree analytics usage devices --json
 ```
 
-_See code: [src/commands/analytics/usage/devices.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/devices.ts)_
+_See code: [src/commands/analytics/usage/devices.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/devices.ts)_
 
 ## `twentythree analytics usage devices timeseries`
 
@@ -93,7 +93,7 @@ EXAMPLES
   $ twentythree analytics usage devices timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/devices/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/devices/timeseries.ts)_
+_See code: [src/commands/analytics/usage/devices/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/devices/timeseries.ts)_
 
 ## `twentythree analytics usage devices totals`
 
@@ -128,7 +128,7 @@ EXAMPLES
   $ twentythree analytics usage devices totals --json
 ```
 
-_See code: [src/commands/analytics/usage/devices/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/devices/totals.ts)_
+_See code: [src/commands/analytics/usage/devices/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/devices/totals.ts)_
 
 ## `twentythree analytics usage domains`
 
@@ -166,7 +166,7 @@ EXAMPLES
   $ twentythree analytics usage domains --json
 ```
 
-_See code: [src/commands/analytics/usage/domains.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/domains.ts)_
+_See code: [src/commands/analytics/usage/domains.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/domains.ts)_
 
 ## `twentythree analytics usage domains totals`
 
@@ -201,7 +201,7 @@ EXAMPLES
   $ twentythree analytics usage domains totals --json
 ```
 
-_See code: [src/commands/analytics/usage/domains/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/domains/totals.ts)_
+_See code: [src/commands/analytics/usage/domains/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/domains/totals.ts)_
 
 ## `twentythree analytics usage locations`
 
@@ -239,7 +239,7 @@ EXAMPLES
   $ twentythree analytics usage locations --json
 ```
 
-_See code: [src/commands/analytics/usage/locations.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/locations.ts)_
+_See code: [src/commands/analytics/usage/locations.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/locations.ts)_
 
 ## `twentythree analytics usage locations totals`
 
@@ -274,7 +274,7 @@ EXAMPLES
   $ twentythree analytics usage locations totals --json
 ```
 
-_See code: [src/commands/analytics/usage/locations/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/locations/totals.ts)_
+_See code: [src/commands/analytics/usage/locations/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/locations/totals.ts)_
 
 ## `twentythree analytics usage sourceids`
 
@@ -312,7 +312,7 @@ EXAMPLES
   $ twentythree analytics usage sourceids --json
 ```
 
-_See code: [src/commands/analytics/usage/sourceids.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/sourceids.ts)_
+_See code: [src/commands/analytics/usage/sourceids.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/sourceids.ts)_
 
 ## `twentythree analytics usage sourceids totals`
 
@@ -347,7 +347,7 @@ EXAMPLES
   $ twentythree analytics usage sourceids totals --json
 ```
 
-_See code: [src/commands/analytics/usage/sourceids/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/sourceids/totals.ts)_
+_See code: [src/commands/analytics/usage/sourceids/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/sourceids/totals.ts)_
 
 ## `twentythree analytics usage sources`
 
@@ -385,7 +385,7 @@ EXAMPLES
   $ twentythree analytics usage sources --json
 ```
 
-_See code: [src/commands/analytics/usage/sources.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/sources.ts)_
+_See code: [src/commands/analytics/usage/sources.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/sources.ts)_
 
 ## `twentythree analytics usage sources totals`
 
@@ -420,7 +420,7 @@ EXAMPLES
   $ twentythree analytics usage sources totals --json
 ```
 
-_See code: [src/commands/analytics/usage/sources/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/sources/totals.ts)_
+_See code: [src/commands/analytics/usage/sources/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/sources/totals.ts)_
 
 ## `twentythree analytics usage spots`
 
@@ -458,7 +458,7 @@ EXAMPLES
   $ twentythree analytics usage spots --json
 ```
 
-_See code: [src/commands/analytics/usage/spots.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/spots.ts)_
+_See code: [src/commands/analytics/usage/spots.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/spots.ts)_
 
 ## `twentythree analytics usage spots timeseries`
 
@@ -493,7 +493,7 @@ EXAMPLES
   $ twentythree analytics usage spots timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/spots/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/spots/timeseries.ts)_
+_See code: [src/commands/analytics/usage/spots/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/spots/timeseries.ts)_
 
 ## `twentythree analytics usage spots totals`
 
@@ -528,7 +528,7 @@ EXAMPLES
   $ twentythree analytics usage spots totals --json
 ```
 
-_See code: [src/commands/analytics/usage/spots/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/spots/totals.ts)_
+_See code: [src/commands/analytics/usage/spots/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/spots/totals.ts)_
 
 ## `twentythree analytics usage storage`
 
@@ -563,7 +563,7 @@ EXAMPLES
   $ twentythree analytics usage storage --selection videos
 ```
 
-_See code: [src/commands/analytics/usage/storage.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/storage.ts)_
+_See code: [src/commands/analytics/usage/storage.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/storage.ts)_
 
 ## `twentythree analytics usage traffic`
 
@@ -601,7 +601,7 @@ EXAMPLES
   $ twentythree analytics usage traffic --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/traffic.ts)_
+_See code: [src/commands/analytics/usage/traffic.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/traffic.ts)_
 
 ## `twentythree analytics usage traffic timeseries`
 
@@ -636,7 +636,7 @@ EXAMPLES
   $ twentythree analytics usage traffic timeseries --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/traffic/timeseries.ts)_
+_See code: [src/commands/analytics/usage/traffic/timeseries.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/traffic/timeseries.ts)_
 
 ## `twentythree analytics usage traffic totals`
 
@@ -671,4 +671,4 @@ EXAMPLES
   $ twentythree analytics usage traffic totals --json
 ```
 
-_See code: [src/commands/analytics/usage/traffic/totals.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/analytics/usage/traffic/totals.ts)_
+_See code: [src/commands/analytics/usage/traffic/totals.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/analytics/usage/traffic/totals.ts)_

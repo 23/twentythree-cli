@@ -52,4 +52,4 @@ EXAMPLES
   $ twentythree comment list --object-id 123 --comment-user-id 456 --json
 ```
 
-_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/comment/list.ts)_
+_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/comment/list.ts)_

@@ -35,7 +35,7 @@ EXAMPLES
   $ twentythree openupload list --json
 ```
 
-_See code: [src/commands/openupload/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/openupload/list.ts)_
+_See code: [src/commands/openupload/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/openupload/list.ts)_
 
 ## `twentythree openupload update-file`
 
@@ -69,7 +69,7 @@ EXAMPLES
   $ twentythree openupload update-file --token-upload-id 123 --token abc123 --upload-key key456 --json
 ```
 
-_See code: [src/commands/openupload/update-file.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/openupload/update-file.ts)_
+_See code: [src/commands/openupload/update-file.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/openupload/update-file.ts)_
 
 ## `twentythree openupload upload-file`
 
@@ -102,4 +102,4 @@ EXAMPLES
   $ twentythree openupload upload-file --file-path ./video.mp4 --token-upload-id 123 --token abc123 --json
 ```
 
-_See code: [src/commands/openupload/upload-file.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/openupload/upload-file.ts)_
+_See code: [src/commands/openupload/upload-file.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/openupload/upload-file.ts)_

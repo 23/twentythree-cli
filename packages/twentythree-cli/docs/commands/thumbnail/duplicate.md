@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree thumbnail duplicate 42 --name "My Copy" --json
 ```
 
-_See code: [src/commands/thumbnail/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/thumbnail/duplicate.ts)_
+_See code: [src/commands/thumbnail/duplicate.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/thumbnail/duplicate.ts)_

@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree action upload 12345 image ./banner.png --json
 ```
 
-_See code: [src/commands/action/upload.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/action/upload.ts)_
+_See code: [src/commands/action/upload.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/action/upload.ts)_

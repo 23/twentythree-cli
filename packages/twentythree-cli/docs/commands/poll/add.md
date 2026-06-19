@@ -30,4 +30,4 @@ EXAMPLES
   $ twentythree poll add --object-id 12345 --question "How are you?" --json
 ```
 
-_See code: [src/commands/poll/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/poll/add.ts)_
+_See code: [src/commands/poll/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/poll/add.ts)_

@@ -40,7 +40,7 @@ EXAMPLES
   $ twentythree app add --name "My App" --json
 ```
 
-_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/add.ts)_
+_See code: [src/commands/app/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/add.ts)_
 
 ## `twentythree app delete ID`
 
@@ -66,7 +66,7 @@ EXAMPLES
   $ twentythree app delete 12345 --json
 ```
 
-_See code: [src/commands/app/delete.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/delete.ts)_
+_See code: [src/commands/app/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/delete.ts)_
 
 ## `twentythree app list`
 
@@ -98,7 +98,7 @@ EXAMPLES
   $ twentythree app list --json
 ```
 
-_See code: [src/commands/app/list.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/list.ts)_
+_See code: [src/commands/app/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/list.ts)_
 
 ## `twentythree app remove-thumbnail ID`
 
@@ -124,7 +124,7 @@ EXAMPLES
   $ twentythree app remove-thumbnail 42 --json
 ```
 
-_See code: [src/commands/app/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/remove-thumbnail.ts)_
+_See code: [src/commands/app/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/remove-thumbnail.ts)_
 
 ## `twentythree app set-thumbnail FILE`
 
@@ -153,7 +153,7 @@ EXAMPLES
   $ twentythree app set-thumbnail ./thumbnail.jpg --app-id 42 --json
 ```
 
-_See code: [src/commands/app/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/set-thumbnail.ts)_
+_See code: [src/commands/app/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/set-thumbnail.ts)_
 
 ## `twentythree app update ID`
 
@@ -188,4 +188,4 @@ EXAMPLES
   $ twentythree app update 12345 --name "Updated Name" --json
 ```
 
-_See code: [src/commands/app/update.ts](https://github.com/23/twentythree-cli/blob/v1.6.4/src/commands/app/update.ts)_
+_See code: [src/commands/app/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/app/update.ts)_
