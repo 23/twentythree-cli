@@ -19,6 +19,7 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
   static examples = [
     '<%= config.bin %> webinar series update 42 --name "Updated Series"',
     '<%= config.bin %> webinar series update 42 --description "New description"',
+    '<%= config.bin %> webinar series update 42 --trailer-video-id 127764838',
     '<%= config.bin %> webinar series update 42 --name "Updated" --json',
   ]
 
@@ -37,6 +38,10 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
     'seo-policy': Flags.string({
       description: 'SEO policy for the series: index, noindex, or empty string to reset',
       options: ['', 'index', 'noindex'],
+      required: false,
+    }),
+    'trailer-video-id': Flags.integer({
+      description: 'ID of a video to use as the series trailer (API trailer_photo_id)',
       required: false,
     }),
   }
@@ -61,6 +66,7 @@ export default class WebinarSeriesUpdate extends AuthenticatedCommand<typeof Web
     if (flags.name !== undefined) body.name = flags.name
     if (flags.description !== undefined) body.description = flags.description
     if (flags['seo-policy'] !== undefined) body.seo_policy = flags['seo-policy']
+    if (flags['trailer-video-id'] !== undefined) body.trailer_photo_id = flags['trailer-video-id']
 
     const { data, error } = await this.apiClient.POST('/live/series/update', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

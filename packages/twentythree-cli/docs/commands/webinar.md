@@ -1408,16 +1408,17 @@ Update a webinar series
 ```
 USAGE
   $ twentythree webinar series update ID [--json] [-w <value>] [--name <value>] [--description <value>] [--seo-policy
-    |index|noindex]
+    |index|noindex] [--trailer-video-id <value>]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --description=<value>  Series description
-  --name=<value>         Series name
-  --seo-policy=<option>  SEO policy for the series: index, noindex, or empty string to reset
-                         <options: |index|noindex>
+  --description=<value>       Series description
+  --name=<value>             Series name
+  --seo-policy=<option>       SEO policy for the series: index, noindex, or empty string to reset
+                             <options: |index|noindex>
+  --trailer-video-id=<value>  ID of a video to use as the series trailer (API trailer_photo_id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -2028,7 +2029,7 @@ USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
     [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
     [--format event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
-    [--publish-recordings] [--ondemand] [--series-id <value>] [--timezone <value>]
+    [--publish-recordings] [--ondemand] [--series-id <value>] [--trailer-video-id <value>] [--timezone <value>]
 
 ARGUMENTS
   ID  Webinar ID
@@ -2053,6 +2054,7 @@ FLAGS
   --status=<value>              Webinar status: upcoming, live, or previous
   --timezone=<value>            Timezone for the webinar schedule (e.g. Europe/Copenhagen)
   --title=<value>               New title for the webinar
+  --trailer-video-id=<value>    ID of a video to use as the webinar trailer (API trailer_photo_id)
   --webinar-design-id=<value>   Assign a webinar design by ID to this webinar
 
 GLOBAL FLAGS

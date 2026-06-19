@@ -14,7 +14,7 @@ USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
     [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
     [--format event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
-    [--publish-recordings] [--ondemand] [--series-id <value>] [--timezone <value>]
+    [--publish-recordings] [--ondemand] [--series-id <value>] [--trailer-video-id <value>] [--timezone <value>]
 
 ARGUMENTS
   ID  Webinar ID
@@ -39,6 +39,7 @@ FLAGS
   --status=<value>              Webinar status: upcoming, live, or previous
   --timezone=<value>            Timezone for the webinar schedule (e.g. Europe/Copenhagen)
   --title=<value>               New title for the webinar
+  --trailer-video-id=<value>    ID of a video to use as the webinar trailer (API trailer_photo_id)
   --webinar-design-id=<value>   Assign a webinar design by ID to this webinar
 
 GLOBAL FLAGS
@@ -54,6 +55,8 @@ EXAMPLES
   $ twentythree webinar update 12345 --status upcoming
 
   $ twentythree webinar update 12345 --ondemand --no-private --locale da_DK
+
+  $ twentythree webinar update 12345 --trailer-video-id 127764838
 
   $ twentythree webinar update 12345
 ```

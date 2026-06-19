@@ -105,6 +105,10 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       description: 'Attach the webinar to a webinar series by ID',
       required: false,
     }),
+    'trailer-video-id': Flags.integer({
+      description: 'ID of a video to use as the webinar trailer (API trailer_photo_id)',
+      required: false,
+    }),
     timezone: Flags.string({
       description: 'Timezone for the webinar schedule (e.g. Europe/Copenhagen)',
       required: false,
@@ -155,6 +159,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       flags.ondemand,
       flags['series-id'],
       flags.timezone,
+      flags['trailer-video-id'],
     ].some((v) => v !== undefined)
 
     const body: Record<string, unknown> = { live_id: webinarId }
@@ -257,6 +262,7 @@ export default class WebinarUpdate extends AuthenticatedCommand<typeof WebinarUp
       if (flags.ondemand !== undefined) body.enable_ondemand_p = flags.ondemand ? 1 : 0
       if (flags['series-id'] !== undefined) body.live_series_id = flags['series-id']
       if (flags.timezone !== undefined) body.timezone = flags.timezone
+      if (flags['trailer-video-id'] !== undefined) body.trailer_photo_id = flags['trailer-video-id']
     }
 
     const { data: updateData, error: updateError } = await this.apiClient.POST('/live/update', {

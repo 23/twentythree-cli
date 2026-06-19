@@ -164,10 +164,16 @@ twentythree webinar list --ordering name --json
 | `--draft` / `--no-draft` | no | — | Set as draft |
 | `--publish` / `--no-publish` | no | — | Publish or unpublish the webinar |
 | `--webinar-design-id` | no | — | Assign a webinar design by ID |
+| `--trailer-video-id` | no | — | ID of a video to use as the webinar trailer (API `trailer_photo_id`) |
+
+> **Trailers:** a webinar can have a single trailer video. Set it with `--trailer-video-id <videoId>` on **update** (there is no trailer flag on `create` — create the webinar first, then set the trailer). The video must already exist in the workspace (find its ID with `video list`).
 
 ```bash
 # Update title and description
 twentythree webinar update <id> --title "New Title" --description "Updated description" --json
+
+# Set the webinar's trailer to an existing video
+twentythree webinar update <id> --trailer-video-id 127764838 --json
 
 # Publish a draft webinar
 twentythree webinar update <id> --publish --json
@@ -736,13 +742,17 @@ twentythree webinar series create --name "Q2 Webinars" --description "All Q2 ses
 |------|----------|---------|-------------|
 | `--name` | no | — | Series name |
 | `--description` | no | — | Series description |
+| `--seo-policy` | no | — | SEO policy: `index`, `noindex`, or empty to reset |
+| `--trailer-video-id` | no | — | ID of a video to use as the series trailer (API `trailer_photo_id`) |
+
+> **Trailers:** like a webinar, a series can have a single trailer video — set it with `--trailer-video-id <videoId>` (the video must already exist in the workspace).
 
 ```bash
 # Update the series name
 twentythree webinar series update <series-id> --name "Q2 All-Hands Series" --json
 
-# Update the series description
-twentythree webinar series update <series-id> --description "Quarterly alignment sessions" --json
+# Set the series trailer to an existing video
+twentythree webinar series update <series-id> --trailer-video-id 127764838 --json
 ```
 
 ---

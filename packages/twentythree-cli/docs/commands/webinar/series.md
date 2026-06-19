@@ -338,16 +338,17 @@ Update a webinar series
 ```
 USAGE
   $ twentythree webinar series update ID [--json] [-w <value>] [--name <value>] [--description <value>] [--seo-policy
-    |index|noindex]
+    |index|noindex] [--trailer-video-id <value>]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --description=<value>  Series description
-  --name=<value>         Series name
-  --seo-policy=<option>  SEO policy for the series: index, noindex, or empty string to reset
-                         <options: |index|noindex>
+  --description=<value>       Series description
+  --name=<value>             Series name
+  --seo-policy=<option>       SEO policy for the series: index, noindex, or empty string to reset
+                             <options: |index|noindex>
+  --trailer-video-id=<value>  ID of a video to use as the series trailer (API trailer_photo_id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -360,6 +361,8 @@ EXAMPLES
   $ twentythree webinar series update 42 --name "Updated Series"
 
   $ twentythree webinar series update 42 --description "New description"
+
+  $ twentythree webinar series update 42 --trailer-video-id 127764838
 
   $ twentythree webinar series update 42 --name "Updated" --json
 ```
