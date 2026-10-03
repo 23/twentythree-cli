@@ -11,44 +11,17 @@ import {
 import { ensureFreshToken } from '../auth/token-refresh.js'
 import { createApiClient } from '../api/client.js'
 import { EXIT_CANCELLED } from './output.js'
+import { permissionBelow, type PermissionLevel } from './permissions.js'
 
 export type BaseFlags<T extends typeof Command> = Interfaces.InferredFlags<
   (typeof BaseCommand)['baseFlags'] & T['flags']
 >
-
-export type PermissionLevel = 'anonymous' | 'none' | 'read' | 'write' | 'admin' | 'super'
 
 export interface AgentMetadata {
   api_endpoint: string
   auth_scope: PermissionLevel
   output_shape: { type: 'table'; columns: string[] } | { type: 'key-value' } | { type: 'none' }
   side_effects: 'none' | 'destructive' | 'creates' | 'updates'
-}
-
-/**
- * Ordering of API permission levels, lowest first. Mirrors the server's
- * none < anonymous < read < write < admin < super ladder.
- */
-const PERMISSION_RANK: Record<PermissionLevel, number> = {
-  none: 0,
-  anonymous: 1,
-  read: 2,
-  write: 3,
-  admin: 4,
-  super: 5,
-}
-
-/**
- * True when `have` is a known permission level strictly below `need`.
- * Unknown or missing levels never fail the comparison — the API is the
- * authority, this is only a fast-fail for levels we already know about.
- */
-export function permissionBelow(have: string | undefined, need: string | undefined): boolean {
-  if (!have || !need) return false
-  const h = PERMISSION_RANK[have as PermissionLevel]
-  const n = PERMISSION_RANK[need as PermissionLevel]
-  if (h === undefined || n === undefined) return false
-  return h < n
 }
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
@@ -276,7 +249,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     const confirmed = await p.confirm({ message })
     if (p.isCancel(confirmed) || !confirmed) {
-      process.exit(EXIT_CANCELLED)
+      this.log('Cancelled.')
+      this.exit(EXIT_CANCELLED)
     }
   }
 

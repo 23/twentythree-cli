@@ -179,7 +179,7 @@ With `--json`, the command returns the configured `mode`, `permission_level`, `a
 Two things to know when scripting this:
 
 - **An empty token is an error, not anonymous mode.** `--token ""` (usually an unset shell variable) and an empty `TWENTYTHREE_TOKEN` exit 1 with a message saying so. Anonymous access is configured only when the token is omitted entirely.
-- **The permission level is reported at login.** A read-only API credential logs in fine but every create/update/delete command is refused — the CLI says so at login (`permission_level: "read"` plus a `warning` in the JSON) and again, before the confirmation prompt, when such a command is run.
+- **The permission level is reported at login.** A read-only API credential logs in fine but every create/update/delete command is refused — the CLI says so at login (`permission_level: "read"` plus a `warning` in the JSON) and again, before the confirmation prompt, when such a command is run. Workspaces configured by an older CLI version pick the level up at their next token refresh or re-login.
 
 ## Destructive commands without a terminal
 

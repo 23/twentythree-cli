@@ -92,7 +92,8 @@ vi.mock('@clack/prompts', () => ({
   confirm: mockPConfirm,
 }))
 
-import { BaseCommand, AuthenticatedCommand, permissionBelow } from '../base-command.js'
+import { BaseCommand, AuthenticatedCommand } from '../base-command.js'
+import { permissionBelow } from '../permissions.js'
 import type { WorkspaceEntry } from '../../auth/workspace-config.js'
 
 // ---------------------------------------------------------------------------
@@ -551,10 +552,11 @@ describe('BaseCommand.confirmDestructive()', () => {
     expect(exitSpy).not.toHaveBeenCalled()
   })
 
-  it('exits 2 when the prompt is declined', async () => {
+  it('says "Cancelled." and exits 2 when the prompt is declined', async () => {
     mockPConfirm.mockResolvedValue(false)
     const cmd = await initDestructive([])
 
-    await expect(cmd.confirmForTest('Delete it?')).rejects.toThrow('process.exit(2)')
+    await expect(cmd.confirmForTest('Delete it?')).rejects.toMatchObject({ oclif: { exit: 2 } })
+    expect(mockLog).toHaveBeenCalledWith('Cancelled.')
   })
 })

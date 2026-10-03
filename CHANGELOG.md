@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `email-subscription list|add|remove` commands for the new `/email-subscription/*` endpoints (digest emails for newly published videos)
 - `video upload-url` command for `POST /photo/upload-url` — create a video from a URL instead of uploading a local file
-- `--yes` / `-y` flag on every destructive command to skip the confirmation prompt; without a TTY and without `--yes`/`--json` the command now exits 2 with a message naming the flag instead of hanging
-- Permission level of the login is recorded from `/user/tokens` and shown by `auth credentials`, `auth status`, `workspace list` and `doctor`; commands whose scope exceeds a read-only login fail fast with a clear message instead of a 403 after the prompt
+- `--yes` / `-y` flag on every destructive command to skip the confirmation prompt; without a TTY and without `--yes`/`--json` the command now exits 2 with a message naming the flag instead of hanging. Five destructive commands that never prompted (`comment reaction remove`, `audience unregister`, `webinar queued-video remove`, `webinar speaker cancel-guest-request`, `webinar speaker remove-avatar`) now confirm like the rest
+- Permission level of the login is recorded from `/user/tokens` (at login, or at the next token refresh for existing configs) and shown by `auth credentials`, `auth status`, `workspace list` and `doctor`; commands whose scope exceeds a read-only login fail fast with a clear message instead of a 403 after the prompt
 - Skills: `reference/email-subscription.md`, plus guide rules for `--yes`, permission levels and empty tokens
 
 ### Changed

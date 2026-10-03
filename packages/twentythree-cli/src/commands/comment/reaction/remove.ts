@@ -33,6 +33,7 @@ export default class CommentReactionRemove extends AuthenticatedCommand<typeof C
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     reaction: Flags.string({
       description: 'Reaction emoji to remove',
       required: true,
@@ -63,6 +64,11 @@ export default class CommentReactionRemove extends AuthenticatedCommand<typeof C
   public async run(): Promise<void | object> {
     const { args, flags } = await this.parse(CommentReactionRemove)
     this.printWorkspaceHeader()
+
+    // Destructive: confirm before the API call; --yes / --json skip the prompt.
+    await this.confirmDestructive(
+      `Remove reaction ${flags.reaction} from comment ${args.id} on ${this.activeWorkspace.domain}?`,
+    )
 
     const { data, error } = await this.apiClient.GET('/comment/reaction/remove', {
       params: {

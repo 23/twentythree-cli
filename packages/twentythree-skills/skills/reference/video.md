@@ -59,12 +59,13 @@ Creates a video by having the platform download the file from a public URL — n
 |------|----------|---------|-------------|
 | `--title` | no | — | Title for the video |
 | `--description` | no | — | Description of the video |
-| `--content-format` | no | `text/enhanced` | `text/enhanced`, `text/plain` or `text/html` |
+| `--content-format` | no | — (API default `text/enhanced`) | `text/enhanced`, `text/plain` or `text/html` |
 | `--tags` | no | — | Comma-separated tags |
 | `--category-id` | no | — | Category ID to place the video in |
 | `--publish` / `--no-publish` | no | `--publish` | Publish once the file lands |
 | `--publish-date` | no | — | Publish date, past or future, e.g. `"2026-11-01 09:00:00"` |
 | `--user-id` | no | — | Upload on behalf of a user (super users only) |
+| `--fields` | no | — | Comma-separated list of fields to return |
 
 ```bash
 # Pull a video from a URL and keep it unpublished for review

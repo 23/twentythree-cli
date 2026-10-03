@@ -41,13 +41,15 @@ Remove a queued video from a webinar
 
 ```
 USAGE
-  $ twentythree webinar queued-video remove ID [--json] [-w <value>] [--video-id <value>]
+  $ twentythree webinar queued-video remove ID [--json] [-w <value>] [-y] [--video-id <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --video-id=<value>  Video ID to remove from queue
+  -y, --yes               Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                          skips it.
+      --video-id=<value>  Video ID to remove from queue
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

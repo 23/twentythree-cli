@@ -69,6 +69,10 @@ export default class VideoUploadUrl extends AuthenticatedCommand<typeof VideoUpl
       description: 'Upload on behalf of this user ID (super users only; otherwise ignored)',
       required: false,
     }),
+    fields: Flags.string({
+      description: 'Comma-separated list of fields to return in the API response',
+      required: false,
+    }),
   }
 
   static args = {
@@ -92,6 +96,7 @@ export default class VideoUploadUrl extends AuthenticatedCommand<typeof VideoUpl
     if (flags['category-id'] !== undefined) body.album_id = flags['category-id']
     if (flags['publish-date'] !== undefined) body.publish_date = flags['publish-date']
     if (flags['user-id'] !== undefined) body.user_id = flags['user-id']
+    if (flags.fields !== undefined) body.fields = flags.fields
 
     const { data, error } = await this.apiClient.POST('/photo/upload-url', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,28 +113,22 @@ export default class VideoUploadUrl extends AuthenticatedCommand<typeof VideoUpl
     const videoId = result.photo_id
 
     this.log(chalk.green('Video queued from URL'))
+    const adminUrl = videoId ? `https://${this.activeWorkspace.domain}/manage/video/${videoId}` : undefined
     if (videoId) {
-      const adminUrl = `https://${this.activeWorkspace.domain}/manage/video/${videoId}`
       this.log(`ID:    ${videoId}`)
       this.log(`Admin: ${adminUrl}`)
       this.log(chalk.dim('Transcoding runs in the background — check with `video transcoding-progress`.'))
-      if (this.jsonEnabled()) {
-        return formatJsonOutput({
-          ok: true,
-          data: { ...result, admin_url: adminUrl },
-          summary: 'Video queued from URL',
-          breadcrumbs: [
-            { domain: this.activeWorkspace.domain },
-            { resource: 'video', id: String(videoId) },
-          ],
-        })
-      }
-    } else if (this.jsonEnabled()) {
+    }
+
+    if (this.jsonEnabled()) {
       return formatJsonOutput({
         ok: true,
-        data: result,
+        data: adminUrl ? { ...result, admin_url: adminUrl } : result,
         summary: 'Video queued from URL',
-        breadcrumbs: [{ domain: this.activeWorkspace.domain }],
+        breadcrumbs: [
+          { domain: this.activeWorkspace.domain },
+          ...(videoId ? [{ resource: 'video', id: String(videoId) }] : []),
+        ],
       })
     }
   }

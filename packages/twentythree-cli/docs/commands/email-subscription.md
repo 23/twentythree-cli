@@ -49,8 +49,8 @@ USAGE
 FLAGS
   --email=<value>    Only return subscriptions for this email address
   --fields=<value>   Comma-separated list of fields to return in the API response
-  --page=<value>     Page number (default: fetch all pages)
-  --size=<value>     Number of results per page (default 50, max 500)
+  --page=<value>     Page number. Passing --page or --size returns a single page; otherwise every page is fetched
+  --size=<value>     Results per page (API default 50, max 500). Passing --page or --size returns a single page
   --user-id=<value>  Only return subscriptions belonging to this user
 
 GLOBAL FLAGS

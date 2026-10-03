@@ -53,13 +53,12 @@ export default class EmailSubscriptionAdd extends AuthenticatedCommand<typeof Em
     const { flags } = await this.parse(EmailSubscriptionAdd)
     this.printWorkspaceHeader()
 
+    const body: Record<string, unknown> = { email: flags.email, frequency: flags.frequency }
+    if (flags.fields !== undefined) body.fields = flags.fields
+
     const { data, error } = await this.apiClient.POST('/email-subscription/add', {
-      body: {
-        email: flags.email,
-        frequency: flags.frequency,
-        fields: flags.fields,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body: body as any,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
 

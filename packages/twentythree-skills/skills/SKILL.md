@@ -5,7 +5,7 @@ description: |
   videos, run webinars, query analytics, manage audiences, configure players,
   create categories, manage tags, spots, thumbnails, webhooks, collectors, polls,
   presentations, email digest subscriptions, or any TwentyThree platform operation.
-  Covers 260+ API commands across 25 resource groups plus meta commands (auth,
+  Covers 260+ API commands across 26 resource groups plus meta commands (auth,
   workspace, autocomplete, doctor).
   Every command supports --json for machine-readable output and --agent for
   self-describing metadata (api_endpoint, auth_scope, output_shape, side_effects).
@@ -29,7 +29,7 @@ compatibility: Requires twentythree-cli installed globally (npm install -g twent
 
 # TwentyThree CLI
 
-> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 260+ commands across 25 resource groups.
+> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 260+ commands across 26 resource groups.
 >
 > Always use `--json` in agentic contexts for structured output. Always run `twentythree <command> --agent` before calling an unfamiliar command to discover its flags, API endpoint, auth scope, and side effects.
 
@@ -205,7 +205,7 @@ Parameter guidance:
 
 ## Resource Index
 
-All 25 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
+All 26 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
 
 | Topic | Representative verbs | Use for |
 |-------|---------------------|---------|

@@ -29,6 +29,7 @@ export default class AudienceUnregister extends AuthenticatedCommand<typeof Audi
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'object-id': Flags.string({
       description: 'Object ID to unregister from',
       required: true,
@@ -52,6 +53,11 @@ export default class AudienceUnregister extends AuthenticatedCommand<typeof Audi
     const body: Record<string, unknown> = { object_id: Number(flags['object-id']) }
     if (flags.email !== undefined) body.email = flags.email
     if (flags.uuid !== undefined) body.uuid = flags.uuid
+
+    // Destructive: confirm before the API call; --yes / --json skip the prompt.
+    await this.confirmDestructive(
+      `Unregister ${flags.email ?? flags.uuid ?? 'the contact'} from object ${flags['object-id']} on ${this.activeWorkspace.domain}? This cannot be undone.`,
+    )
 
     const { data, error } = await this.apiClient.POST('/audience/unregister', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

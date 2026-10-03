@@ -14,7 +14,7 @@ Auth scope: **write** for all three commands (including `list`).
 Run `twentythree auth credentials` if not already configured.
 Verify: `twentythree auth status --json`
 
-The workspace must have email subscriptions enabled; otherwise the API answers `412 email_subscriptions_not_enabled`. That is a workspace setting, not something the CLI can turn on — tell the user.
+The workspace must have email subscriptions enabled; otherwise every call answers HTTP 412 (error code `email_subscriptions_not_enabled`). That is a workspace setting, not something the CLI can turn on — tell the user.
 
 > For any flag not listed here, run `twentythree email-subscription <cmd> --agent` to get the complete flag list, types, and defaults.
 
@@ -24,14 +24,14 @@ The workspace must have email subscriptions enabled; otherwise the API answers `
 
 **Auth scope:** write  **Side effects:** none  **Output:** table (ID, Email, User, Scope, Frequency, Created)
 
-Lists subscriptions newest first. Without `--page`/`--size` the command fetches every page. A subscription's **Scope** (`object_pretty`) says what it covers: the whole workspace, or one tag, category or uploading user — only workspace-wide subscriptions can be created from the CLI.
+Lists subscriptions newest first. Without `--page` and `--size` the command fetches every page; passing either returns that single page. A subscription's **Scope** (`object_pretty`) says what it covers: the whole workspace, or one tag, category or uploading user — only workspace-wide subscriptions can be created from the CLI.
 
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
 | `--email` | no | — | Only return subscriptions for this email address |
 | `--user-id` | no | — | Only return subscriptions belonging to this user |
-| `--page` | no | all pages | Page number |
-| `--size` | no | 50 | Results per page (max 500) |
+| `--page` | no | — | Page number (passing `--page` or `--size` returns one page) |
+| `--size` | no | 50 | Results per page; the handler allows up to 500 |
 | `--fields` | no | — | Comma-separated list of fields to return |
 
 ```bash

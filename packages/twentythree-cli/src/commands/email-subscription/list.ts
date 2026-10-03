@@ -10,7 +10,8 @@ import { fetchAllPages } from '../../lib/pagination.js'
  * of newly published videos.
  *
  * Maps to GET /email-subscription/list. The endpoint is paginated (default 50,
- * max 500 per page); without --page/--size the command fetches every page.
+ * max 500 per page, per the handler's pagination settings); passing --page or
+ * --size returns that single page, otherwise the command fetches every page.
  */
 export default class EmailSubscriptionList extends AuthenticatedCommand<typeof EmailSubscriptionList> {
   static description = 'List email subscriptions to new-video digests in the active workspace'
@@ -35,11 +36,11 @@ export default class EmailSubscriptionList extends AuthenticatedCommand<typeof E
       required: false,
     }),
     page: Flags.integer({
-      description: 'Page number (default: fetch all pages)',
+      description: 'Page number. Passing --page or --size returns a single page; otherwise every page is fetched',
       required: false,
     }),
     size: Flags.integer({
-      description: 'Number of results per page (default 50, max 500)',
+      description: 'Results per page (API default 50, max 500). Passing --page or --size returns a single page',
       required: false,
     }),
     fields: Flags.string({

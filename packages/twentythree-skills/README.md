@@ -37,7 +37,7 @@ Installs into `.claude/skills/`, `.agents/skills/`, `.github/skills/`, or `.curs
 ## What's included
 
 - `skills/SKILL.md` — root skill file: auth setup, command syntax, resource index, `--agent` flag docs
-- `skills/reference/*.md` — 23 reference files, one per TwentyThree CLI resource group (video, webinar, analytics, email-subscription, …)
+- `skills/reference/*.md` — 24 reference files, one per TwentyThree CLI resource group (video, webinar, analytics, email-subscription, …) plus `personal.md`
 - `skills/workflows/*.md` — workflow files for high-value automation patterns (video upload, webinar lifecycle)
 - `skills/hooks/` — an optional Claude Code hook that enforces session telemetry deterministically (see below)
 
