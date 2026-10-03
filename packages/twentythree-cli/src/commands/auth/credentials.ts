@@ -9,6 +9,7 @@ import {
   type WorkspaceEntry,
 } from '../../auth/workspace-config.js'
 import { fetchWorkspaceTokens } from '../../auth/token-refresh.js'
+import { permissionBelow } from '../../lib/base-command.js'
 
 /**
  * Build the workspace entry used for anonymous (domain-only) access — no token,
@@ -46,7 +47,7 @@ export default class Credentials extends Command {
     }),
     token: Flags.string({
       description:
-        'Bearer/login token. Falls back to the TWENTYTHREE_TOKEN env var. Omit for anonymous (domain-only) access.',
+        'Bearer/login token. Falls back to the TWENTYTHREE_TOKEN env var. Omit (and leave the env var unset) for anonymous (domain-only) access; an empty value is an error.',
     }),
     workspace: Flags.string({
       description:
@@ -66,11 +67,26 @@ export default class Credentials extends Command {
 
     // Non-interactive when --domain is supplied. This is the agent/CI path.
     if (flags.domain !== undefined) {
-      return this.runNonInteractive(
-        flags.domain,
-        flags.token ?? process.env.TWENTYTHREE_TOKEN,
-        flags.workspace,
-      )
+      // TWE-576: an empty token must not silently degrade to anonymous mode.
+      // `--token ""` (typically an unset shell variable) and an empty
+      // TWENTYTHREE_TOKEN are errors; only a genuinely absent token means
+      // anonymous access was intended.
+      const envToken = process.env.TWENTYTHREE_TOKEN
+      if (flags.token !== undefined && flags.token.trim() === '') {
+        this.error(
+          '--token was given but is empty (is the shell variable set?). ' +
+            'Pass a non-empty bearer token, or omit --token for anonymous (domain-only) access.',
+          { exit: 1 },
+        )
+      }
+      if (flags.token === undefined && envToken !== undefined && envToken.trim() === '') {
+        this.error(
+          'TWENTYTHREE_TOKEN is set but empty. ' +
+            'Export a non-empty bearer token, or unset it for anonymous (domain-only) access.',
+          { exit: 1 },
+        )
+      }
+      return this.runNonInteractive(flags.domain, flags.token ?? envToken, flags.workspace)
     }
 
     // Interactive mode requires a TTY — @clack prompts cannot run otherwise.
@@ -111,9 +127,16 @@ export default class Credentials extends Command {
       setWorkspaces([entry])
       setActiveWorkspace(domain)
       if (json) {
-        return { domain, mode: 'anonymous', active_workspace: domain, workspaces: [domain] }
+        return {
+          domain,
+          mode: 'anonymous',
+          permission_level: 'anonymous',
+          active_workspace: domain,
+          workspaces: [domain],
+          warning: 'No token was supplied; only endpoints that do not require authentication are accessible.',
+        }
       }
-      this.log(
+      this.warn(
         `Anonymous mode configured for ${domain}. Only endpoints that do not require authentication are accessible.`,
       )
       this.log('Re-run with --token to add a bearer token.')
@@ -172,16 +195,23 @@ export default class Credentials extends Command {
     setWorkspaces(workspaces)
     setActiveWorkspace(active.domain)
 
+    const permissionLevel = active.permission_level ?? null
+
     if (json) {
       return {
         domain,
         mode: 'authenticated',
+        permission_level: permissionLevel,
         active_workspace: active.domain,
         workspaces: workspaces.map((w) => ({ domain: w.domain, display_name: w.display_name })),
+        ...(permissionBelow(permissionLevel ?? undefined, 'write')
+          ? { warning: `The token is ${permissionLevel}-only; commands that create, update or delete will be refused.` }
+          : {}),
       }
     }
 
     this.log(`Credentials saved for ${domain}.`)
+    this.logPermissionLevel(permissionLevel)
     if (workspaces.length > 1 && !workspaceSelector) {
       this.log(
         `Discovered ${workspaces.length} workspaces; set '${active.display_name} (${active.domain})' active. ` +
@@ -189,6 +219,23 @@ export default class Credentials extends Command {
       )
     } else {
       this.log(`Active workspace: ${active.display_name} (${active.domain}).`)
+    }
+  }
+
+  /**
+   * Tell the user what the login can do. A read-only token is valid but every
+   * create/update/delete command will be refused, which is worth knowing at
+   * login rather than at the first failed command.
+   */
+  private logPermissionLevel(level: string | null): void {
+    if (!level) return
+    if (permissionBelow(level, 'write')) {
+      this.warn(
+        `Permission level: ${level}. This token is ${level}-only — commands that create, update or delete will be refused. ` +
+          'Use a token with write access if you need them.',
+      )
+    } else {
+      this.log(`Permission level: ${level}.`)
     }
   }
 
@@ -269,6 +316,7 @@ export default class Credentials extends Command {
 
       setWorkspaces(workspaces)
       setActiveWorkspace(defaultDomain)
+      this.logPermissionLevel(workspaces[0]?.permission_level ?? null)
     } else {
       // Domain-only mode: store entry without token, skip discovery
       const domainOnlyEntry = buildDomainOnlyEntry(domain as string)
