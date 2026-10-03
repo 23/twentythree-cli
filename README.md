@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/twentythree-cli.svg)](https://www.npmjs.com/package/twentythree-cli) [![license](https://img.shields.io/npm/l/twentythree-cli.svg)](https://github.com/23/twentythree-cli/blob/master/LICENSE)
 
-Terminal access to every TwentyThree API endpoint. Authenticate, select a workspace, and start calling any of the 244 commands from your terminal in under a minute.
+Terminal access to every TwentyThree API endpoint. Authenticate, select a workspace, and start calling any of the 265 commands from your terminal in under a minute.
 
 ## Quickstart
 
@@ -42,7 +42,7 @@ Follow the on-screen instructions to add the eval line to your shell RC file (`~
 
 ## Commands
 
-TwentyThree CLI provides 247 commands across 26 topics.
+TwentyThree CLI provides 265 commands across 29 topics.
 
 | Topic | Description | Reference |
 |-------|-------------|-----------|
@@ -52,10 +52,12 @@ TwentyThree CLI provides 247 commands across 26 topics.
 | `app` | Create a new app integration | [docs](packages/twentythree-cli/docs/commands/app.md) |
 | `audience` | List audience companies | [docs](packages/twentythree-cli/docs/commands/audience.md) |
 | `auth` | Configure domain and bearer token for a TwentyThree workspace | [docs](packages/twentythree-cli/docs/commands/auth.md) |
+| `autocomplete` | Set up shell tab completion | [docs](packages/twentythree-cli/docs/commands/autocomplete.md) |
 | `category` | Manage categories -- list, create, update, and delete | [docs](packages/twentythree-cli/docs/commands/category.md) |
 | `collector` | Block a collector from a video or webinar | [docs](packages/twentythree-cli/docs/commands/collector.md) |
 | `comment` | Add a comment to an object | [docs](packages/twentythree-cli/docs/commands/comment.md) |
 | `doctor` | Check CLI credentials, connectivity, and token validity | [docs](packages/twentythree-cli/docs/commands/doctor.md) |
+| `email-subscription` | Manage email subscriptions to new-video digests -- list, add, and remove | [docs](packages/twentythree-cli/docs/commands/email-subscription.md) |
 | `openupload` | List open upload tokens in the active workspace | [docs](packages/twentythree-cli/docs/commands/openupload.md) |
 | `player` | Delete a player from the active workspace | [docs](packages/twentythree-cli/docs/commands/player.md) |
 | `poll` | Create a new poll for a webinar | [docs](packages/twentythree-cli/docs/commands/poll.md) |
@@ -73,6 +75,10 @@ TwentyThree CLI provides 247 commands across 26 topics.
 | `webhook` | List available webhook event types | [docs](packages/twentythree-cli/docs/commands/webhook.md) |
 | `webinar` | Manage webinars -- create, list, update, delete, and more | [docs](packages/twentythree-cli/docs/commands/webinar.md) |
 | `workspace` | List all configured workspaces | [docs](packages/twentythree-cli/docs/commands/workspace.md) |
+
+### Scripting and agents
+
+Destructive commands (`delete`, `remove`, `unsubscribe`, …) ask for confirmation. Pass `--yes` (`-y`) to confirm up front, or `--json`; without a terminal and without either flag the command exits 2 instead of hanging. `twentythree auth credentials` reports the login's permission level — a read-only token is accepted, but create/update/delete commands are refused with a clear message.
 
 ## Terminology
 

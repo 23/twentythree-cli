@@ -18,6 +18,7 @@ const {
   mockPIsCancel,
   mockPCancel,
   mockPOutro,
+  mockPConfirm,
   mockRunCommand,
 } = vi.hoisted(() => {
   const mockGetWorkspaces = vi.fn()
@@ -37,6 +38,7 @@ const {
   const mockPIsCancel = vi.fn(() => false)
   const mockPCancel = vi.fn()
   const mockPOutro = vi.fn()
+  const mockPConfirm = vi.fn()
   const mockRunCommand = vi.fn().mockResolvedValue(undefined)
   return {
     mockGetWorkspaces,
@@ -52,6 +54,7 @@ const {
     mockPIsCancel,
     mockPCancel,
     mockPOutro,
+    mockPConfirm,
     mockRunCommand,
   }
 })
@@ -86,9 +89,10 @@ vi.mock('@clack/prompts', () => ({
   isCancel: mockPIsCancel,
   cancel: mockPCancel,
   outro: mockPOutro,
+  confirm: mockPConfirm,
 }))
 
-import { BaseCommand, AuthenticatedCommand } from '../base-command.js'
+import { BaseCommand, AuthenticatedCommand, permissionBelow } from '../base-command.js'
 import type { WorkspaceEntry } from '../../auth/workspace-config.js'
 
 // ---------------------------------------------------------------------------
@@ -393,5 +397,164 @@ describe('BaseCommand.catch() — interactive prompt for missing required flag',
     await expect((cmd as any).catch(err)).rejects.toThrow('Cancelled')
     expect(mockPCancel).toHaveBeenCalledWith('Cancelled')
     expect(mockRunCommand).not.toHaveBeenCalled()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Permission levels
+// ---------------------------------------------------------------------------
+
+describe('permissionBelow', () => {
+  it('orders none < anonymous < read < write < admin < super', () => {
+    expect(permissionBelow('read', 'write')).toBe(true)
+    expect(permissionBelow('write', 'admin')).toBe(true)
+    expect(permissionBelow('anonymous', 'read')).toBe(true)
+    expect(permissionBelow('write', 'write')).toBe(false)
+    expect(permissionBelow('admin', 'write')).toBe(false)
+    expect(permissionBelow('super', 'admin')).toBe(false)
+  })
+
+  it('never fails for unknown or missing levels — the API stays the authority', () => {
+    expect(permissionBelow(undefined, 'write')).toBe(false)
+    expect(permissionBelow('read', undefined)).toBe(false)
+    expect(permissionBelow('bogus', 'write')).toBe(false)
+    expect(permissionBelow('read', 'bogus')).toBe(false)
+  })
+})
+
+describe('AuthenticatedCommand — permission level fast-fail', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockEnsureFreshToken.mockResolvedValue(null)
+    mockGetActiveWorkspace.mockReturnValue('company.video23.com')
+  })
+
+  function makeScopedClass(scope: string) {
+    class Scoped extends AuthenticatedCommand<typeof Scoped> {
+      static id = 'video:delete'
+      static flags = {}
+      static args = {}
+      static strict = true
+      static enableJsonFlag = true
+      static agentMetadata = { api_endpoint: 'POST /photo/delete', auth_scope: scope, output_shape: { type: 'none' }, side_effects: 'destructive' }
+      async run() { /* no-op */ }
+    }
+    return Scoped as unknown as ReturnType<typeof makeBaseCommandClass>
+  }
+
+  it('refuses a write command when the stored login is read-only, naming the command', async () => {
+    mockGetWorkspaceForDomain.mockReturnValue({ ...WORKSPACE_WITH_TOKEN, permission_level: 'read' })
+
+    await expect(initCommand(makeScopedClass('write'), [])).rejects.toThrow(
+      /read-only, but `video delete` requires write permission/,
+    )
+  })
+
+  it('allows a read command on a read-only login', async () => {
+    mockGetWorkspaceForDomain.mockReturnValue({ ...WORKSPACE_WITH_TOKEN, permission_level: 'read' })
+
+    await expect(initCommand(makeScopedClass('read'), [])).resolves.toBeDefined()
+    expect(mockError).not.toHaveBeenCalled()
+  })
+
+  it('skips the check when the stored entry has no permission level (pre-existing configs)', async () => {
+    mockGetWorkspaceForDomain.mockReturnValue(WORKSPACE_WITH_TOKEN)
+
+    await expect(initCommand(makeScopedClass('admin'), [])).resolves.toBeDefined()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// confirmDestructive()
+// ---------------------------------------------------------------------------
+
+describe('BaseCommand.confirmDestructive()', () => {
+  let originalIsTTY: boolean | undefined
+  let exitSpy: ReturnType<typeof vi.spyOn>
+
+  function makeDestructiveClass() {
+    class Destructive extends BaseCommand<typeof Destructive> {
+      static id = 'test:remove'
+      static flags = { ...BaseCommand.destructiveFlags }
+      static args = {}
+      static strict = true
+      static enableJsonFlag = true
+      async run() { /* no-op */ }
+      public confirmForTest(message: string) {
+        return this.confirmDestructive(message)
+      }
+    }
+    return Destructive
+  }
+
+  async function initDestructive(argv: string[]) {
+    const cmd = new (makeDestructiveClass())(argv, makeOclifConfig())
+    cmd.log = mockLog
+    cmd.error = mockError as typeof cmd.error
+    await cmd.init()
+    return cmd
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockEnsureFreshToken.mockResolvedValue(null)
+    mockGetActiveWorkspace.mockReturnValue('company.video23.com')
+    mockGetWorkspaceForDomain.mockReturnValue(WORKSPACE_WITH_TOKEN)
+    mockPIsCancel.mockReturnValue(false)
+    originalIsTTY = process.stdin.isTTY
+    Object.defineProperty(process.stdin, 'isTTY', { value: true, writable: true, configurable: true })
+    exitSpy = vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
+      throw new Error(`process.exit(${code})`)
+    }) as never)
+  })
+
+  afterEach(() => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: originalIsTTY, writable: true, configurable: true })
+    exitSpy.mockRestore()
+  })
+
+  it('--yes skips the prompt', async () => {
+    const cmd = await initDestructive(['--yes'])
+    await cmd.confirmForTest('Delete it?')
+    expect(mockPConfirm).not.toHaveBeenCalled()
+  })
+
+  it('-y is the short form of --yes', async () => {
+    const cmd = await initDestructive(['-y'])
+    await cmd.confirmForTest('Delete it?')
+    expect(mockPConfirm).not.toHaveBeenCalled()
+  })
+
+  it('--json skips the prompt (backwards compatible scripting mode)', async () => {
+    const cmd = await initDestructive(['--json'])
+    await cmd.confirmForTest('Delete it?')
+    expect(mockPConfirm).not.toHaveBeenCalled()
+  })
+
+  it('without a TTY and without --yes it exits 2 with a message naming the flag', async () => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: false, writable: true, configurable: true })
+    const cmd = await initDestructive([])
+
+    await expect(cmd.confirmForTest('Delete video 1 from company.video23.com?')).rejects.toThrow(
+      /Confirmation required but no interactive terminal is attached.*--yes/s,
+    )
+    expect(mockError).toHaveBeenCalledWith(expect.stringContaining('Delete video 1 from company.video23.com?'), { exit: 2 })
+    expect(mockPConfirm).not.toHaveBeenCalled()
+  })
+
+  it('prompts on a TTY and continues when confirmed', async () => {
+    mockPConfirm.mockResolvedValue(true)
+    const cmd = await initDestructive([])
+
+    await cmd.confirmForTest('Delete it?')
+    expect(mockPConfirm).toHaveBeenCalledWith({ message: 'Delete it?' })
+    expect(exitSpy).not.toHaveBeenCalled()
+  })
+
+  it('exits 2 when the prompt is declined', async () => {
+    mockPConfirm.mockResolvedValue(false)
+    const cmd = await initDestructive([])
+
+    await expect(cmd.confirmForTest('Delete it?')).rejects.toThrow('process.exit(2)')
   })
 })

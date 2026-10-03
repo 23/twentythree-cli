@@ -5,7 +5,7 @@
 // Three-gate validation (see 18-RESEARCH.md "validate-skills.mjs — Design"):
 //   Gate 1 (strict): skills/SKILL.md must exist with name + description frontmatter.
 //   Gate 2 (soft):   skills/reference/ — warn if absent (Phase 19 creates it);
-//                    error only if present but missing any of the 22 groups.
+//                    error only if present but missing any of the 23 groups.
 //   Gate 3 (strict): npm pack --dry-run must list exactly 29 files and include skills/guide.md.
 //
 // Exits 0 on success, 1 on any hard failure.
@@ -19,13 +19,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const packageRoot = join(__dirname, '..')
 const skillsDir = join(packageRoot, 'skills')
 
-// The 22 resource groups that must each have a reference/<group>.md file
+// The 23 resource groups that must each have a reference/<group>.md file
 // once Phase 19 creates skills/reference/. Source: REQUIREMENTS.md SKILL-02.
 const RESOURCE_GROUPS = [
   'action', 'analytics', 'app', 'audience', 'category', 'collector',
   'comment', 'openupload', 'player', 'poll', 'presentation', 'protection',
   'session', 'setting', 'site', 'spot', 'tag', 'thumbnail', 'user',
-  'video', 'webhook', 'webinar',
+  'video', 'webhook', 'webinar', 'email-subscription',
 ]
 
 const errors = []
@@ -69,7 +69,7 @@ if (!existsSync(referenceDir)) {
 
 // ─── Gate 3: Pack file count ──────────────────────────────────────────────────
 // Update EXPECTED_FILE_COUNT when adding new files to the package.
-const EXPECTED_FILE_COUNT = 32
+const EXPECTED_FILE_COUNT = 33
 
 const packResult = spawnSync('npm', ['pack', '--dry-run'], {
   cwd: packageRoot,

@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -20,6 +19,7 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
 
   static examples = [
     '<%= config.bin %> webinar speaker remove 12345 9900',
+    '<%= config.bin %> webinar speaker remove 12345 9900 --yes',
     '<%= config.bin %> webinar speaker remove 12345 9900 --json',
   ]
 
@@ -27,6 +27,7 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -45,16 +46,8 @@ export default class WebinarSpeakerRemove extends AuthenticatedCommand<typeof We
     const { args } = await this.parse(WebinarSpeakerRemove)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-05-08: Confirmation includes domain before destructive operation
-      const confirmed = await confirm({
-        message: `Remove speaker ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-05-08: Confirmation includes domain before destructive operation
+    await this.confirmDestructive(`Remove speaker ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/live/speaker/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

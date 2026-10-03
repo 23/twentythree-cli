@@ -14,13 +14,15 @@ Delete an attachment from a webinar
 
 ```
 USAGE
-  $ twentythree webinar attachment delete ID [--json] [-w <value>] [--filename <value>]
+  $ twentythree webinar attachment delete ID [--json] [-w <value>] [-y] [--filename <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --filename=<value>  Filename of the attachment to delete
+  -y, --yes               Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                          skips it.
+      --filename=<value>  Filename of the attachment to delete
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -31,6 +33,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar attachment delete 12345 --filename slides.pdf
+
+  $ twentythree webinar attachment delete 12345 --filename slides.pdf --yes
 
   $ twentythree webinar attachment delete 12345 --filename handout.pdf --json
 ```

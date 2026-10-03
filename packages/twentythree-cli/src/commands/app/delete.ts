@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -17,6 +16,7 @@ export default class AppDelete extends AuthenticatedCommand<typeof AppDelete> {
 
   static examples = [
     '<%= config.bin %> app delete 12345',
+    '<%= config.bin %> app delete 12345 --yes',
     '<%= config.bin %> app delete 12345 --json',
   ]
 
@@ -24,6 +24,7 @@ export default class AppDelete extends AuthenticatedCommand<typeof AppDelete> {
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -43,16 +44,8 @@ export default class AppDelete extends AuthenticatedCommand<typeof AppDelete> {
     const { args } = await this.parse(AppDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-08-04: Confirmation prompt includes workspace domain so user knows which workspace
-      const confirmed = await confirm({
-        message: `Delete app ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-08-04: Confirmation prompt includes workspace domain so user knows which workspace
+    await this.confirmDestructive(`Delete app ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/app/delete', {
       body: { app_id: Number(args.id) } as any,

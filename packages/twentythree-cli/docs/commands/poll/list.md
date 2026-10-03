@@ -11,8 +11,8 @@ List polls for a webinar
 
 ```
 USAGE
-  $ twentythree poll list --object-id <value> [--json] [-w <value>] [--object-token <value>] [--poll-id <value>]
-    [--open] [--no-open] [--public] [--no-public] [--display-results] [--no-display-results] [--fields <value>]
+  $ twentythree poll list --object-id <value> [--json] [-w <value>] [--object-token <value>] [--poll-id
+    <value>] [--open] [--public] [--display-results] [--fields <value>]
 
 FLAGS
   --[no-]display-results  Filter to polls with publicly displayed results

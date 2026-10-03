@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -11,7 +10,8 @@ import { applyCliTerms } from '../../lib/term-map.js'
  * Prompts user to confirm deletion showing the workspace domain and warning
  * that all recordings will be permanently deleted (T-04-06 repudiation mitigation).
  *
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Threat mitigations:
  *   T-04-06: Confirmation prompt includes domain AND "permanently deletes all recordings" warning
@@ -29,6 +29,7 @@ export default class WebinarDelete extends AuthenticatedCommand<typeof WebinarDe
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -46,16 +47,8 @@ export default class WebinarDelete extends AuthenticatedCommand<typeof WebinarDe
     const { args } = await this.parse(WebinarDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-04-06: Confirmation includes domain and recordings warning
-      const confirmed = await confirm({
-        message: `Delete webinar ${args.id} from ${this.activeWorkspace.domain}? This permanently deletes all recordings. This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-04-06: Confirmation includes domain and recordings warning
+    await this.confirmDestructive(`Delete webinar ${args.id} from ${this.activeWorkspace.domain}? This permanently deletes all recordings. This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/live/delete', {
       body: { live_id: Number(args.id) } as any,

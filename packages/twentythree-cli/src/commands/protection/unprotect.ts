@@ -1,8 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -19,6 +18,7 @@ export default class ProtectionUnprotect extends AuthenticatedCommand<typeof Pro
 
   static examples = [
     '<%= config.bin %> protection unprotect',
+    '<%= config.bin %> protection unprotect --yes',
     '<%= config.bin %> protection unprotect --object-id 12345',
     '<%= config.bin %> protection unprotect --object-id 12345 --json',
   ]
@@ -27,6 +27,7 @@ export default class ProtectionUnprotect extends AuthenticatedCommand<typeof Pro
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'object-id': Flags.string({
       description: 'Object ID to remove protection from',
       required: false,
@@ -47,16 +48,10 @@ export default class ProtectionUnprotect extends AuthenticatedCommand<typeof Pro
 
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-08-14: Confirmation prompt includes workspace domain so user knows the scope
-      const confirmed = await confirm({
-        message: `Remove protection${flags['object-id'] ? ` from object ${flags['object-id']}` : ''} on ${this.activeWorkspace.domain}? This will expose the content.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-08-14: Confirmation prompt includes workspace domain so user knows the scope
+    await this.confirmDestructive(
+      `Remove protection${flags['object-id'] ? ` from object ${flags['object-id']}` : ''} on ${this.activeWorkspace.domain}? This will expose the content.`,
+    )
 
     const body: Record<string, unknown> = {}
     if (flags['object-id'] !== undefined) body.object_id = flags['object-id']

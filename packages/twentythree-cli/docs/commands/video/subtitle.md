@@ -125,14 +125,16 @@ Delete a subtitle track from a video
 
 ```
 USAGE
-  $ twentythree video subtitle delete ID --subtitle-id <value> [--json] [-w <value>] [--type <value>]
+  $ twentythree video subtitle delete ID --subtitle-id <value> [--json] [-w <value>] [-y] [--type <value>]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --subtitle-id=<value>  (required) Locale of the subtitle track to delete (e.g. en_US)
-  --type=<value>         [default: general] Subtitle type to delete (general, closedcaptions, audiodescriptions)
+  -y, --yes                  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                             also skips it.
+      --subtitle-id=<value>  (required) Locale of the subtitle track to delete (e.g. en_US)
+      --type=<value>         [default: general] Subtitle type to delete (general, closedcaptions, audiodescriptions)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -189,9 +191,9 @@ List all subtitle tracks for a video
 
 ```
 USAGE
-  $ twentythree video subtitle list ID [--json] [-w <value>] [--include-drafts]
-    [--subtitle-format websrt|json|adobe|subviewer|webvtt] [--type general|closedcaptions|audiodescriptions]
-    [--stripped] [--detect-language] [--fields <value>]
+  $ twentythree video subtitle list ID [--json] [-w <value>] [--include-drafts] [--subtitle-format
+    websrt|json|adobe|subviewer|webvtt] [--type general|closedcaptions|audiodescriptions] [--stripped]
+    [--detect-language] [--fields <value>]
 
 ARGUMENTS
   ID  Video ID
@@ -219,8 +221,6 @@ EXAMPLES
   $ twentythree video subtitle list 12345 --json
 
   $ twentythree video subtitle list 12345 --include-drafts
-
-  $ twentythree video subtitle list 12345 --type closedcaptions --subtitle-format webvtt --json
 ```
 
 _See code: [src/commands/video/subtitle/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/subtitle/list.ts)_

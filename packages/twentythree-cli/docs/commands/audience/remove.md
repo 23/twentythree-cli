@@ -11,11 +11,13 @@ Permanently remove an audience contact
 
 ```
 USAGE
-  $ twentythree audience remove [--json] [-w <value>] [--email <value>] [--uuid <value>]
+  $ twentythree audience remove [--json] [-w <value>] [-y] [--email <value>] [--uuid <value>]
 
 FLAGS
-  --email=<value>  Contact email address
-  --uuid=<value>   Contact UUID
+  -y, --yes            Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                       skips it.
+      --email=<value>  Contact email address
+      --uuid=<value>   Contact UUID
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

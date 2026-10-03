@@ -1,6 +1,6 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { text, confirm, isCancel } from '@clack/prompts'
+import { text, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
 import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
@@ -19,6 +19,7 @@ export default class WebinarAttachmentDelete extends AuthenticatedCommand<typeof
 
   static examples = [
     '<%= config.bin %> webinar attachment delete 12345 --filename slides.pdf',
+    '<%= config.bin %> webinar attachment delete 12345 --filename slides.pdf --yes',
     '<%= config.bin %> webinar attachment delete 12345 --filename handout.pdf --json',
   ]
 
@@ -26,6 +27,7 @@ export default class WebinarAttachmentDelete extends AuthenticatedCommand<typeof
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     filename: Flags.string({
       description: 'Filename of the attachment to delete',
       required: false,
@@ -63,15 +65,7 @@ export default class WebinarAttachmentDelete extends AuthenticatedCommand<typeof
     }
 
     // T-05-04: Confirmation prompt includes domain and filename before delete
-    if (!this.jsonEnabled()) {
-      const confirmed = await confirm({
-        message: `Delete attachment "${filename}" from webinar ${args.id} on ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    await this.confirmDestructive(`Delete attachment "${filename}" from webinar ${args.id} on ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/live/attachment/delete', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

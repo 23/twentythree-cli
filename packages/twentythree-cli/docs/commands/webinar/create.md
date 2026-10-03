@@ -1,13 +1,13 @@
 `twentythree webinar:create`
 ============================
 
-Create a new webinar
+Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
 
 * [`twentythree webinar create`](#twentythree-webinar-create)
 
 ## `twentythree webinar create`
 
-Create a new webinar
+Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
 
 ```
 USAGE
@@ -27,8 +27,8 @@ FLAGS
   --[no-]private                Make the webinar private (use --no-private to make it public and appear on the hub)
   --[no-]publish                Publish the webinar
   --[no-]publish-recordings     Publish the webinar recordings
-  --registration-mode=<option>  [default: all] Registration mode. Defaults to "all" (registration enabled); pass
-                                "none" to disable.
+  --registration-mode=<option>  [default: all] Registration mode. Defaults to "all" (registration enabled); pass "none"
+                                to disable.
                                 <options: |all|none>
   --series-id=<value>           Attach the webinar to a webinar series by ID
   --status=<value>              Webinar status: upcoming, live, or previous
@@ -41,8 +41,8 @@ GLOBAL FLAGS
       --json               Format output as json.
 
 DESCRIPTION
-  Create a new webinar. By default the webinar is created as a draft with registration enabled
-  (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
+  Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all);
+  pass --no-draft/--publish or --registration-mode none to change this.
 
 EXAMPLES
   $ twentythree webinar create --title "My Webinar"

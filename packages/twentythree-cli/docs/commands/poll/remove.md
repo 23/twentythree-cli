@@ -11,10 +11,13 @@ Remove a poll
 
 ```
 USAGE
-  $ twentythree poll remove ID [--json] [-w <value>]
+  $ twentythree poll remove ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Poll ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -25,6 +28,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree poll remove 99
+
+  $ twentythree poll remove 99 --yes
 
   $ twentythree poll remove 99 --json
 ```

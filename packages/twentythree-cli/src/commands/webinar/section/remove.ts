@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -19,6 +18,7 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
 
   static examples = [
     '<%= config.bin %> webinar section remove 12345 99',
+    '<%= config.bin %> webinar section remove 12345 99 --yes',
     '<%= config.bin %> webinar section remove 12345 99 --json',
   ]
 
@@ -26,6 +26,7 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -44,15 +45,7 @@ export default class WebinarSectionRemove extends AuthenticatedCommand<typeof We
     const { args } = await this.parse(WebinarSectionRemove)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      const confirmed = await confirm({
-        message: `Remove section ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    await this.confirmDestructive(`Remove section ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/live/section/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

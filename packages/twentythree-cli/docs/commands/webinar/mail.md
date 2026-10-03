@@ -48,7 +48,7 @@ EXAMPLES
 
   $ twentythree webinar mail add --series-id 67890 --subject "Reminder"
 
-  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --recipient-groups "registered,attendees" --cta-link "https://example.com" --cta-label "Join" --json
+  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
 ```
 
 _See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/mail/add.ts)_
@@ -84,8 +84,6 @@ EXAMPLES
   $ twentythree webinar mail list --series-id 67890
 
   $ twentythree webinar mail list 12345 --json
-
-  $ twentythree webinar mail list 12345 --include-metrics --json
 ```
 
 _See code: [src/commands/webinar/mail/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/mail/list.ts)_
@@ -128,14 +126,16 @@ Remove an email from a webinar
 
 ```
 USAGE
-  $ twentythree webinar mail remove ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>]
+  $ twentythree webinar mail remove ID [--json] [-w <value>] [-y] [--webinar-id <value> | --series-id <value>]
 
 ARGUMENTS
   ID  Mail ID
 
 FLAGS
-  --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
-  --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
+  -y, --yes                 Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                            also skips it.
+      --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
+      --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -146,6 +146,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar mail remove 555 --webinar-id 12345
+
+  $ twentythree webinar mail remove 555 --webinar-id 12345 --yes
 
   $ twentythree webinar mail remove 555 --series-id 67890 --json
 ```
@@ -223,8 +225,8 @@ Update a webinar email
 ```
 USAGE
   $ twentythree webinar mail update ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>] [--subject
-    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link
-    <value>] [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
+    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link <value>]
+    [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
 
 ARGUMENTS
   ID  Mail ID
@@ -255,7 +257,7 @@ EXAMPLES
 
   $ twentythree webinar mail update 555 --series-id 67890 --message "New content"
 
-  $ twentythree webinar mail update 555 --webinar-id 12345 --no-enabled --cta-link "https://example.com" --json
+  $ twentythree webinar mail update 555 --webinar-id 12345 --subject "Updated" --json
 ```
 
 _See code: [src/commands/webinar/mail/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/mail/update.ts)_

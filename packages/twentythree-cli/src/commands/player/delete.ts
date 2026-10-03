@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -11,7 +10,8 @@ import { applyCliTerms } from '../../lib/term-map.js'
  * Prompts user to confirm deletion showing the workspace domain so they know
  * which workspace they are deleting from.
  *
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Exit codes:
  *   0 — success
@@ -40,6 +40,7 @@ export default class PlayerDelete extends AuthenticatedCommand<typeof PlayerDele
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -50,15 +51,7 @@ export default class PlayerDelete extends AuthenticatedCommand<typeof PlayerDele
     const { args } = await this.parse(PlayerDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      const confirmed = await confirm({
-        message: `Delete player ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    await this.confirmDestructive(`Delete player ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/player/delete', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

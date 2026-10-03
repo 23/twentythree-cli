@@ -174,7 +174,21 @@ twentythree auth credentials --domain company.video23.com --token <token> --work
 twentythree auth credentials --domain company.video23.com
 ```
 
-With `--json`, the command returns the configured `mode`, `active_workspace`, and the list of discovered `workspaces` for the agent to parse. If multiple workspaces are discovered and `--workspace` is omitted, the starred (then canonical, then first) workspace is set active.
+With `--json`, the command returns the configured `mode`, `permission_level`, `active_workspace`, and the list of discovered `workspaces` for the agent to parse. If multiple workspaces are discovered and `--workspace` is omitted, the starred (then canonical, then first) workspace is set active.
+
+Two things to know when scripting this:
+
+- **An empty token is an error, not anonymous mode.** `--token ""` (usually an unset shell variable) and an empty `TWENTYTHREE_TOKEN` exit 1 with a message saying so. Anonymous access is configured only when the token is omitted entirely.
+- **The permission level is reported at login.** A read-only API credential logs in fine but every create/update/delete command is refused — the CLI says so at login (`permission_level: "read"` plus a `warning` in the JSON) and again, before the confirmation prompt, when such a command is run.
+
+## Destructive commands without a terminal
+
+Commands that delete or remove things ask for confirmation. Pass `--yes` (`-y`) to confirm up front; `--json` also skips the prompt. Without either flag and without a TTY the command exits 2 and names the flag to pass — it never hangs waiting for input.
+
+```bash
+twentythree video delete 12345 --yes --json
+twentythree webhook unsubscribe --webhook-id 42 --yes
+```
 
 ## How the agent calls the CLI
 

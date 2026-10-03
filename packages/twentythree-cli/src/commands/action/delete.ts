@@ -1,15 +1,15 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
  * Action delete command — deletes a CTA action after confirmation.
  *
  * Prompts user to confirm deletion showing the workspace domain (T-06-03 mitigation).
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Exit codes:
  *   0 — success
@@ -38,6 +38,7 @@ export default class ActionDelete extends AuthenticatedCommand<typeof ActionDele
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -49,16 +50,8 @@ export default class ActionDelete extends AuthenticatedCommand<typeof ActionDele
 
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-06-03: Confirmation prompt includes workspace domain
-      const confirmed = await confirm({
-        message: `Delete action ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-06-03: Confirmation prompt includes workspace domain
+    await this.confirmDestructive(`Delete action ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/action/delete', {
       body: { action_id: Number(args.id) } as any,

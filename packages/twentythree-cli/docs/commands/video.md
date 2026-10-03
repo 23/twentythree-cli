@@ -10,6 +10,7 @@ Manage videos — upload, list, update, delete, and more
 * [`twentythree video list`](#twentythree-video-list)
 * [`twentythree video replace ID FILE`](#twentythree-video-replace-id-file)
 * [`twentythree video section`](#twentythree-video-section)
+* [`twentythree video section check-generate-available ID`](#twentythree-video-section-check-generate-available-id)
 * [`twentythree video section create ID`](#twentythree-video-section-create-id)
 * [`twentythree video section delete ID`](#twentythree-video-section-delete-id)
 * [`twentythree video section generate ID`](#twentythree-video-section-generate-id)
@@ -31,6 +32,7 @@ Manage videos — upload, list, update, delete, and more
 * [`twentythree video transcoding-progress ID`](#twentythree-video-transcoding-progress-id)
 * [`twentythree video update ID`](#twentythree-video-update-id)
 * [`twentythree video upload FILE`](#twentythree-video-upload-file)
+* [`twentythree video upload-url URL`](#twentythree-video-upload-url-url)
 
 ## `twentythree video`
 
@@ -52,10 +54,13 @@ Delete a video from the active workspace
 
 ```
 USAGE
-  $ twentythree video delete ID [--json] [-w <value>]
+  $ twentythree video delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Video ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -135,11 +140,42 @@ List videos in the active workspace
 
 ```
 USAGE
-  $ twentythree video list [--json] [-w <value>] [--limit <value>] [--include-unpublished]
+  $ twentythree video list [--json] [-w <value>] [--limit <value>] [--search <value>] [--album-id <value>]
+    [--user-id <value>] [--photo-id <value>] [--live-id <value>] [--tag <value>] [--tags <value>] [--tag-mode and|or]
+    [--order-by uploaded|published|created|creation|taken|title|views|comments|rating|numratings|video_length|words|rela
+    ted|posted|rank|default-published] [--order asc|desc] [--before-time <value>] [--after-time <value>] [--year
+    <value>] [--month <value>] [--day <value>] [--published] [--promoted] [--unalbummed] [--include-unpublished]
+    [--include-stats] [--include-sections-count] [--include-user-group] [--fields <value>]
 
 FLAGS
+  --after-time=<value>        Filter to videos uploaded after this timestamp (ISO 8601)
+  --album-id=<value>          Filter to videos in one or more categories (comma-separated IDs)
+  --before-time=<value>       Filter to videos uploaded before this timestamp (ISO 8601)
+  --day=<value>               Filter to videos from a specific day (1–31, requires --year and --month)
+  --fields=<value>            Comma-separated list of fields to return in the API response
+  --include-sections-count    Include the number of chapters for each video
+  --include-stats             Include per-video performance statistics (view count, play rate, engagement)
   --[no-]include-unpublished  Include unpublished videos in the results
+  --include-user-group        Include the user group assignment for each video
   --limit=<value>             Maximum number of videos to return (default: all)
+  --live-id=<value>           Filter to videos associated with a specific webinar
+  --month=<value>             Filter to videos from a specific month (1–12, requires --year)
+  --order=<option>            Sort direction
+                              <options: asc|desc>
+  --order-by=<option>         Order results by this field
+                              <options: uploaded|published|created|creation|taken|title|views|comments|rating|numratings
+                              |video_length|words|related|posted|rank|default-published>
+  --photo-id=<value>          Limit results to a single video by its ID
+  --[no-]promoted             Filter to promoted videos only
+  --[no-]published            Filter by published status
+  --search=<value>            Search by title, description, or tags
+  --tag=<value>               Filter to videos with a specific tag
+  --tag-mode=<option>         How to combine tag filters: "and" requires all tags to match, "or" requires any
+                              <options: and|or>
+  --tags=<value>              Space-separated list of tags to filter by
+  --unalbummed                Filter to videos not assigned to any category
+  --user-id=<value>           Filter to videos uploaded by a specific user (use "me" for the authenticated user)
+  --year=<value>              Filter to videos from a specific year
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -152,6 +188,14 @@ EXAMPLES
   $ twentythree video list
 
   $ twentythree video list --json
+
+  $ twentythree video list --search "intro" --order-by views --order desc
+
+  $ twentythree video list --album-id 42 --include-unpublished
+
+  $ twentythree video list --user-id me --limit 10
+
+  $ twentythree video list --after-time 2024-01-01T00:00:00Z --fields photo_id,title
 ```
 
 _See code: [src/commands/video/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/list.ts)_
@@ -201,6 +245,35 @@ DESCRIPTION
 
 _See code: [src/commands/video/section/index.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/section/index.ts)_
 
+## `twentythree video section check-generate-available ID`
+
+Check whether AI chapter generation is available for a video
+
+```
+USAGE
+  $ twentythree video section check-generate-available ID [--json] [-w <value>] [--fields <value>]
+
+ARGUMENTS
+  ID  Video ID
+
+FLAGS
+  --fields=<value>  Comma-separated list of fields to return in the API response
+
+GLOBAL FLAGS
+  -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
+      --json               Format output as json.
+
+DESCRIPTION
+  Check whether AI chapter generation is available for a video
+
+EXAMPLES
+  $ twentythree video section check-generate-available 12345
+
+  $ twentythree video section check-generate-available 12345 --json
+```
+
+_See code: [src/commands/video/section/check-generate-available.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/section/check-generate-available.ts)_
+
 ## `twentythree video section create ID`
 
 Create a new section for a video
@@ -239,13 +312,15 @@ Delete a section from a video
 
 ```
 USAGE
-  $ twentythree video section delete ID --section-id <value> [--json] [-w <value>]
+  $ twentythree video section delete ID --section-id <value> [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --section-id=<value>  (required) Section ID to delete
+  -y, --yes                 Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                            also skips it.
+      --section-id=<value>  (required) Section ID to delete
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -488,14 +563,16 @@ Delete a subtitle track from a video
 
 ```
 USAGE
-  $ twentythree video subtitle delete ID --subtitle-id <value> [--json] [-w <value>] [--type <value>]
+  $ twentythree video subtitle delete ID --subtitle-id <value> [--json] [-w <value>] [-y] [--type <value>]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --subtitle-id=<value>  (required) Locale of the subtitle track to delete (e.g. en_US)
-  --type=<value>         [default: general] Subtitle type to delete (general, closedcaptions, audiodescriptions)
+  -y, --yes                  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                             also skips it.
+      --subtitle-id=<value>  (required) Locale of the subtitle track to delete (e.g. en_US)
+      --type=<value>         [default: general] Subtitle type to delete (general, closedcaptions, audiodescriptions)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -552,13 +629,22 @@ List all subtitle tracks for a video
 
 ```
 USAGE
-  $ twentythree video subtitle list ID [--json] [-w <value>] [--include-drafts]
+  $ twentythree video subtitle list ID [--json] [-w <value>] [--include-drafts] [--subtitle-format
+    websrt|json|adobe|subviewer|webvtt] [--type general|closedcaptions|audiodescriptions] [--stripped]
+    [--detect-language] [--fields <value>]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --[no-]include-drafts  Include draft (unpublished) subtitle tracks
+  --detect-language           Use the viewer's browser language to determine the default subtitle
+  --fields=<value>            Comma-separated list of fields to return in the API response
+  --[no-]include-drafts       Include draft (unpublished) subtitle tracks
+  --stripped                  Return a stripped (timing-only) version of the subtitle file
+  --subtitle-format=<option>  Format to use for subtitle download URLs
+                              <options: websrt|json|adobe|subviewer|webvtt>
+  --type=<option>             Filter by subtitle type
+                              <options: general|closedcaptions|audiodescriptions>
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -823,3 +909,44 @@ EXAMPLES
 ```
 
 _See code: [src/commands/video/upload.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/upload.ts)_
+
+## `twentythree video upload-url URL`
+
+Create a video by downloading the file from a URL
+
+```
+USAGE
+  $ twentythree video upload-url URL [--json] [-w <value>] [--title <value>] [--description <value>] [--content-format
+    text/enhanced|text/plain|text/html] [--tags <value>] [--category-id <value>] [--publish] [--publish-date <value>]
+    [--user-id <value>]
+
+ARGUMENTS
+  URL  URL of the video file to download
+
+FLAGS
+  --category-id=<value>      Category ID to place the video in
+  --content-format=<option>  Format of the description
+                             <options: text/enhanced|text/plain|text/html>
+  --description=<value>      Description of the video
+  --[no-]publish             Publish the video once it lands (API default). Use --no-publish to keep it unpublished
+  --publish-date=<value>     Publish date (past or future), e.g. "2026-11-01 09:00:00"
+  --tags=<value>             Comma-separated tags for the video
+  --title=<value>            Title for the video
+  --user-id=<value>          Upload on behalf of this user ID (super users only; otherwise ignored)
+
+GLOBAL FLAGS
+  -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
+      --json               Format output as json.
+
+DESCRIPTION
+  Create a video by downloading the file from a URL
+
+EXAMPLES
+  $ twentythree video upload-url https://example.com/keynote.mp4 --title "Keynote"
+
+  $ twentythree video upload-url https://example.com/keynote.mp4 --no-publish --category-id 1234 --json
+
+  $ twentythree video upload-url https://example.com/keynote.mp4 --publish-date "2026-11-01 09:00:00"
+```
+
+_See code: [src/commands/video/upload-url.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/upload-url.ts)_

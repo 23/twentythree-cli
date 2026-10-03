@@ -11,10 +11,13 @@ Delete a webinar from the active workspace
 
 ```
 USAGE
-  $ twentythree webinar delete ID [--json] [-w <value>]
+  $ twentythree webinar delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Webinar ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

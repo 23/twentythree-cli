@@ -42,10 +42,12 @@ Remove a custom audience field
 
 ```
 USAGE
-  $ twentythree audience field remove --key <value> [--json] [-w <value>]
+  $ twentythree audience field remove --key <value> [--json] [-w <value>] [-y]
 
 FLAGS
-  --key=<value>  (required) Field key to remove
+  -y, --yes          Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips
+                     it.
+      --key=<value>  (required) Field key to remove
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

@@ -91,10 +91,13 @@ Delete a thumbnail template from the active workspace
 
 ```
 USAGE
-  $ twentythree thumbnail delete ID [--json] [-w <value>]
+  $ twentythree thumbnail delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Thumbnail template ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -148,11 +151,13 @@ Delete a file from a thumbnail template
 
 ```
 USAGE
-  $ twentythree thumbnail file delete --template-id <value> --filename <value> [--json] [-w <value>]
+  $ twentythree thumbnail file delete --template-id <value> --filename <value> [--json] [-w <value>] [-y]
 
 FLAGS
-  --filename=<value>     (required) Filename to delete
-  --template-id=<value>  (required) Thumbnail template ID
+  -y, --yes                  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                             also skips it.
+      --filename=<value>     (required) Filename to delete
+      --template-id=<value>  (required) Thumbnail template ID
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

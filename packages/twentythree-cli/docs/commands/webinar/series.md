@@ -51,13 +51,15 @@ Cancel a webinar series
 
 ```
 USAGE
-  $ twentythree webinar series cancel ID [--json] [-w <value>] [--cancel-associations]
+  $ twentythree webinar series cancel ID [--json] [-w <value>] [-y] [--cancel-associations]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --[no-]cancel-associations  Also cancel associated webinars
+  -y, --yes                       Skip the confirmation prompt. Required when no terminal is attached (CI, agents);
+                                  --json also skips it.
+      --[no-]cancel-associations  Also cancel associated webinars
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -68,6 +70,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar series cancel 42
+
+  $ twentythree webinar series cancel 42 --yes
 
   $ twentythree webinar series cancel 42 --cancel-associations
 
@@ -111,13 +115,15 @@ Delete a webinar series
 
 ```
 USAGE
-  $ twentythree webinar series delete ID [--json] [-w <value>] [--delete-associations]
+  $ twentythree webinar series delete ID [--json] [-w <value>] [-y] [--delete-associations]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --[no-]delete-associations  Also delete associated webinars
+  -y, --yes                       Skip the confirmation prompt. Required when no terminal is attached (CI, agents);
+                                  --json also skips it.
+      --[no-]delete-associations  Also delete associated webinars
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -128,6 +134,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar series delete 42
+
+  $ twentythree webinar series delete 42 --yes
 
   $ twentythree webinar series delete 42 --delete-associations
 
@@ -142,11 +150,10 @@ List webinar series
 
 ```
 USAGE
-  $ twentythree webinar series list [--json] [-w <value>] [--search <value>] [--live-series-id <value>]
-    [--live-id <value>] [--album-id <value>] [--user-id <value>] [--series-type liveevent|series]
-    [--ordering name|private|live_status|live_date|creation_date|updated_date] [--order asc|desc]
-    [--cancelled] [--no-cancelled] [--draft] [--no-draft] [--private] [--no-private] [--include-private]
-    [--include-speakers] [--include-stats] [--include-albums] [--fields <value>]
+  $ twentythree webinar series list [--json] [-w <value>] [--search <value>] [--live-series-id <value>] [--live-id
+    <value>] [--album-id <value>] [--user-id <value>] [--series-type liveevent|series] [--ordering
+    name|private|live_status|live_date|creation_date|updated_date] [--order asc|desc] [--cancelled] [--draft]
+    [--private] [--include-private] [--include-speakers] [--include-stats] [--include-albums] [--fields <value>]
 
 FLAGS
   --album-id=<value>        Filter to series belonging to a specific category
@@ -167,7 +174,7 @@ FLAGS
   --search=<value>          Search for specific series by keyword
   --series-type=<option>    Filter by series type
                             <options: liveevent|series>
-  --user-id=<value>         Filter to series created by a specific user (use "me" for authenticated user)
+  --user-id=<value>         Filter to series created by a specific user (use "me" for the authenticated user)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -345,9 +352,9 @@ ARGUMENTS
 
 FLAGS
   --description=<value>       Series description
-  --name=<value>             Series name
+  --name=<value>              Series name
   --seo-policy=<option>       SEO policy for the series: index, noindex, or empty string to reset
-                             <options: |index|noindex>
+                              <options: |index|noindex>
   --trailer-video-id=<value>  ID of a video to use as the series trailer (API trailer_photo_id)
 
 GLOBAL FLAGS

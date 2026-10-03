@@ -11,11 +11,13 @@ Unsubscribe from a webhook event
 
 ```
 USAGE
-  $ twentythree webhook unsubscribe [--json] [-w <value>] [--webhook-id <value>] [--target-url <value>]
+  $ twentythree webhook unsubscribe [--json] [-w <value>] [-y] [--webhook-id <value>] [--target-url <value>]
 
 FLAGS
-  --target-url=<value>  Target URL to unsubscribe
-  --webhook-id=<value>  Webhook subscription ID
+  -y, --yes                 Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                            also skips it.
+      --target-url=<value>  Target URL to unsubscribe
+      --webhook-id=<value>  Webhook subscription ID
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -26,6 +28,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webhook unsubscribe --webhook-id 12345
+
+  $ twentythree webhook unsubscribe --webhook-id 12345 --yes
 
   $ twentythree webhook unsubscribe --target-url https://example.com/hook
 

@@ -1,8 +1,7 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -20,6 +19,7 @@ export default class WebinarMailRemove extends AuthenticatedCommand<typeof Webin
 
   static examples = [
     '<%= config.bin %> webinar mail remove 555 --webinar-id 12345',
+    '<%= config.bin %> webinar mail remove 555 --webinar-id 12345 --yes',
     '<%= config.bin %> webinar mail remove 555 --series-id 67890 --json',
   ]
 
@@ -27,6 +27,7 @@ export default class WebinarMailRemove extends AuthenticatedCommand<typeof Webin
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'webinar-id': Flags.string({
       description: 'Webinar ID (mutually exclusive with --series-id)',
       exclusive: ['series-id'],
@@ -62,16 +63,8 @@ export default class WebinarMailRemove extends AuthenticatedCommand<typeof Webin
       this.error(applyCliTerms('Either --webinar-id or --series-id is required'), { exit: EXIT_ERROR })
     }
 
-    if (!this.jsonEnabled()) {
-      // T-05-08: Confirmation includes domain before destructive operation
-      const confirmed = await confirm({
-        message: `Remove mail ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-05-08: Confirmation includes domain before destructive operation
+    await this.confirmDestructive(`Remove mail ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/live/mail/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

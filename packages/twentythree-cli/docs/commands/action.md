@@ -49,10 +49,13 @@ Delete a CTA action
 
 ```
 USAGE
-  $ twentythree action delete ID [--json] [-w <value>]
+  $ twentythree action delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Action ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

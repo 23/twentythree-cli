@@ -11,10 +11,12 @@ Remove protection from content
 
 ```
 USAGE
-  $ twentythree protection unprotect [--json] [-w <value>] [--object-id <value>]
+  $ twentythree protection unprotect [--json] [-w <value>] [-y] [--object-id <value>]
 
 FLAGS
-  --object-id=<value>  Object ID to remove protection from
+  -y, --yes                Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                           skips it.
+      --object-id=<value>  Object ID to remove protection from
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -25,6 +27,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree protection unprotect
+
+  $ twentythree protection unprotect --yes
 
   $ twentythree protection unprotect --object-id 12345
 

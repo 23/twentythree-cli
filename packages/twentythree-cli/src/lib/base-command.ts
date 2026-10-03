@@ -10,16 +10,45 @@ import {
 } from '../auth/workspace-config.js'
 import { ensureFreshToken } from '../auth/token-refresh.js'
 import { createApiClient } from '../api/client.js'
+import { EXIT_CANCELLED } from './output.js'
 
 export type BaseFlags<T extends typeof Command> = Interfaces.InferredFlags<
   (typeof BaseCommand)['baseFlags'] & T['flags']
 >
 
+export type PermissionLevel = 'anonymous' | 'none' | 'read' | 'write' | 'admin' | 'super'
+
 export interface AgentMetadata {
   api_endpoint: string
-  auth_scope: 'anonymous' | 'none' | 'read' | 'write' | 'admin' | 'super'
+  auth_scope: PermissionLevel
   output_shape: { type: 'table'; columns: string[] } | { type: 'key-value' } | { type: 'none' }
   side_effects: 'none' | 'destructive' | 'creates' | 'updates'
+}
+
+/**
+ * Ordering of API permission levels, lowest first. Mirrors the server's
+ * none < anonymous < read < write < admin < super ladder.
+ */
+const PERMISSION_RANK: Record<PermissionLevel, number> = {
+  none: 0,
+  anonymous: 1,
+  read: 2,
+  write: 3,
+  admin: 4,
+  super: 5,
+}
+
+/**
+ * True when `have` is a known permission level strictly below `need`.
+ * Unknown or missing levels never fail the comparison — the API is the
+ * authority, this is only a fast-fail for levels we already know about.
+ */
+export function permissionBelow(have: string | undefined, need: string | undefined): boolean {
+  if (!have || !need) return false
+  const h = PERMISSION_RANK[have as PermissionLevel]
+  const n = PERMISSION_RANK[need as PermissionLevel]
+  if (h === undefined || n === undefined) return false
+  return h < n
 }
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
@@ -35,6 +64,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       description: 'Output machine-readable command metadata for AI agent consumption',
       helpGroup: 'GLOBAL',
       hidden: true,
+    }),
+  }
+
+  /**
+   * Flags for commands with destructive side effects. Spread into `static flags`
+   * alongside baseFlags so `--yes` is parsed and shows up in `--help` / `--agent`.
+   */
+  static destructiveFlags = {
+    yes: Flags.boolean({
+      char: 'y',
+      description:
+        'Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.',
+      default: false,
     }),
   }
 
@@ -208,6 +250,37 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   /**
+   * Ask the user to confirm a destructive action, or skip the prompt when the
+   * caller already opted in.
+   *
+   * - `--yes` (or `--json`, kept for backwards compatibility) skips the prompt.
+   * - Without a TTY the prompt cannot be answered, so instead of hanging or
+   *   failing with an opaque error the command exits with EXIT_CANCELLED and a
+   *   message that names the flag to pass.
+   * - Otherwise prompts; declining or cancelling exits with EXIT_CANCELLED.
+   *
+   * The message should name the workspace domain so the user knows which
+   * workspace is affected (repudiation mitigation shared by all delete commands).
+   */
+  protected async confirmDestructive(message: string): Promise<void> {
+    const yes = Boolean((this.flags as { yes?: boolean } | undefined)?.yes)
+    if (yes || this.jsonEnabled()) return
+
+    if (!process.stdin.isTTY) {
+      this.error(
+        `${message}\nConfirmation required but no interactive terminal is attached. ` +
+          'Re-run with --yes to confirm (or --json, which also skips the prompt).',
+        { exit: EXIT_CANCELLED },
+      )
+    }
+
+    const confirmed = await p.confirm({ message })
+    if (p.isCancel(confirmed) || !confirmed) {
+      process.exit(EXIT_CANCELLED)
+    }
+  }
+
+  /**
    * Print the [domain] workspace header in dim style.
    * Call at the top of every command's run() method (AUTH-04).
    */
@@ -229,6 +302,21 @@ export abstract class AuthenticatedCommand<T extends typeof Command> extends Bas
     if (!this.activeWorkspace.bearer_token) {
       this.error(
         'This command requires authentication — run `twentythree auth credentials` to add a bearer token',
+        { exit: 1 },
+      )
+    }
+
+    // Fast-fail when we already know the login cannot perform this command.
+    // The permission level is recorded at login from /user/tokens, which caps
+    // every issued token at the bearer credential's own level. A read-only
+    // login would otherwise prompt for confirmation and then be refused with a
+    // 403 — tell the user up front instead.
+    const needed = (this.ctor as unknown as { agentMetadata?: AgentMetadata }).agentMetadata?.auth_scope
+    const have = this.activeWorkspace.permission_level
+    if (permissionBelow(have, needed)) {
+      this.error(
+        `Your login on ${this.activeWorkspace.domain} is ${have}-only, but \`${this.id?.replace(/:/g, ' ')}\` requires ${needed} permission. ` +
+          'Log in with a token that has a higher permission level: `twentythree auth credentials`.',
         { exit: 1 },
       )
     }
