@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree action delete 12345 --json
 ```
 
-_See code: [src/commands/action/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/action/delete.ts)_
+_See code: [src/commands/action/delete.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/action/delete.ts)_

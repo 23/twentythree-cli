@@ -34,4 +34,4 @@ EXAMPLES
   $ twentythree email-subscription remove 91827364 --json
 ```
 
-_See code: [src/commands/email-subscription/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/remove.ts)_
+_See code: [src/commands/email-subscription/remove.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/remove.ts)_

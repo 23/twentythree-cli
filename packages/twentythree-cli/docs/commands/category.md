@@ -21,7 +21,7 @@ DESCRIPTION
   Manage categories — list, create, update, and delete
 ```
 
-_See code: [src/commands/category/index.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/category/index.ts)_
+_See code: [src/commands/category/index.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/category/index.ts)_
 
 ## `twentythree category create`
 
@@ -51,7 +51,7 @@ EXAMPLES
   $ twentythree category create --title "Hidden Category" --hidden
 ```
 
-_See code: [src/commands/category/create.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/category/create.ts)_
+_See code: [src/commands/category/create.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/category/create.ts)_
 
 ## `twentythree category delete ID`
 
@@ -80,7 +80,7 @@ EXAMPLES
   $ twentythree category delete 42 --json
 ```
 
-_See code: [src/commands/category/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/category/delete.ts)_
+_See code: [src/commands/category/delete.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/category/delete.ts)_
 
 ## `twentythree category list`
 
@@ -125,7 +125,7 @@ EXAMPLES
   $ twentythree category list --photo-id 12345 --json
 ```
 
-_See code: [src/commands/category/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/category/list.ts)_
+_See code: [src/commands/category/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/category/list.ts)_
 
 ## `twentythree category update ID`
 
@@ -158,4 +158,4 @@ EXAMPLES
   $ twentythree category update 42
 ```
 
-_See code: [src/commands/category/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/category/update.ts)_
+_See code: [src/commands/category/update.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/category/update.ts)_

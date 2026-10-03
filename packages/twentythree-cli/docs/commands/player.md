@@ -39,7 +39,7 @@ EXAMPLES
   $ twentythree player delete 42 --json
 ```
 
-_See code: [src/commands/player/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/delete.ts)_
+_See code: [src/commands/player/delete.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/delete.ts)_
 
 ## `twentythree player embed`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ twentythree player embed --video-id 123 --json
 ```
 
-_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/embed.ts)_
+_See code: [src/commands/player/embed.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/embed.ts)_
 
 ## `twentythree player embed-versions`
 
@@ -112,7 +112,7 @@ EXAMPLES
   $ twentythree player embed-versions --object-type live --object-id 456 --json
 ```
 
-_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/embed-versions.ts)_
+_See code: [src/commands/player/embed-versions.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/embed-versions.ts)_
 
 ## `twentythree player list`
 
@@ -138,7 +138,7 @@ EXAMPLES
   $ twentythree player list --json
 ```
 
-_See code: [src/commands/player/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/list.ts)_
+_See code: [src/commands/player/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/list.ts)_
 
 ## `twentythree player remove-thumbnail ID`
 
@@ -164,7 +164,7 @@ EXAMPLES
   $ twentythree player remove-thumbnail 42 --json
 ```
 
-_See code: [src/commands/player/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/remove-thumbnail.ts)_
+_See code: [src/commands/player/remove-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/remove-thumbnail.ts)_
 
 ## `twentythree player set-thumbnail FILE`
 
@@ -193,7 +193,7 @@ EXAMPLES
   $ twentythree player set-thumbnail ./thumbnail.jpg --player-id 42 --json
 ```
 
-_See code: [src/commands/player/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/set-thumbnail.ts)_
+_See code: [src/commands/player/set-thumbnail.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/set-thumbnail.ts)_
 
 ## `twentythree player styles`
 
@@ -219,7 +219,7 @@ EXAMPLES
   $ twentythree player styles --json
 ```
 
-_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/styles.ts)_
+_See code: [src/commands/player/styles.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/styles.ts)_
 
 ## `twentythree player update ID`
 
@@ -250,4 +250,4 @@ EXAMPLES
   $ twentythree player update 42 --description "New description"
 ```
 
-_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/player/update.ts)_
+_See code: [src/commands/player/update.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/player/update.ts)_

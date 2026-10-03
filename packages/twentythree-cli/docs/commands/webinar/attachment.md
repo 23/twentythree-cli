@@ -39,7 +39,7 @@ EXAMPLES
   $ twentythree webinar attachment delete 12345 --filename handout.pdf --json
 ```
 
-_See code: [src/commands/webinar/attachment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/attachment/delete.ts)_
+_See code: [src/commands/webinar/attachment/delete.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/webinar/attachment/delete.ts)_
 
 ## `twentythree webinar attachment list ID`
 
@@ -71,7 +71,7 @@ EXAMPLES
   $ twentythree webinar attachment list 12345 --include-hidden
 ```
 
-_See code: [src/commands/webinar/attachment/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/attachment/list.ts)_
+_See code: [src/commands/webinar/attachment/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/webinar/attachment/list.ts)_
 
 ## `twentythree webinar attachment set-hidden ID`
 
@@ -103,7 +103,7 @@ EXAMPLES
   $ twentythree webinar attachment set-hidden 12345 --filename slides.pdf --hidden --json
 ```
 
-_See code: [src/commands/webinar/attachment/set-hidden.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/attachment/set-hidden.ts)_
+_See code: [src/commands/webinar/attachment/set-hidden.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/webinar/attachment/set-hidden.ts)_
 
 ## `twentythree webinar attachment upload ID FILE`
 
@@ -136,4 +136,4 @@ EXAMPLES
   $ twentythree webinar attachment upload 12345 ./handout.pdf --hidden
 ```
 
-_See code: [src/commands/webinar/attachment/upload.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/attachment/upload.ts)_
+_See code: [src/commands/webinar/attachment/upload.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/webinar/attachment/upload.ts)_

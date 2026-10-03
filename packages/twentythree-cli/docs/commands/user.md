@@ -45,7 +45,7 @@ EXAMPLES
   $ twentythree user create --email alice@example.com --json
 ```
 
-_See code: [src/commands/user/create.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/create.ts)_
+_See code: [src/commands/user/create.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/create.ts)_
 
 ## `twentythree user get ID`
 
@@ -76,7 +76,7 @@ EXAMPLES
   $ twentythree user get 12345 --json
 ```
 
-_See code: [src/commands/user/get.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/get.ts)_
+_See code: [src/commands/user/get.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/get.ts)_
 
 ## `twentythree user get-login-token ID`
 
@@ -107,7 +107,7 @@ EXAMPLES
   $ twentythree user get-login-token 12345 --json
 ```
 
-_See code: [src/commands/user/get-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/get-login-token.ts)_
+_See code: [src/commands/user/get-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/get-login-token.ts)_
 
 ## `twentythree user list`
 
@@ -156,7 +156,7 @@ EXAMPLES
   $ twentythree user list --user-group-id 5 --orderby display_name --json
 ```
 
-_See code: [src/commands/user/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/list.ts)_
+_See code: [src/commands/user/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/list.ts)_
 
 ## `twentythree user redeem-login-token`
 
@@ -182,7 +182,7 @@ EXAMPLES
   $ twentythree user redeem-login-token --login-token abc123 --json
 ```
 
-_See code: [src/commands/user/redeem-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/redeem-login-token.ts)_
+_See code: [src/commands/user/redeem-login-token.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/redeem-login-token.ts)_
 
 ## `twentythree user send-invitation ID`
 
@@ -213,7 +213,7 @@ EXAMPLES
   $ twentythree user send-invitation 12345 --json
 ```
 
-_See code: [src/commands/user/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/send-invitation.ts)_
+_See code: [src/commands/user/send-invitation.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/send-invitation.ts)_
 
 ## `twentythree user tokens`
 
@@ -241,7 +241,7 @@ EXAMPLES
   $ twentythree user tokens --json
 ```
 
-_See code: [src/commands/user/tokens.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/tokens.ts)_
+_See code: [src/commands/user/tokens.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/tokens.ts)_
 
 ## `twentythree user update ID`
 
@@ -279,4 +279,4 @@ EXAMPLES
   $ twentythree user update 12345 --json
 ```
 
-_See code: [src/commands/user/update.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/user/update.ts)_
+_See code: [src/commands/user/update.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/user/update.ts)_

@@ -38,4 +38,4 @@ EXAMPLES
   $ twentythree email-subscription list --page 2 --size 50
 ```
 
-_See code: [src/commands/email-subscription/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/list.ts)_
+_See code: [src/commands/email-subscription/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/list.ts)_

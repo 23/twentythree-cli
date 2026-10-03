@@ -35,7 +35,7 @@ EXAMPLES
   $ twentythree email-subscription add --email anna@example.com --frequency weekly --json
 ```
 
-_See code: [src/commands/email-subscription/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/add.ts)_
+_See code: [src/commands/email-subscription/add.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/add.ts)_
 
 ## `twentythree email-subscription list`
 
@@ -70,7 +70,7 @@ EXAMPLES
   $ twentythree email-subscription list --page 2 --size 50
 ```
 
-_See code: [src/commands/email-subscription/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/list.ts)_
+_See code: [src/commands/email-subscription/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/list.ts)_
 
 ## `twentythree email-subscription remove ID`
 
@@ -101,4 +101,4 @@ EXAMPLES
   $ twentythree email-subscription remove 91827364 --json
 ```
 
-_See code: [src/commands/email-subscription/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/remove.ts)_
+_See code: [src/commands/email-subscription/remove.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/remove.ts)_

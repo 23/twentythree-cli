@@ -29,4 +29,4 @@ EXAMPLES
   $ twentythree seo metrics --json
 ```
 
-_See code: [src/commands/seo/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/seo/metrics.ts)_
+_See code: [src/commands/seo/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/seo/metrics.ts)_

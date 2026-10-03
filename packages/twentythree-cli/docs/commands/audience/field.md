@@ -34,7 +34,7 @@ EXAMPLES
   $ twentythree audience field list --json
 ```
 
-_See code: [src/commands/audience/field/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/list.ts)_
+_See code: [src/commands/audience/field/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/list.ts)_
 
 ## `twentythree audience field remove`
 
@@ -62,7 +62,7 @@ EXAMPLES
   $ twentythree audience field remove --key "old-field" --json
 ```
 
-_See code: [src/commands/audience/field/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/remove.ts)_
+_See code: [src/commands/audience/field/remove.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/remove.ts)_
 
 ## `twentythree audience field set`
 
@@ -95,7 +95,7 @@ EXAMPLES
   $ twentythree audience field set --key "score" --type number --label "NPS Score" --priority 1 --json
 ```
 
-_See code: [src/commands/audience/field/set.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/set.ts)_
+_See code: [src/commands/audience/field/set.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/set.ts)_
 
 ## `twentythree audience field types`
 
@@ -118,4 +118,4 @@ EXAMPLES
   $ twentythree audience field types --json
 ```
 
-_See code: [src/commands/audience/field/types.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/types.ts)_
+_See code: [src/commands/audience/field/types.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/types.ts)_

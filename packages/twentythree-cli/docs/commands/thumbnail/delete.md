@@ -32,4 +32,4 @@ EXAMPLES
   $ twentythree thumbnail delete 42 --json
 ```
 
-_See code: [src/commands/thumbnail/delete.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/thumbnail/delete.ts)_
+_See code: [src/commands/thumbnail/delete.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/thumbnail/delete.ts)_

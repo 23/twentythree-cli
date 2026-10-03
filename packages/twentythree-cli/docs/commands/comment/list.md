@@ -45,4 +45,4 @@ EXAMPLES
   $ twentythree comment list --json
 ```
 
-_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/comment/list.ts)_
+_See code: [src/commands/comment/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/comment/list.ts)_

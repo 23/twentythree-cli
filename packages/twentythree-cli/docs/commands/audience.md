@@ -52,7 +52,7 @@ EXAMPLES
   $ twentythree audience companies --domains "acme.com" --json
 ```
 
-_See code: [src/commands/audience/companies.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/companies.ts)_
+_See code: [src/commands/audience/companies.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/companies.ts)_
 
 ## `twentythree audience field list`
 
@@ -80,7 +80,7 @@ EXAMPLES
   $ twentythree audience field list --json
 ```
 
-_See code: [src/commands/audience/field/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/list.ts)_
+_See code: [src/commands/audience/field/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/list.ts)_
 
 ## `twentythree audience field remove`
 
@@ -108,7 +108,7 @@ EXAMPLES
   $ twentythree audience field remove --key "old-field" --json
 ```
 
-_See code: [src/commands/audience/field/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/remove.ts)_
+_See code: [src/commands/audience/field/remove.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/remove.ts)_
 
 ## `twentythree audience field set`
 
@@ -141,7 +141,7 @@ EXAMPLES
   $ twentythree audience field set --key "score" --type number --label "NPS Score" --priority 1 --json
 ```
 
-_See code: [src/commands/audience/field/set.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/set.ts)_
+_See code: [src/commands/audience/field/set.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/set.ts)_
 
 ## `twentythree audience field types`
 
@@ -164,7 +164,7 @@ EXAMPLES
   $ twentythree audience field types --json
 ```
 
-_See code: [src/commands/audience/field/types.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/field/types.ts)_
+_See code: [src/commands/audience/field/types.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/field/types.ts)_
 
 ## `twentythree audience funnel`
 
@@ -196,7 +196,7 @@ EXAMPLES
   $ twentythree audience funnel --live-type on_demand --resolve-recordings
 ```
 
-_See code: [src/commands/audience/funnel.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/funnel.ts)_
+_See code: [src/commands/audience/funnel.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/funnel.ts)_
 
 ## `twentythree audience identity-sources`
 
@@ -219,7 +219,7 @@ EXAMPLES
   $ twentythree audience identity-sources --json
 ```
 
-_See code: [src/commands/audience/identity-sources.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/identity-sources.ts)_
+_See code: [src/commands/audience/identity-sources.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/identity-sources.ts)_
 
 ## `twentythree audience list`
 
@@ -283,7 +283,7 @@ EXAMPLES
   $ twentythree audience list --export-format csv > audience.csv
 ```
 
-_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/list.ts)_
+_See code: [src/commands/audience/list.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/list.ts)_
 
 ## `twentythree audience list-collectors`
 
@@ -312,7 +312,7 @@ EXAMPLES
   $ twentythree audience list-collectors --action-id 456 --json
 ```
 
-_See code: [src/commands/audience/list-collectors.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/list-collectors.ts)_
+_See code: [src/commands/audience/list-collectors.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/list-collectors.ts)_
 
 ## `twentythree audience metrics`
 
@@ -346,7 +346,7 @@ EXAMPLES
   $ twentythree audience metrics --search "acme" --size 100
 ```
 
-_See code: [src/commands/audience/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/metrics.ts)_
+_See code: [src/commands/audience/metrics.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/metrics.ts)_
 
 ## `twentythree audience register`
 
@@ -385,7 +385,7 @@ EXAMPLES
   $ twentythree audience register --email "user@co.com" --company "Acme Corp" --source api --json
 ```
 
-_See code: [src/commands/audience/register.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/register.ts)_
+_See code: [src/commands/audience/register.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/register.ts)_
 
 ## `twentythree audience remove`
 
@@ -416,7 +416,7 @@ EXAMPLES
   $ twentythree audience remove --email "user@co.com" --json
 ```
 
-_See code: [src/commands/audience/remove.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/remove.ts)_
+_See code: [src/commands/audience/remove.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/remove.ts)_
 
 ## `twentythree audience search`
 
@@ -449,7 +449,7 @@ EXAMPLES
   $ twentythree audience search --text "jane" --orderby score --order desc
 ```
 
-_See code: [src/commands/audience/search.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/search.ts)_
+_See code: [src/commands/audience/search.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/search.ts)_
 
 ## `twentythree audience timelines`
 
@@ -484,7 +484,7 @@ EXAMPLES
   $ twentythree audience timelines --objects "456 789" --json
 ```
 
-_See code: [src/commands/audience/timelines.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/timelines.ts)_
+_See code: [src/commands/audience/timelines.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/timelines.ts)_
 
 ## `twentythree audience unregister`
 
@@ -516,4 +516,4 @@ EXAMPLES
   $ twentythree audience unregister --object-id 789 --json
 ```
 
-_See code: [src/commands/audience/unregister.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/audience/unregister.ts)_
+_See code: [src/commands/audience/unregister.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/audience/unregister.ts)_

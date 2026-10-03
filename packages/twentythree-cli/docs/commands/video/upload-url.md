@@ -45,4 +45,4 @@ EXAMPLES
   $ twentythree video upload-url https://example.com/keynote.mp4 --publish-date "2026-11-01 09:00:00"
 ```
 
-_See code: [src/commands/video/upload-url.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/video/upload-url.ts)_
+_See code: [src/commands/video/upload-url.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/video/upload-url.ts)_

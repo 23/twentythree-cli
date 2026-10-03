@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-10-03
+
 ### Added
 
 - `email-subscription list|add|remove` commands for the new `/email-subscription/*` endpoints (digest emails for newly published videos)

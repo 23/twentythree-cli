@@ -33,4 +33,4 @@ EXAMPLES
   $ twentythree email-subscription add --email anna@example.com --frequency weekly --json
 ```
 
-_See code: [src/commands/email-subscription/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/email-subscription/add.ts)_
+_See code: [src/commands/email-subscription/add.ts](https://github.com/23/twentythree-cli/blob/v1.8.0/src/commands/email-subscription/add.ts)_
