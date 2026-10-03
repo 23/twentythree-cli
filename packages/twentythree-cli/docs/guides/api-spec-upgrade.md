@@ -77,6 +77,19 @@ pnpm --filter twentythree-cli test --run
 
 Both should complete without new errors introduced by the spec update.
 
+## Step 4b: Regenerate the command reference
+
+`docs/commands/` is generated from the built oclif manifest, so after adding or changing commands:
+
+```bash
+pnpm --filter twentythree-cli build
+cd packages/twentythree-cli
+pnpm exec oclif readme --multi --nested-topics-depth 2 --output-dir docs/commands
+git checkout docs/commands/README.md   # the index table is hand-maintained
+```
+
+Add a row to `docs/commands/README.md` and to the topic table in the root `README.md` for any new topic. A new resource group also needs `packages/twentythree-skills/skills/reference/<group>.md`, a row in the SKILL.md resource index, and an update to `RESOURCE_GROUPS` and `EXPECTED_FILE_COUNT` in `packages/twentythree-skills/scripts/validate-skills.mjs`.
+
 ## Step 5: Commit
 
 Commit these files together in a single commit:

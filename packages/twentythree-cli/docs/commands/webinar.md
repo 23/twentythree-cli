@@ -781,13 +781,15 @@ Remove a queued video from a webinar
 
 ```
 USAGE
-  $ twentythree webinar queued-video remove ID [--json] [-w <value>] [--video-id <value>]
+  $ twentythree webinar queued-video remove ID [--json] [-w <value>] [-y] [--video-id <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --video-id=<value>  Video ID to remove from queue
+  -y, --yes               Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                          skips it.
+      --video-id=<value>  Video ID to remove from queue
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1674,11 +1676,14 @@ Cancel a guest request for a speaker
 
 ```
 USAGE
-  $ twentythree webinar speaker cancel-guest-request WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker cancel-guest-request WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1822,11 +1827,14 @@ Remove the avatar image from a speaker
 
 ```
 USAGE
-  $ twentythree webinar speaker remove-avatar WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker remove-avatar WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

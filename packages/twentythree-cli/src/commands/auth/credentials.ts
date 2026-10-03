@@ -9,7 +9,7 @@ import {
   type WorkspaceEntry,
 } from '../../auth/workspace-config.js'
 import { fetchWorkspaceTokens } from '../../auth/token-refresh.js'
-import { permissionBelow } from '../../lib/base-command.js'
+import { isReadOnly, describePermission } from '../../lib/permissions.js'
 
 /**
  * Build the workspace entry used for anonymous (domain-only) access — no token,
@@ -204,8 +204,8 @@ export default class Credentials extends Command {
         permission_level: permissionLevel,
         active_workspace: active.domain,
         workspaces: workspaces.map((w) => ({ domain: w.domain, display_name: w.display_name })),
-        ...(permissionBelow(permissionLevel ?? undefined, 'write')
-          ? { warning: `The token is ${permissionLevel}-only; commands that create, update or delete will be refused.` }
+        ...(isReadOnly(permissionLevel ?? undefined)
+          ? { warning: `Permission level ${describePermission(permissionLevel ?? undefined)}.` }
           : {}),
       }
     }
@@ -228,14 +228,12 @@ export default class Credentials extends Command {
    * login rather than at the first failed command.
    */
   private logPermissionLevel(level: string | null): void {
-    if (!level) return
-    if (permissionBelow(level, 'write')) {
-      this.warn(
-        `Permission level: ${level}. This token is ${level}-only — commands that create, update or delete will be refused. ` +
-          'Use a token with write access if you need them.',
-      )
+    const described = describePermission(level ?? undefined)
+    if (!described) return
+    if (isReadOnly(level ?? undefined)) {
+      this.warn(`Permission level: ${described}. Use a token with write access if you need them.`)
     } else {
-      this.log(`Permission level: ${level}.`)
+      this.log(`Permission level: ${described}.`)
     }
   }
 

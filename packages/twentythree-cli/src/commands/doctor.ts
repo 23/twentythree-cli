@@ -3,7 +3,7 @@ import Table from 'cli-table3'
 import chalk from 'chalk'
 import { getActiveWorkspace, getWorkspaceForDomain } from '../auth/workspace-config.js'
 import { createApiClient } from '../api/client.js'
-import { permissionBelow } from '../lib/base-command.js'
+import { describePermission } from '../lib/permissions.js'
 
 export default class Doctor extends Command {
   static description = 'Check CLI credentials, connectivity, and token validity'
@@ -73,12 +73,8 @@ export default class Doctor extends Command {
       } else {
         // Every API response carries the caller's permission level; show it so a
         // read-only login is visible here rather than at the first refused write.
-        const level = (data as { permission_level?: string } | undefined)?.permission_level
-        const detail = level
-          ? permissionBelow(level, 'write')
-            ? `Authenticated, ${level}-only (create/update/delete commands will be refused)`
-            : `Authenticated, ${level}`
-          : 'Authenticated'
+        const described = describePermission((data as { permission_level?: string } | undefined)?.permission_level)
+        const detail = described ? `Authenticated, ${described}` : 'Authenticated'
         checks.push({ name: 'Token valid', passed: true, detail })
       }
     }

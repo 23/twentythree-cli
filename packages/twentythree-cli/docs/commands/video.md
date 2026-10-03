@@ -918,7 +918,7 @@ Create a video by downloading the file from a URL
 USAGE
   $ twentythree video upload-url URL [--json] [-w <value>] [--title <value>] [--description <value>] [--content-format
     text/enhanced|text/plain|text/html] [--tags <value>] [--category-id <value>] [--publish] [--publish-date <value>]
-    [--user-id <value>]
+    [--user-id <value>] [--fields <value>]
 
 ARGUMENTS
   URL  URL of the video file to download
@@ -928,6 +928,7 @@ FLAGS
   --content-format=<option>  Format of the description
                              <options: text/enhanced|text/plain|text/html>
   --description=<value>      Description of the video
+  --fields=<value>           Comma-separated list of fields to return in the API response
   --[no-]publish             Publish the video once it lands (API default). Use --no-publish to keep it unpublished
   --publish-date=<value>     Publish date (past or future), e.g. "2026-11-01 09:00:00"
   --tags=<value>             Comma-separated tags for the video

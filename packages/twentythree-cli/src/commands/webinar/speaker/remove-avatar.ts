@@ -24,6 +24,7 @@ export default class WebinarSpeakerRemoveAvatar extends AuthenticatedCommand<typ
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -41,6 +42,11 @@ export default class WebinarSpeakerRemoveAvatar extends AuthenticatedCommand<typ
   public async run(): Promise<void | object> {
     const { args } = await this.parse(WebinarSpeakerRemoveAvatar)
     this.printWorkspaceHeader()
+
+    // Destructive: confirm before the API call; --yes / --json skip the prompt.
+    await this.confirmDestructive(
+      `Remove the avatar of speaker ${args.id} on ${this.activeWorkspace.domain}? This cannot be undone.`,
+    )
 
     const { data, error } = await this.apiClient.POST('/live/speaker/remove-avatar', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

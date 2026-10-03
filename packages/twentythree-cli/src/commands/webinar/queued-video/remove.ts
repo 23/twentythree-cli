@@ -30,6 +30,7 @@ export default class WebinarQueuedVideoRemove extends AuthenticatedCommand<typeo
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'video-id': Flags.string({
       description: 'Video ID to remove from queue',
       required: false,
@@ -71,6 +72,11 @@ export default class WebinarQueuedVideoRemove extends AuthenticatedCommand<typeo
     if (!Number.isFinite(photoId) || photoId <= 0) {
       this.error('--video-id must be a positive integer', { exit: EXIT_ERROR })
     }
+
+    // Destructive: confirm before the API call; --yes / --json skip the prompt.
+    await this.confirmDestructive(
+      `Remove video ${photoId} from the queue of webinar ${args.id} on ${this.activeWorkspace.domain}?`,
+    )
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (this.apiClient as any).POST('/live/queuedvideos/remove', {

@@ -255,17 +255,19 @@ Remove a reaction from a comment
 ```
 USAGE
   $ twentythree comment reaction remove ID --reaction <value> --object-id <value> --object-token <value> [--json] [-w
-    <value>] [--object-type <value>] [--uuid <value>]
+    <value>] [-y] [--object-type <value>] [--uuid <value>]
 
 ARGUMENTS
   ID  Comment ID
 
 FLAGS
-  --object-id=<value>     (required) Object ID the comment belongs to
-  --object-token=<value>  (required) Object token for the target object
-  --object-type=<value>   Object type (live, photo, album)
-  --reaction=<value>      (required) Reaction emoji to remove
-  --uuid=<value>          UUID identifier
+  -y, --yes                   Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                              also skips it.
+      --object-id=<value>     (required) Object ID the comment belongs to
+      --object-token=<value>  (required) Object token for the target object
+      --object-type=<value>   Object type (live, photo, album)
+      --reaction=<value>      (required) Reaction emoji to remove
+      --uuid=<value>          UUID identifier
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

@@ -131,11 +131,14 @@ Cancel a guest request for a speaker
 
 ```
 USAGE
-  $ twentythree webinar speaker cancel-guest-request WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker cancel-guest-request WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -279,11 +282,14 @@ Remove the avatar image from a speaker
 
 ```
 USAGE
-  $ twentythree webinar speaker remove-avatar WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker remove-avatar WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

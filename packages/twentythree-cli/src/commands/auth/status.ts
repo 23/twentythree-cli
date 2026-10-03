@@ -1,4 +1,5 @@
-import { BaseCommand, permissionBelow } from '../../lib/base-command.js'
+import { BaseCommand } from '../../lib/base-command.js'
+import { describePermission } from '../../lib/permissions.js'
 import { getWorkspaces } from '../../auth/workspace-config.js'
 
 /**
@@ -52,9 +53,9 @@ export default class Status extends BaseCommand<typeof Status> {
 
     if (workspace.bearer_token) {
       this.log(`Token:       active (auto-refreshes)`)
-      if (workspace.permission_level) {
-        const note = permissionBelow(workspace.permission_level, 'write') ? ' (read-only — create/update/delete commands will be refused)' : ''
-        this.log(`Permission:  ${workspace.permission_level}${note}`)
+      const described = describePermission(workspace.permission_level)
+      if (described) {
+        this.log(`Permission:  ${described}`)
       }
     }
 
