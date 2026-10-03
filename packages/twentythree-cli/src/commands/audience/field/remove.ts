@@ -1,8 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -34,6 +33,7 @@ export default class AudienceFieldRemove extends AuthenticatedCommand<typeof Aud
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     key: Flags.string({
       description: 'Field key to remove',
       required: true,
@@ -47,16 +47,10 @@ export default class AudienceFieldRemove extends AuthenticatedCommand<typeof Aud
     this.printWorkspaceHeader()
 
     // T-07-09 mitigation: Confirmation required before destructive field deletion.
-    // JSON mode skips confirmation (automation use case).
-    if (!this.jsonEnabled()) {
-      const confirmed = await confirm({
-        message: `Permanently remove field "${flags.key}" and all associated data? This cannot be undone.`,
-      })
-      if (!confirmed || typeof confirmed === 'symbol') {
-        this.log('Cancelled.')
-        this.exit(EXIT_CANCELLED)
-      }
-    }
+    // --yes / --json skip the prompt (automation use case).
+    await this.confirmDestructive(
+      `Permanently remove field "${flags.key}" and all associated data from ${this.activeWorkspace.domain}? This cannot be undone.`,
+    )
 
     const { data, error } = await this.apiClient.POST('/audience/field/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

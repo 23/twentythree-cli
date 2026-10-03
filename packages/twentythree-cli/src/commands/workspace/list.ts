@@ -35,7 +35,9 @@ export default class List extends BaseCommand<typeof List> {
       const isDefault = w.domain === activeDomain
       const marker = isDefault ? chalk.green('*') : ' '
 
-      const status = w.bearer_token ? 'authenticated' : 'anonymous'
+      const status = w.bearer_token
+        ? w.permission_level ? `authenticated, ${w.permission_level}` : 'authenticated'
+        : 'anonymous'
 
       this.log(`  ${marker} ${w.domain}  ${w.display_name}  (${status})`)
 

@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -24,6 +23,7 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
 
   static examples = [
     '<%= config.bin %> poll remove 99',
+    '<%= config.bin %> poll remove 99 --yes',
     '<%= config.bin %> poll remove 99 --json',
   ]
 
@@ -31,6 +31,7 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -41,16 +42,8 @@ export default class PollRemove extends AuthenticatedCommand<typeof PollRemove> 
     const { args } = await this.parse(PollRemove)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-05-19: Confirmation includes domain
-      const confirmed = await confirm({
-        message: `Remove poll ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-05-19: Confirmation includes domain
+    await this.confirmDestructive(`Remove poll ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/poll/remove', {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

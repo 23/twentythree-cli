@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -10,7 +9,8 @@ import { applyCliTerms } from '../../lib/term-map.js'
  *
  * Maps to POST /thumbnail/template/delete.
  * Prompts user to confirm deletion with workspace domain (T-08-07 repudiation mitigation).
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Threat mitigations:
  *   T-08-07: Confirmation prompt includes workspace domain
@@ -28,6 +28,7 @@ export default class ThumbnailDelete extends AuthenticatedCommand<typeof Thumbna
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -47,16 +48,8 @@ export default class ThumbnailDelete extends AuthenticatedCommand<typeof Thumbna
     const { args } = await this.parse(ThumbnailDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-08-07: Confirmation prompt includes workspace domain
-      const confirmed = await confirm({
-        message: `Delete thumbnail template ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-08-07: Confirmation prompt includes workspace domain
+    await this.confirmDestructive(`Delete thumbnail template ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/thumbnail/template/delete', {
       body: { thumbnail_template_id: Number(args.id) } as any,

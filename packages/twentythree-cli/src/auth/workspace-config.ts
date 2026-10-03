@@ -9,6 +9,12 @@ export interface WorkspaceEntry {
   site_name: string
   canonical_user_p: boolean
   starred_p: boolean
+  /**
+   * Permission level of the login that issued this token ('read', 'write', 'admin', ...),
+   * as reported by /user/tokens. Absent for anonymous entries and for configs
+   * written before the field existed.
+   */
+  permission_level?: string
 }
 
 interface CliConfig {

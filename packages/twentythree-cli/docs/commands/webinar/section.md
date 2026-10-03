@@ -77,11 +77,14 @@ Remove an agenda section from a webinar
 
 ```
 USAGE
-  $ twentythree webinar section remove WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar section remove WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Section ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -92,6 +95,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar section remove 12345 99
+
+  $ twentythree webinar section remove 12345 99 --yes
 
   $ twentythree webinar section remove 12345 99 --json
 ```

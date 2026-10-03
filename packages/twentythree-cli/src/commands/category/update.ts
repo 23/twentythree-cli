@@ -146,7 +146,7 @@ export default class CategoryUpdate extends AuthenticatedCommand<typeof Category
     })
 
     if (updateError) {
-      this.error(applyCliTerms(String(updateError)), { exit: EXIT_ERROR })
+      this.error(applyCliTerms(formatApiError(updateError)), { exit: EXIT_ERROR })
     }
 
     this.log(chalk.green(`Category ${args.id} updated`))

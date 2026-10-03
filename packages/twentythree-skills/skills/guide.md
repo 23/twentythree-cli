@@ -85,6 +85,33 @@ twentythree webinar create --title "Launch Event" --live-date "2026-06-01T14:00:
 
 ---
 
+### Destructive Commands Need `--yes` Without a Terminal
+
+Every command with `side_effects: destructive` (`video delete`, `webinar delete`, `email-subscription remove`, `webhook unsubscribe`, …) asks for confirmation before calling the API. An agent has no terminal to answer that prompt, so pass `--yes` (short `-y`) to confirm up front; `--json` also skips the prompt. Without either flag and without a TTY the command does nothing and exits with code 2, naming the flag to pass. Only pass `--yes` after the user has confirmed the specific object (show the ID and the workspace domain first).
+
+```bash
+# Confirm with the user, then delete non-interactively
+twentythree video delete 12345 --yes --json
+```
+
+---
+
+### Check the Permission Level Before Writing
+
+A login can be read-only. `twentythree auth credentials` reports the token's permission level, and `auth status --json` returns it as `permission_level` (`read`, `write`, `admin`, …). Every API response also carries `permission_level`. With a `read` login, every command whose `--agent` output says `auth_scope: write` (or higher) is refused before it reaches the API — don't retry, and don't look for a different flag. Tell the user the token is read-only and that a write-level token is needed for `twentythree auth credentials`.
+
+```bash
+twentythree auth status --json | jq -r '.permission_level'   # "read" → create/update/delete will be refused
+```
+
+---
+
+### Never Pass an Empty Token to `auth credentials`
+
+`twentythree auth credentials --domain <domain> --token ""` (typically an unset shell variable) and an empty `TWENTYTHREE_TOKEN` fail with exit 1 instead of configuring anonymous mode. Anonymous (domain-only) access is only configured when the token is omitted entirely. If you intend anonymous access, omit `--token`; otherwise check that the variable actually holds the token before running the command.
+
+---
+
 ### Admin Link Construction
 
 The `--json` response after every upload or create includes `data.admin_url`. Use that value directly for admin deep links — never construct admin URLs by concatenating domain and ID.

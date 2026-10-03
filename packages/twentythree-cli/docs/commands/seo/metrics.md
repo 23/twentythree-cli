@@ -23,9 +23,6 @@ GLOBAL FLAGS
 DESCRIPTION
   Get workspace-wide SEO and GEO metrics
 
-  Returns the average score across all objects, counts of videos, webinars, and pages, and a
-  breakdown of the library's SEO health into high, medium, and low tiers.
-
 EXAMPLES
   $ twentythree seo metrics
 

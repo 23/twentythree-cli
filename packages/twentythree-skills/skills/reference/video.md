@@ -10,7 +10,7 @@ description: Manage video assets — upload, list, metadata updates, thumbnails,
 
 ## Prerequisites
 
-Auth scope varies: **read** (list, get, transcoding-progress), **write** (upload, update, delete, replace, frame, all section writes, all subtitle writes).
+Auth scope varies: **read** (list, get, transcoding-progress), **write** (upload, upload-url, update, delete, replace, frame, all section writes, all subtitle writes).
 Run `twentythree auth credentials` if not already configured.
 Verify: `twentythree auth status --json`
 
@@ -45,6 +45,33 @@ twentythree video upload ./video.mp4 --title "Demo" --json
 
 # Upload with category, tags, and publish immediately
 twentythree video upload ./video.mp4 --title "Q2 Keynote" --category-id <cat-id> --tags "product q2" --publish --json
+```
+
+---
+
+### video upload-url
+
+**Auth scope:** write  **Side effects:** creates  **Output:** key-value (photo_id, tree_id, token + admin_url)
+
+Creates a video by having the platform download the file from a public URL — no local file and no chunked upload. The command returns as soon as the video exists; transcoding continues in the background (`video transcoding-progress <id>`). **Unlike `video upload`, the API publishes the video by default** — pass `--no-publish` to keep it unpublished.
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--title` | no | — | Title for the video |
+| `--description` | no | — | Description of the video |
+| `--content-format` | no | `text/enhanced` | `text/enhanced`, `text/plain` or `text/html` |
+| `--tags` | no | — | Comma-separated tags |
+| `--category-id` | no | — | Category ID to place the video in |
+| `--publish` / `--no-publish` | no | `--publish` | Publish once the file lands |
+| `--publish-date` | no | — | Publish date, past or future, e.g. `"2026-11-01 09:00:00"` |
+| `--user-id` | no | — | Upload on behalf of a user (super users only) |
+
+```bash
+# Pull a video from a URL and keep it unpublished for review
+twentythree video upload-url https://example.com/keynote.mp4 --title "Keynote" --no-publish --json
+
+# Follow transcoding with the returned ID
+twentythree video transcoding-progress <id> --json
 ```
 
 ---
@@ -200,14 +227,18 @@ twentythree video update <id> --category-id <cat-id> --tags "demo q2" --publish-
 
 > **Warning: This action is destructive and cannot be undone.** The video and all associated data (subtitles, sections, analytics) are permanently deleted from the workspace.
 
-No additional flags — pass the video ID as a positional argument.
+Pass the video ID as a positional argument. Requires a **write**-level login — with a read-only token the command is refused before the prompt (see [guide.md](../guide.md) → Check the Permission Level Before Writing).
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--yes` / `-y` | no | false | Skip the confirmation prompt. Required without a terminal; `--json` also skips it |
 
 ```bash
-# Delete a video (destructive — cannot be undone)
-twentythree video delete <id> --json
+# Delete a video (destructive — cannot be undone); --yes confirms non-interactively
+twentythree video delete <id> --yes --json
 
 # Example with a real ID
-twentythree video delete 12345 --json
+twentythree video delete 12345 --yes --json
 ```
 
 ---
@@ -789,6 +820,7 @@ twentythree video subtitle duplicate <id> --subtitle-id en_US --target-locale fr
 CLI `video` = API `photo`. The `api_endpoint` field in `--agent` output uses the API name:
 
 - `twentythree video upload` -> `POST /photo/redeem-upload-token`
+- `twentythree video upload-url` -> `POST /photo/upload-url`
 - `twentythree video list` -> `GET /photo/list`
 - `twentythree video update` -> `POST /photo/update`
 - `twentythree video delete` -> `POST /photo/delete`

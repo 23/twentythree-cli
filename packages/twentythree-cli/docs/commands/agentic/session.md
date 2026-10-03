@@ -1,7 +1,7 @@
 `twentythree agentic:session`
 =============================
 
-Report and inspect agentic (AI agent) sessions
+List reported agentic (AI agent) sessions
 
 * [`twentythree agentic session list`](#twentythree-agentic-session-list)
 * [`twentythree agentic session metrics`](#twentythree-agentic-session-metrics)
@@ -24,9 +24,6 @@ GLOBAL FLAGS
 
 DESCRIPTION
   List reported agentic (AI agent) sessions
-
-  Lists sessions previously reported via `agentic session status`, with prompt counts, durations,
-  and start/end times.
 
 EXAMPLES
   $ twentythree agentic session list
@@ -54,9 +51,6 @@ GLOBAL FLAGS
 DESCRIPTION
   Get aggregate metrics for reported agentic (AI agent) sessions
 
-  Returns the total session count, total number of prompts, and total session duration in seconds
-  across all reported agentic sessions.
-
 EXAMPLES
   $ twentythree agentic session metrics
 
@@ -71,13 +65,14 @@ Report (store) the status of an agentic (AI agent) session
 
 ```
 USAGE
-  $ twentythree agentic session status --session-identifier <value> --summary <value> --number-of-prompts
-    <value> --session-duration-seconds <value> --ai-provider <value> --twentythree-skill-version <value>
+  $ twentythree agentic session status --session-identifier <value> --summary <value> --number-of-prompts <value>
+    --session-duration-seconds <value> --ai-provider <value> --twentythree-skill-version <value>
     --estimated-minutes-saved <value> [--json] [-w <value>] [--fields <value>]
 
 FLAGS
   --ai-provider=<value>                (required) AI/LLM provider used in the session (e.g. "claude code", "codex")
-  --estimated-minutes-saved=<value>    (required) Conservative (deliberately low) estimate of minutes saved by the automated run vs. doing the task by hand; round down, 0 if none/unknown
+  --estimated-minutes-saved=<value>    (required) Conservative (deliberately low) estimate of minutes saved by the
+                                       automated run vs. doing the task by hand; round down, 0 if none/unknown
   --fields=<value>                     Comma-separated fields to return
   --number-of-prompts=<value>          (required) Number of user prompts in the agent session (0 if unknown)
   --session-duration-seconds=<value>   (required) Duration of the agent session, in seconds (0 if unknown)
@@ -91,10 +86,6 @@ GLOBAL FLAGS
 
 DESCRIPTION
   Report (store) the status of an agentic (AI agent) session
-
-  Stores a record of what an AI agent session accomplished — its summary, prompt count, duration,
-  the AI provider used, and the TwentyThree skill version. Surfaced via `agentic session list` and
-  aggregated by `agentic session metrics`.
 
 EXAMPLES
   $ twentythree agentic session status --session-identifier abc123 --summary "Uploaded 3 videos" --number-of-prompts 12 --session-duration-seconds 540 --ai-provider "claude code" --twentythree-skill-version 1.6.0 --estimated-minutes-saved 20

@@ -91,13 +91,15 @@ Delete an attachment from a webinar
 
 ```
 USAGE
-  $ twentythree webinar attachment delete ID [--json] [-w <value>] [--filename <value>]
+  $ twentythree webinar attachment delete ID [--json] [-w <value>] [-y] [--filename <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --filename=<value>  Filename of the attachment to delete
+  -y, --yes               Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also
+                          skips it.
+      --filename=<value>  Filename of the attachment to delete
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -108,6 +110,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar attachment delete 12345 --filename slides.pdf
+
+  $ twentythree webinar attachment delete 12345 --filename slides.pdf --yes
 
   $ twentythree webinar attachment delete 12345 --filename handout.pdf --json
 ```
@@ -239,7 +243,7 @@ _See code: [src/commands/webinar/clips.ts](https://github.com/23/twentythree-cli
 
 ## `twentythree webinar create`
 
-Create a new webinar
+Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
 
 ```
 USAGE
@@ -259,8 +263,8 @@ FLAGS
   --[no-]private                Make the webinar private (use --no-private to make it public and appear on the hub)
   --[no-]publish                Publish the webinar
   --[no-]publish-recordings     Publish the webinar recordings
-  --registration-mode=<option>  [default: all] Registration mode. Defaults to "all" (registration enabled); pass
-                                "none" to disable.
+  --registration-mode=<option>  [default: all] Registration mode. Defaults to "all" (registration enabled); pass "none"
+                                to disable.
                                 <options: |all|none>
   --series-id=<value>           Attach the webinar to a webinar series by ID
   --status=<value>              Webinar status: upcoming, live, or previous
@@ -273,8 +277,8 @@ GLOBAL FLAGS
       --json               Format output as json.
 
 DESCRIPTION
-  Create a new webinar. By default the webinar is created as a draft with registration enabled
-  (registration-mode=all); pass --no-draft/--publish or --registration-mode none to change this.
+  Create a new webinar. By default the webinar is created as a draft with registration enabled (registration-mode=all);
+  pass --no-draft/--publish or --registration-mode none to change this.
 
 EXAMPLES
   $ twentythree webinar create --title "My Webinar"
@@ -296,10 +300,13 @@ Delete a webinar from the active workspace
 
 ```
 USAGE
-  $ twentythree webinar delete ID [--json] [-w <value>]
+  $ twentythree webinar delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Webinar ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -353,15 +360,40 @@ List webinars in the active workspace
 
 ```
 USAGE
-  $ twentythree webinar list [--json] [-w <value>] [--limit <value>] [--all] [--include-private] [--status
-    <value>] [--search <value>]
+  $ twentythree webinar list [--json] [-w <value>] [--limit <value>] [--all] [--search <value>] [--status
+    upcoming|live|previous] [--include-private] [--live-id <value>] [--album-id <value>] [--user-id <value>]
+    [--live-format event|webinar] [--live-series-id <value>] [--ordering
+    private|promoted|streaming|broadcasting|name|live_label|live_status|live_date|creation_date] [--order asc|desc]
+    [--promoted] [--draft] [--cancelled] [--streaming] [--template] [--include-stats] [--include-speakers]
+    [--include-albums] [--fields <value>]
 
 FLAGS
-  --all                   Fetch all webinars across all pages (overrides --limit)
-  --[no-]include-private  Include private webinars in the results
-  --limit=<value>         [default: 20] Maximum number of webinars to return (default: 20)
-  --search=<value>        Search webinars by keyword
-  --status=<value>        Filter by status: upcoming, live, or previous
+  --album-id=<value>        Filter to webinars in a specific category
+  --all                     Fetch all webinars across all pages (overrides --limit)
+  --[no-]cancelled          Filter by cancelled status
+  --[no-]draft              Filter by draft status
+  --fields=<value>          Comma-separated list of fields to return in the API response
+  --include-albums          Include category information for each webinar
+  --[no-]include-private    Include private webinars in the results
+  --include-speakers        Include speaker information for each webinar
+  --include-stats           Include performance statistics for each webinar
+  --limit=<value>           [default: 20] Maximum number of webinars to return (default: 20)
+  --live-format=<option>    Filter by live format
+                            <options: event|webinar>
+  --live-id=<value>         Limit to a single webinar by ID
+  --live-series-id=<value>  Filter to webinars in a specific series
+  --order=<option>          Sort direction
+                            <options: asc|desc>
+  --ordering=<option>       Field to order results by
+                            <options:
+                            private|promoted|streaming|broadcasting|name|live_label|live_status|live_date|creation_date>
+  --[no-]promoted           Filter by promoted status
+  --search=<value>          Search webinars by keyword
+  --status=<option>         Filter by status: upcoming, live, or previous
+                            <options: upcoming|live|previous>
+  --streaming               Filter to currently streaming webinars only
+  --template                Filter to webinar templates only
+  --user-id=<value>         Filter to webinars created by a specific user (use "me" for the authenticated user)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -378,6 +410,12 @@ EXAMPLES
   $ twentythree webinar list --all
 
   $ twentythree webinar list --status upcoming --json
+
+  $ twentythree webinar list --live-format webinar --ordering live_date --order asc
+
+  $ twentythree webinar list --user-id me --include-speakers --json
+
+  $ twentythree webinar list --live-series-id 42 --all --json
 ```
 
 _See code: [src/commands/webinar/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/list.ts)_
@@ -468,7 +506,7 @@ EXAMPLES
 
   $ twentythree webinar mail add --series-id 67890 --subject "Reminder"
 
-  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --recipient-groups "registered,attendees" --cta-link "https://example.com" --cta-label "Join" --json
+  $ twentythree webinar mail add 12345 --subject "Reminder" --message "Join us!" --json
 ```
 
 _See code: [src/commands/webinar/mail/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/mail/add.ts)_
@@ -479,12 +517,16 @@ List emails for a webinar
 
 ```
 USAGE
-  $ twentythree webinar mail list [ID] [--json] [-w <value>] [--series-id <value>]
+  $ twentythree webinar mail list [ID] [--json] [-w <value>] [--series-id <value>] [--mail-id <value>]
+    [--include-metrics] [--fields <value>]
 
 ARGUMENTS
   [ID]  Webinar ID (omit when using --series-id)
 
 FLAGS
+  --fields=<value>     Comma-separated list of fields to return in the API response
+  --include-metrics    Include metrics on mail performance in the response
+  --mail-id=<value>    Return a specific mail by its ID
   --series-id=<value>  Series ID — list mails for a series instead of a webinar
 
 GLOBAL FLAGS
@@ -542,14 +584,16 @@ Remove an email from a webinar
 
 ```
 USAGE
-  $ twentythree webinar mail remove ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>]
+  $ twentythree webinar mail remove ID [--json] [-w <value>] [-y] [--webinar-id <value> | --series-id <value>]
 
 ARGUMENTS
   ID  Mail ID
 
 FLAGS
-  --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
-  --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
+  -y, --yes                 Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                            also skips it.
+      --series-id=<value>   Series ID (mutually exclusive with --webinar-id)
+      --webinar-id=<value>  Webinar ID (mutually exclusive with --series-id)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -560,6 +604,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar mail remove 555 --webinar-id 12345
+
+  $ twentythree webinar mail remove 555 --webinar-id 12345 --yes
 
   $ twentythree webinar mail remove 555 --series-id 67890 --json
 ```
@@ -637,8 +683,8 @@ Update a webinar email
 ```
 USAGE
   $ twentythree webinar mail update ID [--json] [-w <value>] [--webinar-id <value> | --series-id <value>] [--subject
-    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link
-    <value>] [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
+    <value>] [--message <value>] [--enabled] [--recipient-groups <value>] [--scheduled-at <value>] [--cta-link <value>]
+    [--cta-label <value>] [--include-live-info] [--include-series-archive] [--require-recording]
 
 ARGUMENTS
   ID  Mail ID
@@ -868,13 +914,14 @@ Duplicate a webinar and schedule the copy at a new date/time
 
 ```
 USAGE
-  $ twentythree webinar repeat ID --date <value> [--json] [-w <value>]
+  $ twentythree webinar repeat ID --date <value> [--json] [-w <value>] [--webinar-design-id <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --date=<value>  (required) Schedule date/time for the new webinar (ISO 8601)
+  --date=<value>               (required) Schedule date/time for the new webinar (ISO 8601)
+  --webinar-design-id=<value>  Assign a webinar design by ID to the new webinar
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1061,11 +1108,14 @@ Remove an agenda section from a webinar
 
 ```
 USAGE
-  $ twentythree webinar section remove WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar section remove WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Section ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1076,6 +1126,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar section remove 12345 99
+
+  $ twentythree webinar section remove 12345 99 --yes
 
   $ twentythree webinar section remove 12345 99 --json
 ```
@@ -1152,13 +1204,15 @@ Cancel a webinar series
 
 ```
 USAGE
-  $ twentythree webinar series cancel ID [--json] [-w <value>] [--cancel-associations]
+  $ twentythree webinar series cancel ID [--json] [-w <value>] [-y] [--cancel-associations]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --[no-]cancel-associations  Also cancel associated webinars
+  -y, --yes                       Skip the confirmation prompt. Required when no terminal is attached (CI, agents);
+                                  --json also skips it.
+      --[no-]cancel-associations  Also cancel associated webinars
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1169,6 +1223,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar series cancel 42
+
+  $ twentythree webinar series cancel 42 --yes
 
   $ twentythree webinar series cancel 42 --cancel-associations
 
@@ -1212,13 +1268,15 @@ Delete a webinar series
 
 ```
 USAGE
-  $ twentythree webinar series delete ID [--json] [-w <value>] [--delete-associations]
+  $ twentythree webinar series delete ID [--json] [-w <value>] [-y] [--delete-associations]
 
 ARGUMENTS
   ID  Series ID
 
 FLAGS
-  --[no-]delete-associations  Also delete associated webinars
+  -y, --yes                       Skip the confirmation prompt. Required when no terminal is attached (CI, agents);
+                                  --json also skips it.
+      --[no-]delete-associations  Also delete associated webinars
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1229,6 +1287,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar series delete 42
+
+  $ twentythree webinar series delete 42 --yes
 
   $ twentythree webinar series delete 42 --delete-associations
 
@@ -1243,7 +1303,31 @@ List webinar series
 
 ```
 USAGE
-  $ twentythree webinar series list [--json] [-w <value>]
+  $ twentythree webinar series list [--json] [-w <value>] [--search <value>] [--live-series-id <value>] [--live-id
+    <value>] [--album-id <value>] [--user-id <value>] [--series-type liveevent|series] [--ordering
+    name|private|live_status|live_date|creation_date|updated_date] [--order asc|desc] [--cancelled] [--draft]
+    [--private] [--include-private] [--include-speakers] [--include-stats] [--include-albums] [--fields <value>]
+
+FLAGS
+  --album-id=<value>        Filter to series belonging to a specific category
+  --[no-]cancelled          Filter by cancelled status
+  --[no-]draft              Filter by draft status
+  --fields=<value>          Comma-separated list of fields to return in the API response
+  --include-albums          Include category information for each series
+  --include-private         Include private series in results
+  --include-speakers        Include speaker information for each series
+  --include-stats           Include performance statistics for each series
+  --live-id=<value>         Filter to series that contain a specific webinar ID
+  --live-series-id=<value>  Limit results to a single series by its ID
+  --order=<option>          Sort direction
+                            <options: asc|desc>
+  --ordering=<option>       Field to order results by
+                            <options: name|private|live_status|live_date|creation_date|updated_date>
+  --[no-]private            Filter by private status
+  --search=<value>          Search for specific series by keyword
+  --series-type=<option>    Filter by series type
+                            <options: liveevent|series>
+  --user-id=<value>         Filter to series created by a specific user (use "me" for the authenticated user)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1256,6 +1340,12 @@ EXAMPLES
   $ twentythree webinar series list
 
   $ twentythree webinar series list --json
+
+  $ twentythree webinar series list --search "Q4" --ordering live_date --order asc
+
+  $ twentythree webinar series list --series-type series --include-speakers --json
+
+  $ twentythree webinar series list --user-id me --include-stats --json
 ```
 
 _See code: [src/commands/webinar/series/list.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/series/list.ts)_
@@ -1415,9 +1505,9 @@ ARGUMENTS
 
 FLAGS
   --description=<value>       Series description
-  --name=<value>             Series name
+  --name=<value>              Series name
   --seo-policy=<option>       SEO policy for the series: index, noindex, or empty string to reset
-                             <options: |index|noindex>
+                              <options: |index|noindex>
   --trailer-video-id=<value>  ID of a video to use as the series trailer (API trailer_photo_id)
 
 GLOBAL FLAGS
@@ -1431,6 +1521,8 @@ EXAMPLES
   $ twentythree webinar series update 42 --name "Updated Series"
 
   $ twentythree webinar series update 42 --description "New description"
+
+  $ twentythree webinar series update 42 --trailer-video-id 127764838
 
   $ twentythree webinar series update 42 --name "Updated" --json
 ```
@@ -1475,10 +1567,9 @@ Add a speaker to a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>]
-    [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
-    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
-    [--connection-type-pull-url <value>]
+  $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>] [--bio
+    <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>] [--facebook <value>]
+    [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url] [--connection-type-pull-url <value>]
 
 ARGUMENTS
   ID  Webinar ID
@@ -1508,9 +1599,9 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com
 
-  $ twentythree webinar speaker add 12345 --name "John Smith" --connection-type rtmp
+  $ twentythree webinar speaker add 12345
 
-  $ twentythree webinar speaker add 12345 --name "Jane Doe" --title "CTO" --company "Acme" --bio "Builds things" --linkedin "in/janedoe" --json
+  $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
 ```
 
 _See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/speaker/add.ts)_
@@ -1659,13 +1750,24 @@ List speakers for a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker list ID [--json] [-w <value>] [--token <value>]
+  $ twentythree webinar speaker list ID [--json] [-w <value>] [--token <value>] [--speaker-id <value>] [--request-status
+    requested|approved|denied|expired] [--creation-source admin|guest] [--exclude-hidden] [--include-unapproved]
+    [--include-hidden-guests] [--fields <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --token=<value>  Webinar token (auto-looked up if omitted)
+  --creation-source=<option>  Filter by the source of the speaker record
+                              <options: admin|guest>
+  --exclude-hidden            Exclude speakers marked as hidden
+  --fields=<value>            Comma-separated list of fields to return in the API response
+  --include-hidden-guests     Include guest speakers even if they are marked as hidden
+  --include-unapproved        Include speakers with a non-approved request status
+  --request-status=<option>   Filter by the speaker's request status
+                              <options: requested|approved|denied|expired>
+  --speaker-id=<value>        Filter to a single speaker by their speaker record ID
+  --token=<value>             Webinar token (auto-looked up if omitted)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1688,11 +1790,14 @@ Remove a speaker from a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker remove WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker remove WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -1703,6 +1808,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar speaker remove 12345 9900
+
+  $ twentythree webinar speaker remove 12345 9900 --yes
 
   $ twentythree webinar speaker remove 12345 9900 --json
 ```
@@ -1895,9 +2002,7 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe"
 
-  $ twentythree webinar speaker update 12345 9900 --company "Acme" --linkedin "in/janedoe"
-
-  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO" --bio "Builds things"
+  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO"
 
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```
@@ -2027,8 +2132,8 @@ Update details for a webinar
 ```
 USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
-    [--format event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
+    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>] [--format
+    event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
     [--publish-recordings] [--ondemand] [--series-id <value>] [--trailer-video-id <value>] [--timezone <value>]
 
 ARGUMENTS
@@ -2068,8 +2173,6 @@ EXAMPLES
   $ twentythree webinar update 12345 --title "New Title"
 
   $ twentythree webinar update 12345 --status upcoming
-
-  $ twentythree webinar update 12345 --ondemand --no-private --locale da_DK
 
   $ twentythree webinar update 12345
 ```

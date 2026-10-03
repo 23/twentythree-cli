@@ -47,9 +47,6 @@ GLOBAL FLAGS
 DESCRIPTION
   Check whether AI chapter generation is available for a video
 
-  Checks whether AI chapter generation is available for a given video. Requires the workspace feature to be enabled
-  and the video to have a transcript available.
-
 EXAMPLES
   $ twentythree video section check-generate-available 12345
 
@@ -96,13 +93,15 @@ Delete a section from a video
 
 ```
 USAGE
-  $ twentythree video section delete ID --section-id <value> [--json] [-w <value>]
+  $ twentythree video section delete ID --section-id <value> [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Video ID
 
 FLAGS
-  --section-id=<value>  (required) Section ID to delete
+  -y, --yes                 Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json
+                            also skips it.
+      --section-id=<value>  (required) Section ID to delete
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

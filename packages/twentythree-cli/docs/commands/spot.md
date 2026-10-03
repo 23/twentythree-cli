@@ -75,10 +75,13 @@ Delete a spot from the active workspace
 
 ```
 USAGE
-  $ twentythree spot delete ID [--json] [-w <value>]
+  $ twentythree spot delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Spot ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -101,17 +104,26 @@ List spots in the active workspace
 
 ```
 USAGE
-  $ twentythree spot list [--json] [-w <value>] [--page <value>] [--size <value>] [--search <value>]
-    [--spot-type <value>] [--active] [--orderby <value>] [--order <value>]
+  $ twentythree spot list [--json] [-w <value>] [--page <value>] [--size <value>] [--search <value>] [--spot-id
+    <value>] [--spot-type page|widget] [--spot-object-type live|video] [--active] [--include-analytics] [--orderby
+    spot_name|creation_time|title] [--order asc|desc] [--fields <value>]
 
 FLAGS
-  --[no-]active        Filter by active status
-  --order=<value>      Sort order (asc or desc)
-  --orderby=<value>    Field to order results by
-  --page=<value>       Page number
-  --search=<value>     Search term
-  --size=<value>       Number of results per page
-  --spot-type=<value>  Filter by spot type
+  --[no-]active                Filter by active status
+  --fields=<value>             Comma-separated list of fields to return in the API response
+  --include-analytics          Include impression analytics data for each spot
+  --order=<option>             Sort direction
+                               <options: asc|desc>
+  --orderby=<option>           Field to order results by
+                               <options: spot_name|creation_time|title>
+  --page=<value>               Page number
+  --search=<value>             Search spots by name
+  --size=<value>               Number of results per page
+  --spot-id=<value>            Filter to a specific spot by ID
+  --spot-object-type=<option>  Filter by the object type the spot is configured for
+                               <options: live|video>
+  --spot-type=<option>         Filter by spot type
+                               <options: page|widget>
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

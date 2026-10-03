@@ -104,6 +104,30 @@ describe('fetchWorkspaceTokens', () => {
     vi.unstubAllGlobals()
   })
 
+  it('records the envelope permission_level on every entry (tokens are capped at the login level)', async () => {
+    const site1 = makeWorkspace({ domain: 'site1.video23.com' })
+    const site2 = makeWorkspace({ domain: 'site2.video23.com' })
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ status: 'ok', permission_level: 'read', sites: [site1, site2] }),
+    }))
+
+    const result = await fetchWorkspaceTokens('site1.video23.com', 'login_tok')
+    expect(result.map((w) => w.permission_level)).toEqual(['read', 'read'])
+    vi.unstubAllGlobals()
+  })
+
+  it('leaves permission_level unset when the envelope has none', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ status: 'ok', sites: [makeWorkspace()] }),
+    }))
+
+    const result = await fetchWorkspaceTokens('company.video23.com', 'login_tok')
+    expect(result[0]).not.toHaveProperty('permission_level')
+    vi.unstubAllGlobals()
+  })
+
   it('returns empty array when response.sites is missing', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: true,

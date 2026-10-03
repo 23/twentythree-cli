@@ -1,8 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -33,6 +32,7 @@ export default class AudienceRemove extends AuthenticatedCommand<typeof Audience
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     email: Flags.string({
       description: 'Contact email address',
       required: false,
@@ -50,16 +50,10 @@ export default class AudienceRemove extends AuthenticatedCommand<typeof Audience
     this.printWorkspaceHeader()
 
     // T-07-08 mitigation: Confirmation required before destructive action.
-    // JSON mode skips confirmation (automation use case).
-    if (!this.jsonEnabled()) {
-      const confirmed = await confirm({
-        message: `Permanently remove contact from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-      if (!confirmed || typeof confirmed === 'symbol') {
-        this.log('Cancelled.')
-        this.exit(EXIT_CANCELLED)
-      }
-    }
+    // --yes / --json skip the prompt (automation use case).
+    await this.confirmDestructive(
+      `Permanently remove contact from ${this.activeWorkspace.domain}? This cannot be undone.`,
+    )
 
     const body: Record<string, unknown> = {}
     if (flags.email !== undefined) body.email = flags.email

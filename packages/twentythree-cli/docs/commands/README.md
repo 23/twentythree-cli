@@ -1,6 +1,6 @@
 # Command Reference
 
-TwentyThree CLI provides 244 commands across 24 topics.
+TwentyThree CLI provides 265 commands across 29 topics.
 
 | Topic | Description | Reference |
 |-------|-------------|-----------|
@@ -9,10 +9,12 @@ TwentyThree CLI provides 244 commands across 24 topics.
 | `app` | Create a new app integration | [docs](app.md) |
 | `audience` | List audience companies | [docs](audience.md) |
 | `auth` | Configure domain and bearer token for a TwentyThree workspace | [docs](auth.md) |
+| `autocomplete` | Set up shell tab completion | [docs](autocomplete.md) |
 | `category` | Manage categories -- list, create, update, and delete | [docs](category.md) |
 | `collector` | Block a collector from a video or webinar | [docs](collector.md) |
 | `comment` | Add a comment to an object | [docs](comment.md) |
 | `doctor` | Check CLI credentials, connectivity, and token validity | [docs](doctor.md) |
+| `email-subscription` | Manage email subscriptions to new-video digests -- list, add, and remove | [docs](email-subscription.md) |
 | `openupload` | List open upload tokens in the active workspace | [docs](openupload.md) |
 | `player` | Delete a player from the active workspace | [docs](player.md) |
 | `poll` | Create a new poll for a webinar | [docs](poll.md) |

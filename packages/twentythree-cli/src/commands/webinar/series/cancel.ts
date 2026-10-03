@@ -1,8 +1,7 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -20,6 +19,7 @@ export default class WebinarSeriesCancel extends AuthenticatedCommand<typeof Web
 
   static examples = [
     '<%= config.bin %> webinar series cancel 42',
+    '<%= config.bin %> webinar series cancel 42 --yes',
     '<%= config.bin %> webinar series cancel 42 --cancel-associations',
     '<%= config.bin %> webinar series cancel 42 --json',
   ]
@@ -28,6 +28,7 @@ export default class WebinarSeriesCancel extends AuthenticatedCommand<typeof Web
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'cancel-associations': Flags.boolean({
       description: 'Also cancel associated webinars',
       allowNo: true,
@@ -50,16 +51,8 @@ export default class WebinarSeriesCancel extends AuthenticatedCommand<typeof Web
     const { args, flags } = await this.parse(WebinarSeriesCancel)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-05-17: Confirmation includes domain
-      const confirmed = await confirm({
-        message: `Cancel series ${args.id} on ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-05-17: Confirmation includes domain
+    await this.confirmDestructive(`Cancel series ${args.id} on ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     // CRITICAL: live_series_id NOT live_id
     const body: Record<string, unknown> = { live_series_id: Number(args.id) }

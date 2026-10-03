@@ -4,8 +4,9 @@ description: |
   Full TwentyThree video platform CLI. Use when the user asks to upload or manage
   videos, run webinars, query analytics, manage audiences, configure players,
   create categories, manage tags, spots, thumbnails, webhooks, collectors, polls,
-  presentations, or any TwentyThree platform operation. Covers 241+ API commands
-  across 23 resource groups plus meta commands (auth, workspace, autocomplete, doctor).
+  presentations, email digest subscriptions, or any TwentyThree platform operation.
+  Covers 260+ API commands across 25 resource groups plus meta commands (auth,
+  workspace, autocomplete, doctor).
   Every command supports --json for machine-readable output and --agent for
   self-describing metadata (api_endpoint, auth_scope, output_shape, side_effects).
 triggers:
@@ -28,7 +29,7 @@ compatibility: Requires twentythree-cli installed globally (npm install -g twent
 
 # TwentyThree CLI
 
-> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 241+ commands across 23 resource groups.
+> Terminal access to the full TwentyThree video platform API — videos, webinars, analytics, audiences, and every related resource. 260+ commands across 25 resource groups.
 >
 > Always use `--json` in agentic contexts for structured output. Always run `twentythree <command> --agent` before calling an unfamiliar command to discover its flags, API endpoint, auth scope, and side effects.
 
@@ -51,6 +52,9 @@ twentythree auth credentials --domain <domain> --token <token> --json
 ```
 
 The token can also be supplied via the `TWENTYTHREE_TOKEN` env var instead of `--token` (keeps it out of shell history). Add `--workspace "<name or domain>"` to pick the active workspace when the token unlocks several; omit the token entirely for anonymous (domain-only) access.
+
+- **An empty token is an error.** `--token ""` (an unset shell variable) or an empty `TWENTYTHREE_TOKEN` exits 1 instead of silently configuring anonymous mode. Check the variable holds the token before running the command.
+- **Read the `permission_level` in the response.** `read` means the token is read-only: every create/update/delete command will be refused. Tell the user up front rather than discovering it at the first write.
 
 Credentials are stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) — never in plaintext files.
 
@@ -130,6 +134,8 @@ Always check `auth_scope` and `side_effects` before write/admin operations.
   - CLI `webinar` ↔ API `live`
   - The `api_endpoint` field in `--agent` output shows the actual API path.
 - **After upload or create, the CLI prints the new resource ID and its admin URL.** Use the ID for follow-up updates (e.g. setting thumbnail, publishing).
+- **Destructive commands need `--yes` without a terminal.** Every `side_effects: destructive` command confirms before acting; pass `--yes` (`-y`) once the user has confirmed, or `--json`. Without either and without a TTY the command exits 2 and names the flag — it never deletes unprompted.
+- **Write commands require a write-level login.** With a `read` token (see `auth status --json` → `permission_level`) any command with `auth_scope: write` or higher is refused before the API call. Don't retry; tell the user a write-level token is needed.
 - **On persistent errors, run `twentythree doctor`** to diagnose auth, connectivity, and dependency issues.
 
 ## Behavioral Guide
@@ -137,7 +143,7 @@ Always check `auth_scope` and `side_effects` before write/admin operations.
 Before executing multi-step workflows, read [`guide.md`](guide.md) for cross-cutting rules.
 The guide covers two categories:
 
-- **Correctness Rules** — must-follow rules that prevent API errors (object type differentiation, no `webinar get`, webinar creation defaults, timezone handling, admin link construction)
+- **Correctness Rules** — must-follow rules that prevent API errors (object type differentiation, no `webinar get`, webinar creation defaults, timezone handling, `--yes` on destructive commands, permission levels, empty tokens, admin link construction)
 - **Preference Rules** — best-practice rules that improve output quality (thumbnails from listing responses, analytics via listing flags, filtering/sorting on listing endpoints)
 
 > See [`guide.md`](guide.md) for the full rule list with examples.
@@ -199,11 +205,11 @@ Parameter guidance:
 
 ## Resource Index
 
-All 24 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
+All 25 resource groups. Every topic supports `--agent`, `--json`, and `--workspace`.
 
 | Topic | Representative verbs | Use for |
 |-------|---------------------|---------|
-| `video` | `upload`, `list`, `get`, `update`, `delete`, `replace`, `frame`, `transcoding-progress` | Video file management, upload, metadata, thumbnails |
+| `video` | `upload`, `upload-url`, `list`, `get`, `update`, `delete`, `replace`, `frame`, `transcoding-progress` | Video file management, upload (local file or URL), metadata, thumbnails |
 | `personal` | workspace switch, list, tasks, flows, templates, email | Personal video recording — browser-based recording, mischung videos, tasks, flows |
 | `webinar` | `create`, `list`, `get`, `update`, `delete`, `repeat`, `highlights`, `clips`, `metrics`, `log` + attachment/mail/queued-video/recording/room/section/series/speaker/transcription subtopics | Live events, scheduling, recordings, attendee comms |
 | `analytics` | `conversions`, `live`, `usage`, `video` subtopics (many verbs each) | Reporting, viewer data, playback metrics, conversion tracking |
@@ -218,6 +224,7 @@ All 24 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 | `tag` | `list`, `create` | Content tagging |
 | `thumbnail` | `list`, `create`, `get`, `update`, `delete`, `preview-scss` | Video thumbnail and template management |
 | `webhook` | `list`, `create`, `get`, `update`, `delete` | Event webhooks |
+| `email-subscription` | `list`, `add`, `remove` | Email digests of newly published videos — who is subscribed, at what frequency |
 | `app` | `list`, `thumbnail`, `create`, `get`, `update`, `delete` | App/integration management |
 | `presentation` | `list` + page/setting subtopics | Presentation content |
 | `protection` | `list`, `create`, `delete` | Access protection |
@@ -231,7 +238,7 @@ All 24 resource groups. Every topic supports `--agent`, `--json`, and `--workspa
 
 ## Meta Commands
 
-These are not in the 22 resource groups — they are CLI-local utilities:
+These are not in the resource groups above — they are CLI-local utilities:
 
 | Topic | Commands | Purpose |
 |-------|----------|---------|

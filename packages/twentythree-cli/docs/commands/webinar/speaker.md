@@ -24,10 +24,9 @@ Add a speaker to a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>]
-    [--bio <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>]
-    [--facebook <value>] [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url]
-    [--connection-type-pull-url <value>]
+  $ twentythree webinar speaker add ID [--json] [-w <value>] [--name <value>] [--email <value>] [--title <value>] [--bio
+    <value>] [--description <value>] [--company <value>] [--website <value>] [--linkedin <value>] [--facebook <value>]
+    [--twitter <value>] [--connection-type webrtc|gearmode|rtmp|whip|srt|url] [--connection-type-pull-url <value>]
 
 ARGUMENTS
   ID  Webinar ID
@@ -57,9 +56,9 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com
 
-  $ twentythree webinar speaker add 12345 --name "John Smith" --connection-type rtmp
+  $ twentythree webinar speaker add 12345
 
-  $ twentythree webinar speaker add 12345 --name "Jane Doe" --title "CTO" --company "Acme" --bio "Builds things" --linkedin "in/janedoe" --json
+  $ twentythree webinar speaker add 12345 --name "Jane Doe" --email jane@example.com --json
 ```
 
 _See code: [src/commands/webinar/speaker/add.ts](https://github.com/23/twentythree-cli/blob/v1.7.0/src/commands/webinar/speaker/add.ts)_
@@ -208,13 +207,24 @@ List speakers for a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker list ID [--json] [-w <value>] [--token <value>]
+  $ twentythree webinar speaker list ID [--json] [-w <value>] [--token <value>] [--speaker-id <value>] [--request-status
+    requested|approved|denied|expired] [--creation-source admin|guest] [--exclude-hidden] [--include-unapproved]
+    [--include-hidden-guests] [--fields <value>]
 
 ARGUMENTS
   ID  Webinar ID
 
 FLAGS
-  --token=<value>  Webinar token (auto-looked up if omitted)
+  --creation-source=<option>  Filter by the source of the speaker record
+                              <options: admin|guest>
+  --exclude-hidden            Exclude speakers marked as hidden
+  --fields=<value>            Comma-separated list of fields to return in the API response
+  --include-hidden-guests     Include guest speakers even if they are marked as hidden
+  --include-unapproved        Include speakers with a non-approved request status
+  --request-status=<option>   Filter by the speaker's request status
+                              <options: requested|approved|denied|expired>
+  --speaker-id=<value>        Filter to a single speaker by their speaker record ID
+  --token=<value>             Webinar token (auto-looked up if omitted)
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -237,11 +247,14 @@ Remove a speaker from a webinar
 
 ```
 USAGE
-  $ twentythree webinar speaker remove WEBINARID ID [--json] [-w <value>]
+  $ twentythree webinar speaker remove WEBINARID ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   WEBINARID  Webinar ID
   ID         Speaker ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -252,6 +265,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree webinar speaker remove 12345 9900
+
+  $ twentythree webinar speaker remove 12345 9900 --yes
 
   $ twentythree webinar speaker remove 12345 9900 --json
 ```
@@ -444,9 +459,7 @@ DESCRIPTION
 EXAMPLES
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe"
 
-  $ twentythree webinar speaker update 12345 9900 --company "Acme" --linkedin "in/janedoe"
-
-  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO" --bio "Builds things"
+  $ twentythree webinar speaker update 12345 9900 --email jane@example.com --title "CTO"
 
   $ twentythree webinar speaker update 12345 9900 --name "Jane Doe" --json
 ```

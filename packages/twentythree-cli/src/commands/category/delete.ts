@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -11,7 +10,8 @@ import { applyCliTerms } from '../../lib/term-map.js'
  * Prompts user to confirm deletion showing the workspace domain so they know
  * which workspace they are deleting from (T-04-02 repudiation mitigation).
  *
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Maps to the /album/delete API endpoint.
  * "album" is the API term; "category" is the CLI user-facing term (term-map.ts).
@@ -44,6 +44,7 @@ export default class CategoryDelete extends AuthenticatedCommand<typeof Category
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -55,16 +56,8 @@ export default class CategoryDelete extends AuthenticatedCommand<typeof Category
 
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-04-02: Confirmation prompt includes workspace domain so user knows which workspace
-      const confirmed = await confirm({
-        message: `Delete category ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-04-02: Confirmation prompt includes workspace domain so user knows which workspace
+    await this.confirmDestructive(`Delete category ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/album/delete', {
       body: { album_id: Number(args.id) } as any,

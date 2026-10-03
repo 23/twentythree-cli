@@ -1,8 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -19,6 +18,7 @@ export default class WebhookUnsubscribe extends AuthenticatedCommand<typeof Webh
 
   static examples = [
     '<%= config.bin %> webhook unsubscribe --webhook-id 12345',
+    '<%= config.bin %> webhook unsubscribe --webhook-id 12345 --yes',
     '<%= config.bin %> webhook unsubscribe --target-url https://example.com/hook',
     '<%= config.bin %> webhook unsubscribe --webhook-id 12345 --json',
   ]
@@ -27,6 +27,7 @@ export default class WebhookUnsubscribe extends AuthenticatedCommand<typeof Webh
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'webhook-id': Flags.string({
       description: 'Webhook subscription ID',
       required: false,
@@ -56,16 +57,8 @@ export default class WebhookUnsubscribe extends AuthenticatedCommand<typeof Webh
       this.error('Provide --webhook-id or --target-url', { exit: EXIT_ERROR })
     }
 
-    if (!this.jsonEnabled()) {
-      // T-08-04: Confirmation prompt includes workspace domain so user knows which workspace
-      const confirmed = await confirm({
-        message: `Unsubscribe webhook from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-08-04: Confirmation prompt includes workspace domain so user knows which workspace
+    await this.confirmDestructive(`Unsubscribe webhook from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/webhook/unsubscribe', {
       body: {

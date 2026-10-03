@@ -39,6 +39,13 @@ export async function fetchWorkspaceTokens(
   const entries = (Array.isArray(json)
     ? json
     : (json.tokens ?? json.sites ?? json.data ?? json.workspaces ?? [])) as WorkspaceEntry[]
+  // The envelope's permission_level is the level of the login token itself. Since
+  // the server caps every issued token at that level, record it on each entry so
+  // commands can warn before attempting something the login cannot do.
+  const level = Array.isArray(json) ? undefined : json.permission_level
+  if (typeof level === 'string' && level) {
+    return entries.map((e) => ({ ...e, permission_level: level }))
+  }
   return entries
 }
 

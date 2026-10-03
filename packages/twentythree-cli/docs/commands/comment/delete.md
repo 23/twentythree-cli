@@ -11,10 +11,13 @@ Delete a comment
 
 ```
 USAGE
-  $ twentythree comment delete ID [--json] [-w <value>]
+  $ twentythree comment delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Comment ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -25,6 +28,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree comment delete 789
+
+  $ twentythree comment delete 789 --yes
 
   $ twentythree comment delete 789 --json
 ```

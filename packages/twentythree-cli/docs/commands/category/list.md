@@ -11,21 +11,21 @@ List categories in the active workspace
 
 ```
 USAGE
-  $ twentythree category list [--json] [-w <value>] [--include-hidden] [--search <value>] [--album-id <value>]
-    [--photo-id <value>] [--user-id <value>] [--orderby sortkey|title|editing_date|creation_date|live_create]
-    [--order asc|desc] [--fields <value>]
+  $ twentythree category list [--json] [-w <value>] [--search <value>] [--album-id <value>] [--photo-id <value>]
+    [--user-id <value>] [--include-hidden] [--orderby sortkey|title|editing_date|creation_date|live_create] [--order
+    asc|desc] [--fields <value>]
 
 FLAGS
-  --album-id=<value>    Return information for a specific category by its ID
-  --fields=<value>      Comma-separated list of fields to return in the API response
-  --[no-]include-hidden Include hidden categories in the results
-  --order=<option>      Sort direction
-                        <options: asc|desc>
-  --orderby=<option>    Field to order results by
-                        <options: sortkey|title|editing_date|creation_date|live_create>
-  --photo-id=<value>    Filter to categories that contain a specific video
-  --search=<value>      Search categories by title or keyword
-  --user-id=<value>     Filter by the ID of the user that created the category
+  --album-id=<value>     Return information for a specific category by its ID
+  --fields=<value>       Comma-separated list of fields to return in the API response
+  --[no-]include-hidden  Include hidden categories in the results
+  --order=<option>       Sort direction
+                         <options: asc|desc>
+  --orderby=<option>     Field to order results by
+                         <options: sortkey|title|editing_date|creation_date|live_create>
+  --photo-id=<value>     Filter to categories that contain a specific video
+  --search=<value>       Search categories by title or keyword
+  --user-id=<value>      Filter by the ID of the user that created the category
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

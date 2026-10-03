@@ -12,8 +12,8 @@ Update details for a webinar
 ```
 USAGE
   $ twentythree webinar update ID [--json] [-w <value>] [--title <value>] [--description <value>] [--status <value>]
-    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>]
-    [--format event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
+    [--live-date <value>] [--draft] [--publish] [--seo-policy |index|noindex] [--webinar-design-id <value>] [--format
+    event|webinar] [--registration-mode all|none] [--private] [--category-id <value>] [--locale <value>]
     [--publish-recordings] [--ondemand] [--series-id <value>] [--trailer-video-id <value>] [--timezone <value>]
 
 ARGUMENTS
@@ -53,10 +53,6 @@ EXAMPLES
   $ twentythree webinar update 12345 --title "New Title"
 
   $ twentythree webinar update 12345 --status upcoming
-
-  $ twentythree webinar update 12345 --ondemand --no-private --locale da_DK
-
-  $ twentythree webinar update 12345 --trailer-video-id 127764838
 
   $ twentythree webinar update 12345
 ```

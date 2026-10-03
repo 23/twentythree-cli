@@ -11,10 +11,13 @@ Delete a thumbnail template from the active workspace
 
 ```
 USAGE
-  $ twentythree thumbnail delete ID [--json] [-w <value>]
+  $ twentythree thumbnail delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  Thumbnail template ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.

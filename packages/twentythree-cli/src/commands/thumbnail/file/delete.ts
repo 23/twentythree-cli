@@ -1,8 +1,7 @@
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -10,7 +9,8 @@ import { applyCliTerms } from '../../../lib/term-map.js'
  *
  * Maps to POST /thumbnail/template/delete-file.
  * Prompts user to confirm deletion with workspace domain (T-08-07 repudiation mitigation).
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Threat mitigations:
  *   T-08-07: Confirmation prompt includes workspace domain
@@ -28,6 +28,7 @@ export default class ThumbnailFileDelete extends AuthenticatedCommand<typeof Thu
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'template-id': Flags.string({
       description: 'Thumbnail template ID',
       required: true,
@@ -53,16 +54,8 @@ export default class ThumbnailFileDelete extends AuthenticatedCommand<typeof Thu
     const { flags } = await this.parse(ThumbnailFileDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-08-07: Confirmation prompt includes workspace domain
-      const confirmed = await confirm({
-        message: `Delete file "${flags.filename}" from template ${flags['template-id']} on ${this.activeWorkspace.domain}?`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-08-07: Confirmation prompt includes workspace domain
+    await this.confirmDestructive(`Delete file "${flags.filename}" from template ${flags['template-id']} on ${this.activeWorkspace.domain}?`)
 
     const { data: deleteData, error: deleteError } = await this.apiClient.POST('/thumbnail/template/delete-file', {
       body: {

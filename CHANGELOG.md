@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `email-subscription list|add|remove` commands for the new `/email-subscription/*` endpoints (digest emails for newly published videos)
+- `video upload-url` command for `POST /photo/upload-url` — create a video from a URL instead of uploading a local file
+- `--yes` / `-y` flag on every destructive command to skip the confirmation prompt; without a TTY and without `--yes`/`--json` the command now exits 2 with a message naming the flag instead of hanging
+- Permission level of the login is recorded from `/user/tokens` and shown by `auth credentials`, `auth status`, `workspace list` and `doctor`; commands whose scope exceeds a read-only login fail fast with a clear message instead of a 403 after the prompt
+- Skills: `reference/email-subscription.md`, plus guide rules for `--yes`, permission levels and empty tokens
+
+### Changed
+
+- API spec and generated types synced with the live `swagger.json` (email subscriptions, `photo/upload-url`, `create_placeholders_p` on upload tokens, `exclude_implicit_placeholders_p` on `photo/list`, `live/speaker/connection-types` now `read`)
+
+### Fixed
+
+- `auth credentials --domain <d> --token ""` and an empty `TWENTYTHREE_TOKEN` no longer silently configure anonymous mode; both are errors (TWE-576)
+- `video delete`, `video upload` and `category update` rendered API error objects as `[object Object]`; they now show the API message
+
 ## [1.1.1] - 2026-04-17
 
 ### Added

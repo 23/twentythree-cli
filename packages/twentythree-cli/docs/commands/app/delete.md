@@ -11,10 +11,13 @@ Delete an app integration from the active workspace
 
 ```
 USAGE
-  $ twentythree app delete ID [--json] [-w <value>]
+  $ twentythree app delete ID [--json] [-w <value>] [-y]
 
 ARGUMENTS
   ID  App ID
+
+FLAGS
+  -y, --yes  Skip the confirmation prompt. Required when no terminal is attached (CI, agents); --json also skips it.
 
 GLOBAL FLAGS
   -w, --workspace=<value>  Workspace domain or display name to use for this invocation.
@@ -25,6 +28,8 @@ DESCRIPTION
 
 EXAMPLES
   $ twentythree app delete 12345
+
+  $ twentythree app delete 12345 --yes
 
   $ twentythree app delete 12345 --json
 ```

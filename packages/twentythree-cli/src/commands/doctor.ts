@@ -3,6 +3,7 @@ import Table from 'cli-table3'
 import chalk from 'chalk'
 import { getActiveWorkspace, getWorkspaceForDomain } from '../auth/workspace-config.js'
 import { createApiClient } from '../api/client.js'
+import { permissionBelow } from '../lib/base-command.js'
 
 export default class Doctor extends Command {
   static description = 'Check CLI credentials, connectivity, and token validity'
@@ -62,7 +63,7 @@ export default class Doctor extends Command {
       const baseUrl = ws!.api_base_url.replace(/\/?$/, '/')
       const apiBaseUrl = baseUrl + 'api/2/'
       const client = createApiClient({ baseUrl: apiBaseUrl, token: ws!.bearer_token })
-      const { error } = await client.GET('/photo/list', { params: { query: { size: 1 } } })
+      const { data, error } = await client.GET('/photo/list', { params: { query: { size: 1 } } })
       if (error) {
         const status = (error as { status?: string | number; code?: string | number })?.status
           ?? (error as { status?: string | number; code?: string | number })?.code
@@ -70,7 +71,15 @@ export default class Doctor extends Command {
         const message = (error as { message?: string })?.message ?? 'Unauthorized'
         checks.push({ name: 'Token valid', passed: false, detail: `${status} ${message}` })
       } else {
-        checks.push({ name: 'Token valid', passed: true, detail: 'Authenticated' })
+        // Every API response carries the caller's permission level; show it so a
+        // read-only login is visible here rather than at the first refused write.
+        const level = (data as { permission_level?: string } | undefined)?.permission_level
+        const detail = level
+          ? permissionBelow(level, 'write')
+            ? `Authenticated, ${level}-only (create/update/delete commands will be refused)`
+            : `Authenticated, ${level}`
+          : 'Authenticated'
+        checks.push({ name: 'Token valid', passed: true, detail })
       }
     }
 

@@ -1,8 +1,7 @@
 import { Args } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../lib/output.js'
 import { applyCliTerms } from '../../lib/term-map.js'
 
 /**
@@ -22,6 +21,7 @@ export default class CommentDelete extends AuthenticatedCommand<typeof CommentDe
 
   static examples = [
     '<%= config.bin %> comment delete 789',
+    '<%= config.bin %> comment delete 789 --yes',
     '<%= config.bin %> comment delete 789 --json',
   ]
 
@@ -29,6 +29,7 @@ export default class CommentDelete extends AuthenticatedCommand<typeof CommentDe
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
   }
 
   static args = {
@@ -39,16 +40,8 @@ export default class CommentDelete extends AuthenticatedCommand<typeof CommentDe
     const { args } = await this.parse(CommentDelete)
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-06-05: Confirmation prompt includes workspace domain
-      const confirmed = await confirm({
-        message: `Delete comment ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-06-05: Confirmation prompt includes workspace domain
+    await this.confirmDestructive(`Delete comment ${args.id} from ${this.activeWorkspace.domain}? This cannot be undone.`)
 
     const { data, error } = await this.apiClient.POST('/comment/delete', {
       body: { comment_id: Number(args.id) } as any,

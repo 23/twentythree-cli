@@ -1,8 +1,7 @@
 import { Args, Flags } from '@oclif/core'
 import chalk from 'chalk'
-import { confirm, isCancel } from '@clack/prompts'
 import { AuthenticatedCommand } from '../../../lib/base-command.js'
-import { formatJsonOutput, formatApiError, EXIT_ERROR, EXIT_CANCELLED } from '../../../lib/output.js'
+import { formatJsonOutput, formatApiError, EXIT_ERROR } from '../../../lib/output.js'
 import { applyCliTerms } from '../../../lib/term-map.js'
 
 /**
@@ -11,7 +10,8 @@ import { applyCliTerms } from '../../../lib/term-map.js'
  * Prompts user to confirm deletion showing workspace domain and section ID
  * so they know exactly what is being deleted (T-03-11 repudiation mitigation).
  *
- * --json flag skips the confirmation prompt (scripting mode — assume confirmed).
+ * --yes (or --json) skips the confirmation prompt. Without a TTY and without either
+ * flag the command exits 2 and names the flag to pass, instead of hanging.
  *
  * Threat mitigations:
  *   T-03-11: Confirmation prompt includes workspace domain and section ID
@@ -36,6 +36,7 @@ export default class VideoSectionDelete extends AuthenticatedCommand<typeof Vide
 
   static flags = {
     ...AuthenticatedCommand.baseFlags,
+    ...AuthenticatedCommand.destructiveFlags,
     'section-id': Flags.string({
       description: 'Section ID to delete',
       required: true,
@@ -51,16 +52,8 @@ export default class VideoSectionDelete extends AuthenticatedCommand<typeof Vide
 
     this.printWorkspaceHeader()
 
-    if (!this.jsonEnabled()) {
-      // T-03-11: Confirmation includes workspace domain and section ID
-      const confirmed = await confirm({
-        message: `Delete section ${flags['section-id']} from video ${args.id} on ${this.activeWorkspace.domain}?`,
-      })
-
-      if (isCancel(confirmed) || !confirmed) {
-        process.exit(EXIT_CANCELLED)
-      }
-    }
+    // T-03-11: Confirmation includes workspace domain and section ID
+    await this.confirmDestructive(`Delete section ${flags['section-id']} from video ${args.id} on ${this.activeWorkspace.domain}?`)
 
     const { data, error } = await this.apiClient.POST('/photo/section/delete', {
       body: {
