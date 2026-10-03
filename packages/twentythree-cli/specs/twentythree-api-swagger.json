@@ -25258,6 +25258,599 @@
                 }
             }
         },
+        "/email-subscription/add": {
+            "post": {
+                "summary":     "Add email subscription",
+                "description": "Subscribe an email address to a digest of new videos published on the workspace. If the address already has a workspace-wide subscription, it is replaced by the new one. Use `frequency` to control how often the digest is sent; the default is a daily digest.",
+                "tags":        [
+                    "Email subscriptions"
+                ],
+                "operationId": "emailSubscriptionAdd",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "photo_subscription_id": {
+                                                    "type":    "number",
+                                                    "example": 91827364
+                                                },
+                                                "email":              {
+                                                    "type":    "string",
+                                                    "example": "anna@example.com"
+                                                },
+                                                "user_id":            {
+                                                    "type":    "string",
+                                                    "example": ""
+                                                },
+                                                "object_type":        {
+                                                    "type":    "string",
+                                                    "example": "site"
+                                                },
+                                                "object_id":          {
+                                                    "type":    "number",
+                                                    "example": 12345
+                                                },
+                                                "object_pretty":      {
+                                                    "type":    "string",
+                                                    "example": "All video from example.twentythree.com"
+                                                },
+                                                "frequency":          {
+                                                    "type":    "string",
+                                                    "example": "daily"
+                                                },
+                                                "send_interval":      {
+                                                    "type":    "string",
+                                                    "example": "1 day"
+                                                },
+                                                "creation_time_ansi": {
+                                                    "type":    "string",
+                                                    "example": "2026-09-28 10:15:00"
+                                                },
+                                                "creation_time_fmt":  {
+                                                    "type":    "string",
+                                                    "example": "28 September 2026"
+                                                }
+                                            }
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The email subscription was added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "email":     {
+                                        "description": "Email address to subscribe.",
+                                        "type":        "string"
+                                    },
+                                    "frequency": {
+                                        "description": "How often the subscriber receives a digest of new videos.",
+                                        "type":        "string",
+                                        "minLength":   1,
+                                        "default":     "daily",
+                                        "enum":        [
+                                            "instant",
+                                            "four_hours",
+                                            "twelve_hours",
+                                            "daily",
+                                            "weekly"
+                                        ]
+                                    },
+                                    "fields":    {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/email-subscription/list": {
+            "get": {
+                "summary":     "List email subscriptions",
+                "description": "List the email subscriptions on the workspace. Subscribers receive an email digest when new videos are published, either for the whole workspace or for a specific tag, album or uploading user. Optionally filter by `email` or `user_id`. Subscriptions are returned newest first.",
+                "tags":        [
+                    "Email subscriptions"
+                ],
+                "operationId": "emailSubscriptionList",
+                "parameters":  [
+                    {
+                        "name":            "email",
+                        "in":              "query",
+                        "description":     "Only return subscriptions for this email address.",
+                        "required":        false,
+                        "allowEmptyValue": true,
+                        "schema":          {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name":            "user_id",
+                        "in":              "query",
+                        "description":     "Only return subscriptions belonging to this user.",
+                        "required":        false,
+                        "allowEmptyValue": false,
+                        "schema":          {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name":            "p",
+                        "in":              "query",
+                        "description":     "Page offset for the request.",
+                        "required":        false,
+                        "allowEmptyValue": false,
+                        "schema":          {
+                            "type":    "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name":            "size",
+                        "in":              "query",
+                        "description":     "Number of objects to include in the response. Default is `50` and maximum value is `pagination_max`.",
+                        "required":        false,
+                        "allowEmptyValue": false,
+                        "schema":          {
+                            "type":    "integer",
+                            "default": 50
+                        }
+                    },
+                    {
+                        "name":            "fields",
+                        "in":              "query",
+                        "description":     "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                        "required":        false,
+                        "allowEmptyValue": true,
+                        "schema":          {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "p":                {
+                                            "type":    "number",
+                                            "example": 1
+                                        },
+                                        "size":             {
+                                            "type":    "number",
+                                            "example": 50
+                                        },
+                                        "total_count":      {
+                                            "type":    "number",
+                                            "example": 2
+                                        },
+                                        "data":             {
+                                            "type":  "array",
+                                            "items": {
+                                                "type":       "object",
+                                                "properties": {
+                                                    "photo_subscription_id": {
+                                                        "type":    "number",
+                                                        "example": 91827364
+                                                    },
+                                                    "email":              {
+                                                        "type":    "string",
+                                                        "example": "anna@example.com"
+                                                    },
+                                                    "user_id":            {
+                                                        "type":    "string",
+                                                        "example": ""
+                                                    },
+                                                    "username":           {
+                                                        "type":    "string",
+                                                        "example": ""
+                                                    },
+                                                    "full_name":          {
+                                                        "type":    "string",
+                                                        "example": ""
+                                                    },
+                                                    "object_type":        {
+                                                        "type":    "string",
+                                                        "example": "site"
+                                                    },
+                                                    "object_id":          {
+                                                        "type":    "number",
+                                                        "example": 12345
+                                                    },
+                                                    "object_pretty":      {
+                                                        "type":    "string",
+                                                        "example": "All video from example.twentythree.com"
+                                                    },
+                                                    "frequency":          {
+                                                        "type":    "string",
+                                                        "example": "daily"
+                                                    },
+                                                    "send_interval":      {
+                                                        "type":    "string",
+                                                        "example": "1 day"
+                                                    },
+                                                    "creation_time_ansi": {
+                                                        "type":    "string",
+                                                        "example": "2026-09-28 10:15:00"
+                                                    },
+                                                    "creation_time_fmt":  {
+                                                        "type":    "string",
+                                                        "example": "28 September 2026"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false
+            }
+        },
+        "/email-subscription/remove": {
+            "post": {
+                "summary":     "Remove email subscription",
+                "description": "Remove an email subscription from the workspace, so the subscriber no longer receives digests of new videos. Identify the subscription by the `photo_subscription_id` returned by `/api/email-subscription/list`.",
+                "tags":        [
+                    "Email subscriptions"
+                ],
+                "operationId": "emailSubscriptionRemove",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {}
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The email subscription was removed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "photo_subscription_id": {
+                                        "description": "ID of the subscription to remove.",
+                                        "type":        "integer"
+                                    },
+                                    "fields": {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "photo_subscription_id"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/openupload/list":     {
             "get": {
                 "summary":     "List open uploads",
@@ -32473,7 +33066,7 @@
         "/thumbnail/template/upload-file": {
             "post": {
                 "summary":     "Upload thumbnail template file",
-                "description": "Upload a file for use with a ThumbnailStudio template.\n        Supports Resumable.js-style chunked uploads as well as standard multi-part form uploads using the `file` parameter.\n        The maximum file size is 20 MB; files are stored and scoped to the specified `thumbnail_template_id`.",
+                "description": "Upload a file for use with a ThumbnailStudio template.\n        Supports Resumable.js-style chunked uploads as well as standard multi-part form uploads using the `file` parameter.\n        The maximum file size is 20 MB; files are stored and scoped to the specified `thumbnail_template_id`.\n        A file over the size limit is rejected with HTTP 413, and a file type the workspace does not allow with HTTP 415.",
                 "tags":        [
                     "Thumbnail Templates"
                 ],
@@ -34317,7 +34910,7 @@
         "/photo/delete-upload-token": {
             "post": {
                 "summary":     "Delete video by upload token",
-                "description": "Deletes a video identified by its `upload_token`, optionally scoped to a specific resumable upload via `resumableIdentifier`. No authentication credentials are required; the upload token itself serves as proof of ownership. Returns an error if no matching video is found.",
+                "description": "Deletes a video identified by its `upload_token`, optionally scoped to a specific chunked file via `resumableIdentifier`. Works while the upload is still in progress when the token was created with `create_placeholders_p=1`, in which case the placeholder is deleted and a later chunk for the same file starts a fresh placeholder. No authentication credentials are required; the upload token itself serves as proof of ownership. Returns an error if no matching video is found.",
                 "tags":        [
                     "Videos"
                 ],
@@ -34445,17 +35038,13 @@
                             "schema": {
                                 "type":       "object",
                                 "properties": {
-                                    "photo_id":            {
-                                        "description": "The ID of the video to delete.",
-                                        "type":        "integer"
-                                    },
                                     "upload_token":        {
                                         "description": "The upload token associated with the video, used to verify ownership.",
                                         "type":        "string",
                                         "minLength":   1
                                     },
                                     "resumableIdentifier": {
-                                        "description": "The resumable upload identifier, used to scope the deletion to a specific chunk-uploaded file within the token.",
+                                        "description": "The upload identifier of the chunked file, used to scope the deletion to one file within the token. When omitted, the most recent video uploaded with the token is deleted.",
                                         "type":        "string"
                                     },
                                     "fields":              {
@@ -34464,7 +35053,6 @@
                                     }
                                 },
                                 "required":   [
-                                    "photo_id",
                                     "upload_token"
                                 ]
                             }
@@ -35380,6 +35968,16 @@
                         }
                     },
                     {
+                        "name":            "create_placeholders_p",
+                        "in":              "query",
+                        "description":     "When `1`, each file uploaded in chunks with this token creates a video placeholder in the workspace on its first accepted chunk. The response to every accepted chunk of that file is the standard API response with the placeholder's `photo_id`, `tree_id` and `token`. The finished file replaces the placeholder in place, so the ID does not change. The token's `publish` and `publish_date` are applied when the file lands, as for other uploads; until then the placeholder is unpublished. Placeholders are removed if the upload is rejected or the token expires first. Creating a placeholder emits the standard `new`/`create` events like any video; key on transcoding or published state to know a video is playable. Only chunked video uploads create placeholders; non-chunked uploads behave as without the flag, and chunked images are rejected.",
+                        "required":        false,
+                        "allowEmptyValue": false,
+                        "schema":          {
+                            "type": "boolean"
+                        }
+                    },
+                    {
                         "name":            "fields",
                         "in":              "query",
                         "description":     "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
@@ -35814,6 +36412,17 @@
                         "allowEmptyValue": false,
                         "schema":          {
                             "type": "boolean"
+                        }
+                    },
+                    {
+                        "name":            "exclude_implicit_placeholders_p",
+                        "in":              "query",
+                        "description":     "Set to `true` to leave out implicit placeholders: videos created by an upload token with `create_placeholders_p` whose file has not landed yet. Finished videos and explicit placeholders are returned. Combine with `placeholder_p=1` to list explicit placeholders only.",
+                        "required":        false,
+                        "allowEmptyValue": false,
+                        "schema":          {
+                            "type":    "boolean",
+                            "default": false
                         }
                     },
                     {
@@ -37869,10 +38478,207 @@
                 }
             }
         },
+        "/photo/upload-url":    {
+            "post": {
+                "summary":     "Upload a video from a URL",
+                "description": "Creates a new video in the workspace by downloading the file at `url` and queueing it for transcoding. The video can be placed in an album with `album_id`, given a `title`, `content` description and `tags`, and published immediately or at a later `publish_date`. Returns the `photo_id`, `tree_id` and `token` of the new video.",
+                "tags":        [
+                    "Videos"
+                ],
+                "operationId": "videoUploadUrl",
+                "responses":   {
+                    "200": {
+                        "description": "OK",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "type":       "object",
+                                    "properties": {
+                                        "status":           {
+                                            "type":    "string",
+                                            "example": "ok"
+                                        },
+                                        "permission_level": {
+                                            "type":    "string",
+                                            "example": "write"
+                                        },
+                                        "cached":           {
+                                            "type":    "boolean",
+                                            "example": false
+                                        },
+                                        "cache_time":       {
+                                            "type":        "integer",
+                                            "description": "If the reponse is returned from cache, this property details the cache time.",
+                                            "example":     1610486659
+                                        },
+                                        "data":             {
+                                            "type":       "object",
+                                            "properties": {
+                                                "photo_id": {
+                                                    "type":    "number",
+                                                    "example": 7667553
+                                                },
+                                                "tree_id":  {
+                                                    "type":    "number",
+                                                    "example": 1234567
+                                                },
+                                                "token":    {
+                                                    "type":    "string",
+                                                    "example": "abcdef1234567890"
+                                                }
+                                            }
+                                        },
+                                        "message":          {
+                                            "type":    "string",
+                                            "example": "The url was successfully uploaded"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation400"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Operation forbidden",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation403"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation404"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation406"
+                                }
+                            }
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation412"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content":     {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInformation500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security":    [
+                    {
+                        "twentythree_auth": [
+                            "write"
+                        ]
+                    }
+                ],
+                "deprecated":  false,
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type":       "object",
+                                "properties": {
+                                    "url":            {
+                                        "description": "The URL to pull the video file from.",
+                                        "type":        "string",
+                                        "minLength":   1
+                                    },
+                                    "album_id":       {
+                                        "description": "Album for the video.",
+                                        "type":        "string"
+                                    },
+                                    "title":          {
+                                        "description": "Title for the video.",
+                                        "type":        "string"
+                                    },
+                                    "content":        {
+                                        "description": "Description of the video.",
+                                        "type":        "string"
+                                    },
+                                    "content_format": {
+                                        "description": "Content format for the description: `text/enhanced`, `text/plain` or `text/html`.",
+                                        "type":        "string",
+                                        "default":     "text/enhanced"
+                                    },
+                                    "tags":           {
+                                        "description": "Comma-separated tags for the video.",
+                                        "type":        "string"
+                                    },
+                                    "publish":        {
+                                        "description": "Publish the video or not.",
+                                        "type":        "integer",
+                                        "default":     1
+                                    },
+                                    "publish_date":   {
+                                        "description": "Publish date, may be both in the past and in the future.",
+                                        "type":        "string"
+                                    },
+                                    "user_id":        {
+                                        "description": "ID of the user for the upload. Only honoured for super users; otherwise the authenticated user is used.",
+                                        "type":        "integer"
+                                    },
+                                    "fields":         {
+                                        "description": "An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties.",
+                                        "type":        "string"
+                                    }
+                                },
+                                "required":   [
+                                    "url"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/photo/redeem-upload-token": {
             "post": {
                 "summary":     "Upload video using token",
-                "description": "Upload a video using a pre-authenticated upload token. Refer to the documentation on browser-based uploads for more information. Any additional query parameters sent to this method will be included in the callback request to `return_url`.\n\nThis endpoint supports an extra set of parameters designed to support resumable/chunked upload and to work with Resumable.js, an open sourced JavaScript library for providing multiple simultaneous, stable, fault-tolerant and resumable uploads via the HTML5 File API released by TwentyThree.\n\nTo handle the state of upload chunks, a number of extra parameters are sent along with such requests:\n\n* `resumableChunkNumber`: The index of chunk in the current upload. First chunk is 1 (no base-0 counting here).\n* `resumableChunkSize`: The chunk size in bytes.\n* `resumableTotalSize`: The total file size in bytes.\n* `resumableIdentifier`: A unique identifier for the file contained in the request.\n\nThe endpoint expects all chunks of a file to be uploaded before the video is added to the archive. When the last chunk's upload completes, the messages listed in the returns section applies.\n\nFor all other chunks, HTTP status codes control the flow and retriability:\n\n* `200`: The chunk was accepted and correct. No need to re-upload.\n* `500`: The file for which the chunk was uploaded is not supported, cancel the entire upload.\n* Anything else: Something went wrong, but try reuploading the file.",
+                "description": "Upload a video using a pre-authenticated upload token. Refer to the documentation on browser-based uploads for more information. Any additional query parameters sent to this method will be included in the callback request to `return_url`.\n\nThis endpoint supports an extra set of parameters designed to support resumable/chunked upload and to work with Resumable.js, an open sourced JavaScript library for providing multiple simultaneous, stable, fault-tolerant and resumable uploads via the HTML5 File API released by TwentyThree.\n\nTo handle the state of upload chunks, a number of extra parameters are sent along with such requests:\n\n* `resumableChunkNumber`: The index of chunk in the current upload. First chunk is 1 (no base-0 counting here).\n* `resumableChunkSize`: The chunk size in bytes.\n* `resumableTotalSize`: The total file size in bytes.\n* `resumableIdentifier`: A unique identifier for the file contained in the request.\n\nThe endpoint expects all chunks of a file to be uploaded before the video is added to the archive. When the last chunk's upload completes, the messages listed in the returns section applies.\n\nFor all other chunks, HTTP status codes control the flow and retriability:\n\n* `200`: The chunk was accepted and correct. No need to re-upload.\n* `500`: The file for which the chunk was uploaded is not supported, cancel the entire upload.\n* Anything else: Something went wrong, but try reuploading the file.\n\nWhen the token was created with `create_placeholders_p=1`, the first accepted chunk of each file creates a video placeholder in the workspace, and the response to every accepted intermediate chunk of that file is the standard API response with the placeholder's `photo_id`, `tree_id` and `token` instead of the plain-text `ok`. When the last chunk arrives, the file replaces the placeholder in place, so the ID reported on the first chunk is the ID of the finished video, and the token's metadata is applied as usual.\n\nThe token's `publish` and `publish_date` are applied when the file lands, as for other uploads; until then the placeholder is unpublished. Placeholders are removed if the upload is rejected (for example an unsupported file, or a file beyond the token's `max_uploads`, which is refused on its first chunk) or if the token expires before the upload completes, and emit the standard `new`/`create` events at creation like any video, followed by the usual replace and update events at completion; key on transcoding or published state to know a video is playable. Only chunked video uploads create placeholders: non-chunked uploads behave as without the flag, and a chunked image is rejected.",
                 "tags":        [
                     "Videos"
                 ],
@@ -45854,7 +46660,7 @@
         "/live/attachment/upload": {
             "post": {
                 "summary":     "Upload webinar handout",
-                "description": "Upload a file handout to a webinar.\n        This endpoint supports Resumable.js-style uploads in addition to multi-part form uploads using the `file` parameter.",
+                "description": "Upload a file handout to a webinar.\n        This endpoint supports Resumable.js-style uploads in addition to multi-part form uploads using the `file` parameter.\n        A file over the size limit (200 MB) is rejected with HTTP 413, and a file type the workspace does not allow with HTTP 415.",
                 "tags":        [
                     "Webinars: Handouts"
                 ],
@@ -53886,7 +54692,7 @@
         "/live/speaker/connection-types": {
             "get": {
                 "summary":     "List speaker connection types",
-                "description": "List the supported connection types available for speakers on a given webinar. Requires admin permissions and a valid `live_id`. The returned types depend on the webinar's streaming method.",
+                "description": "List the supported connection types available for speakers on a given webinar. Requires read permissions and a valid `live_id`. The returned types depend on the webinar's streaming method.",
                 "tags":        [
                     "Webinars: Speakers"
                 ],
@@ -54033,7 +54839,7 @@
                 "security":    [
                     {
                         "twentythree_auth": [
-                            "admin"
+                            "read"
                         ]
                     }
                 ],

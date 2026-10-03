@@ -1889,6 +1889,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/email-subscription/add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add email subscription
+         * @description Subscribe an email address to a digest of new videos published on the workspace. If the address already has a workspace-wide subscription, it is replaced by the new one. Use `frequency` to control how often the digest is sent; the default is a daily digest.
+         */
+        post: operations["emailSubscriptionAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/email-subscription/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List email subscriptions
+         * @description List the email subscriptions on the workspace. Subscribers receive an email digest when new videos are published, either for the whole workspace or for a specific tag, album or uploading user. Optionally filter by `email` or `user_id`. Subscriptions are returned newest first.
+         */
+        get: operations["emailSubscriptionList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/email-subscription/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove email subscription
+         * @description Remove an email subscription from the workspace, so the subscriber no longer receives digests of new videos. Identify the subscription by the `photo_subscription_id` returned by `/api/email-subscription/list`.
+         */
+        post: operations["emailSubscriptionRemove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/openupload/list": {
         parameters: {
             query?: never;
@@ -2682,6 +2742,7 @@ export interface paths {
          * @description Upload a file for use with a ThumbnailStudio template.
          *             Supports Resumable.js-style chunked uploads as well as standard multi-part form uploads using the `file` parameter.
          *             The maximum file size is 20 MB; files are stored and scoped to the specified `thumbnail_template_id`.
+         *             A file over the size limit is rejected with HTTP 413, and a file type the workspace does not allow with HTTP 415.
          */
         post: operations["thumbnailTemplateUploadFile"];
         delete?: never;
@@ -2861,7 +2922,7 @@ export interface paths {
         put?: never;
         /**
          * Delete video by upload token
-         * @description Deletes a video identified by its `upload_token`, optionally scoped to a specific resumable upload via `resumableIdentifier`. No authentication credentials are required; the upload token itself serves as proof of ownership. Returns an error if no matching video is found.
+         * @description Deletes a video identified by its `upload_token`, optionally scoped to a specific chunked file via `resumableIdentifier`. Works while the upload is still in progress when the token was created with `create_placeholders_p=1`, in which case the placeholder is deleted and a later chunk for the same file starts a fresh placeholder. No authentication credentials are required; the upload token itself serves as proof of ownership. Returns an error if no matching video is found.
          */
         post: operations["videoDeleteUploadToken"];
         delete?: never;
@@ -3059,6 +3120,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/photo/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a video from a URL
+         * @description Creates a new video in the workspace by downloading the file at `url` and queueing it for transcoding. The video can be placed in an album with `album_id`, given a `title`, `content` description and `tags`, and published immediately or at a later `publish_date`. Returns the `photo_id`, `tree_id` and `token` of the new video.
+         */
+        post: operations["videoUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/photo/redeem-upload-token": {
         parameters: {
             query?: never;
@@ -3088,6 +3169,10 @@ export interface paths {
          *     * `200`: The chunk was accepted and correct. No need to re-upload.
          *     * `500`: The file for which the chunk was uploaded is not supported, cancel the entire upload.
          *     * Anything else: Something went wrong, but try reuploading the file.
+         *
+         *     When the token was created with `create_placeholders_p=1`, the first accepted chunk of each file creates a video placeholder in the workspace, and the response to every accepted intermediate chunk of that file is the standard API response with the placeholder's `photo_id`, `tree_id` and `token` instead of the plain-text `ok`. When the last chunk arrives, the file replaces the placeholder in place, so the ID reported on the first chunk is the ID of the finished video, and the token's metadata is applied as usual.
+         *
+         *     The token's `publish` and `publish_date` are applied when the file lands, as for other uploads; until then the placeholder is unpublished. Placeholders are removed if the upload is rejected (for example an unsupported file, or a file beyond the token's `max_uploads`, which is refused on its first chunk) or if the token expires before the upload completes, and emit the standard `new`/`create` events at creation like any video, followed by the usual replace and update events at completion; key on transcoding or published state to know a video is playable. Only chunked video uploads create placeholders: non-chunked uploads behave as without the flag, and a chunked image is rejected.
          */
         post: operations["videoRedeemUploadToken"];
         delete?: never;
@@ -3869,6 +3954,7 @@ export interface paths {
          * Upload webinar handout
          * @description Upload a file handout to a webinar.
          *             This endpoint supports Resumable.js-style uploads in addition to multi-part form uploads using the `file` parameter.
+         *             A file over the size limit (200 MB) is rejected with HTTP 413, and a file type the workspace does not allow with HTTP 415.
          */
         post: operations["liveAttachmentUpload"];
         delete?: never;
@@ -4687,7 +4773,7 @@ export interface paths {
         };
         /**
          * List speaker connection types
-         * @description List the supported connection types available for speakers on a given webinar. Requires admin permissions and a valid `live_id`. The returned types depend on the webinar's streaming method.
+         * @description List the supported connection types available for speakers on a given webinar. Requires read permissions and a valid `live_id`. The returned types depend on the webinar's streaming method.
          */
         get: operations["liveSpeakerConnectionTypes"];
         put?: never;
@@ -18109,6 +18195,385 @@ export interface operations {
             };
         };
     };
+    emailSubscriptionAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description Email address to subscribe. */
+                    email: string;
+                    /**
+                     * @description How often the subscriber receives a digest of new videos.
+                     * @default daily
+                     * @enum {string}
+                     */
+                    frequency?: "instant" | "four_hours" | "twelve_hours" | "daily" | "weekly";
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 91827364 */
+                            photo_subscription_id?: number;
+                            /** @example anna@example.com */
+                            email?: string;
+                            /** @example  */
+                            user_id?: string;
+                            /** @example site */
+                            object_type?: string;
+                            /** @example 12345 */
+                            object_id?: number;
+                            /** @example All video from example.twentythree.com */
+                            object_pretty?: string;
+                            /** @example daily */
+                            frequency?: string;
+                            /** @example 1 day */
+                            send_interval?: string;
+                            /** @example 2026-09-28 10:15:00 */
+                            creation_time_ansi?: string;
+                            /** @example 28 September 2026 */
+                            creation_time_fmt?: string;
+                        };
+                        /** @example The email subscription was added */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    emailSubscriptionList: {
+        parameters: {
+            query?: {
+                /** @description Only return subscriptions for this email address. */
+                email?: string;
+                /** @description Only return subscriptions belonging to this user. */
+                user_id?: number;
+                /** @description Page offset for the request. */
+                p?: number;
+                /** @description Number of objects to include in the response. Default is `50` and maximum value is `pagination_max`. */
+                size?: number;
+                /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        /** @example 1 */
+                        p?: number;
+                        /** @example 50 */
+                        size?: number;
+                        /** @example 2 */
+                        total_count?: number;
+                        data?: {
+                            /** @example 91827364 */
+                            photo_subscription_id?: number;
+                            /** @example anna@example.com */
+                            email?: string;
+                            /** @example  */
+                            user_id?: string;
+                            /** @example  */
+                            username?: string;
+                            /** @example  */
+                            full_name?: string;
+                            /** @example site */
+                            object_type?: string;
+                            /** @example 12345 */
+                            object_id?: number;
+                            /** @example All video from example.twentythree.com */
+                            object_pretty?: string;
+                            /** @example daily */
+                            frequency?: string;
+                            /** @example 1 day */
+                            send_interval?: string;
+                            /** @example 2026-09-28 10:15:00 */
+                            creation_time_ansi?: string;
+                            /** @example 28 September 2026 */
+                            creation_time_fmt?: string;
+                        }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    emailSubscriptionRemove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description ID of the subscription to remove. */
+                    photo_subscription_id: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: Record<string, never>;
+                        /** @example The email subscription was removed */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
     openuploadList: {
         parameters: {
             query?: {
@@ -23887,11 +24352,9 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/x-www-form-urlencoded": {
-                    /** @description The ID of the video to delete. */
-                    photo_id: number;
                     /** @description The upload token associated with the video, used to verify ownership. */
                     upload_token: string;
-                    /** @description The resumable upload identifier, used to scope the deletion to a specific chunk-uploaded file within the token. */
+                    /** @description The upload identifier of the chunked file, used to scope the deletion to one file within the token. When omitted, the most recent video uploaded with the token is deleted. */
                     resumableIdentifier?: string;
                     /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                     fields?: string;
@@ -24476,6 +24939,8 @@ export interface operations {
                 absolute_url?: string;
                 /** @description The URL to redirect to after upload success or failure. The callback is a GET request when the return data is under 1500 characters, and a POST otherwise ? your handler must accept both. If omitted, the server returns a plain HTTP 200 OK response. */
                 return_url?: string;
+                /** @description When `1`, each file uploaded in chunks with this token creates a video placeholder in the workspace on its first accepted chunk. The response to every accepted chunk of that file is the standard API response with the placeholder's `photo_id`, `tree_id` and `token`. The finished file replaces the placeholder in place, so the ID does not change. The token's `publish` and `publish_date` are applied when the file lands, as for other uploads; until then the placeholder is unpublished. Placeholders are removed if the upload is rejected or the token expires first. Creating a placeholder emits the standard `new`/`create` events like any video; key on transcoding or published state to know a video is playable. Only chunked video uploads create placeholders; non-chunked uploads behave as without the flag, and chunked images are rejected. */
+                create_placeholders_p?: boolean;
                 /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
                 fields?: string;
             };
@@ -24651,6 +25116,8 @@ export interface operations {
                 audio_p?: boolean;
                 /** @description Filter by placeholder status. */
                 placeholder_p?: boolean;
+                /** @description Set to `true` to leave out implicit placeholders: videos created by an upload token with `create_placeholders_p` whose file has not landed yet. Finished videos and explicit placeholders are returned. Combine with `placeholder_p=1` to list explicit placeholders only. */
+                exclude_implicit_placeholders_p?: boolean;
                 /** @description Filter by encoding status. Set to `true` for fully encoded videos only. */
                 video_encoded_p?: boolean;
                 /** @description Filter to videos not assigned to any category. */
@@ -25604,6 +26071,142 @@ export interface operations {
                         cache_time?: number;
                         data?: Record<string, never>;
                         /** @example The token information was updated */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation400"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation401"];
+                };
+            };
+            /** @description Operation forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation403"];
+                };
+            };
+            /** @description Object not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation404"];
+                };
+            };
+            /** @description Not Acceptable */
+            406: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation406"];
+                };
+            };
+            /** @description Precondition Failed */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation412"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorInformation500"];
+                };
+            };
+        };
+    };
+    videoUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    /** @description The URL to pull the video file from. */
+                    url: string;
+                    /** @description Album for the video. */
+                    album_id?: string;
+                    /** @description Title for the video. */
+                    title?: string;
+                    /** @description Description of the video. */
+                    content?: string;
+                    /**
+                     * @description Content format for the description: `text/enhanced`, `text/plain` or `text/html`.
+                     * @default text/enhanced
+                     */
+                    content_format?: string;
+                    /** @description Comma-separated tags for the video. */
+                    tags?: string;
+                    /**
+                     * @description Publish the video or not.
+                     * @default 1
+                     */
+                    publish?: number;
+                    /** @description Publish date, may be both in the past and in the future. */
+                    publish_date?: string;
+                    /** @description ID of the user for the upload. Only honoured for super users; otherwise the authenticated user is used. */
+                    user_id?: number;
+                    /** @description An optional, comma-separated list of fields to return in the API response. Default behaviour is to return all properties. */
+                    fields?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /** @example write */
+                        permission_level?: string;
+                        /** @example false */
+                        cached?: boolean;
+                        /**
+                         * @description If the reponse is returned from cache, this property details the cache time.
+                         * @example 1610486659
+                         */
+                        cache_time?: number;
+                        data?: {
+                            /** @example 7667553 */
+                            photo_id?: number;
+                            /** @example 1234567 */
+                            tree_id?: number;
+                            /** @example abcdef1234567890 */
+                            token?: string;
+                        };
+                        /** @example The url was successfully uploaded */
                         message?: string;
                     };
                 };
