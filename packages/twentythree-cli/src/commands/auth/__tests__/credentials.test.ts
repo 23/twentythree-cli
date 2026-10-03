@@ -242,6 +242,55 @@ describe('auth credentials — non-interactive', () => {
     expect(result).toMatchObject({ mode: 'anonymous', active_workspace: 'anon.video23.com' })
   })
 
+  it('TWE-576: an empty --token is an error, not silent anonymous mode', async () => {
+    await expect(runCmd(['--domain', 'company.video23.com', '--token', '', '--json'])).rejects.toThrow(
+      /--token was given but is empty/,
+    )
+    expect(vi.mocked(wsConfig.setWorkspaces)).not.toHaveBeenCalled()
+    expect(vi.mocked(wsConfig.setActiveWorkspace)).not.toHaveBeenCalled()
+    expect(vi.mocked(credStore.setCredential)).not.toHaveBeenCalled()
+  })
+
+  it('TWE-576: a whitespace-only --token is treated as empty', async () => {
+    await expect(runCmd(['--domain', 'company.video23.com', '--token', '   '])).rejects.toThrow(
+      /--token was given but is empty/,
+    )
+    expect(vi.mocked(wsConfig.setWorkspaces)).not.toHaveBeenCalled()
+  })
+
+  it('TWE-576: an empty TWENTYTHREE_TOKEN is an error, not silent anonymous mode', async () => {
+    process.env.TWENTYTHREE_TOKEN = ''
+    await expect(runCmd(['--domain', 'company.video23.com', '--json'])).rejects.toThrow(
+      /TWENTYTHREE_TOKEN is set but empty/,
+    )
+    expect(vi.mocked(wsConfig.setWorkspaces)).not.toHaveBeenCalled()
+  })
+
+  it('reports the permission level of the login and warns when read-only', async () => {
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([
+      { ...makeWorkspace('company.video23.com', 'Company'), permission_level: 'read' },
+    ])
+
+    const result = await runCmd(['--domain', 'company.video23.com', '--token', 'ro-token', '--json'])
+
+    expect(result).toMatchObject({
+      mode: 'authenticated',
+      permission_level: 'read',
+      warning: expect.stringContaining('read-only'),
+    })
+  })
+
+  it('reports a write-level login without a warning', async () => {
+    vi.mocked(tokenRefresh.fetchWorkspaceTokens).mockResolvedValue([
+      { ...makeWorkspace('company.video23.com', 'Company'), permission_level: 'write' },
+    ])
+
+    const result = await runCmd(['--domain', 'company.video23.com', '--token', 'rw-token', '--json'])
+
+    expect(result).toMatchObject({ mode: 'authenticated', permission_level: 'write' })
+    expect(result).not.toHaveProperty('warning')
+  })
+
   it('errors on an invalid domain', async () => {
     await expect(runCmd(['--domain', 'not-a-domain'])).rejects.toThrow(/Invalid domain/)
     expect(vi.mocked(wsConfig.setWorkspaces)).not.toHaveBeenCalled()
